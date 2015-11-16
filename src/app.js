@@ -8,8 +8,6 @@ require('es5-sham-ie8');
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var classnames = require('classnames');
-var Button = require('react-bootstrap').Button;
 var insertStylesheet = require('insert-stylesheet')
 
 
@@ -26,6 +24,4 @@ require('./app.css');
 var mainElement = document.getElementById('main');
 ReactDOM.render(
   <div>
-    <Home title="left"/>
-    <Home title="right"/>
   </div>, mainElement);
