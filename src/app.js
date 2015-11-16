@@ -9,6 +9,8 @@ require('es5-sham-ie8');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var insertStylesheet = require('insert-stylesheet')
+var Shuffle = require('shuffle');
+
 
 
 // Insert stylesheets.
@@ -19,6 +21,15 @@ var insertStylesheet = require('insert-stylesheet')
   insertStylesheet('../node_modules/' + css_path);
 });
 require('./app.css');
+
+var clear_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.";
+clear_text = clear_text.toLowerCase();
+var alphabet = Array.apply(null, {length: 26}).map(function (_, i) { return String.fromCharCode(97 + i); });
+var permutation = Shuffle.shuffle({deck: alphabet}).cards;
+var cipher_text = clear_text.split('').map(function (c) {
+  var i = alphabet.indexOf(c);
+  return i === -1 ? c : permutation[i];
+}).join('');
 
 // Insert HTML.
 var mainElement = document.getElementById('main');
