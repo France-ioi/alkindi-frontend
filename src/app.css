@@ -1,3 +1,17 @@
+
+@font-face {
+  font-family: 'Snowflakes';
+  src: url('../ext/2FB463_0_0.eot');
+  src: url('../ext/2FB463_0_0.eot?#iefix') format('embedded-opentype'),
+       url('../ext/2FB463_0_0.woff2') format('woff2'),
+       url('../ext/2FB463_0_0.woff') format('woff'),
+       url('../ext/2FB463_0_0.ttf') format('truetype');
+}
+
 .selected {
   font-weight: bold;
+}
+
+.cipher {
+  font-family: 'Snowflakes';
 }
