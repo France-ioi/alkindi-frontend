@@ -11,6 +11,7 @@ var ReactDOM = require('react-dom');
 var insertStylesheet = require('insert-stylesheet')
 var Shuffle = require('shuffle');
 
+var TextInput = require('./tools/text-input');
 
 
 // Insert stylesheets.
@@ -35,4 +36,5 @@ var cipher_text = clear_text.split('').map(function (c) {
 var mainElement = document.getElementById('main');
 ReactDOM.render(
   <div>
+    <TextInput title="Texte chiffré" text={cipher_text} />
   </div>, mainElement);
