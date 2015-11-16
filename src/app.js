@@ -11,7 +11,13 @@ var ReactDOM = require('react-dom');
 var insertStylesheet = require('insert-stylesheet')
 var Shuffle = require('shuffle');
 
+// var Home = require('./home');
+// var Menu = require('./menu');
 var TextInput = require('./tools/text-input');
+// var Hints = require('./hints');
+// var SubstitutionTool = require('./tools/substitution');
+// var FrequencyAnalysisTool = require('./tools/frequency-analysis');
+// var TextOutput = require('./tools/text-output');
 
 
 // Insert stylesheets.
