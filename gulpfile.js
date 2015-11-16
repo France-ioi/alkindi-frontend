@@ -1,4 +1,3 @@
-// very simple compiler
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
@@ -8,6 +7,7 @@ var eslint = require('gulp-eslint');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var browserify = require('browserify');
+var cssify = require('cssify');
 var reactify = require('reactify');
 var watchify = require('watchify');
 var assign = require('lodash.assign');
@@ -18,7 +18,7 @@ function buildScript (options) {
     var browserifyOpts = {
         entries: [options.entry],
         debug: true,
-        transform: [reactify]
+        transform: [reactify, cssify]
     };
     if (options.watch)
         browserifyOpts = assign({}, watchify.args, browserifyOpts);

@@ -10,6 +10,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var classnames = require('classnames');
 
+require('./app.css');
+
 var Home = React.createClass({
   getInitialState: function () {
     return {selected: 0};
