@@ -7,8 +7,6 @@ var eslint = require('gulp-eslint');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var browserify = require('browserify');
-var cssify = require('cssify');
-var reactify = require('reactify');
 var watchify = require('watchify');
 var assign = require('lodash.assign');
 var buffer = require('vinyl-buffer');
@@ -18,7 +16,10 @@ function buildScript (options) {
     var browserifyOpts = {
         entries: [options.entry],
         debug: true,
-        transform: [reactify, cssify]
+        transform: [
+            ['babelify', {presets: ["es2015", "react"]}],
+            'cssify'
+        ]
     };
     if (options.watch)
         browserifyOpts = assign({}, watchify.args, browserifyOpts);
