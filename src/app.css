@@ -19,3 +19,30 @@ textarea.cipher {
   max-width: 100%;
   resize: both;
 }
+
+/*
+
+character substitutions tables
+
+*/
+.char-pairs {
+	float: left;
+	width: 2em;
+	line-height: 2em;
+	text-align: center;
+}
+.char-base, .char-subs {
+	display: block;
+}
+.char-subs {
+	border: 1px solid #000;
+	border-left: none;
+}
+.char-pairs:first-child .char-subs {
+	border: 1px solid #000;
+}
+
+#hint-score {
+	text-align: center;
+	font-weight: bold;
+}
