@@ -5,7 +5,9 @@ module.exports = React.createClass({
     return {};
   },
   getDefaultProps: function () {
-    return {title: 'Text input'};
+    return {
+      title: 'Text input'
+    };
   },
   propTypes: function () {
     return {
@@ -15,9 +17,7 @@ module.exports = React.createClass({
   },
   render: function () {
     return (
-      <Tool title={this.props.title}>
-        <textarea readOnly className='cipher' value={this.props.text}/>
-      </Tool>
+      <textarea readOnly className='cipher' value={this.props.text}/>
     );
   }
 });

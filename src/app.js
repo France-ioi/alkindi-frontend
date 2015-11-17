@@ -36,5 +36,5 @@ var cipher_text = clear_text.split('').map(function (c) {
 var mainElement = document.getElementById('main');
 ReactDOM.render(
   <div>
-    <TextInput title="Texte chiffré" text={cipher_text} />
+    <Tool type='TextInput' title="Texte chiffré" text={cipher_text} />
   </div>, mainElement);
