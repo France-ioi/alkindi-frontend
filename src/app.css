@@ -15,3 +15,7 @@
 .cipher {
   font-family: 'Snowflakes';
 }
+textarea.cipher {
+  max-width: 100%;
+  resize: both;
+}

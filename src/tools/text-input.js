@@ -17,7 +17,7 @@ module.exports = React.createClass({
   },
   render: function () {
     return (
-      <textarea readOnly className='cipher' value={this.props.text}/>
+      <textarea readOnly className='cipher' cols="120" rows="6" value={this.props.text}/>
     );
   }
 });
