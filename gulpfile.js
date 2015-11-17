@@ -8,7 +8,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var browserify = require('browserify');
 var watchify = require('watchify');
-var assign = require('lodash.assign');
 var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
 
@@ -22,7 +21,7 @@ function buildScript (options) {
         ]
     };
     if (options.watch)
-        browserifyOpts = assign({}, watchify.args, browserifyOpts);
+        browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
     var bundler = browserify(browserifyOpts);
     if (options.watch)
         bundler = watchify(bundler);
@@ -48,12 +47,12 @@ function buildScript (options) {
 }
 
 function watched(opts) {
-    return assign({}, opts, {watch: true});
+    return Object.assign({}, opts, {watch: true});
 }
 
 function uglified(opts) {
     var output = opts.output.replace(/.js$/, '.min.js');
-    return assign({}, opts, {uglify: true, output: output});
+    return Object.assign({}, opts, {uglify: true, output: output});
 }
 
 var mainScriptOpts = {
