@@ -1,6 +1,6 @@
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var classnames = require('classnames');
+import React from 'react');
+import {Button} from 'react-bootstrap';
+import classnames from 'classnames';
 
 module.exports = React.createClass({
   getInitialState: function () {

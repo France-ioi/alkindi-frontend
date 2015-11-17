@@ -1,6 +1,8 @@
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var Panel = require('react-bootstrap').Panel;
+
+import React from 'react';
+import {Button, Panel} from 'react-bootstrap';
+
+import registry from './tool-registry';
 
 module.exports = React.createClass({
   getDefaultProps: function () {

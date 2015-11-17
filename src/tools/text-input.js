@@ -1,6 +1,4 @@
-var React = require('react');
-
-var Tool = require('../tool');
+import React from 'react';
 
 module.exports = React.createClass({
   getInitialState: function () {

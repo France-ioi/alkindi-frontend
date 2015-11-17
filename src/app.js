@@ -6,19 +6,12 @@ require('es5-shim');
 require('es5-sham-ie8');
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var insertStylesheet = require('insert-stylesheet')
-var Shuffle = require('shuffle');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import insertStylesheet from 'insert-stylesheet';
+import Shuffle from 'shuffle';
 
-// var Home = require('./home');
-// var Menu = require('./menu');
-var TextInput = require('./tools/text-input');
-// var Hints = require('./hints');
-// var SubstitutionTool = require('./tools/substitution');
-// var FrequencyAnalysisTool = require('./tools/frequency-analysis');
-// var TextOutput = require('./tools/text-output');
-
+import Tool from './tool';
 
 // Insert stylesheets.
 [
