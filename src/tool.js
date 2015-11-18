@@ -4,7 +4,7 @@ import {Button, Panel} from 'react-bootstrap';
 
 import registry from './tool-registry';
 
-module.exports = React.createClass({
+export default React.createClass({
   getInitialState: function () {
     return {
       collapsed: false
@@ -24,15 +24,15 @@ module.exports = React.createClass({
     };
   },
   render: function () {
-    var header = [
+    const header = [
       (<Button key="min" onClick={this.minClicked}><i className="fa fa-minus"></i></Button>), ' ',
-      <span key="title">{this.props.title}</span>,
+      <span key="title">{this.props.title}</span>
     ];
     if (this.props.canClose)
       header.push(<Button key="close" className="pull-right"><i className="fa fa-times"></i></Button>);
-    var inner = false;
+    let inner = false;
     if (!this.state.collapsed && this.props.type in registry) {
-      var Component = registry[this.props.type];
+      const Component = registry[this.props.type];
       inner = (<Component {...this.props}/>);
     }
     return (

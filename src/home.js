@@ -1,8 +1,8 @@
-import React from 'react');
+import React from 'react';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
-module.exports = React.createClass({
+export default React.createClass({
   getInitialState: function () {
     return {selected: 0};
   },

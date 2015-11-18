@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-module.exports = React.createClass({
+export default React.createClass({
   getInitialState: function () {
     return {
       revealed: Array.apply(null, {length: 26}).map(function () { return true; })
@@ -11,19 +11,17 @@ module.exports = React.createClass({
     return {};
   },
   render: function () {
-    var alphabet = window.alphabet,
-        forwardPermutation = window.permutation,
-        reversePermutation = Array.apply(' ', {length: 26}),
-        forwardMapping = [],
-        backwardMapping = [],
-        i, j;
-    for (i = 0, j = alphabet.length; i < j; i++) {
+    const alphabet = window.alphabet,
+          forwardPermutation = window.permutation,
+          reversePermutation = Array.apply(' ', {length: 26}),
+          forwardMapping = [],
+          backwardMapping = [];
+    for (let i = 0, j = alphabet.length; i < j; i++) {
       reversePermutation[forwardPermutation[i]] = i;
     }
-    for (i = 0, j = window.alphabet.length; i < j; i++) {
-      var c = forwardPermutation[i], showC = this.state.revealed[i],
+    for (let i = 0, j = window.alphabet.length; i < j; i++) {
+      let c = forwardPermutation[i], showC = this.state.revealed[i],
           d = reversePermutation[i], showD = this.state.revealed[d];
-      console.log(i, c, showC, d, showD);
       forwardMapping.push(
         <div key={i} className="char-pairs">
           <span className="char-base cipher">{alphabet[i]}</span>

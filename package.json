@@ -16,6 +16,7 @@
     "font-awesome": "^4.4.0",
     "html5shiv": "^3.7.3",
     "insert-stylesheet": "^0.1.0",
+    "node-range": "^0.1.0",
     "react": "^0.14.2",
     "react-bootstrap": "^0.27.3",
     "react-dom": "^0.14.2",
