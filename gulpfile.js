@@ -1,18 +1,19 @@
+'use strict';
 
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var chmod = require('gulp-chmod');
-var eol = require('gulp-eol');
-var eslint = require('gulp-eslint');
-var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var buffer = require('vinyl-buffer');
-var source = require('vinyl-source-stream');
+const gulp = require('gulp');
+const gutil = require('gulp-util');
+const chmod = require('gulp-chmod');
+const eol = require('gulp-eol');
+const eslint = require('gulp-eslint');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const buffer = require('vinyl-buffer');
+const source = require('vinyl-source-stream');
 
 function buildScript (options) {
-    var browserifyOpts = {
+    let browserifyOpts = {
         entries: [options.entry],
         debug: true,
         transform: [
@@ -22,12 +23,15 @@ function buildScript (options) {
     };
     if (options.watch)
         browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
-    var bundler = browserify(browserifyOpts);
+    let bundler = browserify(browserifyOpts);
+    /*bundler.on('file', function (file, id, parent) {
+        console.log('bundle', file);
+    });*/
     if (options.watch)
         bundler = watchify(bundler);
 
     function rebundle () {
-        var p = bundler.bundle()
+        let p = bundler.bundle()
             .on('error', gutil.log.bind(gutil, 'Browserify Error'))
             .pipe(source(options.output))
             .pipe(buffer())
@@ -51,11 +55,11 @@ function watched(opts) {
 }
 
 function uglified(opts) {
-    var output = opts.output.replace(/.js$/, '.min.js');
+    const output = opts.output.replace(/.js$/, '.min.js');
     return Object.assign({}, opts, {uglify: true, output: output});
 }
 
-var mainScriptOpts = {
+const mainScriptOpts = {
     entry: 'src/app.js',
     output: 'app.js',
     watch: false,
