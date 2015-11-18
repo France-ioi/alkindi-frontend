@@ -1,6 +1,11 @@
+import Hints from './tools/hints';
+import TextInput from './tools/text-input';
+import Substitution from './tools/substitution';
+// import FrequencyAnalysisTool from './tools/frequency-analysis';
+// import TextOutput from './tools/text-output';
 
-module.exports.Hints = require('./tools/hints');
-module.exports.TextInput = require('./tools/text-input');
-// module.exports.SubstitutionTool = require('./tools/substitution');
-// module.exports.FrequencyAnalysisTool = require('./tools/frequency-analysis');
-// module.exports.TextOutput = require('./tools/text-output');
+export default {
+   Hints: Hints,
+   TextInput: TextInput,
+   Substitution: Substitution
+};
