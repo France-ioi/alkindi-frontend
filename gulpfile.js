@@ -83,7 +83,9 @@ gulp.task('lint', function() {
     .pipe(eslint({
         extends: "eslint:recommended",
         ecmaFeatures: {
-            jsx: true
+            blockBindings: true,
+            jsx: true,
+            modules: true
         },
         plugins: [
             "react"
