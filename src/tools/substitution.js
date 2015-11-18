@@ -79,7 +79,7 @@ export default React.createClass({
     // substitution section
     items.push(this.collapsible('substitution', "Substitution", function () {
       const substitution = toIndices(this.props.substitution);
-      const mapping = range(0, 25).map(function (i) {
+      const mapping = range(0, 26).map(function (i) {
         let d = substitution[i];
         return (
           <div key={i} className="char-pairs">
