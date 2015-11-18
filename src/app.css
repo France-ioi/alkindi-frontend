@@ -1,6 +1,6 @@
 
 @font-face {
-  font-family: 'Snowflakes';
+  font-family: 'Alien';
   src: url('../ext/alien.eot');
   src: url('../ext/alien.eot?#iefix') format('embedded-opentype'),
        url('../ext/alien.woff') format('woff'),
@@ -12,7 +12,7 @@
 }
 
 .cipher {
-  font-family: 'Snowflakes';
+  font-family: 'Alien';
 }
 textarea.cipher {
   max-width: 100%;
