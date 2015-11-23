@@ -14,14 +14,18 @@ export function toChar (i) {
   return String.fromCharCode(97 + i);
 }
 
-export function toChars (is) {
-  return is.map(toChar).join('');
+export function toString (indices) {
+  return indices.map(toChar).join('');
 }
 
-export function substitute (s, i) {
+export function substIndex (s, i) {
   if (typeof i === 'string')
     return i;
   return s[i];
+}
+
+export function substString (sub, str) {
+  return toString(toIndices(str).map(function (i) { return substIndex(sub, i); }));
 }
 
 export function inverse (s) {

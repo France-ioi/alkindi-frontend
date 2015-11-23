@@ -2,17 +2,11 @@ import React from 'react';
 import range from 'node-range';
 import {Button,DropdownButton,MenuItem} from 'react-bootstrap';
 
-import {toChar, toIndices} from '../alpha';
+import {substString,toIndices,toChar} from '../alpha';
 
-const CollapseButton = React.createClass({
+const ExpandToggleButton = React.createClass({
   render: function () {
-    return (<Button>-</Button>);
-  }
-});
-
-const ExpandButton = React.createClass({
-  render: function () {
-    return (<Button>+</Button>);
+    return (<Button>±</Button>);
   }
 });
 
@@ -63,45 +57,58 @@ export default React.createClass({
     // TODO: selecting a target letter and typing another letter exchanges
     //       the two letters.
     // TODO: drag & drop also allows exchanging letters.
+    const input = "abcdef";
+    const substitution = toIndices(this.props.substitution);
+    const output = substString(substitution, input);
 
     // input section
-    items.push(this.collapsible('input', "Texte d'origine", function () {
-      return (
+    items.push(
+      <div key='input'>
         <div>
-          <div>
-            <span>Issu de la variable :</span>
-            <SelectVariable variable={this.props.inputVar} mustExist={true} onSelect={this.setInputVar} />
-          </div>
-          <div className="char-base cipher">abcdef</div>
-        </div>);
-    }.bind(this)));
+          <ExpandToggleButton collapsed={this.state.collapsed.input} eventKey='input' onClick={this.toggleExpand} />
+          <span>Texte d'origine</span>
+        </div>
+        <div>
+          <span>Issu de la variable :</span>
+          <SelectVariable variable={this.props.inputVar} mustExist={true} onSelect={this.setInputVar} />
+        </div>
+        <div className="char-base cipher">abcdef</div>
+      </div>);
 
     // substitution section
-    items.push(this.collapsible('substitution', "Substitution", function () {
-      const substitution = toIndices(this.props.substitution);
-      const mapping = range(0, 26).map(function (i) {
-        let d = substitution[i];
-        return (
-          <div key={i} className="char-pairs">
-            <span className="char-base cipher">{toChar(i)}</span>
-            <span className="char-subs">{toChar(d)}</span>
-          </div>
-        );
-      });
+    const mapping = range(0, 26).map(function (i) {
+      let d = substitution[i];
       return (
-        <div className="backwardMapping">
+        <div key={i} className="char-pairs">
+          <span className="char-base cipher">{toChar(i)}</span>
+          <span className="char-subs">{toChar(d)}</span>
+        </div>
+      );
+    });
+    items.push(
+      <div key='substitution'>
+        <div>
+          <ExpandToggleButton eventKey='substitution' onClick={this.toggleExpand} />
+          <span>Substitution</span>
+        </div>
+        <div>
           <div className="clearfix">{mapping}</div>
-        </div>);
-    }.bind(this)));
+        </div>
+      </div>);
 
     // output section
-    items.push(this.collapsible('output', "Texte après substitution", function () {
-      return (
+    items.push(
+      <div key='output'>
+        <div>
+          <ExpandToggleButton eventKey='output' onClick={this.toggleExpand} />
+          <span>Texte après substitution</span>
+        </div>
+        <div className="char-base">abcdef</div>
         <div>
           <span>Stocké dans la variable :</span>
           <SelectVariable variable={this.props.outputVar} mustExist={false} onSelect={this.setOutputVar} />
-        </div>);
-    }.bind(this)));
+        </div>
+      </div>);
 
     return (<div className="substitution-tool">{items}</div>);
   },

@@ -19,6 +19,25 @@ textarea.cipher {
   resize: both;
 }
 
+.textBlock {
+  font-family: monospace;
+}
+.textBlock span {
+  display: inline-block;
+  margin: 2px;
+  color: #000;
+  background-color: #F0F0F0;
+  cursor: default;
+  font-size: 20px;
+}
+.textBlock span:hover {
+  color: #FFF;
+  background-color: #000;
+}
+.textBlock span.textInsert {
+ background-color: #FFF;
+}
+
 /*
 
 character substitutions tables
