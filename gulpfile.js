@@ -17,7 +17,10 @@ function buildScript (options) {
         entries: [options.entry],
         debug: true,
         transform: [
-            ['babelify', {presets: ["es2015", "react"]}],
+            ['babelify', {
+                presets: ["es2015", "react"],
+                plugins: ["transform-object-rest-spread"]
+            }],
             'cssify'
         ]
     };
@@ -85,7 +88,8 @@ gulp.task('lint', function() {
         ecmaFeatures: {
             blockBindings: true,
             jsx: true,
-            modules: true
+            modules: true,
+            experimentalObjectRestSpread: true
         },
         plugins: [
             "react"
