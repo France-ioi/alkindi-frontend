@@ -96,7 +96,7 @@ export default function reduce (state, action) {
       const id = 't' + state.nextToolId;
       return {
         ...state,
-        nextToolId: id + 1,
+        nextToolId: state.nextToolId + 1,
         toolMap: {...state.toolMap,
           [id]: {
             type: action.toolType,
