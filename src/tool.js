@@ -25,7 +25,6 @@ export default connect(toolSelector)(React.createClass({
     };
   },
   render: function () {
-    console.log(this.props);
     const {title,type,canRemove,canConfigure} = this.props;
     const {collapsed} = this.state; // TODO: move to global state
     const rightButtons = [];
