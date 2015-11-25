@@ -15,7 +15,7 @@ import {Provider, connect} from 'react-redux';
 import Shuffle from 'shuffle';
 import range from 'node-range';
 
-import {renderTool} from './tool';
+import Tool from './tool';
 import * as values from './values';
 import reducer from './reducer';
 import {toChar} from './alpha';
@@ -65,46 +65,20 @@ let store = createStore(reducer);
   }
 ].forEach(function (action) { store.dispatch(action); });
 
-let selector = function (state) {
+const appSelector = function (state) {
   return {
-    state: state
+    toolOrder: state.toolOrder
   };
-}
+};
 
-let App = connect(selector)(React.createClass({
+let App = connect(appSelector)(React.createClass({
   render: function () {
-    const {state} = this.props;
-    var tool1 = renderTool({
-      state: state,
-      props: {
-        type: 'TextDisplay',
-        title: "Texte clair"
-      },
-      lookup: {
-        text: 'cleartext'
-      }
+    const tools = this.props.toolOrder.map(function (id) {
+      return <div key={id}><Tool id={id}/></div>;
     });
-    var tool2 = renderTool({
-      state: state,
-      props: {
-        type: 'TextDisplay',
-        title: "Texte chiffré"
-      },
-      lookup: {
-        text: 'ciphertext'
-      }
-    });
-    return (
-      <div>
-        <div key='1'>{tool1}</div>
-        <div key='2'>{tool2}</div>
-      </div>);
+    return (<div>{tools}</div>);
   }
 }));
-
-// <Tool type='Hints' title="Indices" score={this.props.score} maxScore={this.props.maxScore} alphabets={this.props.alphabets} clearAlphabet="letters" codedAlphabet="letters" hints={this.props.hints} />
-// <Tool type='Substitution' title="Substitution" inputVar="foo" outputVar="bar" substitution="abcdefghijklmnopqrstuvwxyz" />
-
 
 // Insert HTML.
 const mainElement = document.getElementById('main');

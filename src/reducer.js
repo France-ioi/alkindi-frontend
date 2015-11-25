@@ -7,7 +7,24 @@ export function initialState () {
     maxScore: 300,
     alphabets: {},
     environment: {},
-    controls: []
+    controls: [],
+    toolOrder: ['tool1', 'tool2'],
+    toolMap: {
+      'tool1': {
+        type: 'TextDisplay',
+        title: 'Texte en clair',
+        settings: {
+          input: 'cleartext'
+        }
+      },
+      'tool2': {
+        type: 'TextDisplay',
+        title: 'Texte chiffré',
+        settings: {
+          input: 'ciphertext'
+        }
+      }
+    }
   };
 }
 
@@ -35,7 +52,6 @@ function combineQualifiers (q1, q2) {
 }
 
 function applySubstitution (substitution, text) {
-  console.log('applySubstitution', substitution, text);
   if (substitution.sourceAlphabet !== text.alphabet)
     return errorValue('alphabet mismatch');
   let pairs = substitution.pairs;
@@ -90,8 +106,16 @@ export default function reduce (state, action) {
       }
       console.log('dropped unknown COMPUTE action', action);
       return state;
-    case 'ADD_CONTROL':
-      return state;
+    case 'CONFIGURE_TOOL':
+      return {
+        ...state,
+        toolMap: {...state.toolMap,
+          [action.id]: {
+            ...state.toolMap[action.id],
+            settings: action.settings
+          }
+        }
+      };
     default:
       console.log('dropped unknown action', action);
   }
