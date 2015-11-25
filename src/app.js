@@ -14,6 +14,7 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import Shuffle from 'shuffle';
 import range from 'node-range';
+import {Button} from 'react-bootstrap';
 
 import Tool from './tool';
 import * as values from './values';
@@ -86,7 +87,20 @@ let App = connect(appSelector)(React.createClass({
     const tools = this.props.toolOrder.map(function (id) {
       return <div key={id}><Tool id={id} canRemove={true}/></div>;
     });
-    return (<div>{tools}</div>);
+    return (
+      <div>
+        {tools}
+        <Button onClick={this.addTool}>
+          <i className="fa fa-plus"/> TextDisplay
+        </Button>
+      </div>);
+  },
+  addTool: function () {
+    this.props.dispatch({
+      type: 'ADD_TOOL',
+      toolType: 'TextDisplay',
+      settings: {input: 'ciphertext'}
+    });
   }
 }));
 
