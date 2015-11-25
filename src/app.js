@@ -62,6 +62,18 @@ let store = createStore(reducer);
     source: 'cleartext',
     substitution: 'cipher',
     destination: 'ciphertext'
+  },
+  {
+    type: 'ADD_TOOL',
+    id: 'tool1',
+    toolType: 'TextDisplay',
+    settings: {input: 'cleartext'}
+  },
+  {
+    type: 'ADD_TOOL',
+    id: 'tool2',
+    toolType: 'TextDisplay',
+    settings: {input: 'ciphertext'}
   }
 ].forEach(function (action) { store.dispatch(action); });
 

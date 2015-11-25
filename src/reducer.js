@@ -8,23 +8,8 @@ export function initialState () {
     alphabets: {},
     environment: {},
     controls: [],
-    toolOrder: ['tool1', 'tool2'],
-    toolMap: {
-      'tool1': {
-        type: 'TextDisplay',
-        title: 'Texte en clair',
-        settings: {
-          input: 'cleartext'
-        }
-      },
-      'tool2': {
-        type: 'TextDisplay',
-        title: 'Texte chiffré',
-        settings: {
-          input: 'ciphertext'
-        }
-      }
-    }
+    toolOrder: [],
+    toolMap: {}
   };
 }
 
@@ -106,6 +91,18 @@ export default function reduce (state, action) {
       }
       console.log('dropped unknown COMPUTE action', action);
       return state;
+    case 'ADD_TOOL':
+      return {
+        ...state,
+        toolMap: {...state.toolMap,
+          [action.id]: {
+            type: action.toolType,
+            title: 'TODO: remove and compute',
+            settings: action.settings
+          }
+        },
+        toolOrder: [...state.toolOrder, action.id]
+      };
     case 'CONFIGURE_TOOL':
       return {
         ...state,
