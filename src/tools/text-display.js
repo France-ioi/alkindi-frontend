@@ -62,7 +62,6 @@ const TextDisplay = React.createClass({
     return (
       <div>
         <p>Affichage du texte contenu dans la variable <tt>{input}</tt>.</p>
-        <p>TODO: bouton pour changer la variable + callback</p>
         <IndirectTextDisplay source={input}/>
       </div>);
   }
