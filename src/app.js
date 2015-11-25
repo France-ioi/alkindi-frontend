@@ -84,7 +84,7 @@ const appSelector = function (state) {
 let App = connect(appSelector)(React.createClass({
   render: function () {
     const tools = this.props.toolOrder.map(function (id) {
-      return <div key={id}><Tool id={id}/></div>;
+      return <div key={id}><Tool id={id} canRemove={true}/></div>;
     });
     return (<div>{tools}</div>);
   }

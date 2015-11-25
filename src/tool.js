@@ -26,15 +26,16 @@ export default connect(toolSelector)(React.createClass({
     };
   },
   render: function () {
-    const {title,type,canClose} = this.props;
+    console.log(this.props);
+    const {title,type,canRemove} = this.props;
     const {collapsed} = this.state; // TODO: move to global state
     const header = [
       (<Button key="min" onClick={this.minClicked}><i className="fa fa-minus"></i></Button>), ' ',
       (<Button key="cfg" onClick={this.configureClicked}><i className="fa fa-wrench"></i></Button>), ' ',
       <span key="title">{title}</span>
     ];
-    if (canClose)
-      header.push(<Button key="close" className="pull-right"><i className="fa fa-times"></i></Button>);
+    if (canRemove)
+      header.push(<Button key="close" onClick={this.removeClicked} className="pull-right"><i className="fa fa-times"></i></Button>);
     let inner = false;
     if (!collapsed && type in registry) {
       let tool = registry[this.props.type];
@@ -53,5 +54,8 @@ export default connect(toolSelector)(React.createClass({
   configureClicked: function () {
     let {configuring} = this.state;
     this.setState({configuring: !configuring});
+  },
+  removeClicked: function () {
+    this.props.dispatch({type: 'REMOVE_TOOL', id: this.props.id});
   }
 }));

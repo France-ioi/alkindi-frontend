@@ -106,6 +106,17 @@ export default function reduce (state, action) {
         },
         toolOrder: [...state.toolOrder, id]
       };
+    case 'REMOVE_TOOL':
+      let {toolMap, toolOrder} = state;
+      const i = toolOrder.indexOf(action.id);
+      if (i === -1)
+        return state;
+      // Remove the id from toolOrder.
+      toolOrder = [...toolOrder.slice(0, i), ...toolOrder.slice(i + 1)];
+      // Make a copy of toolMap without the pair being removed.
+      toolMap = {...toolMap}
+      delete toolMap[action.id];
+      return {...state, toolMap, toolOrder};
     case 'CONFIGURE_TOOL':
       return {
         ...state,
