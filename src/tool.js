@@ -16,8 +16,7 @@ const toolSelector = createSelector(toolSelectorFun, function (x) { return x; })
 export default connect(toolSelector)(React.createClass({
   getInitialState: function () {
     return {
-      collapsed: false,
-      configuring: false
+      collapsed: false
     };
   },
   propTypes: function () {
@@ -39,7 +38,7 @@ export default connect(toolSelector)(React.createClass({
     let inner = false;
     if (!collapsed && type in registry) {
       let tool = registry[this.props.type];
-      let Component = this.state.configuring ? tool.configure : tool.normal;
+      let Component = this.props.state.configuring ? tool.configure : tool.normal;
       inner = (<Component {...this.props}/>);
     }
     return (
@@ -52,8 +51,14 @@ export default connect(toolSelector)(React.createClass({
     this.setState({collapsed: !collapsed});
   },
   configureClicked: function () {
-    let {configuring} = this.state;
-    this.setState({configuring: !configuring});
+    this.props.dispatch({
+      type: 'SET_TOOL_STATE',
+      id: this.props.id,
+      state: {
+        ...this.props.state,
+        configuring: !this.props.state.configuring
+      }
+    });
   },
   removeClicked: function () {
     this.props.dispatch({type: 'REMOVE_TOOL', id: this.props.id});

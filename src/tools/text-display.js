@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {Alert} from 'react-bootstrap';
+import {Alert,Button} from 'react-bootstrap';
 
 import {lookupByPropName,SelectVariable} from '../environment';
 
@@ -74,6 +74,7 @@ const ConfigureTextDisplay = React.createClass({
       <div>
         <p>Input variable</p>
         <SelectVariable type='text' value={input} eventKey='input' onSelect={this.onSelect} />
+        <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
       </div>
     );
   },
@@ -87,6 +88,16 @@ const ConfigureTextDisplay = React.createClass({
         [key]: value
       }
     })
+  },
+  close: function (event) {
+    this.props.dispatch({
+      type: 'SET_TOOL_STATE',
+      id: this.props.id,
+      state: {
+        ...this.props.state,
+        configuring: false
+      }
+    });
   }
 });
 

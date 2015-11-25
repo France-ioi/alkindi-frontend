@@ -101,7 +101,10 @@ export default function reduce (state, action) {
           [id]: {
             type: action.toolType,
             title: 'TODO: remove and compute',
-            settings: action.settings
+            settings: action.settings,
+            state: action.state || {
+              configuring: false
+            }
           }
         },
         toolOrder: [...state.toolOrder, id]
@@ -124,6 +127,16 @@ export default function reduce (state, action) {
           [action.id]: {
             ...state.toolMap[action.id],
             settings: action.settings
+          }
+        }
+      };
+    case 'SET_TOOL_STATE':
+      return {
+        ...state,
+        toolMap: {...state.toolMap,
+          [action.id]: {
+            ...state.toolMap[action.id],
+            state: action.state
           }
         }
       };

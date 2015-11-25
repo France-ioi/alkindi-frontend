@@ -99,7 +99,8 @@ let App = connect(appSelector)(React.createClass({
     this.props.dispatch({
       type: 'ADD_TOOL',
       toolType: 'TextDisplay',
-      settings: {input: 'ciphertext'}
+      settings: {input: 'ciphertext'},
+      state: {configuring: true}
     });
   }
 }));
