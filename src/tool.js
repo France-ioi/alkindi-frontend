@@ -3,7 +3,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {Button, Panel} from 'react-bootstrap';
+import {Button, ButtonGroup, Panel} from 'react-bootstrap';
 
 import registry from './tool-registry';
 
@@ -26,21 +26,24 @@ export default connect(toolSelector)(React.createClass({
   },
   render: function () {
     console.log(this.props);
-    const {title,type,canRemove} = this.props;
+    const {title,type,canRemove,canConfigure} = this.props;
     const {collapsed} = this.state; // TODO: move to global state
-    const header = [
-      (<Button key="min" onClick={this.minClicked}><i className="fa fa-minus"></i></Button>), ' ',
-      (<Button key="cfg" onClick={this.configureClicked}><i className="fa fa-wrench"></i></Button>), ' ',
-      <span key="title">{title}</span>
-    ];
+    const rightButtons = [];
+    if (canConfigure)
+      rightButtons.push(<Button key="cfg" onClick={this.configureClicked}><i className="fa fa-wrench"></i></Button>);
     if (canRemove)
-      header.push(<Button key="close" onClick={this.removeClicked} className="pull-right"><i className="fa fa-times"></i></Button>);
+      rightButtons.push(<Button key="close" onClick={this.removeClicked}><i className="fa fa-times"></i></Button>);
     let inner = false;
     if (!collapsed && type in registry) {
       let tool = registry[this.props.type];
       let Component = this.props.state.configuring ? tool.configure : tool.normal;
       inner = (<Component {...this.props}/>);
     }
+    let header = [
+      (<Button key="min" onClick={this.minClicked}><i className="fa fa-minus"></i></Button>), ' ',
+      <span key="title">{title}</span>,
+      <ButtonGroup key="right" className="pull-right">{rightButtons}</ButtonGroup>
+    ];
     return (
       <Panel header={header}>{inner}</Panel>
     );
