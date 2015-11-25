@@ -65,13 +65,11 @@ let store = createStore(reducer);
   },
   {
     type: 'ADD_TOOL',
-    id: 'tool1',
     toolType: 'TextDisplay',
     settings: {input: 'cleartext'}
   },
   {
     type: 'ADD_TOOL',
-    id: 'tool2',
     toolType: 'TextDisplay',
     settings: {input: 'ciphertext'}
   }

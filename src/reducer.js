@@ -9,7 +9,8 @@ export function initialState () {
     environment: {},
     controls: [],
     toolOrder: [],
-    toolMap: {}
+    toolMap: {},
+    nextToolId: 1
   };
 }
 
@@ -92,16 +93,18 @@ export default function reduce (state, action) {
       console.log('dropped unknown COMPUTE action', action);
       return state;
     case 'ADD_TOOL':
+      const id = 't' + state.nextToolId;
       return {
         ...state,
+        nextToolId: id + 1,
         toolMap: {...state.toolMap,
-          [action.id]: {
+          [id]: {
             type: action.toolType,
             title: 'TODO: remove and compute',
             settings: action.settings
           }
         },
-        toolOrder: [...state.toolOrder, action.id]
+        toolOrder: [...state.toolOrder, id]
       };
     case 'CONFIGURE_TOOL':
       return {
