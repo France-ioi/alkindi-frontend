@@ -61,9 +61,10 @@ export const SelectVariable = connect(selSelectVariable)(React.createClass({
   render: function () {
     // TODO: set a unique id
     const id = this.props.prefix + '-select-variable';
-    const variables = this.props.variables;
+    const {value,variables} = this.props;
+    const title = value.length === 0 ? 'select a variable' : value;
     return (
-      <DropdownButton title={this.props.value} onSelect={this.onSelect} id={id}>
+      <DropdownButton title={title} onSelect={this.onSelect} id={id}>
         {variables.map(name => <MenuItem key={name} eventKey={name}>{name}</MenuItem>)}
       </DropdownButton>);
   },
