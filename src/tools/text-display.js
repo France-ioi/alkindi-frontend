@@ -153,7 +153,7 @@ const ConfigureTextDisplay = React.createClass({
 
 
 const buildTitle = function (props) {
-  return code.wrap([code.keyword('0', 'print'), ' ', code.variable('1', props.settings.input)]);
+  return code.wrap([code.keyword('0', 'print'), '(', code.variable('1', props.settings.input), ')']);
 };
 
 export default {
