@@ -118,7 +118,7 @@ const ConfigureTextDisplay = React.createClass({
   onSelect: function (event, key, value) {
     // Update our local state with the user's input.
     this.setState(function (state) {
-      return {...state, [key]: value};
+      return {...state, settings: {...state.settings, [key]: value}};
     });
   },
   close: function (event) {
@@ -126,7 +126,7 @@ const ConfigureTextDisplay = React.createClass({
     this.props.dispatch(
       updateTool(this.props.id, {
         state: {configuring: false},
-        settings: this.state
+        settings: this.state.settings
       }));
   }
 });
