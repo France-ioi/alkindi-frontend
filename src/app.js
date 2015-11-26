@@ -52,19 +52,23 @@ let store = createStore(reducer);
   },
   {
     type: 'IMPORT_SUBSTITUTION',
-    name: 'cipher',
-    sourceAlphabet: 'letters',
-    targetAlphabet: 'letters',
-    pairs: Shuffle.shuffle({deck: range(0, 26).toArray()}).cards.map(function (i) {
-      return {i: i, q: 'given'};
-    })
+    data: {
+      name: 'cipher',
+      sourceAlphabet: 'letters',
+      targetAlphabet: 'letters',
+      pairs: Shuffle.shuffle({deck: range(0, 26).toArray()}).cards.map(function (i) {
+        return {i: i, q: 'given'};
+      })
+    }
   },
   {
     type: 'COMPUTE',
     operation: 'substitute',
-    source: 'cleartext',
-    substitution: 'cipher',
-    destination: 'ciphertext'
+    data: {
+      source: 'cleartext',
+      substitution: 'cipher',
+      destination: 'ciphertext'
+    }
   },
   {
     type: 'ADD_TOOL',

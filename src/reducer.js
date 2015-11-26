@@ -21,6 +21,26 @@ const reduceImportText = function (state, data) {
   return envStore(state, data.name, value);
 };
 
+const reduceImportSubstitution = function (state, data) {
+  const sourceAlphabet = state.alphabets[data.sourceAlphabet];
+  const targetAlphabet = state.alphabets[data.targetAlphabet];
+  const value = importSubstitution(sourceAlphabet, targetAlphabet, data.pairs);
+  return envStore(state, data.name, value);
+}
+
+const reduceCompute = function (state, operation, data) {
+  // TODO: add an operations registry
+  switch (operation) {
+    case 'substitute':
+      let text = envLookup(state, data.source);
+      let substitution = envLookup(state, data.substitution);
+      let value = applySubstitution(substitution, text);
+      return envStore(state, data.destination, value);
+  }
+  console.log('dropped unknown COMPUTE action', operation);
+  return state;
+}
+
 const reduceAddTool = function (state, data) {
   const id = 't' + state.nextToolId;
   return {
@@ -90,23 +110,11 @@ export default function reduce (state, action) {
     case 'IMPORT_TEXT':
       return reduceImportText(state, action.data);
     case 'IMPORT_SUBSTITUTION':
-      var sourceAlphabet = state.alphabets[action.sourceAlphabet];
-      var targetAlphabet = state.alphabets[action.targetAlphabet];
-      let value = importSubstitution(sourceAlphabet, targetAlphabet, action.pairs);
-      return envStore(state, action.name, value);
+      return reduceImportSubstitution(state, action.data);
     case 'STORE':
       return envStore(state, action.name, action.value);
     case 'COMPUTE':
-      // TODO: add a operations registry
-      switch (action.operation) {
-        case 'substitute':
-          let text = envLookup(state, action.source);
-          let substitution = envLookup(state, action.substitution);
-          let value = applySubstitution(substitution, text);
-          return envStore(state, action.destination, value);
-      }
-      console.log('dropped unknown COMPUTE action', action);
-      return state;
+      return reduceCompute(state, action.operation, action.data);
     case 'ADD_TOOL':
       return reduceAddTool(state, action.data);
     case 'REMOVE_TOOL':
