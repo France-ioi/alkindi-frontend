@@ -26,7 +26,7 @@ const reduceImportSubstitution = function (state, data) {
   const targetAlphabet = state.alphabets[data.targetAlphabet];
   const value = importSubstitution(sourceAlphabet, targetAlphabet, data.pairs);
   return envStore(state, data.name, value);
-}
+};
 
 const reduceCompute = function (state, operation, data) {
   // TODO: add an operations registry
@@ -39,7 +39,7 @@ const reduceCompute = function (state, operation, data) {
   }
   console.log('dropped unknown COMPUTE action', operation);
   return state;
-}
+};
 
 const reduceAddTool = function (state, data) {
   const id = 't' + state.nextToolId;
@@ -125,4 +125,4 @@ export default function reduce (state, action) {
       console.log('dropped unknown action', action);
   }
   return state;
-}
+};
