@@ -14,19 +14,14 @@ const toolSelectorFun = function (state, props) {
 const toolSelector = createSelector(toolSelectorFun, function (x) { return x; });
 
 export default connect(toolSelector)(React.createClass({
-  getInitialState: function () {
-    return {
-      collapsed: false
-    };
-  },
   propTypes: function () {
     return {
       id: React.PropTypes.string
     };
   },
   render: function () {
-    const {title,type,canRemove,canConfigure} = this.props;
-    const {collapsed} = this.state; // TODO: move to global state
+    const {title,type,canRemove,canConfigure,state} = this.props;
+    const {collapsed} = state;
     const rightButtons = [];
     if (canConfigure)
       rightButtons.push(<Button key="cfg" onClick={this.configureClicked}><i className="fa fa-wrench"></i></Button>);
@@ -48,9 +43,15 @@ export default connect(toolSelector)(React.createClass({
     );
   },
   minClicked: function () {
-    // TODO: dispatch an action that modifies the global state
-    let {collapsed} = this.state;
-    this.setState({collapsed: !collapsed});
+    this.props.dispatch({
+      type: 'UPDATE_TOOL',
+      id: this.props.id,
+      data: {
+        state: {
+          collapsed: !this.props.state.collapsed
+        }
+      }
+    });
   },
   configureClicked: function () {
     this.props.dispatch({
