@@ -4,11 +4,21 @@ import {createSelector} from 'reselect';
 import {Alert,Button} from 'react-bootstrap';
 
 import {lookupByPropName,SelectVariable} from '../environment';
+import {updateTool} from '../actions';
+import code from '../code';
 
 // BareTextDisplay displays its 'text' property as a text.
 const BareTextDisplay = React.createClass({
+  propTypes: {
+    text: React.PropTypes.object,
+    columns: React.PropTypes.number,
+    lines: React.PropTypes.number
+  },
   getDefaultProps: function () {
-    return {};
+    return {
+      columns: 40,
+      lines: 6
+    };
   },
   render: function () {
     const {text} = this.props;
@@ -21,8 +31,8 @@ const BareTextDisplay = React.createClass({
     const symbols = text.alphabet.symbols;
     const iqArray = text.iqArray;
     const inserts = text.inserts || [];
-    const maxCols = 40;
-    const maxLines = 6;
+    const maxCols = this.props.columns;
+    const maxLines = this.props.lines;
     const lines = [];
     let offset = 0;
     const showInserts = false, insert = [];
@@ -55,24 +65,48 @@ const selIndirectTextDisplay = createSelector(
 );
 const IndirectTextDisplay = connect(selIndirectTextDisplay)(BareTextDisplay);
 
-// TextDisplay is the configurable UI component.
+// TextDisplay is the normal tool's UI.
 const TextDisplay = React.createClass({
+  propTypes: {
+    id: React.PropTypes.string,
+    settings: React.PropTypes.object
+  },
   render: function () {
     const {input} = this.props.settings;
     return (
       <div>
-        <p>Affichage du texte contenu dans la variable <tt>{input}</tt>.</p>
         <IndirectTextDisplay source={input}/>
       </div>);
   }
 });
 
-const ConfigureTextDisplay = React.createClass({
-  getInitialState: function () {
-    return {input: this.props.settings.input};
+// CollapsedTextDisplay is the collapsed view of the tool's UI.
+const CollapsedTextDisplay = React.createClass({
+  propTypes: {
+    id: React.PropTypes.string,
+    settings: React.PropTypes.object
   },
   render: function () {
-    const {input} = this.state;
+    const {input} = this.props.settings;
+    return (
+      <div>
+        <IndirectTextDisplay source={input} lines={2}/>
+      </div>);
+  }
+});
+
+const ConfigureTextDisplay = React.createClass({
+  propTypes: {
+    id: React.PropTypes.string,
+    settings: React.PropTypes.object
+  },
+  getInitialState: function () {
+    // Initialize the settings from props.
+    return {settings: this.props.settings};
+  },
+  render: function () {
+    // Read the settings from our local state.
+    const {input} = this.state.settings;
     return (
       <div>
         <p>Input variable</p>
@@ -82,23 +116,29 @@ const ConfigureTextDisplay = React.createClass({
     );
   },
   onSelect: function (event, key, value) {
+    // Update our local state with the user's input.
     this.setState(function (state) {
       return {...state, [key]: value};
     });
   },
   close: function (event) {
-    this.props.dispatch({
-      type: 'UPDATE_TOOL',
-      id: this.props.id,
-      data: {
+    // Exit configuration mode and update the tool's settings.
+    this.props.dispatch(
+      updateTool(this.props.id, {
         state: {configuring: false},
         settings: this.state
-      }
-    });
+      }));
   }
 });
 
+
+const buildTitle = function (props) {
+  return code.wrap([code.keyword('print'), ' ', code.variable(props.settings.input)]);
+};
+
 export default {
   normal: TextDisplay,
-  configure: ConfigureTextDisplay
+  collapsed: CollapsedTextDisplay,
+  configure: ConfigureTextDisplay,
+  buildTitle: buildTitle
 };

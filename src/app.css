@@ -64,3 +64,19 @@ character substitutions tables
 	text-align: center;
 	font-weight: bold;
 }
+
+/*
+
+ code fragments
+
+*/
+.code {
+  font-family: monospace;
+  font-size: 18px;
+}
+.code-kw {
+  color: #8959A8;
+}
+.code-var {
+  color: #C82829;
+}
