@@ -66,13 +66,17 @@ let store = createStore(reducer);
   },
   {
     type: 'ADD_TOOL',
-    toolType: 'TextDisplay',
-    settings: {input: 'cleartext'}
+    data: {
+      type: 'TextDisplay',
+      settings: {input: 'cleartext'}
+    }
   },
   {
     type: 'ADD_TOOL',
-    toolType: 'TextDisplay',
-    settings: {input: 'ciphertext'}
+    data: {
+      type: 'TextDisplay',
+      settings: {input: 'ciphertext'}
+    }
   }
 ].forEach(function (action) { store.dispatch(action); });
 
@@ -98,9 +102,11 @@ let App = connect(appSelector)(React.createClass({
   addTool: function () {
     this.props.dispatch({
       type: 'ADD_TOOL',
-      toolType: 'TextDisplay',
-      settings: {input: 'ciphertext'},
-      state: {configuring: true}
+      data: {
+        type: 'TextDisplay',
+        settings: {input: 'ciphertext'},
+        state: {configuring: true}
+      }
     });
   }
 }));

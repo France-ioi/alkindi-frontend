@@ -53,6 +53,38 @@ function applySubstitution (substitution, text) {
   };
 }
 
+const addTool = function (state, data) {
+  const id = 't' + state.nextToolId;
+  return {
+    ...state,
+    nextToolId: state.nextToolId + 1,
+    toolMap: {...state.toolMap,
+      [id]: {
+        type: data.type,
+        title: 'TODO: remove and compute',
+        settings: data.settings,
+        state: data.state || {
+          configuring: false
+        }
+      }
+    },
+    toolOrder: [...state.toolOrder, id]
+  };
+};
+
+const removeTool = function (state, id) {
+  let {toolMap, toolOrder} = state;
+  const i = toolOrder.indexOf(id);
+  if (i === -1)
+    return state;
+  // Remove the id from toolOrder.
+  toolOrder = [...toolOrder.slice(0, i), ...toolOrder.slice(i + 1)];
+  // Make a copy of toolMap without the pair being removed.
+  toolMap = {...toolMap}
+  delete toolMap[id];
+  return {...state, toolMap, toolOrder};
+};
+
 const updateTool = function (state, id, data) {
   const toolMap = state.toolMap,
         tool = toolMap[id],
@@ -110,33 +142,9 @@ export default function reduce (state, action) {
       console.log('dropped unknown COMPUTE action', action);
       return state;
     case 'ADD_TOOL':
-      const id = 't' + state.nextToolId;
-      return {
-        ...state,
-        nextToolId: state.nextToolId + 1,
-        toolMap: {...state.toolMap,
-          [id]: {
-            type: action.toolType,
-            title: 'TODO: remove and compute',
-            settings: action.settings,
-            state: action.state || {
-              configuring: false
-            }
-          }
-        },
-        toolOrder: [...state.toolOrder, id]
-      };
+      return addTool(state, action.data);
     case 'REMOVE_TOOL':
-      let {toolMap, toolOrder} = state;
-      const i = toolOrder.indexOf(action.id);
-      if (i === -1)
-        return state;
-      // Remove the id from toolOrder.
-      toolOrder = [...toolOrder.slice(0, i), ...toolOrder.slice(i + 1)];
-      // Make a copy of toolMap without the pair being removed.
-      toolMap = {...toolMap}
-      delete toolMap[action.id];
-      return {...state, toolMap, toolOrder};
+      return removeTool(state, action.id);
     case 'UPDATE_TOOL':
       return updateTool(state, action.id, action.data);
     default:
