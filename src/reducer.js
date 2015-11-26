@@ -1,5 +1,6 @@
 
 import {importText, importSubstitution, errorValue} from './values';
+import {envLookup, envStore} from './environment';
 
 export function initialState () {
   return {
@@ -11,20 +12,6 @@ export function initialState () {
     toolOrder: [],
     toolMap: {},
     nextToolId: 1
-  };
-}
-
-function envLookup (state, name) {
-  return state.environment[name];
-}
-
-function envStore (state, name, value) {
-  // TODO: check value validity
-  return {
-    ...state,
-    environment: {...state.environment,
-      [name]: value
-    }
   };
 }
 
@@ -53,7 +40,13 @@ function applySubstitution (substitution, text) {
   };
 }
 
-const addTool = function (state, data) {
+const reduceImportText = function (state, data) {
+  const alphabet = state.alphabets[data.alphabet];
+  const value = importText(alphabet, data.text, data.qualifier);
+  return envStore(state, data.name, value);
+};
+
+const reduceAddTool = function (state, data) {
   const id = 't' + state.nextToolId;
   return {
     ...state,
@@ -72,7 +65,7 @@ const addTool = function (state, data) {
   };
 };
 
-const removeTool = function (state, id) {
+const reduceRemoveTool = function (state, id) {
   let {toolMap, toolOrder} = state;
   const i = toolOrder.indexOf(id);
   if (i === -1)
@@ -85,7 +78,7 @@ const removeTool = function (state, id) {
   return {...state, toolMap, toolOrder};
 };
 
-const updateTool = function (state, id, data) {
+const reduceUpdateTool = function (state, id, data) {
   const toolMap = state.toolMap,
         tool = toolMap[id],
         toolState = tool.state,
@@ -120,9 +113,7 @@ export default function reduce (state, action) {
         }
       }
     case 'IMPORT_TEXT':
-      var alphabet = state.alphabets[action.alphabet];
-      var value = importText(alphabet, action.text, action.qualifier);
-      return envStore(state, action.name, value);
+      return reduceImportText(state, action.data);
     case 'IMPORT_SUBSTITUTION':
       var sourceAlphabet = state.alphabets[action.sourceAlphabet];
       var targetAlphabet = state.alphabets[action.targetAlphabet];
@@ -142,11 +133,11 @@ export default function reduce (state, action) {
       console.log('dropped unknown COMPUTE action', action);
       return state;
     case 'ADD_TOOL':
-      return addTool(state, action.data);
+      return reduceAddTool(state, action.data);
     case 'REMOVE_TOOL':
-      return removeTool(state, action.id);
+      return reduceRemoveTool(state, action.id);
     case 'UPDATE_TOOL':
-      return updateTool(state, action.id, action.data);
+      return reduceUpdateTool(state, action.id, action.data);
     default:
       console.log('dropped unknown action', action);
   }

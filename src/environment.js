@@ -3,6 +3,20 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
 
+export function envLookup (state, name) {
+  return state.environment[name];
+}
+
+export function envStore (state, name, value) {
+  // TODO: check value validity
+  return {
+    ...state,
+    environment: {...state.environment,
+      [name]: value
+    }
+  };
+}
+
 export function lookupByPropName (name) {
   return function (state, props) {
     return state.environment[props[name]];
