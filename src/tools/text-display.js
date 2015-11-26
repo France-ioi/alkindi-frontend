@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Alert,Button} from 'react-bootstrap';
+import classnames from 'classnames';
 
 import {lookupByPropName,SelectVariable} from '../environment';
 import {updateTool} from '../actions';
@@ -17,41 +18,60 @@ const BareTextDisplay = React.createClass({
   getDefaultProps: function () {
     return {
       columns: 40,
-      lines: 6
+      lines: 6,
+      lineHeight: 30
+    };
+  },
+  getInitialState: function (props) {
+    return {
+      scrollTop: 0
     };
   },
   render: function () {
-    const {text} = this.props;
+    const {text, columns, lines, lineHeight} = this.props;
+    const height = lines * lineHeight;
     // Validate the input value.
     if (typeof text === 'undefined')
-      return (<Alert bsStyle="warning">no value</Alert>);
+      return (<Alert bsStyle='warning'>no value</Alert>);
     if (text.type !== 'text')
-      return (<Alert bsStyle="danger">bad type ({text.type})</Alert>);
-    // Render the text block.
-    const symbols = text.alphabet.symbols;
-    const iqArray = text.iqArray;
-    const inserts = text.inserts || [];
-    const maxCols = this.props.columns;
-    const maxLines = this.props.lines;
-    const lines = [];
-    let offset = 0;
-    const showInserts = false, insert = [];
-    let iInsert = 0;
-    for (let i = 0; i < maxLines; i += 1) {
-      let cols = [];
-      for (let j = 0; j < maxCols; j += 1) {
-        if (showInserts && inserts[iInsert] && offset === inserts[iInsert][0]) {
-          cols.push(<span key={j} className="textInsert">{inserts[iInsert][1]}</span>);
-          iInsert += 1;
-        } else {
-          let iq = iqArray[offset];
-          cols.push(<span key={j} className={'q-'+iq.q}>{symbols[iq.i]}</span>);
-          offset += 1;
-        }
-      }
-      lines.push(<div key={i}>{cols}</div>);
+      return (<Alert bsStyle='danger'>bad type ({text.type})</Alert>);
+    // Compute the indices of the first and list line to render.
+    const lineCount = Math.trunc((text.iqArray.length + columns - 1) / columns);
+    let   firstLine = Math.trunc(this.state.scrollTop / lineHeight);
+    let   lastLine  = firstLine + lines;
+    // Include the line immediately above the top of the view, if there is one.
+    if (firstLine > 0) firstLine -= 1;
+    // Include the line immediately below the top of the view, if there is one.
+    if (lastLine < lineCount) lastLine += 1;
+    // Render the line elements, adding two anchors to make the view scrollable.
+    const lineElements = [];
+    lineElements.push(<div key="top" className='textTopAnchor'/>);
+    lineElements.push(<div key="bot" className='textBottomAnchor' style={{top: lineCount * lineHeight}}/>);
+    for (let i = firstLine; i < lastLine; i += 1) {
+      lineElements.push(this.renderLine(i));
     }
-    return (<div className='textBlock'>{lines}</div>);
+    return (<div ref='container' onScroll={this.onScroll} className='textBlock' style={{height: height}}>{lineElements}</div>);
+  },
+  onScroll: function (event) {
+    const scrollTop = this.refs.container.scrollTop;
+    this.setState({scrollTop});
+  },
+  renderLine: function (lineIndex) {
+    const {text, columns, lineHeight} = this.props;
+    const {iqArray,alphabet} = text;
+    const {symbols} = alphabet;
+    const position = lineIndex * columns;
+    const cols = [];
+    let maxColumn = iqArray.length - position;
+    if (maxColumn > columns)
+      maxColumn = columns;
+    for (let j = 0; j < maxColumn; j += 1) {
+      let iq = iqArray[position + j];
+      cols.push(<span key={j} className={classnames('textSym', 'q-'+iq.q)}>{symbols[iq.i]}</span>);
+    }
+    return (<div key={lineIndex} className='textLine' style={{top: lineIndex * lineHeight}}>
+      <span className='textPos'>{position}</span> {cols}
+    </div>);
   }
 });
 

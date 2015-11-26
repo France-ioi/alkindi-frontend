@@ -21,21 +21,44 @@ textarea.cipher {
 
 .textBlock {
   font-family: monospace;
+  position: relative;
+  overflow-y: auto;
 }
 .textBlock span {
   display: inline-block;
+  height: 26px;
+  font-size: 20px;
   margin: 2px;
   color: #000;
   background-color: #F0F0F0;
   cursor: default;
-  font-size: 20px;
 }
-.textBlock span:hover {
+.textBlock span.textSym:hover {
   color: #FFF;
   background-color: #000;
 }
 .textBlock span.textInsert {
  background-color: #FFF;
+}
+.textBlock span.textPos {
+  color: #888;
+  width: 60px;
+  text-align: right;
+  margin-right: 10px;
+}
+.textLine {
+  position: absolute;
+}
+.textTopAnchor, .textBottomAnchor {
+  position: absolute;
+  right: 0;
+  height: 1px;
+  width: 1px;
+  z-index: -1;
+  background-color: green;
+}
+.textTopAnchor {
+  top: 0;
 }
 
 /*
