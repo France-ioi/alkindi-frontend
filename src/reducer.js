@@ -1,5 +1,5 @@
 
-import {importText, importSubstitution, errorValue} from './values';
+import {importText, importSubstitution, applySubstitution, errorValue} from './values';
 import {envLookup, envStore} from './environment';
 
 export function initialState () {
@@ -12,31 +12,6 @@ export function initialState () {
     toolOrder: [],
     toolMap: {},
     nextToolId: 1
-  };
-}
-
-function combineQualifiers (q1, q2) {
-  if (q1 === 'given')
-    return q2;
-  if (q2 === 'given')
-    return q1;
-  console.log('COMBINE QUALIFIERS', q1, q2);
-  return 'complex';
-}
-
-function applySubstitution (substitution, text) {
-  if (substitution.sourceAlphabet !== text.alphabet)
-    return errorValue('alphabet mismatch');
-  let pairs = substitution.pairs;
-  let iqArray = text.iqArray.map(function (iq) {
-    let p = pairs[iq.i];
-    return {i: p.i, q: combineQualifiers(iq.q, p.q)};
-  });
-  return {
-    type: 'text',
-    alphabet: substitution.targetAlphabet,
-    iqArray: iqArray,
-    inserts: text.inserts
   };
 }
 
