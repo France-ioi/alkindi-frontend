@@ -110,7 +110,7 @@ let App = connect(appSelector)(React.createClass({
       type: 'ADD_TOOL',
       data: {
         type: 'TextDisplay',
-        settings: {input: 'ciphertext'},
+        settings: {input: ''},
         state: {configuring: true}
       }
     });
