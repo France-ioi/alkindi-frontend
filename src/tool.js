@@ -54,11 +54,12 @@ export default connect(toolSelector)(React.createClass({
   },
   configureClicked: function () {
     this.props.dispatch({
-      type: 'SET_TOOL_STATE',
+      type: 'UPDATE_TOOL',
       id: this.props.id,
-      state: {
-        ...this.props.state,
-        configuring: !this.props.state.configuring
+      data: {
+        state: {
+          configuring: !this.props.state.configuring
+        }
       }
     });
   },

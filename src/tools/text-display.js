@@ -68,8 +68,11 @@ const TextDisplay = React.createClass({
 });
 
 const ConfigureTextDisplay = React.createClass({
+  getInitialState: function () {
+    return {input: this.props.settings.input};
+  },
   render: function () {
-    const {input} = this.props.settings;
+    const {input} = this.state;
     return (
       <div>
         <p>Input variable</p>
@@ -79,23 +82,17 @@ const ConfigureTextDisplay = React.createClass({
     );
   },
   onSelect: function (event, key, value) {
-    // this.props.id, this.props.settings.input
-    this.props.dispatch({
-      type: 'CONFIGURE_TOOL',
-      id: this.props.id,
-      settings: {
-        ...this.props.settings,
-        [key]: value
-      }
-    })
+    this.setState(function (state) {
+      return {...state, [key]: value};
+    });
   },
   close: function (event) {
     this.props.dispatch({
-      type: 'SET_TOOL_STATE',
+      type: 'UPDATE_TOOL',
       id: this.props.id,
-      state: {
-        ...this.props.state,
-        configuring: false
+      data: {
+        state: {configuring: false},
+        settings: this.state
       }
     });
   }

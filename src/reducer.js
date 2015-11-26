@@ -53,6 +53,23 @@ function applySubstitution (substitution, text) {
   };
 }
 
+const updateTool = function (state, id, data) {
+  const toolMap = state.toolMap,
+        tool = toolMap[id],
+        toolState = tool.state,
+        settings = tool.settings;
+  return {
+    ...state,
+      toolMap: {...toolMap,
+        [id]: {
+          ...tool,
+          state: {...toolState, ...data.state},
+          settings: {...settings, ...data.settings}
+      }
+    }
+  };
+};
+
 export default function reduce (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
@@ -120,26 +137,8 @@ export default function reduce (state, action) {
       toolMap = {...toolMap}
       delete toolMap[action.id];
       return {...state, toolMap, toolOrder};
-    case 'CONFIGURE_TOOL':
-      return {
-        ...state,
-        toolMap: {...state.toolMap,
-          [action.id]: {
-            ...state.toolMap[action.id],
-            settings: action.settings
-          }
-        }
-      };
-    case 'SET_TOOL_STATE':
-      return {
-        ...state,
-        toolMap: {...state.toolMap,
-          [action.id]: {
-            ...state.toolMap[action.id],
-            state: action.state
-          }
-        }
-      };
+    case 'UPDATE_TOOL':
+      return updateTool(state, action.id, action.data);
     default:
       console.log('dropped unknown action', action);
   }
