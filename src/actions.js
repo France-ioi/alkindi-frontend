@@ -1,12 +1,13 @@
-
-export function updateToolState (toolId, state) {
+export function updateTool (toolId, data) {
   return {
     type: 'UPDATE_TOOL',
     id: toolId,
-    data: {
-      state: state
-    }
+    data: data
   };
+}
+
+export function updateToolState (toolId, state) {
+  return updateTool(toolId, {state: state});
 }
 
 export function removeTool (toolId) {

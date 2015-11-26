@@ -20,21 +20,27 @@ export default connect(toolSelector)(React.createClass({
     };
   },
   render: function () {
-    const {title,type,canRemove,canConfigure,state} = this.props;
-    const {collapsed} = state;
+    const {type,canRemove,canConfigure,state} = this.props;
+    const {collapsed,configuring} = state;
+    let mode = collapsed ? 'collapsed' : 'normal';
+    if (canConfigure && configuring)
+      mode = 'configure';
     const rightButtons = [];
     if (canConfigure)
-      rightButtons.push(<Button key="cfg" onClick={this.configureClicked}><i className="fa fa-wrench"></i></Button>);
+      rightButtons.push(<Button key="cfg" onClick={this.configureClicked} active={configuring}><i className="fa fa-wrench"/></Button>);
     if (canRemove)
-      rightButtons.push(<Button key="close" onClick={this.removeClicked}><i className="fa fa-times"></i></Button>);
-    let inner = false;
-    if (!collapsed && type in registry) {
-      let tool = registry[this.props.type];
-      let Component = this.props.state.configuring ? tool.configure : tool.normal;
+      rightButtons.push(<Button key="close" onClick={this.removeClicked}><i className="fa fa-times"/></Button>);
+    let inner = false, title;
+    if (type in registry) {
+      const tool = registry[this.props.type];
+      const Component = tool[mode];  // JSX requires uppercase first letter
       inner = (<Component {...this.props}/>);
+      title = tool.buildTitle(this.props);
+    } else {
+      title = "unknown tool type " + type;
     }
     let header = [
-      (<Button key="min" onClick={this.minClicked}><i className="fa fa-minus"></i></Button>), ' ',
+      (<Button key="min" onClick={this.minClicked} active={collapsed}><i className="fa fa-minus"></i></Button>), ' ',
       <span key="title">{title}</span>,
       <ButtonGroup key="right" className="pull-right">{rightButtons}</ButtonGroup>
     ];
