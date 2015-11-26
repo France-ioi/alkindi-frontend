@@ -6,7 +6,7 @@ import {createSelector} from 'reselect';
 import {Button, ButtonGroup, Panel} from 'react-bootstrap';
 
 import registry from './tool-registry';
-
+import {removeTool, updateToolState} from './actions';
 
 const toolSelectorFun = function (state, props) {
   return state.toolMap[props.id];
@@ -43,28 +43,14 @@ export default connect(toolSelector)(React.createClass({
     );
   },
   minClicked: function () {
-    this.props.dispatch({
-      type: 'UPDATE_TOOL',
-      id: this.props.id,
-      data: {
-        state: {
-          collapsed: !this.props.state.collapsed
-        }
-      }
-    });
+    this.props.dispatch(
+      updateToolState(this.props.id, {collapsed: !this.props.state.collapsed}));
   },
   configureClicked: function () {
-    this.props.dispatch({
-      type: 'UPDATE_TOOL',
-      id: this.props.id,
-      data: {
-        state: {
-          configuring: !this.props.state.configuring
-        }
-      }
-    });
+    this.props.dispatch(
+      updateToolState(this.props.id, {configuring: !this.props.state.configuring}));
   },
   removeClicked: function () {
-    this.props.dispatch({type: 'REMOVE_TOOL', id: this.props.id});
+    this.props.dispatch(removeTool(this.props.id));
   }
 }));
