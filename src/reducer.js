@@ -1,6 +1,7 @@
 
 import {importText, importSubstitution, applySubstitution, errorValue} from './values';
 import {envLookup, envStore} from './environment';
+import {getDefaultToolSettings} from './tool';
 
 export function initialState () {
   return {
@@ -43,6 +44,8 @@ const reduceCompute = function (state, operation, data) {
 
 const reduceAddTool = function (state, data) {
   const id = 't' + state.nextToolId;
+  const toolState = {configuring: false, ...data.state};
+  const settings = {...getDefaultToolSettings(data.type)(state), ...data.settings};
   return {
     ...state,
     nextToolId: state.nextToolId + 1,
@@ -50,10 +53,8 @@ const reduceAddTool = function (state, data) {
       [id]: {
         type: data.type,
         title: 'TODO: remove and compute',
-        settings: data.settings,
-        state: data.state || {
-          configuring: false
-        }
+        settings: settings,
+        state: toolState
       }
     },
     toolOrder: [...state.toolOrder, id]

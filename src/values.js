@@ -13,31 +13,47 @@ export function errorValue (message) {
 }
 
 export function importText (alphabet, string, qualifier) {
-  let value = {
+  const items = [];
+  const value = {
     type: 'text',
     alphabet: alphabet,
     source: string,
-    iqArray: [],
-    inserts: []
+    items: items
   };
-  let regexp = new RegExp(alphabet.pattern, 'g');
+  const regexp = new RegExp(alphabet.pattern, 'g');
   let lastIndex = -1;
   while (lastIndex < regexp.lastIndex) {
     lastIndex = regexp.lastIndex;
-    let match = regexp.exec(string);
+    const match = regexp.exec(string);
     if (match === null)
       break;
-    let startIndex = regexp.lastIndex - match[0].length;
+    const startIndex = regexp.lastIndex - match[0].length;
     if (startIndex > lastIndex) {
-      value.inserts.push([
-        value.iqArray.length,
-        string.slice(lastIndex, startIndex)
-      ]);
+      // Add literal characters.
+      string.slice(lastIndex, startIndex).split('').forEach(function (c) {
+        items.push({c: c});
+      });
     }
-    let index = alphabet.symbols.indexOf(match[0]);
-    value.iqArray.push({i: index, q: qualifier, s: 'TODO SOURCE'});
+    // Add recognized symbol.
+    const index = alphabet.symbols.indexOf(match[0]);
+    items.push({i: index, q: qualifier});
+  }
+  // Add trailing literal characters.
+  if (lastIndex < string.length) {
+    string.slice(lastIndex).split('').forEach(function (c) {
+        items.push({c: c});
+      });
   }
   return value;
+}
+
+export function editText (value, edit) {
+  const {insert, remove, position} = edit;
+  // TODO check value.aplhabet === insert.alphabet
+  // Copy and update the array.
+  const items = value.items.slice();
+  Array.prototype.splice.apply(items, [position, remove, ...insert.items]);
+  return {...value, items};
 }
 
 export function importSubstitution (sourceAlphabet, targetAlphabet, pairs) {
@@ -51,14 +67,16 @@ export function applySubstitution (substitution, text) {
   if (substitution.sourceAlphabet !== text.alphabet)
     return errorValue('alphabet mismatch');
   let pairs = substitution.pairs;
-  let iqArray = text.iqArray.map(function (iq) {
-    let p = pairs[iq.i];
-    return {i: p.i, q: combineQualifiers(iq.q, p.q)};
+  let items = text.items.map(function (item) {
+    // Pass literal characters unchanged.
+    if ('c' in item) return item;
+    // Apply the substitution to symbols of the alphabet.
+    let p = pairs[item.i];
+    return {i: p.i, q: combineQualifiers(item.q, p.q)};
   });
   return {
     type: 'text',
     alphabet: substitution.targetAlphabet,
-    iqArray: iqArray,
-    inserts: text.inserts
+    items: items
   };
 }

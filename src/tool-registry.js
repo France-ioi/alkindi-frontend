@@ -1,4 +1,5 @@
 import TextDisplay from './tools/text-display';
+import TextInput from './tools/text-input';
 
 // import Hints from './tools/hints';
 // import Substitution from './tools/substitution';
@@ -6,7 +7,8 @@ import TextDisplay from './tools/text-display';
 // import TextOutput from './tools/text-output';
 
 export default {
-   TextDisplay: TextDisplay
+   TextDisplay,
+   TextInput
    // Hints: Hints
    // Substitution: Substitution
 };

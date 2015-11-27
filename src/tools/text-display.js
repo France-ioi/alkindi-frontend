@@ -91,7 +91,11 @@ const buildTitle = function (props) {
 
 export default {
   normal: TextDisplay,
-  collapsed: CollapsedTextDisplay,
   configure: ConfigureTextDisplay,
-  buildTitle: buildTitle
+  buildTitle: buildTitle,
+  getDefaultSettings: function () {
+    return {
+      input: ''
+    };
+  }
 };

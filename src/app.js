@@ -14,9 +14,9 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import Shuffle from 'shuffle';
 import range from 'node-range';
-import {Button} from 'react-bootstrap';
+import {Button, ButtonGroup} from 'react-bootstrap';
 
-import Tool from './tool';
+import {Tool} from './tool';
 import * as values from './values';
 import reducer from './reducer';
 import {toChar} from './alpha';
@@ -83,6 +83,13 @@ let store = createStore(reducer);
       type: 'TextDisplay',
       settings: {input: 'ciphertext'}
     }
+  },
+  {
+    type: 'ADD_TOOL',
+    data: {
+      type: 'TextInput',
+      settings: {output: 'foo'}
+    }
   }
 ].forEach(function (action) { store.dispatch(action); });
 
@@ -94,23 +101,27 @@ const appSelector = function (state) {
 
 let App = connect(appSelector)(React.createClass({
   render: function () {
-    const tools = this.props.toolOrder.map(function (id) {
+    const tools = this.props.toolOrder.map(id => {
       return <div key={id}><Tool id={id} canRemove canConfigure/></div>;
+    });
+    const adders = ['TextDisplay', 'TextInput'].map(name => {
+      return (
+        <Button key={'+'+name} onClick={this.addTool} data-tooltype={name} >
+          <i className="fa fa-plus"/> {name}
+        </Button>);
     });
     return (
       <div>
         {tools}
-        <Button onClick={this.addTool}>
-          <i className="fa fa-plus"/> TextDisplay
-        </Button>
+        <ButtonGroup>{adders}</ButtonGroup>
       </div>);
   },
-  addTool: function () {
+  addTool: function (event) {
+    const toolType = event.currentTarget.getAttribute('data-tooltype');
     this.props.dispatch({
       type: 'ADD_TOOL',
       data: {
-        type: 'TextDisplay',
-        settings: {input: ''},
+        type: toolType,
         state: {configuring: true}
       }
     });

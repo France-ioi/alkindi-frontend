@@ -26,12 +26,16 @@ textarea.cipher {
 }
 .textBlock span {
   display: inline-block;
+  width: 10px;
   height: 26px;
   font-size: 20px;
   margin: 2px;
   color: #000;
-  background-color: #F0F0F0;
   cursor: default;
+  vertical-align: bottom;
+}
+.textBlock span.textSym {
+  background-color: #F0F0F0;
 }
 .textBlock span.textSym:hover {
   color: #FFF;
@@ -45,11 +49,17 @@ textarea.cipher {
   width: 60px;
   text-align: right;
   margin-right: 10px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-.textLine {
+.textBlock .textLine {
   position: absolute;
 }
-.textTopAnchor, .textBottomAnchor {
+.textBlock .textTopAnchor, .textBlock .textBottomAnchor {
   position: absolute;
   right: 0;
   height: 1px;
@@ -57,8 +67,14 @@ textarea.cipher {
   z-index: -1;
   background-color: green;
 }
-.textTopAnchor {
+.textBlock .textTopAnchor {
   top: 0;
+}
+.textBlock .textCursor {
+  border-bottom: 2px solid black;
+}
+.textBlock .textEnd.textCursor {
+  background-color: #FFF;
 }
 
 /*

@@ -13,7 +13,7 @@ const toolSelectorFun = function (state, props) {
 };
 const toolSelector = createSelector(toolSelectorFun, function (x) { return x; });
 
-export default connect(toolSelector)(React.createClass({
+export const Tool = connect(toolSelector)(React.createClass({
   propTypes: function () {
     return {
       id: React.PropTypes.string
@@ -22,9 +22,7 @@ export default connect(toolSelector)(React.createClass({
   render: function () {
     const {type,canRemove,canConfigure,state} = this.props;
     const {collapsed,configuring} = state;
-    let mode = collapsed ? 'collapsed' : 'normal';
-    if (canConfigure && configuring)
-      mode = 'configure';
+    const mode = (canConfigure && configuring) ? 'configure' : 'normal';
     const rightButtons = [];
     if (canConfigure)
       rightButtons.push(<Button key="cfg" onClick={this.configureClicked} active={configuring}><i className="fa fa-wrench"/></Button>);
@@ -33,9 +31,10 @@ export default connect(toolSelector)(React.createClass({
     let inner = false, title;
     if (type in registry) {
       const tool = registry[this.props.type];
+      const props = {...this.props, collapsed: collapsed};
       const Component = tool[mode];  // JSX requires uppercase first letter
-      inner = (<Component {...this.props}/>);
-      title = tool.buildTitle(this.props);
+      inner = (<Component {...props}/>);
+      title = tool.buildTitle(props);
     } else {
       title = "unknown tool type " + type;
     }
@@ -60,3 +59,10 @@ export default connect(toolSelector)(React.createClass({
     this.props.dispatch(removeTool(this.props.id));
   }
 }));
+
+export const getDefaultToolSettings = function (type) {
+  if (!(type in registry))
+    return undefined;
+  const tool = registry[type];
+  return tool.getDefaultSettings;
+};
