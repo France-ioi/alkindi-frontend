@@ -9,6 +9,8 @@ function keyword (key, text) {
 }
 
 function variable (key, text) {
+  if (typeof text === 'undefined')
+    return (<span key={key} className="code-hole">variable</span>);
   return (<span key={key} className="code-var">{text}</span>);
 }
 

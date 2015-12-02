@@ -119,3 +119,7 @@ character substitutions tables
 .code-var {
   color: #C82829;
 }
+.code-hole {
+  color: #888;
+  font-style: italic;
+}

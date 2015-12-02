@@ -17,22 +17,33 @@ export function envStore (state, name, value) {
   };
 }
 
-export function lookupByPropName (name) {
+// Look up in the environment the variable configured as the tool's input with
+// the specified name.
+export const lookupInputVar = function (name) {
   return function (state, props) {
-    return state.environment[props[name]];
+    const variable = props.tool.inputs[name];
+    return state.environment[variable];
   };
-}
+};
 
 function getVariables (state, props) {
+  const toolMap = state.toolMap;
   const environment = state.environment;
+  const filterType = props.type;
   const variables = [];
-  Object.keys(environment).forEach(function (name) {
-    if (typeof props.type !== 'undefined') {
-      // Filter out variables that have an incompatible type.
-      if (props.type !== environment[name].type)
-        return;
-    }
-    variables.push(name);
+  Object.keys(toolMap).forEach(function (id) {
+    const {outputs} = toolMap[id];
+    Object.keys(outputs).forEach(function (name) {
+      const variable = outputs[name];
+      if (typeof filterType !== 'undefined') {
+        // Filter out variables that have an incompatible type.
+        // XXX: we should use the tool's definition for the type of the
+        // variable, instead of looking up the last computed value.
+        if (variable in environment && filterType !== environment[variable].type)
+          return;
+      }
+      variables.push(variable);
+    });
   });
   return variables;
 }
@@ -62,7 +73,7 @@ export const SelectVariable = connect(selSelectVariable)(React.createClass({
     // TODO: set a unique id
     const id = this.props.prefix + '-select-variable';
     const {value,variables} = this.props;
-    const title = value.length === 0 ? 'select a variable' : value;
+    const title = (typeof value === 'string' && value.length > 0) ? value : 'select a variable';
     return (
       <DropdownButton title={title} onSelect={this.onSelect} id={id}>
         {variables.map(name => <MenuItem key={name} eventKey={name}>{name}</MenuItem>)}

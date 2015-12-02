@@ -10,38 +10,28 @@ import {importText} from '../values';
 
 // TextInput is the normal tool's UI.
 const TextInput = React.createClass({
-  propTypes: {
-    id: React.PropTypes.string,
-    settings: React.PropTypes.object
-  },
   render: function () {
-    const {value} = this.props.settings;
-    return (
-      <div>
-        <BareTextInput text={value} editable setText={this.setText} />
-      </div>);
+    const {input} = this.props.tool.compute;
+    return (<textarea ref='input' value={input} onChange={this.onChange} />);
   },
-  setText: function (text, event) {
-    const {id, settings} = this.props;
-    this.props.dispatch(
-      updateTool(id, {
-        settings: {...settings, value: text}
-      }));
+  onChange: function (event) {
+    const {id, dispatch} = this.props;
+    const input = this.refs.input.value;
+    dispatch(updateTool(id, {compute: {input: input}}));
   }
 });
 
 const ConfigureTextInput = React.createClass({
-  propTypes: {
-    id: React.PropTypes.string,
-    settings: React.PropTypes.object
-  },
   getInitialState: function () {
-    // Initialize the state from the settings prop.
-    return this.props.settings;
+    // Initialize our local state using the tool's settings.
+    return {
+      output: this.props.tool.output
+    };
   },
   render: function () {
     // Read the settings from our local state.
     const {output} = this.state;
+    // TODO: allow selecting the alphabet
     return (
       <div>
         <p>Output variable</p>
@@ -52,32 +42,57 @@ const ConfigureTextInput = React.createClass({
   },
   onChange: function (event, key, value) {
     // Update our local state with the user's input.
-    this.setState(function (state) {
-      return {...state, output: this.refs.output.getValue()};
-    });
+    this.setState({output: this.refs.output.getValue()});
   },
   close: function (event) {
-    // Exit configuration mode and update the tool's settings.
-    this.props.dispatch(
-      updateTool(this.props.id, {
-        state: {configuring: false},
-        settings: this.state
+    // Exit configuration mode and update the tool's configuration.
+    const {id, dispatch} = this.props;
+    const {output} = this.state;
+    dispatch(
+      updateTool(id, {
+        configuring: false,
+        outputs: {
+          output: output
+        }
       }));
   }
 });
 
-const buildTitle = function (props) {
-  return code.wrap([code.variable('1', props.settings.output), ' = (text)']);
+const getDefaults = function () {
+  return {
+    compute: {
+      input: '',            // text to import
+      alphabet: undefined,  // alphabet to use for import
+      qualifier: 'given'    // qualifier to apply to the symbols
+    },
+    outputs: {
+      output: undefined     // name of the variable that receives the text
+    }
+  };
+};
+
+const getTitle = function (tool) {
+  const maxTextLength = 20;
+  const {compute, outputs} = tool;
+  const {input} = compute;
+  const {output} = outputs;
+  const shortenedInput = (input.length > maxTextLength) ? input.slice(0, maxTextLength) + '…' : input;
+  // TODO: include the alphabet in the display?
+  return code.wrap([code.variable('1', output), ' = "', shortenedInput, '"']);
+};
+
+const compute = function (tool, inputs) {
+  const {input, alphabet, qualifier} = tool.compute;
+  const text = importText(alphabet, input, qualifier);
+  return {
+    output: text
+  };
 };
 
 export default {
   normal: TextInput,
   configure: ConfigureTextInput,
-  buildTitle: buildTitle,
-  getDefaultSettings: function (state) {
-    return {
-      output: '_',
-      value: importText(state.alphabets.letters, '', 'input')
-    };
-  }
+  getDefaults,
+  getTitle,
+  compute
 };
