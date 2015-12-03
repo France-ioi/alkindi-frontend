@@ -38,7 +38,6 @@ const ConfigureTextInput = React.createClass({
     // TODO: allow selecting the alphabet
     return (
       <div>
-        <p>Output variable</p>
         <Input type='text' ref='output' value={output} label="Output variable" placeholder="Enter variable name" onChange={this.onChange} />
         <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
       </div>
