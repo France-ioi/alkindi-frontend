@@ -33,7 +33,7 @@ require('./app.css');
 // Create the global state store.
 let store = createStore(reducer);
 
-// Fire some actions to set up the environments.
+// Dispatch some actions to set up the initial state.
 [
   {
     type: 'ADD_TOOL',
@@ -96,11 +96,10 @@ function autoRefreshCallback () {
   const state = store.getState();
   if (!state.autoRefresh)
     return;
-  const {toolOrder} = state;
+  const {refreshMap, toolOrder} = state;
   for (let i = 0; i < toolOrder.length; i += 1) {
     const id = toolOrder[i];
-    const tool = state.toolMap[id];
-    if (tool.invalidated) {
+    if (refreshMap[id]) {
       store.dispatch({type: 'REFRESH_TOOL', id: id});
       break;
     }

@@ -13,10 +13,22 @@ import {removeTool, updateTool} from './actions';
 const toolSelectorFun = function (state, props) {
   return state.toolMap[props.id];
 };
+const inputsSelectorFun = function (state, props) {
+  return state.toolInputs[props.id];
+};
+const outputsSelectorFun = function (state, props) {
+  return state.toolOutputs[props.id];
+};
+const needRefreshSelectorFun = function (state, props) {
+  return state.refreshMap[props.id];
+};
 const toolSelector = createSelector(
   toolSelectorFun,
-  function (tool) {
-    return {tool};
+  inputsSelectorFun,
+  outputsSelectorFun,
+  needRefreshSelectorFun,
+  function (tool, inputs, outputs, needRefresh) {
+    return {tool, inputs, outputs, needRefresh};
   }
 );
 
@@ -27,28 +39,32 @@ export const Tool = connect(toolSelector)(React.createClass({
     };
   },
   render: function () {
-    const {type,canRemove,canConfigure,collapsed,invalidated,configuring} = this.props.tool;
+    console.log('render', this.props.id);
+    const {tool, inputs, outputs, needRefresh} = this.props;
+    const {type,canRemove,canConfigure,collapsed,configuring} = this.props.tool;
     const mode = (canConfigure && configuring) ? 'configure' : 'normal';
     const rightButtons = [];
     if (canConfigure)
       rightButtons.push(<Button key="configure" onClick={this.configureClicked} active={configuring}><i className="fa fa-wrench"/></Button>);
     if (canRemove)
       rightButtons.push(<Button key="remove" onClick={this.removeClicked}><i className="fa fa-times"/></Button>);
-    let inner = false, title;
+    let title, inner;
     if (type in registry) {
       const toolSpec = registry[type];
+      title = toolSpec.getTitle(tool);
       const Component = toolSpec[mode];  // JSX requires the uppercase first letter
-      inner = (<Component {...this.props}/>);
-      title = toolSpec.getTitle(this.props.tool);
+      if (configuring || inputs)
+        inner = (<Component {...this.props}/>);
     } else {
       title = "unknown tool type " + type;
+      inner = false;
     }
-    let header = [
+    const header = [
       (<Button key="collapse" onClick={this.collapseClicked} active={collapsed}><i className="fa fa-minus"></i></Button>), ' ',
       <span key="title">{title}</span>
     ];
-    if (invalidated)
-      header.push(<Label key="invalidated" bsStyle="warning">invalidated</Label>);
+    if (needRefresh)
+      header.push(<Label key="invalidated" bsStyle="warning">refresh</Label>);
     header.push(<ButtonGroup key="rightButtons" className="pull-right">{rightButtons}</ButtonGroup>);
     return (<Panel header={header}>{inner}</Panel>);
   },
@@ -98,21 +114,18 @@ function buildToolInputMap (state) {
 }
 
 export const invalidateTool = function (state, id) {
+  console.log('invalidate', id);
   // Build the (input variable → tool IDs) map.
   const inputMap = buildToolInputMap(state);
-  // Invalidated tools are added to a map that will be merge into the tool map.
-  const invalidatedToolMap = {};
+  // Invalidated tools are added to a map that will be merged into the tool map.
+  const refreshMap = {...state.refreshMap};
   const queue = new Deque([id]);
   while (queue.length > 0) {
     id = queue.shift();
-    // Do not invalidate the same tool twice — this should never happen!
-    if (id in invalidatedToolMap) {
-      console.log('invalidateTool avoided a cycle', JSON.dump({id, state}));
-      continue;
-    }
-    // Mark the tool as invalidated in the new tool map.
+    // Set the refresh flag.
+    refreshMap[id] = true;
+    // Cascade invalidation to outputs.
     const tool = state.toolMap[id];
-    invalidatedToolMap[id] = {...tool, invalidated: true};
     const outputs = tool.outputs;
     Object.keys(outputs).forEach(function (name) {
       const output = outputs[name];
@@ -122,15 +135,12 @@ export const invalidateTool = function (state, id) {
     });
   }
   // Install the new tool map.
-  return {
-    ...state,
-    toolMap: {...state.toolMap, ...invalidatedToolMap}
-  };
+  return {...state, refreshMap};
 };
 
 // Look up and return the input values for the specified tool, or undefined
 // if any of the inputs is undefined.
-export const lookupToolInputValues = function (tool, environment) {
+export const lookupToolInputs = function (tool, environment) {
   const {inputs} = tool;
   const inputValues = {};
   let haveUndefined = false;
@@ -145,32 +155,10 @@ export const lookupToolInputValues = function (tool, environment) {
   return haveUndefined ? void 0 : inputValues;
 };
 
-// Compute and return the new output values for the specified tool.
-// An empty object is return if the output values cannot be computed.
-export const computeToolOutputValues = function (tool, inputValues) {
-  const toolSpec = registry[tool.type];
+// Compute and return the tool's output values, using the given input values.
+export const computeToolOutputs = function (tool, inputValues) {
   if (typeof inputValues === 'undefined')
     return {};
+  const toolSpec = registry[tool.type];
   return toolSpec.compute(tool, inputValues);
-};
-
-// Build a partial environment mapping a tool's output variables to the given
-// output values.
-export const buildToolOutputEnv = function (tool, outputValues) {
-  const {outputs} = tool;
-  const outputEnv = {};
-  Object.keys(outputs).forEach(function (name) {
-    const variable = outputs[name];
-    const value = outputValues[name];
-    outputEnv[variable] = value;
-  });
-  return outputEnv;
-};
-
-// Compute the tool's output in the given environment and return an update
-// to the environment.
-export const runTool = function (tool, environment) {
-  const inputValues = lookupToolInputValues(tool, environment);
-  const outputValues = computeToolOutputValues(tool, inputValues);
-  return buildToolOutputEnv(tool, outputValues);
 };

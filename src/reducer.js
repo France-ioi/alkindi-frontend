@@ -2,19 +2,20 @@
 import deepmerge from 'deepmerge';
 
 import {importText, importSubstitution, applySubstitution, errorValue} from './values';
-import {envLookup, envStore} from './environment';
-import {newTool, invalidateTool, runTool} from './tool';
+import {newTool, invalidateTool, lookupToolInputs, computeToolOutputs} from './tool';
 
 const initialState = function () {
   return {
     score: 300,
     maxScore: 300,
     alphabets: {},
-    environment: {},
     controls: [],
     toolOrder: [],
     toolMap: {},
+    toolInputs: {},
+    toolOutputs: {},
     nextToolId: 1,
+    refreshMap: {},
     autoRefresh: true
   };
 }
@@ -99,22 +100,41 @@ const reduceUpdateTool = function (state, id, data) {
   return invalidateTool(state, id);
 };
 
+// Considering only valid (non-invalidated) tools, build a map from output
+// variable name to its value.
+function buildEnvironment (state) {
+  const map = {};
+  Object.keys(state.toolMap).forEach(function (id) {
+    const outputValues = state.toolOutputs[id];
+    if (typeof outputValues !== 'undefined') {
+      const {outputs} = state.toolMap[id];
+      Object.keys(outputValues).forEach(function (name) {
+        const variable = outputs[name];
+        map[variable] = outputValues[name];
+      });
+    }
+  });
+  return map;
+}
+
 const reduceRefreshTool = function (state, id) {
-  const {toolMap, environment} = state;
+  console.log('refresh', id);
+  const {toolMap, toolInputs, toolOutputs} = state;
   const tool = toolMap[id];
-  const outputEnv = runTool(tool, environment);
+  const environment = buildEnvironment(state);
+  const inputValues = lookupToolInputs(tool, environment);
+  const outputValues = computeToolOutputs(tool, inputValues);
+  const refreshMap = {...state.refreshMap};
+  delete refreshMap[id];
   return {
     ...state,
-    environment: {...environment, ...outputEnv},
-    toolMap: {
-      ...toolMap,
-      [id]: {...tool, invalidated: false}
-    }
+    refreshMap,
+    toolInputs: {...toolInputs, [id]: inputValues},
+    toolOutputs: {...toolOutputs, [id]: outputValues}
   };
 };
 
 export default function reduce (state, action) {
-  window.state = state;
   switch (action.type) {
     case '@@redux/INIT':
       return initialState();

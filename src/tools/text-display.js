@@ -3,25 +3,17 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 
-import {lookupInputVar, SelectVariable} from '../environment';
+import {SelectVariable} from '../environment';
 import {updateTool} from '../actions';
 import code from '../code';
 import BareTextDisplay from '../ui/text';
 
-// The selector looks up the configured input variable in the environment,
-// and passes the value to the TextDisplay component in property named 'input'.
-const selTextDisplay = createSelector(
-  lookupInputVar('input'),
-  function (input) {
-    return {input};
-  }
-);
-
 // TextDisplay is the normal tool's UI.
 const TextDisplay = React.createClass({
   render: function () {
-    const {input, collapsed} = this.props;
+    const {collapsed} = this.props.tool;
     const nLines = collapsed ? 2 : 10;
+    const input = this.props.inputs.input;
     return (
       <div>
         <BareTextDisplay text={input} lines={nLines} />
@@ -82,7 +74,7 @@ const compute = function (inputs, settings, state) {
 };
 
 export default {
-  normal: connect(selTextDisplay)(TextDisplay),
+  normal: TextDisplay,
   configure: ConfigureTextDisplay,
   getDefaults,
   getTitle,
