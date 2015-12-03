@@ -6,6 +6,7 @@ import {createSelector} from 'reselect';
 import {Button, ButtonGroup, Panel, Label} from 'react-bootstrap';
 import deepmerge from 'deepmerge';
 import Deque from 'collections/deque';
+import classnames from 'classnames';
 
 import registry from './tool-registry';
 import {removeTool, updateTool} from './actions';
@@ -59,8 +60,9 @@ export const Tool = connect(toolSelector)(React.createClass({
       title = "unknown tool type " + type;
       inner = false;
     }
+    const collapseClasses = classnames(['fa', collapsed ? 'fa-plus' : 'fa-minus']);
     const header = [
-      (<Button key="collapse" onClick={this.collapseClicked} active={collapsed}><i className="fa fa-minus"></i></Button>), ' ',
+      (<Button key="collapse" onClick={this.collapseClicked} active={collapsed}><i className={collapseClasses}></i></Button>), ' ',
       <span key="title">{title}</span>
     ];
     if (needRefresh)
