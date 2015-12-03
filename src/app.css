@@ -11,12 +11,9 @@
   font-weight: bold;
 }
 
-.cipher {
-  font-family: 'Alien';
-}
-textarea.cipher {
+textarea.full-width {
+  width: 100%;
   max-width: 100%;
-  resize: both;
 }
 
 .textBlock {
@@ -121,5 +118,5 @@ character substitutions tables
 }
 .code-hole {
   color: #888;
-  font-style: italic;
+  font-styl:e italic;
 }

@@ -7,12 +7,16 @@ import {updateTool} from '../actions';
 import code from '../code';
 import BareTextInput from '../ui/text';
 import {importText} from '../values';
+import * as alphabets from '../alphabets';
 
 // TextInput is the normal tool's UI.
 const TextInput = React.createClass({
   render: function () {
-    const {input} = this.props.tool.compute;
-    return (<textarea ref='input' value={input} onChange={this.onChange} />);
+    const {compute, collapsed} = this.props.tool;
+    const {input} = compute;
+    const rows = collapsed ? 2 : 6;
+    console.log(this.props.tool.collapsed);
+    return (<textarea ref='input' className="full-width" rows={rows} value={input} onChange={this.onChange} />);
   },
   onChange: function (event) {
     const {id, dispatch} = this.props;
@@ -62,7 +66,7 @@ const getDefaults = function () {
   return {
     compute: {
       input: '',            // text to import
-      alphabet: undefined,  // alphabet to use for import
+      alphabet: alphabets.letters,  // alphabet to use for import
       qualifier: 'given'    // qualifier to apply to the symbols
     },
     outputs: {
