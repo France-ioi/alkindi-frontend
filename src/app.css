@@ -95,6 +95,9 @@ character substitutions tables
 .char-pairs:first-child .char-subs {
 	border: 1px solid #000;
 }
+.char-filler {
+  color: #a0a0a0;
+}
 
 #hint-score {
 	text-align: center;

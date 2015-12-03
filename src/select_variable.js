@@ -34,25 +34,25 @@ const selSelectVariable = createSelector(
     return {variables};
   });
 
-export const SelectVariable = connect(selSelectVariable)(React.createClass({
+export const SelectVariable = connect(selSelectVariable, false, false, {withRef: true})(React.createClass({
+  propTypes: {
+    value: React.PropTypes.string,
+    prefix: React.PropTypes.string
+  },
   getDefaultProps: function () {
     return {
-      value: undefined,
-      eventKey: '',
-      onSelect: x => x,
       prefix: 'single'
     };
   },
-  propTypes: {
-    value: React.PropTypes.string,
-    eventKey: React.PropTypes.string,
-    onSelect: React.PropTypes.func,
-    prefix: React.PropTypes.string
+  getInitialState: function () {
+    return {
+      value: this.props.value
+    };
   },
   render: function () {
-    // TODO: set a unique id
     const id = this.props.prefix + '-select-variable';
-    const {value,variables} = this.props;
+    const {variables} = this.props;
+    const {value} = this.state;
     const title = (typeof value === 'string' && value.length > 0) ? value : 'select a variable';
     return (
       <DropdownButton title={title} onSelect={this.onSelect} id={id}>
@@ -60,6 +60,9 @@ export const SelectVariable = connect(selSelectVariable)(React.createClass({
       </DropdownButton>);
   },
   onSelect: function (event, key) {
-    this.props.onSelect(event, this.props.eventKey, key);
+    this.setState({value: key});
+  },
+  getValue: function () {
+    return this.state.value;
   }
 }));

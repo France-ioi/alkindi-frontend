@@ -29,7 +29,7 @@ const ConfigureTextInput = React.createClass({
   getInitialState: function () {
     // Initialize our local state using the tool's settings.
     return {
-      output: this.props.tool.output
+      output: this.props.tool.outputs.output
     };
   },
   render: function () {
@@ -43,14 +43,10 @@ const ConfigureTextInput = React.createClass({
       </div>
     );
   },
-  onChange: function (event, key, value) {
-    // Update our local state with the user's input.
-    this.setState({output: this.refs.output.getValue()});
-  },
   close: function (event) {
     // Exit configuration mode and update the tool's configuration.
     const {id, dispatch} = this.props;
-    const {output} = this.state;
+    const {output} = this.refs.output.getValue();
     dispatch(
       updateTool(id, {
         configuring: false,

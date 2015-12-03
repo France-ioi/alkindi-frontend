@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 
-import {SelectVariable} from '../environment';
+import {SelectVariable} from '../select_variable';
 import {updateTool} from '../actions';
 import code from '../code';
 import BareTextDisplay from '../ui/text';
@@ -34,19 +34,16 @@ const ConfigureTextDisplay = React.createClass({
     return (
       <div>
         <p>Input variable</p>
-        <SelectVariable type='text' value={input} eventKey='input' onSelect={this.onSelect} />
+        <SelectVariable ref='input' type='text' value={input} />
         <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
       </div>
     );
   },
-  onSelect: function (event, key, value) {
-    // Update our local state with the user's input.
-    this.setState({[key]: value});
-  },
   close: function (event) {
     // Exit configuration mode and update the tool's input variable.
     const {id, dispatch} = this.props;
-    const {input} = this.state;
+    // XXX figure out how to get connect() to proxy getValue()
+    const input = this.refs.input.getWrappedInstance().getValue();
     dispatch(updateTool(id, {
       configuring: false,
       inputs: {input}

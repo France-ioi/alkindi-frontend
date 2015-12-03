@@ -66,7 +66,7 @@ let App = connect(appSelector)(React.createClass({
     const tools = this.props.toolOrder.map(id => {
       return <div key={id}><Tool id={id}/></div>;
     });
-    const adders = ['TextDisplay', 'TextInput'].map(name => {
+    const adders = ['TextDisplay', 'TextInput', 'SubstitutionInput'].map(name => {
       return (
         <Button key={'+'+name} onClick={this.addTool} data-tooltype={name} >
           <i className="fa fa-plus"/> {name}
