@@ -157,23 +157,6 @@ const SubstitutionInput = React.createClass({
     const {dispatch, id} = this.props;
     const update = {compute: {pairs: undefined}};
     dispatch(updateTool(id, update));
-  findPairByTarget: function (targetSym) {
-    const {indexMap, sourceAlphabet, targetAlphabet} = this.props.outputs.output;
-    const targetIndex = targetAlphabet.symbols.indexOf(targetSym);
-    if (targetIndex === -1)
-      return;
-    const sourceIndex = indexMap.findIndex(function (pair) {
-      return pair.i === targetIndex;
-    });
-    if (sourceIndex === -1)
-      return;
-    return {
-      source: sourceAlphabet.symbols[sourceIndex],
-      target: {
-        c: targetSym,
-        l: indexMap[sourceIndex].l
-      }
-    };
   }
 });
 
@@ -280,7 +263,7 @@ function getIdentityMapping (tool) {
     return;
   const mapping = {};
   alphabet.symbols.map(function (c) {
-    mapping[c] = {c: c, l: c === 'A'};
+    mapping[c] = {c: c, l: false};
   });
   return mapping;
 }
