@@ -218,6 +218,7 @@ const ConfigureSubstitutionInput = React.createClass({
   reset: function (event) {
     // Setting the pairs to undefined will cause onUpdate to re-run the
     // initializer.
+    // TODO: preserve lock after asking the user for confirmation
     this.close(event, {update: {compute: {pairs: undefined}}});
   }
 });
