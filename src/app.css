@@ -98,6 +98,10 @@ character substitutions tables
 .char-filler {
   color: #a0a0a0;
 }
+.char-selected {
+  background: #333;
+  color: #fff;
+}
 
 #hint-score {
 	text-align: center;

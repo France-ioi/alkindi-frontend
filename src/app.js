@@ -51,7 +51,25 @@ let store = createStore(reducer);
         output: 'cleartext'
       }
     }
+  },
+  {
+    type: 'ADD_TOOL',
+    data: {
+      type: 'SubstitutionInput',
+      canRemove: true,
+      canConfigure: true,
+      compute: {
+        inputAlphabetName: 'letters',
+        outputAlphabetName: 'letters',
+        pairs: undefined,
+        initializer: 'identity'
+      },
+      outputs: {
+        output: 'cipher'
+      }
+    }
   }
+
 ].forEach(function (action) { store.dispatch(action); });
 
 const appSelector = function (state) {
