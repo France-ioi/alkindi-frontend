@@ -37,7 +37,7 @@ const importSubstitution = function (input) {
       const i = targetRange.indexOf(targetIndex);
       if (i !== -1)
         targetRange.splice(i, 1);
-      mapping[c] = {i: targetIndex, q: p.q};
+      mapping[c] = {i: targetIndex, l: p.l};
     }
   });
   // Build the index map (array keyed by source index).
@@ -45,7 +45,7 @@ const importSubstitution = function (input) {
     if (c in mapping)
       return mapping[c];
     // Fill up the substitution using the next index from targetRange.
-    return {i: targetRange.shift(), q: 'filler'};
+    return {i: targetRange.shift(), l: false};
   });
   return {
     type: 'substitution', sourceAlphabet, targetAlphabet, indexMap
@@ -71,7 +71,8 @@ const SubstitutionInput = React.createClass({
     const charPairs = indexMap.map((p, i) => {
       const sourceSymbol = sourceAlphabet.symbols[i];
       const targetSymbol = targetAlphabet.symbols[p.i];
-      const targetClasses = ['char-subs', 'char-'+p.q];
+      const targetClasses = ['char-subs'];
+      if (p.l) targetClasses.push('char-locked');
       if (targetSymbol === selected)
         targetClasses.push('char-selected');
       return (
