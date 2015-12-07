@@ -9,7 +9,7 @@ import Deque from 'collections/deque';
 import classnames from 'classnames';
 
 import registry from './tool-registry';
-import {removeTool, updateTool} from './actions';
+import * as actions from './actions';
 
 const toolSelectorFun = function (state, props) {
   return state.toolMap[props.id];
@@ -41,7 +41,7 @@ export const Tool = connect(toolSelector)(React.createClass({
   },
   render: function () {
     console.log('render', this.props.id);
-    const {tool, inputs, outputs, needRefresh} = this.props;
+    const {tool, needRefresh} = this.props;
     const {type,canRemove,canConfigure,collapsed,configuring} = this.props.tool;
     const mode = (canConfigure && configuring) ? 'configure' : 'normal';
     const rightButtons = [];
@@ -54,8 +54,7 @@ export const Tool = connect(toolSelector)(React.createClass({
       const toolSpec = registry[type];
       title = toolSpec.getTitle(tool);
       const Component = toolSpec[mode];  // JSX requires the uppercase first letter
-      if (configuring || inputs)
-        inner = (<Component {...this.props}/>);
+      inner = (<Component {...this.props}/>);
     } else {
       title = "unknown tool type " + type;
       inner = false;
@@ -72,14 +71,14 @@ export const Tool = connect(toolSelector)(React.createClass({
   },
   collapseClicked: function () {
     this.props.dispatch(
-      updateTool(this.props.id, {collapsed: !this.props.tool.collapsed}));
+      actions.updateTool(this.props.id, {collapsed: !this.props.tool.collapsed}));
   },
   configureClicked: function () {
     this.props.dispatch(
-      updateTool(this.props.id, {configuring: !this.props.tool.configuring}));
+      actions.updateTool(this.props.id, {configuring: !this.props.tool.configuring}));
   },
   removeClicked: function () {
-    this.props.dispatch(removeTool(this.props.id));
+    this.props.dispatch(actions.removeTool(this.props.id));
   }
 }));
 
@@ -106,6 +105,9 @@ function buildToolInputMap (state) {
     const inputs = tool.inputs;
     Object.keys(inputs).forEach(function (input) {
       const variable = inputs[input];
+      // Skip unspecified inputs.
+      if (typeof variable === 'undefined')
+        return;
       if (variable in map)
         map[variable].push(id);
       else
@@ -131,6 +133,10 @@ export const invalidateTool = function (state, id) {
     const outputs = tool.outputs;
     Object.keys(outputs).forEach(function (name) {
       const output = outputs[name];
+      // Ignore unspecified outputs (this is necessary if the user
+      // names a variable 'undefined').
+      if (typeof output === 'undefined')
+        return;
       // Enqueue all tool IDs that take the ouput variable as an input.
       if (output in inputMap)
         queue.unshift(...inputMap[output]);
@@ -138,6 +144,18 @@ export const invalidateTool = function (state, id) {
   }
   // Install the new tool map.
   return {...state, refreshMap};
+};
+
+export const updateTool = function (tool, data) {
+  // Delegate to the onUpdate method, if it exists.
+  const type = data.type || tool.type;
+  if (type in registry) {
+    const toolSpec = registry[type];
+    if (typeof toolSpec.onUpdate === 'function')
+      return toolSpec.onUpdate(tool, data);
+  }
+  // Default to deepmerge.
+  return deepmerge(tool, data);
 };
 
 // Look up and return the input values for the specified tool, or undefined
@@ -159,8 +177,6 @@ export const lookupToolInputs = function (tool, environment) {
 
 // Compute and return the tool's output values, using the given input values.
 export const computeToolOutputs = function (tool, inputValues) {
-  if (typeof inputValues === 'undefined')
-    return {};
   const toolSpec = registry[tool.type];
   return toolSpec.compute(tool, inputValues);
 };

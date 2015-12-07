@@ -1,8 +1,6 @@
 
-import deepmerge from 'deepmerge';
-
 import {importText, importSubstitution, applySubstitution, errorValue} from './values';
-import {newTool, invalidateTool, lookupToolInputs, computeToolOutputs} from './tool';
+import {newTool, invalidateTool, updateTool, lookupToolInputs, computeToolOutputs} from './tool';
 
 const initialState = function () {
   return {
@@ -87,7 +85,7 @@ const reduceUpdateTool = function (state, id, data) {
   state = invalidateTool(state, id);
   const toolMap = state.toolMap;
   const tool = toolMap[id];
-  const updatedTool = deepmerge(tool, data);
+  const updatedTool = updateTool(tool, data);
   state = {
     ...state,
     toolMap: {
