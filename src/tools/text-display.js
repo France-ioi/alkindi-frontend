@@ -25,19 +25,13 @@ const TextDisplay = React.createClass({
 
 const ConfigureTextDisplay = React.createClass({
   mixins: [PureRenderMixin],
-  getInitialState: function () {
-    // Initialize our local state using the tool's settings.
-    return {
-      input: this.props.tool.inputs.input
-    };
-  },
   render: function () {
     // Read the settings from our local state.
-    const {input} = this.state;
+    const {input} = this.props.tool.inputs;
     return (
       <div>
         <p>Input variable</p>
-        <SelectVariable ref='input' type='text' value={input} />
+        <SelectVariable ref='input' type='text' defaultValue={input} />
         <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
       </div>
     );

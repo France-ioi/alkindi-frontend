@@ -28,19 +28,13 @@ const TextInput = React.createClass({
 
 const ConfigureTextInput = React.createClass({
   mixins: [PureRenderMixin],
-  getInitialState: function () {
-    // Initialize our local state using the tool's settings.
-    return {
-      output: this.props.tool.outputs.output
-    };
-  },
   render: function () {
     // Read the settings from our local state.
-    const {output} = this.state;
+    const {output} = this.props.tool.outputs;
     // TODO: allow selecting the alphabet
     return (
       <div>
-        <Input type='text' ref='output' value={output} label="Output variable" placeholder="Enter variable name" onChange={this.onChange} />
+        <Input type='text' ref='output' label="Output variable" defaultValue={output} placeholder="Enter variable name" />
         <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
       </div>
     );
@@ -48,14 +42,14 @@ const ConfigureTextInput = React.createClass({
   close: function (event) {
     // Exit configuration mode and update the tool's configuration.
     const {id, dispatch} = this.props;
-    const {output} = this.refs.output.getValue();
-    dispatch(
-      updateTool(id, {
-        configuring: false,
-        outputs: {
-          output: output
-        }
-      }));
+    const output = this.refs.output.getValue();
+    const update = {
+      configuring: false,
+      outputs: {
+        output
+      }
+    };
+    dispatch(updateTool(id, update));
   }
 });
 

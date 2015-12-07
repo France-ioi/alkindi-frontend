@@ -171,8 +171,7 @@ export const lookupToolInputs = function (tool, environment) {
       haveUndefined = true;
     inputValues[name] = value;
   });
-  // If any of the input values is undefined we set all the outputs to undefined.
-  return haveUndefined ? void 0 : inputValues;
+  return inputValues;
 };
 
 // Compute and return the tool's output values, using the given input values.

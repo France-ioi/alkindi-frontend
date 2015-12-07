@@ -1,39 +1,28 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {DropdownButton, MenuItem} from 'react-bootstrap';
+import {Input, DropdownButton, MenuItem} from 'react-bootstrap';
 
 import * as alphabets from './alphabets';
+import {PureRenderMixin} from './misc';
 
 export const SelectAlphabet = React.createClass({
+  mixins: [PureRenderMixin],
   propTypes: {
-    value: React.PropTypes.string,
-    prefix: React.PropTypes.string
+    defaultValue: React.PropTypes.string,
+    label: React.PropTypes.string
   },
   getDefaultProps: function () {
-    return {
-      prefix: 'single'
-    };
-  },
-  getInitialState: function () {
-    return {
-      value: this.props.value
-    };
+    defaultValue: 'select an alphabet'
   },
   render: function () {
-    const id = this.props.prefix + '-select-alphabet';
-    const {value} = this.state;
-    const title = value in alphabets ? value : 'select an alphabet';
     const alphabetNames = Object.keys(alphabets).sort();
     return (
-      <DropdownButton title={title} onSelect={this.onChange} id={id}>
-        {alphabetNames.map(name => <MenuItem key={name} eventKey={name}>{name}</MenuItem>)}
-      </DropdownButton>);
-  },
-  onChange: function (event, key) {
-    this.setState({value: key});
+      <Input ref='input' type="select" label={this.props.label} defaultValue={this.props.defaultValue}>
+        {alphabetNames.map(name => <option key={name} value={name}>{name}</option>)}
+      </Input>);
   },
   getValue: function () {
-    return this.state.value;
+    return this.refs.input.getValue();
   }
 });

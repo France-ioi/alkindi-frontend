@@ -1,10 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import {DropdownButton, MenuItem} from 'react-bootstrap';
+import {Input} from 'react-bootstrap';
+
+import {PureRenderMixin} from './misc';
 
 function getVariables (state, options) {
-  const {filterType} = options;
+  const {typeFilter} = options;
   const {toolMap, toolOutputs} = state;
   const variables = [];
   Object.keys(toolMap).forEach(function (id) {
@@ -13,7 +15,7 @@ function getVariables (state, options) {
     if (typeof outputValues !== 'undefined') {
       Object.keys(outputValues).forEach(function (name) {
         const variable = outputs[name];
-        if (typeof filterType !== 'undefined') {
+        if (typeof typeFilter !== 'undefined') {
           // Filter out variables that have an incompatible type.
           const value = outputValues[name];
           if (typeFilter !== value.type)
@@ -35,34 +37,21 @@ const selSelectVariable = createSelector(
   });
 
 export const SelectVariable = connect(selSelectVariable, false, false, {withRef: true})(React.createClass({
+  mixins: [PureRenderMixin],
   propTypes: {
-    value: React.PropTypes.string,
-    prefix: React.PropTypes.string
+    defaultValue: React.PropTypes.string
   },
   getDefaultProps: function () {
-    return {
-      prefix: 'single'
-    };
-  },
-  getInitialState: function () {
-    return {
-      value: this.props.value
-    };
+    defaultValue: 'select a variable'
   },
   render: function () {
-    const id = this.props.prefix + '-select-variable';
     const {variables} = this.props;
-    const {value} = this.state;
-    const title = (typeof value === 'string' && value.length > 0) ? value : 'select a variable';
     return (
-      <DropdownButton title={title} onSelect={this.onSelect} id={id}>
-        {variables.map(name => <MenuItem key={name} eventKey={name}>{name}</MenuItem>)}
-      </DropdownButton>);
-  },
-  onSelect: function (event, key) {
-    this.setState({value: key});
+      <Input ref='input' type='select' label={this.props.label} defaultValue={this.props.defaultValue}>
+        {variables.map(name => <option key={name} value={name}>{name}</option>)}
+      </Input>);
   },
   getValue: function () {
-    return this.state.value;
+    return this.refs.input.getValue();
   }
 }));
