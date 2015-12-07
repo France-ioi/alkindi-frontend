@@ -72,13 +72,20 @@ const SubstitutionInput = React.createClass({
       const sourceSymbol = sourceAlphabet.symbols[i];
       const targetSymbol = targetAlphabet.symbols[p.i];
       const targetClasses = ['char-subs'];
-      if (p.l) targetClasses.push('char-locked');
-      if (targetSymbol === selected)
+      const lockClasses = ['char-lock'];
+      if (sourceSymbol === selected)
         targetClasses.push('char-selected');
+      if (p.l) {
+        targetClasses.push('char-locked');
+        lockClasses.push('char-locked');
+      } else {
+        lockClasses.push('char-unlocked');
+      }
       return (
         <div key={i} className="char-pairs">
           <span className="char-base">{sourceSymbol}</span>
-          <span className={classnames(targetClasses)} onClick={this.onClick} data-key={targetSymbol} >{targetSymbol}</span>
+          <span className={classnames(targetClasses)} onClick={this.selectOrSwap} data-key={sourceSymbol} >{targetSymbol}</span>
+          <span className={classnames(lockClasses)} onClick={this.toggleLock} data-key={sourceSymbol}><i className='fa fa-lock'/></span>
         </div>);
     });
     return (
@@ -86,9 +93,79 @@ const SubstitutionInput = React.createClass({
         <div className="clearfix">{charPairs}</div>
       </div>);
   },
-  onClick: function (event) {
+  toggleLock: function (event) {
+    const sourceSymbol = event.currentTarget.getAttribute('data-key');
+    const p = this.getTarget(sourceSymbol);
+    if (p) {
+      const update = {
+        compute: {
+          pairs: {
+            [sourceSymbol]: {...p, l: !p.l}
+          }
+        }
+      };
+      const {dispatch, id} = this.props;
+      dispatch(updateTool(id, update));
+    }
+  },
+  selectOrSwap: function (event) {
     const key = event.currentTarget.getAttribute('data-key');
-    this.setState({selected: key});
+    // Ignore clicks on locked symbols.
+    const target = this.props.tool.compute.pairs[key];
+    if (target.l)
+      return;
+    // If there is no selected symbol, select the clicked symbol.
+    const {selected} = this.state;
+    if (typeof selected === 'undefined') {
+      this.setState({selected: key});
+      return;
+    }
+    const {dispatch, id, tool} = this.props;
+    // Find pair that maps to {key}, find pair that maps to {selected},
+    // exchange them.
+    const keyTarget = this.getTarget(key);
+    const selectedTarget = this.getTarget(selected);
+    if (keyTarget && selectedTarget) {
+      const update = {
+        compute: {
+          pairs: {
+            [key]: selectedTarget,
+            [selected]: keyTarget
+          }
+        }
+      };
+      dispatch(updateTool(id, update));
+    }
+    this.setState({selected: undefined});
+  },
+  getTarget: function (sourceSym) {
+    const {indexMap, sourceAlphabet, targetAlphabet} = this.props.outputs.output;
+    const sourceIndex = sourceAlphabet.symbols.indexOf(sourceSym);
+    if (sourceIndex === -1)
+      return;
+    const pair = indexMap[sourceIndex];
+    return {
+      c: targetAlphabet.symbols[pair.i],
+      l: pair.l
+    };
+  },
+  findPairByTarget: function (targetSym) {
+    const {indexMap, sourceAlphabet, targetAlphabet} = this.props.outputs.output;
+    const targetIndex = targetAlphabet.symbols.indexOf(targetSym);
+    if (targetIndex === -1)
+      return;
+    const sourceIndex = indexMap.findIndex(function (pair) {
+      return pair.i === targetIndex;
+    });
+    if (sourceIndex === -1)
+      return;
+    return {
+      source: sourceAlphabet.symbols[sourceIndex],
+      target: {
+        c: targetSym,
+        l: indexMap[sourceIndex].l
+      }
+    };
   }
 });
 
@@ -195,7 +272,7 @@ function getIdentityMapping (tool) {
     return;
   const mapping = {};
   alphabet.symbols.map(function (c) {
-    mapping[c] = {c: c, l: false};
+    mapping[c] = {c: c, l: c === 'A'};
   });
   return mapping;
 }

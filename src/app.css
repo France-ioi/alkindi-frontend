@@ -91,16 +91,30 @@ character substitutions tables
 .char-subs {
 	border: 1px solid #000;
 	border-left: none;
+  cursor: pointer;
+}
+.char-subs.char-locked {
+  cursor: default;
 }
 .char-pairs:first-child .char-subs {
 	border: 1px solid #000;
 }
-.char-filler {
-  color: #a0a0a0;
-}
 .char-selected {
   background: #333;
   color: #fff;
+}
+.char-lock {
+  padding: 8px;
+  cursor: pointer;
+}
+.char-lock.char-locked {
+  color: #000;
+}
+.char-lock.char-unlocked {
+  color: #ddd;
+}
+.char-lock.char-unlocked:hover {
+  color: #888;
 }
 
 #hint-score {
@@ -125,5 +139,5 @@ character substitutions tables
 }
 .code-hole {
   color: #888;
-  font-styl:e italic;
+  font-style: italic;
 }
