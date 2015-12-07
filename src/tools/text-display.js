@@ -7,9 +7,11 @@ import {SelectVariable} from '../select_variable';
 import {updateTool} from '../actions';
 import code from '../code';
 import BareTextDisplay from '../ui/text';
+import {PureRenderMixin} from '../misc';
 
 // TextDisplay is the normal tool's UI.
 const TextDisplay = React.createClass({
+  mixins: [PureRenderMixin],
   render: function () {
     const {collapsed} = this.props.tool;
     const nLines = collapsed ? 2 : 10;
@@ -22,6 +24,7 @@ const TextDisplay = React.createClass({
 });
 
 const ConfigureTextDisplay = React.createClass({
+  mixins: [PureRenderMixin],
   getInitialState: function () {
     // Initialize our local state using the tool's settings.
     return {

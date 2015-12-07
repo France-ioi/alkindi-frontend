@@ -8,14 +8,15 @@ import code from '../code';
 import BareTextInput from '../ui/text';
 import {importText} from '../values';
 import * as alphabets from '../alphabets';
+import {PureRenderMixin} from '../misc';
 
 // TextInput is the normal tool's UI.
 const TextInput = React.createClass({
+  mixins: [PureRenderMixin],
   render: function () {
     const {compute, collapsed} = this.props.tool;
     const {input} = compute;
     const rows = collapsed ? 2 : 6;
-    console.log(this.props.tool.collapsed);
     return (<textarea ref='input' className="full-width" rows={rows} value={input} onChange={this.onChange} />);
   },
   onChange: function (event) {
@@ -26,6 +27,7 @@ const TextInput = React.createClass({
 });
 
 const ConfigureTextInput = React.createClass({
+  mixins: [PureRenderMixin],
   getInitialState: function () {
     // Initialize our local state using the tool's settings.
     return {
