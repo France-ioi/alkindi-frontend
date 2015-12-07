@@ -161,6 +161,7 @@ const SubstitutionInput = React.createClass({
 });
 
 const ConfigureSubstitutionInput = React.createClass({
+  mixins: [PureRenderMixin],
   getInitialState: function () {
     return {initializerChanged: false};
   },
