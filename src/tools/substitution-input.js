@@ -90,7 +90,8 @@ const SubstitutionInput = React.createClass({
     });
     return (
       <div key='substitution'>
-        <div className="clearfix">{charPairs}</div>
+        <Button className='pull-right' onClick={this.reset}>reset</Button>
+        <div className='clearfix'>{charPairs}</div>
       </div>);
   },
   toggleLock: function (event) {
@@ -149,6 +150,13 @@ const SubstitutionInput = React.createClass({
       l: pair.l
     };
   },
+  reset: function (event) {
+    // Setting the pairs to undefined will cause onUpdate to re-run the
+    // initializer.
+    // TODO: preserve lock after asking the user for confirmation
+    const {dispatch, id} = this.props;
+    const update = {compute: {pairs: undefined}};
+    dispatch(updateTool(id, update));
   findPairByTarget: function (targetSym) {
     const {indexMap, sourceAlphabet, targetAlphabet} = this.props.outputs.output;
     const targetIndex = targetAlphabet.symbols.indexOf(targetSym);
