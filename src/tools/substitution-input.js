@@ -5,6 +5,7 @@ import {Button, ButtonGroup, Input} from 'react-bootstrap';
 import range from 'node-range';
 import classnames from 'classnames';
 import deepmerge from 'deepmerge';
+import Shuffle from 'shuffle';
 
 import {updateTool} from '../actions';
 import code from '../code';
@@ -113,7 +114,7 @@ const SubstitutionInput = React.createClass({
     const key = event.currentTarget.getAttribute('data-key');
     // Ignore clicks on locked symbols.
     const target = this.props.tool.compute.pairs[key];
-    if (target.l)
+    if (target && target.l)
       return;
     // If there is no selected symbol, select the clicked symbol.
     const {selected} = this.state;
@@ -151,12 +152,14 @@ const SubstitutionInput = React.createClass({
     };
   },
   reset: function (event) {
+    // this.refs.confirmReset.show("Réinitialiser la substitution ?").then(() => {
     // Setting the pairs to undefined will cause onUpdate to re-run the
     // initializer.
     // TODO: preserve lock after asking the user for confirmation
     const {dispatch, id} = this.props;
     const update = {compute: {pairs: undefined}};
     dispatch(updateTool(id, update));
+    // });
   }
 });
 
@@ -177,7 +180,7 @@ const ConfigureSubstitutionInput = React.createClass({
         <Input type='text' ref='output' label="Output variable" defaultValue={output} placeholder="Enter variable name"/>
         <Input type='select' ref='initializer' label="Initializer" defaultValue={initializer} onChange={this.update}>
           <option name='identity'>identity</option>
-          <option name='undefined'>undefined</option>
+          <option name='shuffle'>shuffle</option>
         </Input>
         <ButtonGroup className='pull-right'>
           <Button className={initializerChanged?'btn-primary':''} onClick={this.reset}>reset</Button>
@@ -264,8 +267,25 @@ function getIdentityMapping (tool) {
   if (typeof alphabet === 'undefined')
     return;
   const mapping = {};
-  alphabet.symbols.map(function (c) {
+  alphabet.symbols.forEach(function (c) {
     mapping[c] = {c: c, l: false};
+  });
+  return mapping;
+}
+
+function getShuffleMapping (tool) {
+  const {sourceAlphabetName, targetAlphabetName} = tool.compute;
+  if (sourceAlphabetName !== targetAlphabetName) {
+    console.log('warning: cannot build shuffle substitution')
+    return;
+  }
+  const alphabet = alphabets[sourceAlphabetName];
+  if (typeof alphabet === 'undefined')
+    return;
+  const mapping = {};
+  const shuffle = Shuffle.shuffle({deck: alphabet.symbols}).cards;
+  shuffle.forEach(function (c, i) {
+    mapping[alphabet.symbols[i]] = {c: c, l: false};
   });
   return mapping;
 }
@@ -274,8 +294,8 @@ function getInitialPairs (tool) {
   switch (tool.compute.initializer) {
   case 'identity':
     return getIdentityMapping(tool);
-  case 'undefined':
-    return {};
+  case 'shuffle':
+    return getShuffleMapping(tool);
   }
 }
 

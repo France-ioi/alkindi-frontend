@@ -12,7 +12,6 @@ import ReactDOM from 'react-dom';
 import insertStylesheet from 'insert-stylesheet';
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
-import Shuffle from 'shuffle';
 import {Button, ButtonGroup} from 'react-bootstrap';
 
 import {Tool} from './tool';
@@ -62,7 +61,7 @@ let store = createStore(reducer);
         inputAlphabetName: 'letters',
         outputAlphabetName: 'letters',
         pairs: undefined,
-        initializer: 'identity'
+        initializer: 'shuffle'
       },
       outputs: {
         output: 'cipher'
