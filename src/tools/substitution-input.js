@@ -187,7 +187,7 @@ const ConfigureSubstitutionInput = React.createClass({
     );
   },
   update: function (event) {
-    const initializerChanged = this.props.tool.comput.initializer !== this.refs.initializer.getValue();
+    const initializerChanged = this.props.tool.compute.initializer !== this.refs.initializer.getValue();
     this.setState({
       initializerChanged
     });
