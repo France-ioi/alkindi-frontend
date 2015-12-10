@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, Button, ButtonGroup, Input} from 'react-bootstrap';
+import {Alert, Button, ButtonGroup, Input, Panel} from 'react-bootstrap';
 import classnames from 'classnames';
 import deepmerge from 'deepmerge';
 
@@ -43,7 +43,8 @@ export const Component = PureComponent(self => {
     } else {
       body = <Alert bsStyle='warning'>no substitution</Alert>;
     }
-    return (<div><ToolHeader {...self.props} title={renderTitle(tool)} />{body}</div>);
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)} />;
+    return (<Panel header={header}>{body}</Panel>);
   };
 }, self => {
   return {
@@ -69,17 +70,17 @@ export const Configure = PureComponent(self => {
     const {tool} = self.props;
     const {alphabetName, initializer, outputVarName} = self.state;
     const initializerChanged = initializer !== self.props.tool.state.initializer;
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)} />;
     return (
-      <div>
-        <ToolHeader {...self.props} title={renderTitle(tool)} />
-        <SelectAlphabet label="Alphabet" value={alphabetName} onChange={setters.alphabetName} />
+      <Panel header={header}>
         <InputVariableName label="Output variable" placeholder="Enter variable name" value={outputVarName} onChange={setters.outputVarName} />
+        <SelectAlphabet label="Alphabet" value={alphabetName} onChange={setters.alphabetName} />
         <SubstitutionInitializer label="Initializer" value={initializer} onChange={setters.initializer} />
         <ButtonGroup className='pull-right'>
           <Button className={initializerChanged?'btn-primary':''} onClick={reset}>reset</Button>
           <Button className={initializerChanged?'':'btn-primary'} onClick={close}>Ok</Button>
         </ButtonGroup>
-      </div>
+      </Panel>
     );
   };
 }, self => {
@@ -106,8 +107,7 @@ const mergeState = function (state, update) {
 
 export default self => {
   self.state = {
-    sourceAlphabetName: 'letters',
-    targetAlphabetName: 'letters',
+    alphabetName: 'letters',
     pairs: undefined,
     initializer: {type: 'identify'},
     canCollapse: false

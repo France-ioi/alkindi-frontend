@@ -38,6 +38,9 @@ textarea.full-width {
   color: #FFF;
   background-color: #000;
 }
+.textBlock span.textSym.q-locked {
+  color: red;
+}
 .textBlock span.textInsert {
  background-color: #FFF;
 }
@@ -140,4 +143,10 @@ character substitutions tables
 .code-hole {
   color: #888;
   font-style: italic;
+}
+
+/* make substitution editor scroll horizontally */
+.substitution-editor-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
 }

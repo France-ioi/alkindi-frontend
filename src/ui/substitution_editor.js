@@ -65,7 +65,10 @@ export const SubstitutionEditor = PureComponent(self => {
           <span className={classnames(lockClasses)} onClick={toggleLock} data-key={i}><i className='fa fa-lock'/></span>
         </div>);
     });
-    return (<div className='clearfix'>{charPairs}</div>);
+    const style = {
+      width: indexMap.length * 28 + 'px'
+    };
+    return (<div className='substitution-editor' style={style}>{charPairs}</div>);
   }
 }, self => {
   return {

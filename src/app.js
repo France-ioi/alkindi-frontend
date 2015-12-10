@@ -42,8 +42,32 @@ let store = createStore(reducer);
     toolState: {
       alphabetName: 'letters',
       input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
-      outputVarName: 'cleartext',
+      outputVarName: 'long_text',
       canRemove: false,
+      configuring: false
+    }
+  },
+  {
+    type: 'ADD_TOOL',
+    toolType: 'TextInput',
+    toolState: {
+      alphabetName: 'letters',
+      input: "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
+      outputVarName: 'short_text',
+      canRemove: false,
+      configuring: false,
+      collapsed: true
+    }
+  },
+  {
+    type: 'ADD_TOOL',
+    toolType: 'SubstitutionInputApply',
+    toolState: {
+      alphabetName: 'letters',
+      initializer: {type: 'shuffle'},
+      pairs: undefined,
+      inputVarName: 'short_text',
+      outputVarName: 'ciphertext',
       configuring: false
     }
   },
@@ -51,18 +75,7 @@ let store = createStore(reducer);
     type: 'ADD_TOOL',
     toolType: 'TextDisplay',
     toolState: {
-      inputVarName: 'cleartext',
-      configuring: false
-    }
-  },
-  {
-    type: 'ADD_TOOL',
-    toolType: 'SubstitutionInput',
-    toolState: {
-      alphabetName: 'letters',
-      initializer: {type: 'shuffle'},
-      pairs: undefined,
-      outputVarName: 'foobar',
+      inputVarName: 'ciphertext',
       configuring: false
     }
   }
@@ -81,7 +94,7 @@ let App = connect(appSelector)(React.createClass({
     const tools = this.props.toolOrder.map(id => {
       return <div key={id} className='clearfix'><Tool id={id}/></div>;
     });
-    const adders = ['TextDisplay', 'TextInput', 'SubstitutionInput'].map(name => {
+    const adders = ['TextDisplay', 'TextInput', 'SubstitutionInput', 'SubstitutionInputApply'].map(name => {
       return (
         <Button key={'+'+name} onClick={this.addTool} data-tooltype={name} >
           <i className="fa fa-plus"/> {name}

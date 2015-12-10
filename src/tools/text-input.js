@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Button, Panel} from 'react-bootstrap';
 
 import code from '../code';
 import TextInput from '../ui/text_input';
@@ -26,10 +26,12 @@ export const Component = PureComponent(self => {
     const {tool} = self.props;
     const {input, collapsed} = tool.state;
     const rows = collapsed ? 2 : 6;
-    return (<div>
-      <ToolHeader {...self.props} title={renderTitle(tool)}/>
-      <TextInput text={input} onChange={updateInput} rows={rows} />
-    </div>);
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)}/>;
+    return (
+      <Panel header={header}>
+        <TextInput text={input} onChange={updateInput} rows={rows} />
+      </Panel>
+    );
   };
 });
 
@@ -42,13 +44,13 @@ export const Configure = PureComponent(self => {
   self.render = function () {
     const {tool} = self.props;
     const {alphabetName, outputVarName} = self.state;
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)}/>;
     return (
-      <div>
-        <ToolHeader {...self.props} title={renderTitle(tool)}/>
+      <Panel header={header}>
         <InputVariableName label="Output variable" placeholder="Enter variable name" value={outputVarName} onChange={setters.outputVarName} />
         <SelectAlphabet label="Alphabet" value={alphabetName} onChange={setters.alphabetName} />
         <Button className='btn-primary pull-right' onClick={close}>Ok</Button>
-      </div>
+      </Panel>
     );
   };
 }, self => {

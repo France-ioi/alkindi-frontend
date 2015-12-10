@@ -97,10 +97,6 @@ export const importSubstitution = function (input) {
 };
 
 function getIdentityMapping (alphabet) {
-  if (sourceAlphabetalphabet === undefined) {
-    console.log('warning: cannot build identity substitution');
-    return;
-  }
   const mapping = {};
   alphabet.symbols.forEach(function (c) {
     mapping[c] = {c: c, l: false};
@@ -136,13 +132,13 @@ export function runSubstitutionInitializer (initializer, alphabet) {
 export function applySubstitution (substitution, text) {
   if (substitution.sourceAlphabet !== text.alphabet)
     return errorValue('alphabet mismatch');
-  let pairs = substitution.pairs;
-  let items = text.items.map(function (item) {
+  const {indexMap} = substitution;
+  const items = text.items.map(function (item) {
     // Pass literal characters unchanged.
     if ('c' in item) return item;
     // Apply the substitution to symbols of the alphabet.
-    let p = pairs[item.i];
-    return {i: p.i, q: combineQualifiers(item.q, p.q)};
+    let p = indexMap[item.i];
+    return {i: p.i, q: p.l ? 'locked' : item.q};
   });
   return {
     type: 'text',

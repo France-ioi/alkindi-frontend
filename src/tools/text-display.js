@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Button, Panel} from 'react-bootstrap';
 
 import code from '../code';
 import ToolHeader from '../ui/tool_header';
@@ -19,10 +19,9 @@ export const Component = PureComponent(self => {
     const {tool} = self.props;
     const nLines = tool.state.collapsed ? 2 : 10;
     const input = tool.outputScope[tool.state.inputVarName];
-    return (<div>
-      <ToolHeader {...self.props} title={renderTitle(tool)}/>
-      <TextDisplay text={input} lines={nLines} />
-    </div>);
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)}/>;
+    const body = <TextDisplay text={input} lines={nLines} />;
+    return (<Panel header={header}>{body}</Panel>);
   };
 });
 
@@ -35,13 +34,13 @@ export const Configure = PureComponent(self => {
   self.render = function () {
     const {tool} = self.props;
     const {inputVarName} = self.state;
+    const header = <ToolHeader {...self.props} title={renderTitle(tool)}/>;
     return (
-      <div>
-        <ToolHeader {...self.props} title={renderTitle(tool)}/>
+      <Panel header={header}>
         <p>Input variable</p>
         <SelectVariable scope={tool.outputScope} typeFilter='text' value={inputVarName} onChange={setters.inputVarName} />
         <Button className='btn-primary pull-right' onClick={close}>Ok</Button>
-      </div>
+      </Panel>
     );
   };
 }, self => {
