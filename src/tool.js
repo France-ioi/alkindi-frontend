@@ -57,11 +57,12 @@ export const newTool = function (toolType, toolState) {
   factory(tool);
   // Set sane defaults for initial state.
   tool.state = {
-    ...tool.state,
+    canCollapse: true,
     collapsed: false,
     canRemove: true,
     canConfigure: true,
-    configuring: false
+    configuring: true,
+    ...tool.state
   };
   // Merge the tool state if provided.
   if (toolState !== undefined)

@@ -20,22 +20,22 @@ const ToolHeader = PureComponent(self => {
   };
   self.render = function () {
     const {tool, title, needRefresh} = self.props;
-    const {canRemove, canConfigure, configuring, collapsed} = tool.state;
+    const {canCollapse, canRemove, canConfigure, configuring, collapsed} = tool.state;
+    const header = [<span key="title">{title}</span>];
     const rightButtons = [];
     if (canConfigure)
       rightButtons.push(<Button key="configure" onClick={configureClicked} active={configuring}><i className="fa fa-wrench"/></Button>);
     if (canRemove)
       rightButtons.push(<Button key="remove" onClick={removeClicked}><i className="fa fa-times"/></Button>);
-    const collapseClasses = classnames(['fa', collapsed ? 'fa-plus' : 'fa-minus']);
-    const header = [
-      <Button key="collapse" onClick={collapseClicked} active={collapsed}><i className={collapseClasses}></i></Button>,
-      ' ',
-      <span key="title">{title}</span>
-    ];
+    if (canCollapse) {
+      const collapseClasses = classnames(['fa', collapsed ? 'fa-plus' : 'fa-minus']);
+      header.unshift(' ');
+      header.unshift(<Button key="collapse" onClick={collapseClicked} active={collapsed}><i className={collapseClasses}></i></Button>);
+    }
     if (needRefresh)
       header.push(<Label key="invalidated" bsStyle="warning">refresh</Label>);
     header.push(<ButtonGroup key="rightButtons" className="pull-right">{rightButtons}</ButtonGroup>);
-    return (<div className="tool-header">{header}</div>);
+    return (<div className="tool-header clearfix">{header}</div>);
   };
 });
 

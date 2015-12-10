@@ -43,14 +43,16 @@ let store = createStore(reducer);
       alphabetName: 'letters',
       input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
       outputVarName: 'cleartext',
-      canRemove: false
+      canRemove: false,
+      configuring: false
     }
   },
   {
     type: 'ADD_TOOL',
     toolType: 'TextDisplay',
     toolState: {
-      inputVarName: 'cleartext'
+      inputVarName: 'cleartext',
+      configuring: false
     }
   },
   {
@@ -60,7 +62,8 @@ let store = createStore(reducer);
       alphabetName: 'letters',
       initializer: {type: 'shuffle'},
       pairs: undefined,
-      outputVarName: 'foobar'
+      outputVarName: 'foobar',
+      configuring: false
     }
   }
 ].forEach(function (action) { store.dispatch(action); });

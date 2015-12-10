@@ -36,10 +36,10 @@ export const Component = PureComponent(self => {
     let body;
     if (outputScope.hasOwnProperty(outputVarName)) {
       const substitution = outputScope[outputVarName];
-      body = [
-        <Button key='0' className='pull-right' onClick={reset}>reset</Button>,
-        <SubstitutionEditor key='1' substitution={substitution} updatePairs={updatePairs} />
-      ];
+      body = <div>
+        <Button className='pull-right' onClick={reset}>reset</Button>
+        <SubstitutionEditor substitution={substitution} updatePairs={updatePairs} />
+      </div>;
     } else {
       body = <Alert bsStyle='warning'>no substitution</Alert>;
     }
@@ -109,7 +109,8 @@ export default self => {
     sourceAlphabetName: 'letters',
     targetAlphabetName: 'letters',
     pairs: undefined,
-    initializer: {type: 'identify'}
+    initializer: {type: 'identify'},
+    canCollapse: false
   };
   self.Component = Component;
   self.Configure = Configure;
