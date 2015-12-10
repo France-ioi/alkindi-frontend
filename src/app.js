@@ -14,11 +14,13 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import {Button, ButtonGroup} from 'react-bootstrap';
 
-import {Tool} from './tool';
+import {Tool, newTool} from './tool';
 import * as values from './values';
 import * as alphabets from './alphabets';
 import reducer from './reducer';
 import {toChar} from './alpha';
+import TextInput from './tools/text-input';
+import TextDisplay from './tools/text-display';
 
 // Insert stylesheets.
 [
@@ -36,52 +38,45 @@ let store = createStore(reducer);
 [
   {
     type: 'ADD_TOOL',
-    data: {
-      type: 'TextInput',
-      canRemove: false,
-      canConfigure: true,
-      hidden: false,  // → true
-      compute: {
-        alphabet: alphabets.letters,
-        qualifier: 'given',
-        input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
-      },
-      outputs: {
-        output: 'cleartext'
-      }
+    toolType: 'TextInput',
+    toolState: {
+      alphabetName: 'letters',
+      input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
+      outputVarName: 'cleartext',
+      canRemove: false
     }
   },
   {
     type: 'ADD_TOOL',
-    data: {
-      type: 'SubstitutionInput',
-      canRemove: true,
-      canConfigure: true,
-      compute: {
-        inputAlphabetName: 'letters',
-        outputAlphabetName: 'letters',
-        pairs: undefined,
-        initializer: 'shuffle'
-      },
-      outputs: {
-        output: 'cipher'
-      }
+    toolType: 'TextDisplay',
+    toolState: {
+      inputVarName: 'cleartext'
+    }
+  },
+  {
+    type: 'ADD_TOOL',
+    toolType: 'SubstitutionInput',
+    toolState: {
+      alphabetName: 'letters',
+      initializer: {type: 'shuffle'},
+      pairs: undefined,
+      outputVarName: 'foobar'
     }
   }
-
 ].forEach(function (action) { store.dispatch(action); });
 
 const appSelector = function (state) {
-  const {toolOrder} = state;
+  const {toolOrder, toolPointer} = state;
   return {
-    toolOrder
+    toolOrder, toolPointer
   };
 };
 
 let App = connect(appSelector)(React.createClass({
   render: function () {
+    const toolPointer = this.props.toolPointer;
     const tools = this.props.toolOrder.map(id => {
-      return <div key={id}><Tool id={id}/></div>;
+      return <div key={id} className='clearfix'><Tool id={id}/></div>;
     });
     const adders = ['TextDisplay', 'TextInput', 'SubstitutionInput'].map(name => {
       return (
@@ -91,39 +86,25 @@ let App = connect(appSelector)(React.createClass({
     });
     return (
       <div>
+        <p>PC = {toolPointer}</p>
         {tools}
         <ButtonGroup>{adders}</ButtonGroup>
       </div>);
   },
   addTool: function (event) {
     const toolType = event.currentTarget.getAttribute('data-tooltype');
-    this.props.dispatch({
-      type: 'ADD_TOOL',
-      data: {
-        type: toolType,
-        canRemove: true,
-        canConfigure: true,
-        configuring: true
-      }
-    });
+    this.props.dispatch({type: 'ADD_TOOL', toolType});
   }
 }));
 
-function autoRefreshCallback () {
+function autoStepCallback () {
   const state = store.getState();
-  if (!state.autoRefresh)
+  if (!state.autoRefresh || state.toolPointer === undefined)
     return;
-  const {refreshMap, toolOrder} = state;
-  for (let i = 0; i < toolOrder.length; i += 1) {
-    const id = toolOrder[i];
-    if (refreshMap[id]) {
-      store.dispatch({type: 'REFRESH_TOOL', id: id});
-      break;
-    }
-  }
+  store.dispatch({type: 'STEP'});
 }
 
-const autoRefreshInterval = setInterval(autoRefreshCallback, 100);
+const autoStepInterval = setInterval(autoStepCallback, 100);
 
 // Insert HTML.
 const mainElement = document.getElementById('main');

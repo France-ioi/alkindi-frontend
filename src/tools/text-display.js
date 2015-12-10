@@ -1,76 +1,62 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 
-import {SelectVariable} from '../select_variable';
-import {updateTool} from '../actions';
 import code from '../code';
-import BareTextDisplay from '../ui/text';
-import {PureRenderMixin} from '../misc';
+import ToolHeader from '../ui/tool_header';
+import TextDisplay from '../ui/text_display';
+import SelectVariable from '../ui/select_variable';
+import {PureComponent, stateSetters} from '../misc';
 
-// TextDisplay is the normal tool's UI.
-const TextDisplay = React.createClass({
-  mixins: [PureRenderMixin],
-  render: function () {
-    const {collapsed} = this.props.tool;
-    const nLines = collapsed ? 2 : 10;
-    const input = this.props.inputs.input;
-    return (
-      <div>
-        <BareTextDisplay text={input} lines={nLines} />
-      </div>);
-  }
-});
-
-const ConfigureTextDisplay = React.createClass({
-  mixins: [PureRenderMixin],
-  render: function () {
-    // Read the settings from our local state.
-    const {input} = this.props.tool.inputs;
-    return (
-      <div>
-        <p>Input variable</p>
-        <SelectVariable ref='input' type='text' defaultValue={input} />
-        <Button className='btn-primary pull-right' onClick={this.close}>Ok</Button>
-      </div>
-    );
-  },
-  close: function (event) {
-    // Exit configuration mode and update the tool's input variable.
-    const {id, dispatch} = this.props;
-    // XXX figure out how to get connect() to proxy getValue()
-    const input = this.refs.input.getWrappedInstance().getValue();
-    dispatch(updateTool(id, {
-      configuring: false,
-      inputs: {input}
-    }));
-  }
-});
-
-const getDefaults = function () {
-  return {
-    inputs: {
-      input: undefined
-    }
-  };
-};
-
-const getTitle = function (tool) {
+export const renderTitle = function (tool) {
   return code.wrap([
     code.keyword('0', 'print'),
-    '(', code.variable('1', tool.inputs.input), ')'
+    '(', code.variable('1', tool.state.inputVarName), ')'
   ]);
 };
 
-const compute = function (inputs, settings, state) {
-  return {};
+export const Component = PureComponent(self => {
+  self.render = function () {
+    const {tool} = self.props;
+    const nLines = tool.state.collapsed ? 2 : 10;
+    const input = tool.outputScope[tool.state.inputVarName];
+    return (<div>
+      <ToolHeader {...self.props} title={renderTitle(tool)}/>
+      <TextDisplay text={input} lines={nLines} />
+    </div>);
+  };
+});
+
+export const Configure = PureComponent(self => {
+  const setters = stateSetters(self, ['inputVarName']);
+  const close = function (event) {
+    const {inputVarName} = self.state;
+    self.props.update({configuring: false, inputVarName});
+  };
+  self.render = function () {
+    const {tool} = self.props;
+    const {inputVarName} = self.state;
+    return (
+      <div>
+        <ToolHeader {...self.props} title={renderTitle(tool)}/>
+        <p>Input variable</p>
+        <SelectVariable scope={tool.outputScope} typeFilter='text' value={inputVarName} onChange={setters.inputVarName} />
+        <Button className='btn-primary pull-right' onClick={close}>Ok</Button>
+      </div>
+    );
+  };
+}, self => {
+  const {inputVarName} = self.props.tool.state;
+  return {inputVarName};
+});
+
+export const compute = function (state, scope) {
 };
 
-export default {
-  normal: TextDisplay,
-  configure: ConfigureTextDisplay,
-  getDefaults,
-  getTitle,
-  compute
+export default self => {
+  self.state = {
+    inputVarName: undefined
+  };
+  self.Component = Component;
+  self.Configure = Configure;
+  self.compute = compute;
 };

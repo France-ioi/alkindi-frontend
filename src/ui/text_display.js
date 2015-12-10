@@ -4,9 +4,11 @@ import {Alert} from 'react-bootstrap';
 import keycode from 'keycode';
 
 import {importText, editText} from '../values';
+import {PureRenderMixin} from '../misc';
 
 // This component displays its 'text' property as a preformated text.
 export const Text = React.createClass({
+  mixins: [PureRenderMixin],
   propTypes: {
     text: React.PropTypes.object,
     columns: React.PropTypes.number,
