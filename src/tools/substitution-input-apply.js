@@ -139,7 +139,7 @@ const mergeState = function (state, update) {
 export default self => {
   self.state = {
     inputVarName: undefined,
-    alphabetName: 'letters',
+    alphabetName: undefined,
     outputVarName: undefined,
     pairs: undefined,
     initializer: {type: 'identify'}

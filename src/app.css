@@ -7,6 +7,13 @@
        url('../ext/alien.ttf') format('truetype');
 }
 
+select.placeholder {
+  color: #999;
+}
+option {
+  color: #555;
+}
+
 .selected {
   font-weight: bold;
 }
