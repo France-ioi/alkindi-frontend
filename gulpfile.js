@@ -13,7 +13,7 @@ const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 
 function buildScript (options) {
-    let browserifyOpts = {
+    const browserifyOpts = {
         entries: [options.entry],
         debug: true,
         transform: [
@@ -21,19 +21,15 @@ function buildScript (options) {
                 presets: ["es2015", "react"],
                 plugins: ["transform-object-rest-spread"]
             }],
-            'cssify'
+            'browserify-css'
         ]
     };
     if (options.watch)
         browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
     let bundler = browserify(browserifyOpts);
-    /*bundler.on('file', function (file, id, parent) {
-        console.log('bundle', file);
-    });*/
     if (options.watch)
         bundler = watchify(bundler);
-
-    function rebundle () {
+    const rebundle = function () {
         let p = bundler.bundle()
             .on('error', gutil.log.bind(gutil, 'Browserify Error'))
             .pipe(source(options.output))
@@ -46,11 +42,17 @@ function buildScript (options) {
             .pipe(chmod(644))
             .pipe(eol("\n"))
             .pipe(gulp.dest("dist"));
-    }
-
+    };
     bundler.on('log', gutil.log);
     bundler.on('update', rebundle);
-    return rebundle();
+    rebundle();
+}
+
+
+function modifiedBuild (mod) {
+    return function () {
+        buildScript(mod({entry: 'src/main.js', output: 'main.js'}));
+    };
 }
 
 function watched(opts) {
@@ -62,24 +64,9 @@ function uglified(opts) {
     return Object.assign({}, opts, {uglify: true, output: output});
 }
 
-const mainScriptOpts = {
-    entry: 'src/app.js',
-    output: 'app.js',
-    watch: false,
-    uglify: false
-};
-
-gulp.task('build', [], function () {
-    buildScript(mainScriptOpts);
-});
-
-gulp.task('build_min', [], function () {
-    buildScript(uglified(mainScriptOpts))
-});
-
-gulp.task('watch', [], function () {
-    buildScript(watched(mainScriptOpts));
-});
+gulp.task('build', [], modifiedBuild(function (opts) { return opts; }));
+gulp.task('build_min', [], modifiedBuild(uglified));
+gulp.task('watch', [], modifiedBuild(watched));
 
 gulp.task('lint', function() {
   return gulp.src('./src/**/*.js')

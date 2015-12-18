@@ -22,14 +22,8 @@ import {toChar} from './alpha';
 import TextInput from './tools/text-input';
 import TextDisplay from './tools/text-display';
 
-// Insert stylesheets.
-[
-  'bootstrap/dist/css/bootstrap.min.css',
-  'font-awesome/css/font-awesome.min.css'
-].forEach(function (css_path) {
-  insertStylesheet('../node_modules/' + css_path);
-});
-require('./app.css');
+// Insert our stylesheet.
+require('./main.css');
 
 // Create the global state store.
 let store = createStore(reducer);
