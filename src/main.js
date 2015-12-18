@@ -21,6 +21,7 @@ import reducer from './reducer';
 import {toChar} from './alpha';
 import TextInput from './tools/text-input';
 import TextDisplay from './tools/text-display';
+import AlkindiTabs from './ui/tabs';
 
 // Insert our stylesheet.
 require('./main.css');
@@ -76,14 +77,32 @@ let store = createStore(reducer);
 ].forEach(function (action) { store.dispatch(action); });
 
 const appSelector = function (state) {
-  const {toolOrder, toolPointer} = state;
+  const {toolOrder, toolPointer, activeTabKey} = state;
   return {
-    toolOrder, toolPointer
+    toolOrder, toolPointer, activeTabKey
   };
 };
 
 let App = connect(appSelector)(React.createClass({
   render: function () {
+    const {activeTabKey} = this.props;
+    let content = false;
+    switch (activeTabKey) {
+      case 'cryptanalysis':
+        content = this.renderCryptanalysis();
+    }
+    return (
+      <div>
+        <div id="header">
+          <div className="wrapper">
+            <img id="header-logo" src="https://s3-eu-west-1.amazonaws.com/static3.castor-informatique.fr/contestAssets/images/alkindi-logo.png" />
+            <AlkindiTabs/>
+          </div>
+        </div>
+        <div className="container">{content}</div>
+      </div>);
+  },
+  renderCryptanalysis: function () {
     const toolPointer = this.props.toolPointer;
     const tools = this.props.toolOrder.map(id => {
       return <div key={id} className='clearfix'><Tool id={id}/></div>;
@@ -99,7 +118,8 @@ let App = connect(appSelector)(React.createClass({
         <p>PC = {toolPointer}</p>
         {tools}
         <ButtonGroup>{adders}</ButtonGroup>
-      </div>);
+      </div>
+    );
   },
   addTool: function (event) {
     const toolType = event.currentTarget.getAttribute('data-tooltype');

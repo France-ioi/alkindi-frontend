@@ -1,7 +1,7 @@
 export function updateTool (toolId, stateUpdate) {
   return {
     type: 'UPDATE_TOOL',
-    toolId: toolId,
+    toolId,
     toolStateUpdate: stateUpdate
   };
 }
@@ -9,6 +9,13 @@ export function updateTool (toolId, stateUpdate) {
 export function removeTool (toolId) {
   return {
     type: 'REMOVE_TOOL',
-    toolId: toolId
+    toolId
+  };
+}
+
+export function setActiveTab (tabKey) {
+  return {
+    type: 'SET_ACTIVE_TAB',
+    tabKey
   };
 }

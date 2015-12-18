@@ -8,7 +8,15 @@ const initialState = function () {
     toolMap: {},
     nextToolId: 1,
     autoRefresh: true,
-    rootScope: {}
+    rootScope: {},
+    activeTabKey: 'cryptanalysis'
+  };
+};
+
+const reduceSetActiveTab = function (state, tabKey) {
+  return {
+    ...state,
+    activeTabKey: tabKey
   };
 }
 
@@ -101,6 +109,8 @@ export default function reduce (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
       return initialState();
+    case 'SET_ACTIVE_TAB':
+      return reduceSetActiveTab(state, action.tabKey);
     case 'ADD_TOOL':
       return reduceAddTool(state, action.toolType, action.toolState);
     case 'REMOVE_TOOL':
