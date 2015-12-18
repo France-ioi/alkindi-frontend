@@ -11,9 +11,10 @@ const browserify = require('browserify');
 const watchify = require('watchify');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
+const cp = require('child_process');
 
 function buildScript (options) {
-    const browserifyOpts = {
+    let browserifyOpts = {
         entries: [options.entry],
         debug: true,
         transform: [
@@ -45,6 +46,11 @@ function buildScript (options) {
     };
     bundler.on('log', gutil.log);
     bundler.on('update', rebundle);
+    bundler.on('bytes', function () {
+        cp.exec('cd dist_python; ./setup.py build', function (err, stdout, stderr) {
+            gutil.log('python package updated');
+        });
+    });
     rebundle();
 }
 
