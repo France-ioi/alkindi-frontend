@@ -38,6 +38,9 @@ class build_data(setuptools.Command):
         rmtree(target, ignore_errors=True)
         os.mkdir(target)
         # XXX consider reading these operations from meta
+        # write version
+        with open(os.path.join(package_name, '__init__.py'), 'w') as f:
+            print("version = '{}'".format(meta['version']), file=f)
         # main
         print("copying project assets")
         copy2('../dist/main.js', target)

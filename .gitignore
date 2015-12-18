@@ -1,6 +1,7 @@
 node_modules/
 dist/
 /dist_python/*.egg-info
+/dist_python/alkindi_r2_front/__init__.py
 /dist_python/alkindi_r2_front/assets
 /dist_python/build
 __pycache__
