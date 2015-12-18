@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="header">
+		<div class="wrapper">
+		    <img id="header-logo" src="https://s3-eu-west-1.amazonaws.com/static3.castor-informatique.fr/contestAssets/images/alkindi-logo.png">
+			<ul id="navigation">
+				<li class="indisponible"><a>Sujet</a></li>
+				<li><a>Cryptanalyse</a></li>
+				<li><a>Historique</a></li>
+				<li class="actif"><a>Équipe</a></li>
+			</ul>
+		</div>
+	</div>
+<!-- 
+onglet équipe
+	- créer une équipe -> donne un code d'accès
+		- régler si on peut rejoindre l'équipe
+		- dissoudre l'équipe si personne ne l'a rejoint
+	- rejoindre une équipe -> input + bouton valider
+	ou
+	- informations sur l'équipe
+
+-->	
+	<div class="wrapper">
+		<!-- Affichage si arrivée sur la page par saisie du code personnel -->
+		<p>Choisissez ce que vous souhaitez faire</p>
+		<div class="bloc-boutons">
+			<button type="button" class="tabButton selected">Créer une équipe</button>
+			<button type="button" class="tabButton">Rejoindre une équipe</button>
+		</div>
+	
+		<!-- REMOVE--><hr><!-- END REMOVE-->
+		<!-- Affichage si choix du bouton "Rejoindre une équipe" -->
+		<div>
+			<p>Entrez le code d'équipe qui vous a été fourni :</p>
+			<form method="" action="">
+				<input type="password" id="numero-equipe"/> <button type="submit">Rejoindre l'équipe</button>
+			</form>
+		</div>
+		<!-- REMOVE--><hr><!-- END REMOVE-->
+		<!-- Affichage créateur d'une équipe -->
+		<div>
+			<p>Code d'accès de l'équipe : <strong>XXXXXXXXXXX</strong></p>
+			<p>Vous pouvez modifier les réglages de votre équipe :</p>
+			<form method="" action="">
+				<p><input type="radio" value="" name="equipe-access" id="equipe-open"> <label for="equipe-open">Permettre à d'autres personnes de rejoindre l'équipe</label></p>
+				<p><input type="radio" value="" name="equipe-access" id="equipe-closed"> <label for="equipe-closed">Bloquer les inscriptions à l'équipe</label></p>
+				<button type="submit">Enregistrer les modifications</button>
+			</form>
+			<!-- Affichage si des membres ont rejoint l'équipe -->
+			<p>Votre équipe est constituée de :</p>
+			<table width="100%">
+				<tr>
+					<th>Nom</th>
+					<th>Statut</th>
+					<th>Membre depuis</th>
+				</tr>
+				<tr>
+					<td>XXX</td>
+					<td>sélectionné</td>
+					<td>2015-12-25</td>
+				</tr>
+				<tr>
+					<td>YYY</td>
+					<td>non-sélectionné</td>
+					<td>2015-12-25</td>
+				</tr>
+				<tr>
+					<td>ZZZ</td>
+					<td>non-sélectionné</td>
+					<td>2015-12-25</td>
+				</tr>
+				<tr>
+					<td>AAA</td>
+					<td>sélectionné</td>
+					<td>2015-12-25</td>
+				</tr>
+			</table>
+			<!-- Affichage si personne n'a rejoint l'équipe -->
+			<p>Personne n'a encore rejoint l'équipe :</p>
+			<form method="" action="">
+				<button type="submit">Supprimer l'équipe</button>
+			</form>
+		</div>
+
+		<!-- REMOVE--><hr><!-- END REMOVE-->
+		<!-- Affichage membre d'une équipe -->
+		<div>
+			<p>Code d'accès de l'équipe : <strong>XXXXXXXXXXX</strong></p>
+			<p>Votre équipe est constituée de :</p>
+			<table width="100%">
+				<tr>
+					<th>Nom</th>
+					<th>Statut</th>
+				</tr>
+				<tr>
+					<td>XXX</td>
+					<td>sélectionné</td>
+				</tr>
+				<tr>
+					<td>YYY</td>
+					<td>non-sélectionné</td>
+				</tr>
+				<tr>
+					<td>ZZZ</td>
+					<td>non-sélectionné</td>
+				</tr>
+				<tr>
+					<td>AAA</td>
+					<td>sélectionné</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

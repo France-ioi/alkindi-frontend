@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="header">
+		<div class="wrapper">
+		    <img id="header-logo" src="https://s3-eu-west-1.amazonaws.com/static3.castor-informatique.fr/contestAssets/images/alkindi-logo.png">
+			<ul id="navigation">
+				<li class="indisponible"><a>Sujet</a></li>
+				<li><a>Cryptanalyse</a></li>
+				<li class="actif"><a>Historique</a></li>
+				<li><a>Équipe</a></li>
+			</ul>
+		</div>
+	</div>
+<!-- 
+onglet historique
+	- liste des espaces de travail :
+	- pour chaque élément de la liste
+	. s'il existe une session active : bouton "charger" -> affiche la session active de l'espace de travail sélectionné dans l'onglet cryptanalyse
+	. bouton "voir les sessions" -> affiche la liste des sessions de l'espace de travail dans le même onglet
+		- champ texte prérempli avec le nom de l'espace de travail + bouton enregistrer
+		- tableau listant les sessions
+			. date de création
+			. bouton "supprimer"
+			. bouton "charger"
+			. bouton radio pour rendre la session active
+		- bouton "retour" revoie vers l'affichage des espaces de travail dans l'onglet historique
+-->	
+	<div class="wrapper">
+		<table id="workspace-list">
+			<tr>
+				<td>Mon espace de travail 1</td>
+				<td><a>voir les sessions</a></td>
+				<td><a>charger la session active</a></td>
+			</tr>
+			<tr>
+				<td>Mon espace de travail 2</td>
+				<td><a>voir les sessions</a></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Mon espace de travail 3</td>
+				<td><a>voir les sessions</a></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>La session de travail de Kevin</td>
+				<td><a>voir les sessions</a></td>
+				<td><a>charger la session active</a></td>
+			</tr>
+			<tr>
+				<td>Mon espace de travail 4</td>
+				<td><a>voir les sessions</a></td>
+				<td><a>charger la session active</a></td>
+			</tr>
+			<tr>
+				<td>Mon espace de travail 5</td>
+				<td><a>voir les sessions</a></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<!-- REMOVE--><hr><!-- END REMOVE-->
+		<!-- Affichage de la liste des sessions de l'espace de travail sélectionné -->
+		<form method="" action="">
+			<p><input type="text" value="Mon espace de travail N"> <button type="submit">Enregistrer le nom</button></p>
+		</form>
+		<table>
+			<tr>
+				<th>Date de création</th>
+				<th>Supprimer la session</th>
+				<th>Charger la session</th>
+				<th>Activer la session</th>
+			</tr>
+			<tr>
+				<td>2015-12-24</td>
+				<td><button type="button">supprimer</button></td>
+				<td><button type="button">charger</button></td>
+				<td><label for="activate1" style="position: relative; width: 100%; height: 100%; display: block;">&nbsp;<input type="radio" name="activate-session" value="" id="activate1" /></label></td>
+			</tr>
+			<tr>
+				<td>2015-12-23</td>
+				<td><button type="button">supprimer</button></td>
+				<td><button type="button">charger</button></td>
+				<td><input type="radio" name="activate-session" value="" /></td>
+			</tr>
+			<tr>
+				<td>2015-12-20</td>
+				<td><button type="button">supprimer</button></td>
+				<td><button type="button">charger</button></td>
+				<td><input type="radio" name="activate-session" value="" /></td>
+			</tr>
+			<tr>
+				<td>2015-12-17</td>
+				<td><button type="button">supprimer</button></td>
+				<td><button type="button">charger</button></td>
+				<td><input type="radio" name="activate-session" value="" /></td>
+			</tr>
+		</table>
+		<button type="button">Retour à la liste des espaces de travail</button>
+	</div>
+</body>
+</html>
