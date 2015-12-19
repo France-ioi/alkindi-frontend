@@ -1,3 +1,10 @@
+export function addTool (toolType) {
+  return {
+    type: 'ADD_TOOL',
+    toolType
+  };
+}
+
 export function updateTool (toolId, stateUpdate) {
   return {
     type: 'UPDATE_TOOL',
