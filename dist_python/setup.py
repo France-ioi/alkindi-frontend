@@ -45,8 +45,6 @@ class build_data(setuptools.Command):
         print("copying project assets")
         copy2('../dist/main.js', target)
         copy2('../dist/main.js.map', target)
-        copy2('../dist/main.css', target)
-        copy2('../dist/main.css.map', target)
         # bootstrap
         print("copying bootstrap assets")
         bootstrap_dir = os.path.join(target, 'bootstrap')
