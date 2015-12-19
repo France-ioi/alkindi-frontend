@@ -42,7 +42,7 @@ table {
 table td,
 table th {
   border: 1px solid #777;
-  padding: 3px 5px;
+  padding: 0 5px;
 }
 
 /* Page layout */
@@ -189,8 +189,6 @@ character substitutions tables
 }
 
 
-
-
 /* Authentication header layout */
 #auth-header table {
   border: 0;
@@ -294,11 +292,13 @@ character substitutions tables
   background-color: #E2D9C8;
   font-weight: bold;
 }
-button[type=submit] {
+button[type=submit],
+button[type=button] {
   display: table-cell;
   font-size: 16px;
   text-decoration: none;
   color: #000;
+  margin: 3px 0;
   padding: 3px 10px;
   border: 1px solid #333;
   text-align: center;
@@ -309,7 +309,10 @@ button[type=submit] {
        -o-border-radius: 5px;
           border-radius: 5px;
 }
-button[type=submit]:hover {
+button[type=submit]:hover,
+button[type=button]:hover,
+button[type=submit]:focus,
+button[type=button]:focus {
   background-color: #E2D9C8;
 }
 .general_title {
@@ -336,14 +339,50 @@ button[type=submit]:hover {
     border-bottom: 1px solid #eeeeee;
 }
 /* Historique */
-#workspace-list {
+.workspace-list {
   width: 100%;
 }
-#workspace-list td:first-child {
+.workspace-list td:first-child {
   width: 50%;
 }
+tr.selected {
+  background-color: #333;
+  color: #fff;
+}
+a.cell-link {
+  display: block;
+  color: #000;
+  font-weight: inherit;
+}
+.selected a.cell-link {
+  color: #fff;
+}
 
-
+/* Dev elements */
 .dev {
     color: #4f4;
+}
+.dev-buttons {
+  border-bottom: 1px solid #333;
+  padding: 3px;
+}
+.dev-buttons button {
+  display: table-cell;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000;
+  margin: 3px 0;
+  padding: 3px 10px;
+  border: 1px solid #333;
+  text-align: center;
+  font-weight: normal;
+  background-color: #F0E9D8;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+       -o-border-radius: 5px;
+          border-radius: 5px;
+}
+.dev-buttons button:hover,
+.dev-buttons button:focus {
+  background-color: #E2D9C8;
 }

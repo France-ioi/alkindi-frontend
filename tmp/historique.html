@@ -1,8 +1,10 @@
-﻿<!DOCTYPE html>
+﻿			</tr>
+<!DOCTYPE html>
 <html>
 <head>
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="../src/main.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body>
 	<div id="header">
@@ -16,93 +18,86 @@
 			</ul>
 		</div>
 	</div>
-<!-- 
-onglet historique
-	- liste des espaces de travail :
-	- pour chaque élément de la liste
-	. s'il existe une session active : bouton "charger" -> affiche la session active de l'espace de travail sélectionné dans l'onglet cryptanalyse
-	. bouton "voir les sessions" -> affiche la liste des sessions de l'espace de travail dans le même onglet
-		- champ texte prérempli avec le nom de l'espace de travail + bouton enregistrer
-		- tableau listant les sessions
-			. date de création
-			. bouton "supprimer"
-			. bouton "charger"
-			. bouton radio pour rendre la session active
-		- bouton "retour" revoie vers l'affichage des espaces de travail dans l'onglet historique
--->
 	<div class="wrapper">
-		<table id="workspace-list">
+		<table class="workspace-list"><tbody>
 			<tr>
-				<td>Mon espace de travail 1</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session la plus récente</a></td>
+				<th>Espace de travail</th>
+				<th>Date de la dernière modification</th>
+				<th>Auteur</th>
+				<th></th>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 2</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
+				<td><a class="cell-link">Mon espace de travail 1</a></td>
+				<td>2015-12-19</td>
+				<td>Michel</td>
+				<td><button type="button">utiliser</button></td>
+			</tr>
+			<tr class="selected">
+				<td><a class="cell-link">Mon espace de travail 2</a></td>
+				<td>2015-12-19</td>
+				<td>Bruno</td>
+				<td><button type="button">utiliser</button></td>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 3</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
+				<td><a class="cell-link">Mon espace de travail 3</a></td>
+				<td>2015-12-19</td>
+				<td>Adèle</td>
+				<td><button type="button">utiliser</button></td>
 			</tr>
 			<tr>
-				<td>La session de travail de Kevin</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session active</a></td>
+				<td><a class="cell-link">Mon espace de travail 4</a></td>
+				<td>2015-12-19</td>
+				<td>Michel</td>
+				<td><button type="button">utiliser</button></td>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 4</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session active</a></td>
+				<td><a class="cell-link">Mon espace de travail 5</a></td>
+				<td>2015-12-19</td>
+				<td>Michel</td>
+				<td><button type="button">utiliser</button></td>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 5</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
-			</tr>
-		</table>
+				<td colspan="4"><button type="button">afficher toutes les versions</button></td>
+		</tbody></table>
 
 		<!-- REMOVE--><hr><!-- END REMOVE-->
-		<!-- Affichage de la liste des sessions de l'espace de travail sélectionné -->
-		<p class="dev">On affiche les sessions en dessous du tableau des espaces de travail, et mettre en évidence l'espace de travail sélectionné.</p>
+		<p class="dev">On affiche les versions en dessous du tableau des espaces de travail, et mettre en évidence l'espace de travail sélectionné.</p>
 		<form method="" action="">
-			<p><input type="text" value="Mon espace de travail N"> <button type="submit">Enregistrer le nom</button></p>
+			<p><label for="workspace-name">Modifier le nom de l'espace de travail : </label> <input type="text" value="Mon espace de travail 2" id="workspace-name"></p>
+			<button type="submit">Enregistrer le nom</button>
 		</form>
-		<table>
+		<table class="workspace-list">
 			<tr>
 				<th>Date de création</th>
-				<th>Supprimer la session</th>
-				<th>Charger la session</th>
-				<th>Activer la session</th>
+				<th>Auteur</th>
+				<th></th>
 			</tr>
 			<tr>
 				<td>2015-12-24</td>
-				<td><button type="button">supprimer</button></td>
+				<td>Adèle</td>
 				<td><button type="button">charger</button></td>
-				<td><label for="activate1" style="position: relative; width: 100%; height: 100%; display: block;">&nbsp;<input type="radio" name="activate-session" value="" id="activate1" /></label></td>
 			</tr>
 			<tr>
 				<td>2015-12-23</td>
-				<td><button type="button">supprimer</button></td>
+				<td>Michel</td>
 				<td><button type="button">charger</button></td>
-				<td><input type="radio" name="activate-session" value="" /></td>
+			</tr>
+			<tr>
+				<td>2015-12-22</td>
+				<td>Michel</td>
+				<td><button type="button">charger</button></td>
+			</tr>
+			<tr>
+				<td>2015-12-22</td>
+				<td>Michel</td>
+				<td><button type="button">charger</button></td>
 			</tr>
 			<tr>
 				<td>2015-12-20</td>
-				<td><button type="button">supprimer</button></td>
+				<td>Michel</td>
 				<td><button type="button">charger</button></td>
-				<td><input type="radio" name="activate-session" value="" /></td>
-			</tr>
-			<tr>
-				<td>2015-12-17</td>
-				<td><button type="button">supprimer</button></td>
-				<td><button type="button">charger</button></td>
-				<td><input type="radio" name="activate-session" value="" /></td>
 			</tr>
 		</table>
-		<button type="button">Retour à la liste des espaces de travail</button>
 	</div>
 </body>
 </html>
