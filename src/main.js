@@ -25,7 +25,11 @@ window.Alkindi = (function () {
   // Create the global state store.
   let store = Alkindi.store = createStore(reducer);
 
-  Alkindi.configureAssets = configureAssets;
+  Alkindi.configure = function (config) {
+    if ('assets_template' in config)
+      configureAssets({template: config.assets_template});
+    Alkindi.logout_url = config.logout_url; // temporary?
+  };
 
   Alkindi.install = function (mainElement) {
     // Enable auto-step interval.
