@@ -16,11 +16,13 @@
 <script type="text/javascript">
 // Install in #main.
 Alkindi.install(document.getElementById('main'));
+resetState();
 function resetState () {
   Alkindi.dispatch({type: 'INIT'});
+  Alkindi.dispatch({type: 'SET_USER', user: {username: 'copain@example.com', isSelected: false}});
 }
 function setSelectedUser () {
-  Alkindi.dispatch({type: 'SET_USER', user: {isSelected: true}});
+  Alkindi.dispatch({type: 'SET_USER', user: {username: 'selectionné@example.com', isSelected: true}});
 }
 function joinTeam () {
   Alkindi.dispatch({type: 'SET_TEAM', team: {}});
