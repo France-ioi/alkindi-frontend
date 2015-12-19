@@ -1,14 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
-import {setActiveTab} from '../actions';
-
-const tabsSelector = function (state) {
-  const {activeTabKey, team, question} = state;
-  return {activeTabKey, haveTeam: !!team, haveQuestion: !!question};
-};
 
 const tabs = [
   {key: 'question', label: "Sujet"},
@@ -17,10 +10,10 @@ const tabs = [
   {key: 'team', label: "Équipe"}
 ];
 
-let AlkindiTabs = connect(tabsSelector)(PureComponent(self => {
-  const setActive = function (key) {
+let AlkindiTabs = PureComponent(self => {
+  const setActiveTab = function (key) {
     return function () {
-      self.props.dispatch(setActiveTab(key));
+      self.props.setActiveTab(key);
     };
   };
   self.render = function () {
@@ -35,7 +28,7 @@ let AlkindiTabs = connect(tabsSelector)(PureComponent(self => {
     const items = tabs.map(function (tab) {
       const {key, label} = tab;
       const disabled = tabDisabled[key];
-      const onClick = disabled ? false : setActive(key);
+      const onClick = disabled ? false : setActiveTab(key);
       var classes = classnames({
           actif: activeTabKey === key,
           indisponible: disabled
@@ -44,6 +37,6 @@ let AlkindiTabs = connect(tabsSelector)(PureComponent(self => {
     })
     return <ul id="navigation">{items}</ul>;
   };
-}));
+});
 
 export default AlkindiTabs;

@@ -4,18 +4,20 @@ import {Button, ButtonGroup} from 'react-bootstrap';
 
 import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
-import {Tool, newTool} from './tool';
-import * as values from './values';
-import * as alphabets from './alphabets';
+import {Tool} from './tool';
+import * as actions from './actions';
 
 const appSelector = function (state) {
-  const {toolOrder, toolPointer, activeTabKey, user, team} = state;
+  const {toolOrder, toolPointer, activeTabKey, user, team, question} = state;
   return {
-    toolOrder, toolPointer, activeTabKey, user, team
+    toolOrder, toolPointer, activeTabKey, user, team, question
   };
 };
 
 let App = connect(appSelector)(PureComponent(self => {
+  const setActiveTab = function (tabKey) {
+    self.props.dispatch(actions.setActiveTab(tabKey));
+  };
   const addTool = function (event) {
     const toolType = event.currentTarget.getAttribute('data-tooltype');
     self.props.dispatch({type: 'ADD_TOOL', toolType});
@@ -60,7 +62,7 @@ let App = connect(appSelector)(PureComponent(self => {
     );
   };
   self.render = function () {
-    const {user, team, activeTabKey} = self.props;
+    const {user, team, question, activeTabKey} = self.props;
     // Si l'utilisateur n'est pas sélectionné et qu'il n'a pas rejoint une
     // équipe, on lui affiche le composant de sélection d'équipe.
     if (!user.isSelected && !team)
@@ -75,7 +77,7 @@ let App = connect(appSelector)(PureComponent(self => {
         <div id="header">
           <div className="wrapper">
             <img id="header-logo" src="https://s3-eu-west-1.amazonaws.com/static3.castor-informatique.fr/contestAssets/images/alkindi-logo.png" />
-            <AlkindiTabs/>
+            <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
           </div>
         </div>
         <div className="container">{content}</div>
