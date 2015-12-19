@@ -294,6 +294,8 @@ character substitutions tables
     background-color: #E2D9C8;
     border: 3px solid #333;
     font-weight: bold;
+}
+*/
 button.submit {
   display: table-cell;
   font-size: 16px;
