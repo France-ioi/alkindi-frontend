@@ -4,13 +4,14 @@ import {Button, ButtonGroup} from 'react-bootstrap';
 
 import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
+import CryptanalysisTab from './ui/cryptanalysis_tab';
 import {Tool} from './tool';
 import * as actions from './actions';
 
 const appSelector = function (state) {
-  const {toolOrder, toolPointer, activeTabKey, user, team, question} = state;
+  const {activeTabKey, user, team, question} = state;
   return {
-    toolOrder, toolPointer, activeTabKey, user, team, question
+    activeTabKey, user, team, question
   };
 };
 
@@ -21,25 +22,6 @@ let App = connect(appSelector)(PureComponent(self => {
   const addTool = function (event) {
     const toolType = event.currentTarget.getAttribute('data-tooltype');
     self.props.dispatch({type: 'ADD_TOOL', toolType});
-  };
-  const renderCryptanalysis = function () {
-    const toolPointer = self.props.toolPointer;
-    const tools = self.props.toolOrder.map(id => {
-      return <div key={id} className='clearfix'><Tool id={id}/></div>;
-    });
-    const adders = ['TextDisplay', 'TextInput', 'SubstitutionInput', 'SubstitutionInputApply'].map(name => {
-      return (
-        <Button key={'+'+name} onClick={addTool} data-tooltype={name} >
-          <i className="fa fa-plus"/> {name}
-        </Button>);
-    });
-    return (
-      <div>
-        <p>PC = {toolPointer}</p>
-        {tools}
-        <ButtonGroup>{adders}</ButtonGroup>
-      </div>
-    );
   };
   const renderJoinTeam = function () {
     return (
@@ -70,7 +52,7 @@ let App = connect(appSelector)(PureComponent(self => {
     let content = false;
     switch (activeTabKey) {
       case 'cryptanalysis':
-        content = renderCryptanalysis();
+        content = <CryptanalysisTab/>;
     }
     return (
       <div>
