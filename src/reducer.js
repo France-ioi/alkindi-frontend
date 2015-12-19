@@ -9,8 +9,24 @@ const initialState = function () {
     nextToolId: 1,
     autoRefresh: true,
     rootScope: {},
-    activeTabKey: 'cryptanalysis'
+    user: {
+      isSelected: false
+    },
+    team: undefined,
+    activeTabKey: undefined
   };
+};
+
+const reduceSetUser = function (state, user) {
+  return {...state, user};
+};
+
+const reduceSetTeam = function (state, team) {
+  return {...state, team};
+};
+
+const reduceSetQuestion = function (state, question) {
+  return {...state, question};
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
@@ -18,7 +34,7 @@ const reduceSetActiveTab = function (state, tabKey) {
     ...state,
     activeTabKey: tabKey
   };
-}
+};
 
 const reduceAddTool = function (state, toolType, toolState) {
   const tool = newTool(toolType, toolState);
@@ -108,7 +124,15 @@ export default function reduce (state, action) {
   // console.log('reduce', JSON.stringify(action));
   switch (action.type) {
     case '@@redux/INIT':
+    case 'INIT':
+      console.log('initial state');
       return initialState();
+    case 'SET_USER':
+      return reduceSetUser(state, action.user);
+    case 'SET_TEAM':
+      return reduceSetTeam(state, action.team);
+    case 'SET_QUESTION':
+      return reduceSetQuestion(state, action.question);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
     case 'ADD_TOOL':

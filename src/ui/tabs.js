@@ -6,8 +6,8 @@ import {PureComponent} from '../misc';
 import {setActiveTab} from '../actions';
 
 const tabsSelector = function (state) {
-  const {activeTabKey} = state;
-  return {activeTabKey};
+  const {activeTabKey, team, question} = state;
+  return {activeTabKey, haveTeam: !!team, haveQuestion: !!question};
 };
 
 const tabs = [
@@ -24,9 +24,14 @@ let AlkindiTabs = connect(tabsSelector)(PureComponent(self => {
     };
   };
   self.render = function () {
-    let {activeTabKey} = self.props;
+    let {activeTabKey, haveTeam, haveQuestion} = self.props;
     // TODO: compute disabled status of tabs.
-    const tabDisabled = {question: true};
+    const tabDisabled = {
+      question: !haveTeam,
+      cryptanalysis: !haveQuestion,
+      history: !haveQuestion,
+      team: false
+    };
     const items = tabs.map(function (tab) {
       const {key, label} = tab;
       const disabled = tabDisabled[key];
