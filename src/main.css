@@ -329,3 +329,8 @@ character substitutions tables
 #workspace-list td:first-child {
   width: 50%;
 }
+
+
+.dev {
+    color: #4f4;
+}
