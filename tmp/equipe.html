@@ -17,6 +17,39 @@
 		</div>
 	</div>
 <!-- 
+
+Dans l'interface : session -> version
+* on affiche le nom de l'auteur de chaque version
+* "Voir toutes les version"
+* on ne peut supprimer que ses sessions ()
+* une sesssion est affichée
+  - si elle a une référence
+  - si il n'y a pas de nouvelle version du même utilisateur
+    à moins d'une certaine durée
+    [si on crée une version plus récente du même utilisateur
+     mais à plus d'une certaine distance, on compte 1 aussi]
+  - code python, à terme, pour le moment on affiche tout
+* on veut avoir un historique par date et avoir "Espace de travail"
+  comme filtre
+- tableau qui affiche la liste des espaces de travail
+  - clic sur la cellule pour filtrer par session active
+  - item de plus "tout afficher"
+  - deuxième colonne avec date, créateur de la version la plus récente
+    + bouton charger
+  - la ligne sélectionné ("tout afficher" par défaut) est en couleur
+    [l'intensité lumineuse doit être suffisante pour le voir]
+- dans la première version on ne peut pas supprimer de session
+  - on pourra l'ajouter plus tard
+- tableau avec la liste de toutes les version (de l'espace de travail
+  sélectionné)
+- notion de version "brouillon"
+- on copie un brouillon pour créer une nouvelle version
+  - problème quand un utilisateur
+
+  => on charge tout côté serveur
+  - date de création, créateur, espace de travail
+
+
 onglet équipe
 	- créer une équipe -> donne un code d'accès
 		- régler si on peut rejoindre l'équipe
@@ -27,19 +60,21 @@ onglet équipe
 
 -->	
 	<div class="wrapper">
-		<!-- Affichage si arrivée sur la page par saisie du code personnel -->
-		<p>Choisissez ce que vous souhaitez faire</p>
+		<h1 class="dev">Affichage candidat qualifié s'il n'a pas créé ou rejoint une équipe</h1>
+		<p>Pour participer aux prochaines épreuves du concours, vous devez être membre d'une équipe, soit en créant une équipe, soit en rejoignant une équipe existante.</p>
+		<p>Choisissez ce que vous voulez faire : </p>
 		<div class="bloc-boutons">
 			<button type="button" class="tabButton selected">Créer une équipe</button>
 			<button type="button" class="tabButton">Rejoindre une équipe</button>
 		</div>
 	
 		<!-- REMOVE--><hr><!-- END REMOVE-->
-		<!-- Affichage si choix du bouton "Rejoindre une équipe" -->
+		<h1 class="dev">Affichage si choix du bouton "Rejoindre une équipe"</h1>
 		<div>
-			<p>Entrez le code d'équipe qui vous a été fourni :</p>
+			<p>Vous avez choisi de rejoindre une équipe existante. Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un cammarade ou votre coordinateur.</p>
 			<form method="" action="">
-				<input type="password" id="numero-equipe"/> <button type="submit">Rejoindre l'équipe</button>
+				<p class="input"><label for="numero-equipe">Code d'équipe : </label><input type="password" id="numero-equipe"/></p>
+				<p><button type="submit" class="submit">Rejoindre une équipe</button></p>
 			</form>
 		</div>
 		<!-- REMOVE--><hr><!-- END REMOVE-->
@@ -50,7 +85,12 @@ onglet équipe
 			<form method="" action="">
 				<p><input type="radio" value="" name="equipe-access" id="equipe-open"> <label for="equipe-open">Permettre à d'autres personnes de rejoindre l'équipe</label></p>
 				<p><input type="radio" value="" name="equipe-access" id="equipe-closed"> <label for="equipe-closed">Bloquer les inscriptions à l'équipe</label></p>
-				<button type="submit">Enregistrer les modifications</button>
+				<button type="submit" class="submit">Enregistrer les modifications</button>
+			</form>
+			<!-- Affichage si personne n'a rejoint l'équipe -->
+			<p>Personne n'a encore rejoint l'équipe :</p>
+			<form method="" action="">
+				<button type="submit" class="submit">Supprimer l'équipe</button>
 			</form>
 			<h2 class="dev">Affichage si des membres ont rejoint l'équipe</h2>
 			<p>Votre équipe est constituée de :</p>
@@ -81,41 +121,42 @@ onglet équipe
 					<td>2015-12-25</td>
 				</tr>
 			</table>
-			<!-- Affichage si personne n'a rejoint l'équipe -->
-			<p>Personne n'a encore rejoint l'équipe :</p>
-			<form method="" action="">
-				<button type="submit">Supprimer l'équipe</button>
-			</form>
 		</div>
 
 		<!-- REMOVE--><hr><!-- END REMOVE-->
 		<h1 class="dev">Affichage membre d'une équipe</h1>
 		<div>
 			<p>Votre équipe est constituée de :</p>
+			
 			<table width="100%">
 				<tr>
 					<th>Nom</th>
 					<th>Statut</th>
+					<th>Membre depuis</th>
 				</tr>
 				<tr>
 					<td>XXX</td>
 					<td>créateur, sélectionné</td>
+					<td>2015-12-25</td>
 				</tr>
 				<tr>
 					<td>YYY</td>
 					<td>non-sélectionné</td>
+					<td>2015-12-25</td>
 				</tr>
 				<tr>
 					<td>ZZZ</td>
 					<td>non-sélectionné</td>
+					<td>2015-12-25</td>
 				</tr>
 				<tr>
 					<td>AAA</td>
 					<td>sélectionné</td>
+					<td>2015-12-25</td>
 				</tr>
 			</table>
 			<form method="" action="">
-				<button type="submit">Quitter l'équipe</button>
+				<p><button type="submit" class="submit">Quitter l'équipe</button></p>
 			</form>
 		</div>
 	</div>
