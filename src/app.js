@@ -39,7 +39,7 @@ let App = connect(appSelector)(PureComponent(self => {
       <div>
         <div id="header">
           <div className="wrapper">
-            <img id="header-logo" src="https://s3-eu-west-1.amazonaws.com/static3.castor-informatique.fr/contestAssets/images/alkindi-logo.png" />
+            <img id="header-logo" src="../images/alkindi-logo.png" />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
           </div>
         </div>
