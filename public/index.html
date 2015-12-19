@@ -2,6 +2,13 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
+<div>
+  <button type="button" onclick="resetState()">état initial</button>
+  <button type="button" onclick="setSelectedUser()">utilisateur sélectionné</button>
+  <button type="button" onclick="joinTeam()">rejoindre une équipe</button>
+  <button type="button" onclick="setQuestion()">obtenir un sujet</button>
+  <button type="button" onclick="addDemoTools()">démo outils</button>
+</div>
 <div id="main" class="container">
   <p>Loading, please wait...</p>
 </div>
@@ -9,48 +16,61 @@
 <script type="text/javascript">
 // Install in #main.
 Alkindi.install(document.getElementById('main'));
-// Dispatch some actions to set up the initial state.
-Alkindi.dispatch({
-  type: 'ADD_TOOL',
-  toolType: 'TextInput',
-  toolState: {
-    alphabetName: 'letters',
-    input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
-    outputVarName: 'long_text',
-    canRemove: false,
-    configuring: false
-  }
-});
-Alkindi.dispatch({
-  type: 'ADD_TOOL',
-  toolType: 'TextInput',
-  toolState: {
-    alphabetName: 'letters',
-    input: "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
-    outputVarName: 'short_text',
-    canRemove: false,
-    configuring: false,
-    collapsed: true
-  }
-});
-Alkindi.dispatch({
-  type: 'ADD_TOOL',
-  toolType: 'SubstitutionInputApply',
-  toolState: {
-    alphabetName: 'letters',
-    initializer: {type: 'shuffle'},
-    pairs: undefined,
-    inputVarName: 'short_text',
-    outputVarName: 'ciphertext',
-    configuring: false
-  }
-});
-Alkindi.dispatch({
-  type: 'ADD_TOOL',
-  toolType: 'TextDisplay',
-  toolState: {
-    inputVarName: 'ciphertext',
-    configuring: false
-  }
-});
+function resetState () {
+  Alkindi.dispatch({type: 'INIT'});
+}
+function setSelectedUser () {
+  Alkindi.dispatch({type: 'SET_USER', user: {isSelected: true}});
+}
+function joinTeam () {
+  Alkindi.dispatch({type: 'SET_TEAM', team: {}});
+}
+function setQuestion () {
+  Alkindi.dispatch({type: 'SET_QUESTION', question: {}});
+}
+function addDemoTools () {
+  Alkindi.dispatch({
+    type: 'ADD_TOOL',
+    toolType: 'TextInput',
+    toolState: {
+      alphabetName: 'letters',
+      input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
+      outputVarName: 'long_text',
+      canRemove: false,
+      configuring: false
+    }
+  });
+  Alkindi.dispatch({
+    type: 'ADD_TOOL',
+    toolType: 'TextInput',
+    toolState: {
+      alphabetName: 'letters',
+      input: "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
+      outputVarName: 'short_text',
+      canRemove: false,
+      configuring: false,
+      collapsed: true
+    }
+  });
+  Alkindi.dispatch({
+    type: 'ADD_TOOL',
+    toolType: 'SubstitutionInputApply',
+    toolState: {
+      alphabetName: 'letters',
+      initializer: {type: 'shuffle'},
+      pairs: undefined,
+      inputVarName: 'short_text',
+      outputVarName: 'ciphertext',
+      configuring: false
+    }
+  });
+  Alkindi.dispatch({
+    type: 'ADD_TOOL',
+    toolType: 'TextDisplay',
+    toolState: {
+      inputVarName: 'ciphertext',
+      configuring: false
+    }
+  });
+}
 </script>
