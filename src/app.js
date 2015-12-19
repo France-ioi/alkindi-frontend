@@ -31,7 +31,7 @@ let App = connect(appSelector)(PureComponent(self => {
     // Si l'utilisateur n'est pas sélectionné et qu'il n'a pas rejoint une
     // équipe, on lui affiche l'écran de sélection d'équipe.
     if (!user.isSelected && !team)
-      return <JoinTeamScreen/>;
+      return <JoinTeamScreen user={user} />;
     let content = false;
     switch (activeTabKey) {
       case 'cryptanalysis':
@@ -43,6 +43,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
+            <span>${user.username}</span>
             <AlkindiLogout/>
           </div>
         </div>

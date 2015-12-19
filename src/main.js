@@ -29,6 +29,8 @@ window.Alkindi = (function () {
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
     Alkindi.logout_url = config.logout_url; // temporary?
+    if ('user' in config)
+      store.dispatch({type: 'SET_USER', user: config.user});
   };
 
   Alkindi.install = function (mainElement) {
