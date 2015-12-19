@@ -2,6 +2,7 @@ import React from 'react';
 
 import {image_url} from '../assets';
 import {PureComponent} from '../misc';
+import AlkindiLogout from './logout';
 
 const JoinTeamScreen = PureComponent(self => {
   self.render = function () {
@@ -14,6 +15,7 @@ const JoinTeamScreen = PureComponent(self => {
               <h1 className="general_title">Concours Alkindi</h1>
               <h2 className="general_subtitle">Test alkindi</h2>
             </td>
+            <td style={{width:'20%'}}><AlkindiLogout/></td>
           </tr></tbody></table>
         </div>
         <p>Pour accéder à l'inteface du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un cammarade ou votre coordinateur.</p>

@@ -4,6 +4,7 @@ import {Button, ButtonGroup} from 'react-bootstrap';
 
 import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
+import AlkindiLogout from './ui/logout';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import {Tool} from './tool';
@@ -42,6 +43,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
+            <AlkindiLogout/>
           </div>
         </div>
         <div className="wrapper">{content}</div>
