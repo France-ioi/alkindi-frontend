@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
+import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
 
@@ -23,6 +24,8 @@ window.Alkindi = (function () {
 
   // Create the global state store.
   let store = Alkindi.store = createStore(reducer);
+
+  Alkindi.configureAssets = configureAssets;
 
   Alkindi.install = function (mainElement) {
     // Enable auto-step interval.

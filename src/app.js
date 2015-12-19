@@ -8,6 +8,7 @@ import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import {Tool} from './tool';
 import * as actions from './actions';
+import {image_url} from './assets';
 
 const appSelector = function (state) {
   const {activeTabKey, user, team, question} = state;
@@ -39,7 +40,7 @@ let App = connect(appSelector)(PureComponent(self => {
       <div>
         <div id="header">
           <div className="wrapper">
-            <img id="header-logo" src="../images/alkindi-logo.png" />
+            <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
           </div>
         </div>
