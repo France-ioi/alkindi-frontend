@@ -1,8 +1,10 @@
-﻿<!DOCTYPE html>
+﻿			</tr>
+<!DOCTYPE html>
 <html>
 <head>
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="../src/main.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body>
 	<div id="header">
@@ -29,40 +31,54 @@ onglet historique
 			. bouton "charger"
 			. bouton radio pour rendre la session active
 		- bouton "retour" revoie vers l'affichage des espaces de travail dans l'onglet historique
+
+
+Dans l'interface : session -> version
+* on affiche le nom de l'auteur de chaque version
+* "Voir toutes les version"
+* on ne peut supprimer que ses sessions ()
+* une sesssion est affichée
+  - si elle a une référence
+  - si il n'y a pas de nouvelle version du même utilisateur
+    à moins d'une certaine durée
+    [si on crée une version plus récente du même utilisateur
+     mais à plus d'une certaine distance, on compte 1 aussi]
+  - code python, à terme, pour le moment on affiche tout
+* on veut avoir un historique par date et avoir "Espace de travail"
+  comme filtre
+- tableau qui affiche la liste des espaces de travail
+  - clic sur la cellule pour filtrer par session active
+  - item de plus "tout afficher"
+  - deuxième colonne avec date, créateur de la version la plus récente
+    + bouton charger
+  - la ligne sélectionné ("tout afficher" par défaut) est en couleur
+    [l'intensité lumineuse doit être suffisante pour le voir]
+- dans la première version on ne peut pas supprimer de session
+  - on pourra l'ajouter plus tard
+- tableau avec la liste de toutes les version (de l'espace de travail
+  sélectionné)
+- notion de version "brouillon"
+- on copie un brouillon pour créer une nouvelle version
+  - problème quand un utilisateur
+
 -->
 	<div class="wrapper">
-		<table id="workspace-list">
+		<table id="workspace-list"><tbody>
 			<tr>
-				<td>Mon espace de travail 1</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session la plus récente</a></td>
+				<th>Espace de travail</th>
+				<th>Auteur</th>
+				<th>Date de la dernière modification</th>
+				<th></th>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 2</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
+				<td><button><i class="fa fa-filter"></i></button> Mon espace de travail 1 </td>
+				<td>Michel</td>
+				<td>2015-12-19</td>
+				<td><button>utiliser</button></td>
 			</tr>
 			<tr>
-				<td>Mon espace de travail 3</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>La session de travail de Kevin</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session active</a></td>
-			</tr>
-			<tr>
-				<td>Mon espace de travail 4</td>
-				<td><a>voir les sessions</a></td>
-				<td><a>charger la session active</a></td>
-			</tr>
-			<tr>
-				<td>Mon espace de travail 5</td>
-				<td><a>voir les sessions</a></td>
-				<td></td>
-			</tr>
-		</table>
+				<td colspan="4"><button>afficher toutes les versions</button></td>
+		</tbody></table>
 
 		<!-- REMOVE--><hr><!-- END REMOVE-->
 		<!-- Affichage de la liste des sessions de l'espace de travail sélectionné -->
