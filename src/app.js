@@ -43,7 +43,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
-            <span>${user.username}</span>
+            <span>{user.username}</span>
             <AlkindiLogout/>
           </div>
         </div>
