@@ -43,7 +43,7 @@ let App = connect(appSelector)(PureComponent(self => {
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
           </div>
         </div>
-        <div className="container">{content}</div>
+        <div className="wrapper">{content}</div>
       </div>);
   };
 }));
