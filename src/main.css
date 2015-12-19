@@ -294,9 +294,23 @@ character substitutions tables
     background-color: #E2D9C8;
     border: 3px solid #333;
     font-weight: bold;
+button.submit {
+  display: table-cell;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000;
+  padding: 3px 10px;
+  border: 1px solid #333;
+  text-align: center;
+  font-weight: normal;
+  background-color: #F0E9D8;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+       -o-border-radius: 5px;
+          border-radius: 5px;
 }
-.divInput {
-    padding-left: 100px;
+button.submit:hover {
+  background-color: #E2D9C8;
 }
 
 .general_title {
