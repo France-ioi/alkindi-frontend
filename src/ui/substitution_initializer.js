@@ -9,7 +9,7 @@ export const SubstitutionInitializer = PureComponent(self => {
     self.props.onChange({type});
   };
   self.render = function () {
-    const {value} = this.props;
+    const {value} = self.props;
     return (
       <Input ref='selectType' type='select' label="Initializer" value={value.type} onChange={typeChanged} >
         <option name='identity'>identity</option>

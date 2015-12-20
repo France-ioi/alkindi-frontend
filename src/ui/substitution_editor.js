@@ -40,8 +40,8 @@ export const SubstitutionEditor = PureComponent(self => {
     self.setState({selectedIndex: undefined});
   };
   self.render = function () {
-    const {substitution} = this.props;
-    const {selectedIndex} = this.state;
+    const {substitution} = self.props;
+    const {selectedIndex} = self.state;
     if (substitution === undefined)
       return (<p>undefined substitution</p>);
     const {sourceAlphabet, targetAlphabet, indexMap} = substitution;
