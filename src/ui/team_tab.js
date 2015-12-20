@@ -17,6 +17,9 @@ const TeamTab = PureComponent(self => {
     // self.refs.teamCode
     // for now: dispatch a SET_TEAM event
   }
+  function isOpenChanged () {
+    // TODO
+  }
   self.render = function () {
     const {user, team} = self.props;
     const body = [];
@@ -49,20 +52,21 @@ const TeamTab = PureComponent(self => {
         body.push(
           <div key='settings'>
             <p>Vous pouvez modifier les réglages de votre équipe :</p>
-            <p><input type="radio" name="team-open" id="team-open" checked={team.isOpen} /> <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label></p>
-            <p><input type="radio" name="team-open" id="team-closed" checked={!team.isOpen} /> <label htmlFor="team-closed">Bloquer les inscriptions à l'équipe</label></p>
+            <p><input type="radio" name="team-open" id="team-open" checked={team.isOpen} onChange={isOpenChanged} /> <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label></p>
+            <p><input type="radio" name="team-open" id="team-closed" checked={!team.isOpen} onChange={isOpenChanged} /> <label htmlFor="team-closed">Bloquer les inscriptions à l'équipe</label></p>
             <button type="submit" className="submit">Enregistrer les modifications</button>
           </div>);
       }
       const renderMember = function (member) {
         const flags = [];
-        if (team.creator.id === member.id)
+        if (team.creator.id === member.user.id)
           flags.push('créateur');
         if (member.isSelected)
           flags.push('sélectionné');
         return (
-          <tr key={member.id}>
-            <td>{member.username}</td>
+          <tr key={member.user.id}>
+            <td>{member.user.fullname}</td>
+            <td>{member.user.email}</td>
             <td>{flags.join(', ')}</td>
             <td>{member.joinDate}</td>
           </tr>);

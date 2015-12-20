@@ -6,6 +6,7 @@ import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
 import AlkindiLogout from './ui/logout';
 import TeamTab from './ui/team_tab';
+import HistoryTab from './ui/history_tab';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import {Tool} from './tool';
@@ -38,6 +39,11 @@ let App = connect(appSelector)(PureComponent(self => {
       case 'team':
         content = <TeamTab user={user} team={team} haveQuestion={!!question}/>;
         break;
+      case 'history':
+        // FIXME: we do not always need workspaces, so make the component
+        // connect directly to the store.
+        content = <HistoryTab/>;
+        break;
       case 'cryptanalysis':
         content = <CryptanalysisTab/>;
         break;
@@ -48,7 +54,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
-            <span>{user.username}</span>
+            <span>{user.email}</span>
             <AlkindiLogout/>
           </div>
         </div>

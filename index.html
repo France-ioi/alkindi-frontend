@@ -4,7 +4,9 @@
 <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
 <div>
   <button type="button" onclick="resetState()">état initial</button>
-  <button type="button" onclick="setSelectedUser()">utilisateur sélectionné</button>
+  <button type="button" onclick="setUser(michel)">Michel</button>
+  <button type="button" onclick="setUser(bruno)">Bruno</button>
+  <button type="button" onclick="setUser(adele)">Adèle</button>
   <button type="button" onclick="joinTeam()">rejoindre une équipe</button>
   <button type="button" onclick="setQuestion()">obtenir un sujet</button>
   <button type="button" onclick="addDemoTools()">démo outils</button>
@@ -16,37 +18,89 @@
 <script type="text/javascript">
 // Install in #main.
 Alkindi.install(document.getElementById('main'));
+
+var michel = {
+  id: 3,
+  email: 'michel@example.com',
+  firstname: 'Michel', lastname: 'Dubois', fullname: 'Michel Dubois',
+  isSelected: true
+};
+var bruno = {
+  id: 4,
+  email: 'bruno@example.com',
+  firstname: 'Bruno', lastname: 'Petit', fullname: 'Bruno Petit',
+  isSelected: true
+};
+var adele = {
+  id: 5,
+  email: 'adele@example.com',
+  firstname: 'Adèle', lastname: 'Durand', fullname: 'Adele Durand',
+  isSelected: false
+};
+
 resetState();
+setUser(michel);
+joinTeam();
+setQuestion();
+Alkindi.dispatch({type: 'SET_ACTIVE_TAB', tabKey: 'history'});
 function resetState () {
   Alkindi.dispatch({type: 'INIT'});
-  Alkindi.dispatch({type: 'SET_USER', user: {
-    id: 2,
-    username: 'copain@example.com',
-    isSelected: false
-  }});
+  Alkindi.dispatch({type: 'SET_USER', user: adele});
 }
-function setSelectedUser () {
-  Alkindi.dispatch({type: 'SET_USER', user: {
-    id: 1,
-    username: 'selectionné@example.com',
-    isSelected: true
-  }});
+function setUser (user) {
+  Alkindi.dispatch({type: 'SET_USER', user: user});
 }
 function joinTeam () {
   Alkindi.dispatch({type: 'SET_TEAM', team: {
     code: 'cfr5ujut',
     isOpen: true,
-    creator: {
-      id: 1, username: 'selectionné@example.com', isSelected: true
-    },
+    creator: michel,
     members: [
-      {id: 1, username: 'selectionné@example.com', isSelected: true, joinDate: '2015-12-19'},
-      {id: 2, username: 'copain@example.com', isSelected: false, joinDate: '2015-12-20'}
+      {user: michel, joinDate: '2015-12-19'},
+      {user: bruno, joinDate: '2015-12-20'},
+      {user: adele, joinDate: '2015-12-20'}
     ]
   }});
 }
 function setQuestion () {
   Alkindi.dispatch({type: 'SET_QUESTION', question: {}});
+  Alkindi.dispatch({type: 'SET_WORKSPACES', workspaces: [
+    {
+      id: 1,
+      title: 'Mon espace de travail 1',
+      versions: [
+        {id: 101, updatedAt: '2015-12-19T21:21:30', owner: michel}
+      ]
+    },
+    {
+      id: 2,
+      title: 'Mon espace de travail 2',
+      versions: [
+        {id: 102, updatedAt: '2015-12-19T08:50:27', owner: bruno}
+      ]
+    },
+    {
+      id: 3,
+      title: 'Mon espace de travail 3',
+      versions: [
+        {id: 103, updatedAt: '2015-12-19T09:04:53', owner: adele}
+      ]
+    },
+    {
+      id: 4,
+      title: 'Mon espace de travail 4',
+      versions: [
+        {id: 104, updatedAt: '2015-12-17T22:49:42', owner: michel}
+      ]
+    },
+    {
+      id: 5,
+      title: 'Mon espace de travail 5',
+      versions: [
+        {id: 105, updatedAt: '2015-12-15T18:31:00', owner: michel}
+      ]
+    }
+  ]});
 }
 function addDemoTools () {
   Alkindi.dispatch({

@@ -13,7 +13,11 @@ const initialState = function () {
       isSelected: false
     },
     team: undefined,
-    activeTabKey: undefined
+    activeTabKey: undefined,
+    historyTab: {
+      workspaces: [],
+      currentWorkspace: undefined
+    }
   };
 };
 
@@ -27,6 +31,23 @@ const reduceSetTeam = function (state, team) {
 
 const reduceSetQuestion = function (state, question) {
   return {...state, question};
+};
+
+const reduceSetWorkspaces = function (state, workspaces) {
+  const {historyTab} = state;
+  const currentWorkspace = undefined;
+  // TODO: retain currentWorkspace based on historyTab.currentWorkspace.id
+  // being present in workspaces
+  const newHistoryTab = {
+    workspaces,
+    currentWorkspace
+  };
+  if (currentWorkspace === undefined) {
+    let groups = workspaces.map(w => w.versions.map(v => { return {...v, workspace: w}; }));
+    groups = groups.sort((v1, v2) => new Date(v1.updatedAt) < new Date(v2.updatedAt));
+    newHistoryTab.allVersions = Array.prototype.concat.apply([], groups);
+  }
+  return {...state, historyTab: newHistoryTab};
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
@@ -120,12 +141,11 @@ const reduceStep = function (state) {
   };
 };
 
-export default function reduce (state, action) {
-  // console.log('reduce', JSON.stringify(action));
+function actualReduce (state, action) {
+  let newState = state;
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      console.log('initial state');
       return initialState();
     case 'SET_USER':
       return reduceSetUser(state, action.user);
@@ -133,6 +153,8 @@ export default function reduce (state, action) {
       return reduceSetTeam(state, action.team);
     case 'SET_QUESTION':
       return reduceSetQuestion(state, action.question);
+    case 'SET_WORKSPACES':
+      return reduceSetWorkspaces(state, action.workspaces);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
     case 'ADD_TOOL':
@@ -145,6 +167,12 @@ export default function reduce (state, action) {
       return reduceStep(state);
     default:
       console.log('dropped unknown action', action);
+      return state;
   }
-  return state;
+};
+
+export default function reduce (state, action) {
+  const newState = actualReduce(state, action);
+  // console.log('reduce', action, state, newState);
+  return newState;
 };
