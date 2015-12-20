@@ -5,6 +5,7 @@ import {Button, ButtonGroup} from 'react-bootstrap';
 import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
 import AlkindiLogout from './ui/logout';
+import TeamTab from './ui/team_tab';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import {Tool} from './tool';
@@ -34,8 +35,12 @@ let App = connect(appSelector)(PureComponent(self => {
       return <JoinTeamScreen user={user} />;
     let content = false;
     switch (activeTabKey) {
+      case 'team':
+        content = <TeamTab user={user} team={team} haveQuestion={!!question}/>;
+        break;
       case 'cryptanalysis':
         content = <CryptanalysisTab/>;
+        break;
     }
     return (
       <div>
