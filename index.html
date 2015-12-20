@@ -19,13 +19,31 @@ Alkindi.install(document.getElementById('main'));
 resetState();
 function resetState () {
   Alkindi.dispatch({type: 'INIT'});
-  Alkindi.dispatch({type: 'SET_USER', user: {username: 'copain@example.com', isSelected: false}});
+  Alkindi.dispatch({type: 'SET_USER', user: {
+    id: 2,
+    username: 'copain@example.com',
+    isSelected: false
+  }});
 }
 function setSelectedUser () {
-  Alkindi.dispatch({type: 'SET_USER', user: {username: 'selectionné@example.com', isSelected: true}});
+  Alkindi.dispatch({type: 'SET_USER', user: {
+    id: 1,
+    username: 'selectionné@example.com',
+    isSelected: true
+  }});
 }
 function joinTeam () {
-  Alkindi.dispatch({type: 'SET_TEAM', team: {}});
+  Alkindi.dispatch({type: 'SET_TEAM', team: {
+    code: 'cfr5ujut',
+    isOpen: true,
+    creator: {
+      id: 1, username: 'selectionné@example.com', isSelected: true
+    },
+    members: [
+      {id: 1, username: 'selectionné@example.com', isSelected: true, joinDate: '2015-12-19'},
+      {id: 2, username: 'copain@example.com', isSelected: false, joinDate: '2015-12-20'}
+    ]
+  }});
 }
 function setQuestion () {
   Alkindi.dispatch({type: 'SET_QUESTION', question: {}});
