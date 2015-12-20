@@ -3,6 +3,9 @@ import * as PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
 
 export {PureRenderMixin};
 
+/* A pure component must always render the same for given props and state.
+*/
+
 export function PureComponent (factory, getInitialState) {
   return function (props, context) {
     const self = {
