@@ -38,7 +38,7 @@ const TeamTab = PureComponent(self => {
         body.push(
           <div key='join-team'>
             <p>Vous avez choisi de rejoindre une équipe existante. Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade ou votre coordinateur.</p>
-            <p className="input"><label htmlFor="code-equipe">Code d'équipe : </label><input ref='teamCode' type="password" id="code-equipe"/></p>
+            <p className="input"><label htmlFor="code-equipe">Code d'équipe :&nbsp;</label><input ref='teamCode' type="password" id="code-equipe"/></p>
             <p><button type="button" className="submit" onClick={onJoinTeam}>Rejoindre l'équipe</button></p>
           </div>);
       }
