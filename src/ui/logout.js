@@ -6,6 +6,7 @@ let AlkindiLogout = PureComponent(self => {
   self.render = function () {
     return (
       <form id="logout" action={Alkindi.logout_url} method="POST">
+        <span>{self.props.username}</span>
         <button type='submit'>déconnexion</button>
       </form>
     );
