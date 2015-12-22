@@ -304,14 +304,14 @@ character substitutions tables
   border: 1px solid #333;
   text-align: center;
   font-weight: normal;
-  background-color: #F0E9D8;
+  background-color: #f0ede9;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
        -o-border-radius: 5px;
           border-radius: 5px;
 }
 .tabButton:hover {
-  background-color: #E2D9C8;
+  background-color: #d0cdc9;
   font-weight: bold;
 }
 button[type=submit],
@@ -325,7 +325,7 @@ button[type=button] {
   border: 1px solid #333;
   text-align: center;
   font-weight: normal;
-  background-color: #F0E9D8;
+  background-color: #f0ede9;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
        -o-border-radius: 5px;
@@ -335,7 +335,7 @@ button[type=submit]:hover,
 button[type=button]:hover,
 button[type=submit]:focus,
 button[type=button]:focus {
-  background-color: #E2D9C8;
+  background-color: #d0cdc9;
 }
 .general_title {
   font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
