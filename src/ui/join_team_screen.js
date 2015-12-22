@@ -17,8 +17,7 @@ const JoinTeamScreen = PureComponent(self => {
               <h2 className="general_subtitle">Test alkindi</h2>
             </td>
             <td style={{width:'20%'}}>
-              <span>{user.email}</span>
-              <AlkindiLogout/>
+              <AlkindiLogout username={user.email}/>
             </td>
           </tr></tbody></table>
         </div>
