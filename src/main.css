@@ -237,7 +237,6 @@ character substitutions tables
   width: 60px;
 }
 #navigation {
-  text-align: right;
     display: table-cell;
     vertical-align: bottom;
     margin: 0;
@@ -247,13 +246,28 @@ character substitutions tables
   display: inline-block;
   border: 1px solid #777;
   border-bottom: none;
-  background-color: #E2D9C8;
+  background-color: #F4D5D5;
+  margin: 0 3px;
+  -webkit-border-top-left-radius: 5px;
+     -moz-border-top-left-radius: 5px;
+       -o-border-top-left-radius: 5px;
+          border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+     -moz-border-top-right-radius: 5px;
+       -o-border-top-right-radius: 5px;
+          border-top-right-radius: 5px;
 }
 #navigation li.actif {
-  background-color: #fff;
+  background-color: #ac1a1d;;
+}
+#navigation li.indisponible {
+  background-color: #F4D5D5;
 }
 #navigation li.indisponible a {
-  color: #888;
+  color: #777;
+}
+#navigation li.indisponible a:hover {
+  text-decoration: none;
 }
 #navigation li a {
   display: block;
@@ -264,14 +278,16 @@ character substitutions tables
   line-height: 1.2em;
   text-align: center;
 }
+#navigation li.actif a {
+  color: #fff;
+}
 
 /* Formulaires de création */
+/*
 .dialog {
-    padding-left: 245px;
+  padding-left: 245px;
 }
-.bloc-boutons {
-  display: table;
-}
+*/
 .tabButton {
   display: table-cell;
   width: 250px;
