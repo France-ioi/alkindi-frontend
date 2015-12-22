@@ -374,8 +374,9 @@ button[type=button]:focus {
   border-bottom: 1px solid #eeeeee;
 }
 /* Historique */
-.workspace-list {
-  width: 100%;
+.workspace-list,
+.session-list {
+  margin-top: 1em;
 }
 .workspace-list td:first-child {
   width: 50%;
