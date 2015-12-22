@@ -23,7 +23,7 @@ const JoinTeamScreen = PureComponent(self => {
         </div>
         <p>Pour accéder à l'inteface du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un cammarade ou votre coordinateur.</p>
         <form method="" action="">
-          <p className="input"><label htmlFor="code-equipe">Code d'équipe : </label><input type="text" id="code-equipe"/></p>
+          <p className="input"><label htmlFor="code-equipe">Code d'équipe :&nbsp;</label><input type="text" id="code-equipe"/></p>
           <p><button type="button">Rejoindre une équipe</button></p>
         </form>
       </div>
