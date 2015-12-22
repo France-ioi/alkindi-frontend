@@ -281,7 +281,13 @@ character substitutions tables
 #navigation li.actif a {
   color: #fff;
 }
-
+#logout {
+  display: table-cell;
+  vertical-align: bottom;
+}
+#logout span {
+  display: block;
+}
 /* Formulaires de création */
 /*
 .dialog {
