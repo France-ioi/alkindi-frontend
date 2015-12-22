@@ -16,9 +16,9 @@ body {
 /* Generic elements */
 a {
   color: #4D87CE;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
 }
 select.placeholder {
   color: #999;
@@ -47,9 +47,9 @@ table th {
 
 /* Page layout */
 .wrapper {
-    max-width: 880px;
-    min-width: 650px;
-    margin: 0 auto;
+  max-width: 880px;
+  min-width: 650px;
+  margin: 0 auto;
 }
 
 
@@ -199,29 +199,29 @@ character substitutions tables
   padding: 0;
 }
 #header_logo {
-    padding-bottom: 0px;
-    width: 60px;
+  padding-bottom: 0px;
+  width: 60px;
 }
 #header_logo img {
-    width: 60px;
+  width: 60px;
 }
 #header_score {
-    width: 140px;
-    padding-bottom: 10px;
+  width: 140px;
+  padding-bottom: 10px;
 }
 #header_time {
-    width: 160px;
-    padding-bottom: 10px;
+  width: 160px;
+  padding-bottom: 10px;
 }
 #header_button {
-    width: 310px;
-    text-align: right;
-    padding-bottom: 10px;
+  width: 310px;
+  text-align: right;
+  padding-bottom: 10px;
 }
 #header_button input[type=button] {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px;
 }
 
 /* General header layout */
@@ -237,10 +237,10 @@ character substitutions tables
   width: 60px;
 }
 #navigation {
-    display: table-cell;
-    vertical-align: bottom;
-    margin: 0;
-    padding: 0;
+  display: table-cell;
+  vertical-align: bottom;
+  margin: 0;
+  padding: 0;
 }
 #navigation li {
   display: inline-block;
@@ -339,26 +339,26 @@ button[type=button]:focus {
 }
 .general_title {
   font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-    font-size: 40px;
-    text-transform: uppercase;
-    font-weight: normal;
-    margin: 0;
-    padding: 0;
-    padding-top: 30px;
-    color: #736451;
-    margin-bottom: 10px;
-    text-align: left;
+  font-size: 40px;
+  text-transform: uppercase;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  padding-top: 30px;
+  color: #736451;
+  margin-bottom: 10px;
+  text-align: left;
 }
 .general_subtitle {
-    font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
-    font-size: 24px;
-    text-transform: uppercase;
-    text-align: left;
-    font-weight: normal;
-    margin: 0;
-    padding: 0;
-    color: #000000;
-    border-bottom: 1px solid #eeeeee;
+  font-family: "Century Gothic", "Trebuchet MS", "Arial Narrow", Arial, sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  text-align: left;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  color: #000000;
+  border-bottom: 1px solid #eeeeee;
 }
 /* Historique */
 .workspace-list {
@@ -382,7 +382,7 @@ a.cell-link {
 
 /* Dev elements */
 .dev {
-    color: #4f4;
+  color: #4f4;
 }
 .dev-buttons {
   border-bottom: 1px solid #333;
