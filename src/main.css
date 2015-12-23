@@ -203,6 +203,9 @@ character substitutions tables
 
 
 /* Authentication header layout */
+#auth-header {
+  margin-bottom: 10px;
+}
 #auth-header table {
   border: 0;
 }

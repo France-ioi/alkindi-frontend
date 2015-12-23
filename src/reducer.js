@@ -9,9 +9,7 @@ const initialState = function () {
     nextToolId: 1,
     autoRefresh: true,
     rootScope: {},
-    user: {
-      isSelected: false
-    },
+    user: undefined,
     team: undefined,
     activeTabKey: undefined,
     historyTab: {
@@ -146,6 +144,8 @@ function actualReduce (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
+      return initialState();
+    case 'AFTER_LOGOUT':
       return initialState();
     case 'SET_USER':
       return reduceSetUser(state, action.user);

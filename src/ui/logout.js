@@ -1,14 +1,24 @@
 import React from 'react';
 
 import {PureComponent} from '../misc';
+import {logout} from '../api';
 
 let AlkindiLogout = PureComponent(self => {
+  const onLogout = function () {
+    logout(function (err) {
+      if (err) {
+        // XXX display user notice
+        return;
+      }
+      self.props.onLogout();
+    });
+  };
   self.render = function () {
     return (
-      <form id="logout" action={Alkindi.logout_url} method="POST">
+      <div id="logout">
         <span>{self.props.username}</span>
-        <button type='submit'>déconnexion</button>
-      </form>
+        <button type='button' onClick={onLogout}>déconnexion</button>
+      </div>
     );
   };
 });
