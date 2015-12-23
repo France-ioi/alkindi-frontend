@@ -26,6 +26,7 @@ window.Alkindi = (function () {
   let store = Alkindi.store = createStore(reducer);
 
   Alkindi.configure = function (config) {
+    Alkindi.config = config;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
     Alkindi.logout_url = config.logout_url; // temporary?
