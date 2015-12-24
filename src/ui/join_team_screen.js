@@ -11,7 +11,7 @@ const JoinTeamScreen = PureComponent(self => {
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <AlkindiLogout username={user.email} onLogout={this.props.onLogout}/>
+          <AlkindiLogout username={user.email} logoutUrl={Alkindi.config.logout_url} onLogout={this.props.onLogout}/>
         </div>
         <AlkindiAuthHeader/>
         <p>Pour accéder à l'inteface du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade ou votre coordinateur.</p>

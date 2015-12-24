@@ -9,6 +9,6 @@ function post (path, data) {
   return req;
 }
 
-export const logout = function (callback) {
+/* export const logout = function (callback) {
   post('logout').end(callback);
-};
+}; */

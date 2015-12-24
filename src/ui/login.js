@@ -4,16 +4,15 @@ import {PureComponent} from '../misc';
 import AlkindiAuthHeader from './auth_header';
 
 const LoginScreen = PureComponent(self => {
-  const messageListener = function (event) {
-    if (!event.isTrusted)
-      return;
-    const message = JSON.parse(event.data);
-    if (message.action === 'afterLogin')
-      self.props.onLogin(message.user);
-  };
   const login = function () {
     window.open(self.props.loginUrl, "alkindi:login",
       "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+  };
+  const messageListener = function (event) {
+    // TODO: understand why event.isTrusted is false on Firefox.
+    const message = JSON.parse(event.data);
+    if (message.action === 'afterLogin')
+      self.props.onLogin(message.user);
   };
   self.componentDidMount = function () {
     window.addEventListener('message', messageListener);
