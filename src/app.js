@@ -67,7 +67,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
-            <AlkindiLogout username={user.email} logoutUrl={Alkindi.config.logout_url} onLogout={this.props.onLogout}/>
+            <AlkindiLogout username={user.email} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout} />
           </div>
         </div>
         <div className="wrapper">{content}</div>
