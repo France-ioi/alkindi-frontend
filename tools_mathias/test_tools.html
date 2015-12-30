@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+   .playFairGrid, .playFairAlphabet, .substitutionPair {
+      border-collapse: collapse;
+   }
+
+   .playFairGrid tr td, .playFairAlphabet tr td {
+      width: 30px;
+      height: 30px;
+      font-size: 1.5em;
+      text-align: center;
+      border: solid black 1px;
+   }
+
+   .substitutionPair tr td {
+      width: 20px;
+      height: 20px;
+      font-size: 1.2em;
+      text-align: center;
+      border: solid black 1px;
+   }
+
+   .qualifier-locked {
+      background-color: lightgray;
+      background-image: url('lock.png');
+      background-repeat: no-repeat;
+      background-position: top right;
+   }
+
+   .qualifier-confirmed {
+      background-color: lightgray;
+   }
+
+   .qualifier-disabled {
+      background-color: gray;
+   }
+
+   .cell-query {
+      background-color: cyan;
+   }
+
+   .dialog {
+      width: 400px;
+      background: #E0E0E0;
+      border: solid black 1px;
+      padding: 5px;
+   }
+</style>
+<script type="text/javascript" src="common.js"></script>
+<script type="text/javascript" src="tools/playFair.js"></script>
+<script type="text/javascript" src="tools/hintsPlayFair.js"></script>
+<script type="text/javascript" src="tools/substitutionFromGrid.js"></script>
+<html>
+<div id='hintsPlayFair'></div>
+<br/>
+<div id='substitutionFromGrid'></div>
+<script>
+   var hintsPlayFair = getHintsPlayFair();
+   var substitutionFromGrid = getSubstitutionFromGrid();
+   hintsPlayFair.render();
+   substitutionFromGrid.render();
+</script>
+</html>
