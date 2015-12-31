@@ -11,6 +11,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 8px 0 0;
   padding: 0;
+  color: #000;
 }
 
 /* Generic elements */
@@ -486,4 +487,8 @@ a.cell-link {
   background: #E0E0E0;
   border: solid black 1px;
   padding: 5px;
+}
+.dialogIndice {
+  font-family: monospace;
+  font-weight: bold;
 }
