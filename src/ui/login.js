@@ -12,7 +12,7 @@ const LoginScreen = PureComponent(self => {
     // TODO: understand why event.isTrusted is false on Firefox.
     const message = JSON.parse(event.data);
     if (message.action === 'afterLogin')
-      self.props.onLogin(message.user);
+      self.props.onLogin(message.user_id);
   };
   self.componentDidMount = function () {
     window.addEventListener('message', messageListener);
