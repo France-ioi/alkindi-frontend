@@ -21,27 +21,37 @@ function getHintsPlayFair() {
       }
    };
 
-   var getCellPython = function(cell) {
+   var renderCellPython = function(cell) {
       return "'" + getCellLetter(cell) + "'";
    };
 
-   var getInstructionPython = function() {
-      return self.state.outputGridVariable + " = " + getGridPython(self.state.inputGridCells, getCellPython);
+   var renderInstructionPython = function() {
+      return self.state.outputGridVariable + " = " + common.renderGridPython(self.state.inputGridCells, renderCellPython);
    };
    
-   var getGridHtml = function() {
-      return playFair.getGridHtml(self, getCellLetter);
+   var renderGrid = function() {
+      var selectedRow;
+      var selectedCol;
+      var query = self.state.hintQuery;
+      if (query != undefined) {
+         if (query.type === 'grid') {
+            selectedRow = query.row;
+            selectedCol = query.col;
+         }
+      }
+      return playFair.renderGrid(self, getCellLetter, selectedRow, selectedCol);
    };
 
-   self.clickGridCell = function(iRow, iCol) {
+   self.clickGridCell = function(row, col) {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.state.inputGridCells[iRow][iCol].q === "confirmed") {
-         self.cancelHint();
+      if (self.state.inputGridCells[row][col].q === "confirmed") {
+         self.state.hintQuery = undefined;
+         self.state.hintState = "invalid";
       } else {
-         self.state.hintQuery = { type:'grid', row: iRow, col: iCol };
-         self.state.hintState === "preparing"
+         self.state.hintQuery = { type:'grid', row: row, col: col };
+         self.state.hintState = "preparing";
       }
       self.render();
    };
@@ -50,25 +60,26 @@ function getHintsPlayFair() {
       if (self.state.hintState === "waiting") {
          return;
       }
-      var qualifiers = getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
+      var qualifiers = common.getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
       if (qualifiers[rank] === "confirmed") {
-         self.cancelHint();
+         self.state.hintState = "invalid";
+         self.cancelDialog();
       } else {
          self.state.hintQuery = { type:'alphabet', rank: rank };
-         self.state.hintState === "preparing"
+         self.state.hintState = "preparing";
       }
       self.render();
    };
    
-   var getAlphabetHtml = function() {
-      var qualifiers = getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
+   var renderAlphabet = function() {
+      var qualifiers = common.getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
       var strHtml = "";
 
-      for (var iRow = 0; iRow < 2; iRow++) {
+      for (var row = 0; row < 2; row++) {
          strHtml += "<table class='playFairAlphabet'>";
          strHtml += "<tr>";
-         for (var iCol = 0; iCol < 13; iCol++) {
-            var letterRank = iRow * 13 + iCol;
+         for (var col = 0; col < 13; col++) {
+            var letterRank = row * 13 + col;
             if (letterRank == 22) {
                strHtml += "<td class='qualifier-disabled'></td>";
             } else {
@@ -77,7 +88,7 @@ function getHintsPlayFair() {
                }
                var queryClass = "";
                var query = self.state.hintQuery;
-               if (query !== null) {
+               if (query != undefined) {
                   if ((query.type === 'alphabet') && (query.rank === letterRank)) {
                      queryClass = "cell-query";
                   }
@@ -89,7 +100,7 @@ function getHintsPlayFair() {
          }
          strHtml += "</tr>";
          strHtml += "</table>";
-         if (iRow == 0) {
+         if (row == 0) {
             strHtml += "<br/>";
          }
       }
@@ -98,16 +109,14 @@ function getHintsPlayFair() {
 
    var getQueryCost = function(query) {
       if (query.type === "grid") {
-         return 15;
+         return 10;
       } else {
          return 10;
       }
    }
 
-   var getHintQueryHtml = function() {
-      if (self.state.hintQuery === null) {
-         return "";
-      } else if (self.state.hintState === "preparing") {
+   var renderHintQuery = function() {
+      if (self.state.hintState === "preparing") {
          var query = self.state.hintQuery;
          var message;
          if (query.type === "grid") {
@@ -119,26 +128,25 @@ function getHintsPlayFair() {
          return "<div class='dialog'>" +
                "<strong>Indice demandé :</strong> " + message + "<br/>" +
                "<strong>Coût :</strong> " + cost + " points<br/>" +
-               "<div style='text-align:center'>" +
-               "<button onclick='hintsPlayFair.validateHint()'>Valider</button>" +
-               "&nbsp;&nbsp;&nbsp;" +
-               "<button onclick='hintsPlayFair.cancelHint()'>Annuler</button>" +
-               "</div>" +
+               common.renderValidateOrCancelDialog(self.name) +
             "</div>";
       } else if (self.state.hintState === "waiting") {
-         return "<div class='hintQuery'>En attente de réponse du serveur</div>";
+         return "<div class='dialog'>En attente de réponse du serveur</div>";
       } else if (self.state.hintState === "received") {
-         return "<div class='hintQuery'>Indice obtenu <button onclick='hintsPlayFair.cancelHint()'>OK</button></div>";
+         return "<div class='dialog'>Indice obtenu <button onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
+      } else if (self.state.hintState === "invalid") {
+         return "<div class='dialog'>Cet indice a déjà été obtenu</div>";
       }
+      return "";
    };
 
-   self.cancelHint = function() {
-      self.state.hintQuery = null;
+   self.cancelDialog = function() {
+      self.state.hintQuery = undefined;
       self.state.hintState = "idling";
       self.render();
    };
 
-   self.validateHint = function() {
+   self.validateDialog = function() {
       self.state.hintState = "waiting";
       self.render();
       setTimeout(function() {
@@ -147,36 +155,39 @@ function getHintsPlayFair() {
       }, 1000);
    };
 
-   var getVariables = function() {
-      return getVariablesHtml([
-         {label: "Grille enregistrée", name: self.state.outputGridVariable}
-      ]);
+   var renderVariables = function() {
+      return common.renderVariables({
+         output: [
+            {label: "Grille enregistrée", name: self.state.outputGridVariable}
+         ]
+      });
    };
 
-   var getToolHtml = function() {
+   var renderTool = function() {
       return "<div style='width:700px;border: solid black 1px'>" +
             "<div style='width:100%;border: solid black 1px;box-sizing: border-box;padding:3px'>" + 
-               getInstructionPython() +
+               renderInstructionPython() +
             "</div>" +
             "<div style='overflow:auto'>" +
-               "<div style='float:right; margin:3px'>" + getHintQueryHtml() + "</div>" +
-               getVariables() +
+               "<div style='float:right; margin:3px'>" + renderHintQuery() + "</div>" +
+               renderVariables() +
                "<strong>Score disponible :</strong> " + self.state.score + " points" +
             "</div>" +
             "<span style='clear:both'></span>" + 
+            "<strong>Deux types d'indices sont disponibles :</strong><br/>" +
             "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
                "Révéler une case : " + getQueryCost({ type: "grid"}) + " points" +
-               getGridHtml() +
+               renderGrid() +
             "</div>" +
             "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
                "Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points" +
-               getAlphabetHtml() +
+               renderAlphabet() +
             "</div>" +
          "</div>";
    };
 
    self.render = function() {
-      document.getElementById('hintsPlayFair').innerHTML = getToolHtml();
+      document.getElementById(self.name).innerHTML = renderTool();
    };
 
    return self;

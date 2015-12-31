@@ -1,11 +1,16 @@
 function getSubstitutionFromGrid() {
    var self = {};
 
+   self.name = "substitutionFromGrid";
+
    self.state = {
       alphabet: playFair.alphabet,
       inputGridCells: playFair.sampleGrid,
+      outputGridCells: playFair.sampleGrid,
       inputGridVariable: "lettresGrilleIndice",
-      outputSubstitutionVariable: "substitutionDépart"
+      outputSubstitutionVariable: "substitutionDépart",
+      editState: undefined,
+      edit: undefined
    };
 
    var getCellLetter = function(cell) {
@@ -16,64 +21,56 @@ function getSubstitutionFromGrid() {
       }
    };
 
-   var getCellPython = function(cell) {
+   var renderCellPython = function(cell) {
       return "'" + getCellLetter(cell) + "'";
    };
 
-   var getInstructionPython = function() {
-      return self.state.outputSubstitutionVariable + " = substitutionDepuisGrille(" + self.state.inputGridVariable + ", " + getGridPython(self.state.inputGridCells, getCellPython);
+   var renderInstructionPython = function() {
+      return self.state.outputSubstitutionVariable + " = substitutionDepuisGrille(" + self.state.inputGridVariable + ", " + common.renderGridPython(self.state.inputGridCells, renderCellPython);
    };
    
-   var getGridHtml = function() {
-      return playFair.getGridHtml(self, getCellLetter);
+   var renderGrid = function() {
+      var selectedRow;
+      var selectedCol;
+      if (self.state.editState == "preparing") {
+         selectedRow = self.state.edit.row;
+         selectedCol = self.state.edit.col;
+      }
+      return playFair.renderGrid(self, getCellLetter, selectedRow, selectedCol);
    };
 
-   var getSubstitutionPairHtml = function(substitution, src1, src2) {
-      var dst = substitution[src1][src2];
-      var class1 = "";
-      if ((dst.q1 == "locked") || (dst.q1 == "confirmed")) {
-         class1 = "qualifier-confirmed";
+   var getPairLetterClass = function(cell) {
+      if ((cell.q == "locked") || (cell.q == "confirmed")) {
+         return "qualifier-confirmed";
       }
-      var class2 = "";
-      if ((dst.q2 == "locked") || (dst.q2 == "confirmed")) {
-         class2 = "qualifier-confirmed";
-      }
-      var l1;
-      if (dst.l1 == undefined) {
-         l1 = '';
-      } else {
-         l1 = playFair.alphabet[dst.l1];
-      }
-      var l2;
-      if (dst.l2 == undefined) {
-         l2 = '';
-      } else {
-         l2 = playFair.alphabet[dst.l2];
-      }
+      return "";
+   }
+
+   var renderSubstitutionPair = function(pair) {
       return "<table style='display:inline-block'><tr><td>" +
             "<table class='substitutionPair'><tr>" +
-            "<td>" + playFair.alphabet[src1] + "</td>" +
-            "<td>" + playFair.alphabet[src2] + "</td>" +
+            "<td class='" + getPairLetterClass(pair.src1) + "'>" + getCellLetter(pair.src1) + "</td>" +
+            "<td class='" + getPairLetterClass(pair.src2) + "'>" + getCellLetter(pair.src2) + "</td>" +
          "</tr></table>" +
          "</td>" +
          "<td> -> </td>" +
          "<td><table class='substitutionPair'><tr>" +
-            "<td class='" + class1+ "'>" + l1 + "</td>" +
-            "<td class='" + class2 + "'>" + l2 + "</td>" +
+            "<td class='" + getPairLetterClass(pair.dst1)+ "'>" + getCellLetter(pair.dst1) + "</td>" +
+            "<td class='" + getPairLetterClass(pair.dst2) + "'>" + getCellLetter(pair.dst2) + "</td>" +
          "</tr></table>" +
          "</td></tr></table>";
    }
 
-   var getSubstitutionHtml = function() {
+   var renderSubstitution = function() {
       var html = "<div style='height:100px;width:400px;border: solid black 1px;overflow-y:scroll'>";
       var substitution = playFair.getSubstitutionFromGridCells(self.state.inputGridCells);
       var nbLetters = playFair.alphabet.length;
       for (var src1 = 0; src1 < nbLetters; src1++) {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
-               html += getSubstitutionPairHtml(substitution, src1, src2);
+               html += renderSubstitutionPair(substitution[src1][src2]);
                html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-               html += getSubstitutionPairHtml(substitution, src2, src1);
+               html += renderSubstitutionPair(substitution[src2][src1]);
             }
          }
       }
@@ -81,51 +78,99 @@ function getSubstitutionFromGrid() {
       return html;
    };
 
-   var getEditCellHtml = function() {
-      var html = "<div class='dialog'>" +
-         "<table>" +
-         "<tr>" +
-            "<td><strong>Case éditée :</strong></td>" +
-            "<td>ligne " + self.state.edit.row + ", colonne " + self.state.edit.col + "</td>" +
-         "</tr>" +
-         "<tr>" +
-            "<td><strong>Valeur d'origine :</strong></td>" +
-            "<td>" + self.inputGridCell
+   var renderEditCell = function() {
+      if (self.state.editState == "preparing") {
+         var row = self.state.edit.row;
+         var col = self.state.edit.col;
+         return "<div class='dialog'>" +
+               "<table>" +
+                  "<tr>" +
+                     "<td><strong>Case éditée :</strong></td>" +
+                     "<td>ligne " + (row + 1) + ", colonne " + (col + 1) + "</td>" +
+                  "</tr>" +
+                  "<tr>" +
+                     "<td><strong>Valeur d'origine :</strong></td>" +
+                     "<td>" + getCellLetter(self.state.inputGridCells[row][col]) + "</td>" +
+                  "</tr>" +
+                  "<tr>" +
+                     "<td><strong>Nouvelle valeur :</strong></td>" +
+                     "<td><input type='text' style='width:60px' value='" + getCellLetter(self.state.outputGridCells[row][col]) + "'></td>" +
+                  "</tr>" +
+                  "<tr>" +
+                     "<td><strong>Bloquer / débloquer :</strong></td>" +
+                     "<td><button style='width:60px'><img src='lock.png'></button></td>" +
+                  "</tr>" +
+               "</table>" +
+               common.renderValidateOrCancelDialog(self.name) +
+            "</div>";
+      } else if (self.state.editState == "invalid") {
+         return "<div class='dialog'>Le contenu de cette case est déjà confirmé</div>";
+      } else {
+         return "";
+      }
    };
 
-   var clickGridCell = function(iRow, iCol) {
+   self.clickGridCell = function(row, col) {
+      var inputCell = self.state.inputGridCells[row][col];
+      if (inputCell.q == 'confirmed') {
+         self.state.editState = "invalid";
+      } else {
+         self.state.editState = "preparing";
+         self.state.edit = {
+            row: row,
+            col: col
+         }
+      }
       self.render();
    };
 
-   var getVariables = function() {
-      return getVariablesHtml([
-         {label: "Grille playFair", name: self.state.inputGridVariable},
-         {label: "Substitution générée", name: self.state.outputSubstitutionVariable},
-      ]);
+   self.validateDialog = function() {
+      // TODO
+      self.cancelDialog();
+   }
+
+   self.cancelDialog = function() {
+      self.state.edit = undefined;
+      self.state.editState = undefined;
+      self.render();
+   }
+
+   var renderVariables = function() {
+      return common.renderVariables({
+         input: [
+            {label: "Grille playFair", name: self.state.inputGridVariable}
+         ],
+         output: [
+            {label: "Grille modifiée", name: self.state.inputGridVariable},
+            {label: "Substitution générée", name: self.state.outputSubstitutionVariable}
+         ]
+      });
    };
 
-   var getToolHtml = function() {
+   var renderTool = function() {
       return "<div style='width:700px;border: solid black 1px'>" +
             "<div style='width:100%;border: solid black 1px;box-sizing: border-box;padding:3px'>" + 
-               getInstructionPython() +
+               renderInstructionPython() +
             "</div>" +
             "<div style='overflow:auto'>" +
-               "<div style='float:right; margin:3px'>" + "TODO" + "</div>" +
-               getVariables() +
+               "<div style='float:right; margin:3px'>" +
+                  renderEditCell() +
+               "</div>" +
+               renderVariables() +
             "</div>" +
             "<span style='clear:both'></span>" + 
             "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-               getGridHtml() +
+               renderGrid() +
             "</div>" +
             "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
                "Substitution de bigrammes générée :<br/>" +
-               getSubstitutionHtml() +
+               renderSubstitution() +
             "</div>" +
          "</div>";
    };
 
    self.render = function() {
-      document.getElementById('substitutionFromGrid').innerHTML = getToolHtml();
+      document.getElementById(self.name).innerHTML = renderTool();
    }
 
    return self;

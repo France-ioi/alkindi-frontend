@@ -11,24 +11,21 @@ var playFair = {
 
    // TODO : ne pas passer self mais les parties qui seront utilisées
    // Deviendra un composant react => sebc s'en occupera
-   getGridHtml: function(self, getCellLetterFct) {
+   renderGrid: function(self, renderCellLetterFct, selectedRow, selectedCol) {
       var strHtml = "<table class='playFairGrid'>";
       var cells = self.state.inputGridCells;
       var nbRows = cells.length;
       var nbCols = cells[0].length;
-      for (var iRow = 0; iRow < nbRows; iRow++) {
+      for (var row = 0; row < nbRows; row++) {
          strHtml += "<tr>";
-         for (var iCol = 0; iCol < nbCols; iCol++) {
-            var cell = cells[iRow][iCol];
+         for (var col = 0; col < nbCols; col++) {
+            var cell = cells[row][col];
             var queryClass = "";
-            if (self.state.hintQuery != null) {
-               var query = self.state.hintQuery;
-               if ((query.type === 'grid') && (query.row === iRow) && (query.col === iCol)) {
-                  queryClass = "cell-query";
-               }
+            if ((selectedRow === row) && (selectedCol === col)) {
+               queryClass = "cell-query";
             }
-            strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + self.name + ".clickGridCell(" + iRow + "," + iCol + ")'>";
-            strHtml += getCellLetterFct(cell);
+            strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + self.name + ".clickGridCell(" + row + "," + col + ")'>";
+            strHtml += renderCellLetterFct(cell);
             strHtml += "</td>";
          }
          strHtml += "</tr>";
@@ -37,28 +34,28 @@ var playFair = {
       return strHtml;
    },
 
-   addToSubstitution: function(cells, substitution, iRow1, iCol1, iRow2, iCol2) {
-      var cellSrc1 = cells[iRow1][iCol1];
-      var cellSrc2 = cells[iRow2][iCol2];
+   addToSubstitution: function(cells, substitution, row1, col1, row2, col2) {
+      var cellSrc1 = cells[row1][col1];
+      var cellSrc2 = cells[row2][col2];
       if ((cellSrc1.l == undefined) || (cellSrc2.l == undefined)) {
-         return null;
+         return undefined;
       }
       var cellDst1;
       var cellDst2;
 
-      if ((iRow1 != iRow2) && (iCol1 != iCol2)) {
-         cellDst1 = cells[iRow1][iCol2];
-         cellDst2 = cells[iRow2][iCol1];
-      } else if (iRow1 == iRow2) {
-         cellDst1 = cells[iRow1][(iCol1 + 4) % 5];
-         cellDst2 = cells[iRow2][(iCol2 + 4) % 5];
+      if ((row1 != row2) && (col1 != col2)) {
+         cellDst1 = cells[row1][col2];
+         cellDst2 = cells[row2][col1];
+      } else if (row1 == row2) {
+         cellDst1 = cells[row1][(col1 + 4) % 5];
+         cellDst2 = cells[row2][(col2 + 4) % 5];
       } else {
-         cellDst1 = cells[(iRow1 + 4) % 5][iCol1];
-         cellDst2 = cells[(iRow2 + 4) % 5][iCol2];
+         cellDst1 = cells[(row1 + 4) % 5][col1];
+         cellDst2 = cells[(row2 + 4) % 5][col2];
       }
 
       if ((cellDst1.l == undefined) && (cellDst2.l == undefined)) {
-         return null;
+         return undefined;
       }
       if (substitution[cellSrc1.l] == undefined) {
          substitution[cellSrc1.l] = [];
@@ -67,16 +64,16 @@ var playFair = {
          substitution[cellSrc2.l] = [];
       }
       substitution[cellSrc1.l][cellSrc2.l] = {
-         l1: cellDst1.l,
-         l2: cellDst2.l,
-         q1: cellDst1.q,
-         q2: cellDst2.q
+         src1 : {l: cellSrc1.l, q: cellSrc1.q },
+         src2 : {l: cellSrc2.l, q: cellSrc2.q },
+         dst1 : {l: cellDst1.l, q: cellDst1.q },
+         dst2 : {l: cellDst2.l, q: cellDst2.q }
       };
       substitution[cellSrc2.l][cellSrc1.l] = {
-         l1: cellDst2.l,
-         l2: cellDst1.l,
-         q1: cellDst2.q,
-         q2: cellDst1.q
+         src2 : {l: cellSrc1.l, q: cellSrc1.q },
+         src1 : {l: cellSrc2.l, q: cellSrc2.q },
+         dst2 : {l: cellDst1.l, q: cellDst1.q },
+         dst1 : {l: cellDst2.l, q: cellDst2.q }
       }
    },
 
@@ -84,12 +81,12 @@ var playFair = {
       var substitution = [];
       var nbRows = cells.length;
       var nbCols = cells[0].length;
-      for (var iRow1 = 0; iRow1 < nbRows; iRow1++) {
-         for (var iCol1 = 0; iCol1 < nbCols; iCol1++) {
-            var startCol2 = iCol1 + 1;
-            for (var iRow2 = iRow1; iRow2 < nbRows; iRow2++) {
-               for (var iCol2 = startCol2; iCol2 < nbCols; iCol2++) {
-                   playFair.addToSubstitution(cells, substitution, iRow1, iCol1, iRow2, iCol2);
+      for (var row1 = 0; row1 < nbRows; row1++) {
+         for (var col1 = 0; col1 < nbCols; col1++) {
+            var startCol2 = col1 + 1;
+            for (var row2 = row1; row2 < nbRows; row2++) {
+               for (var col2 = startCol2; col2 < nbCols; col2++) {
+                   playFair.addToSubstitution(cells, substitution, row1, col1, row2, col2);
                }
                startCol2 = 0;
             }
