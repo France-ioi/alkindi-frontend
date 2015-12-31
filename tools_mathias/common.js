@@ -64,16 +64,20 @@ var common = {
       var html = "<div class='playfair-variables'>";
       
       if (variables.input != undefined) {
-         html += "<div><span class='variable-name'>Variables d'entrée :</span></div>";
+         html += "<div class='variable-entree variable-informations'>";
+         html += "<span>Variables d'entrée :</span>";
          for (var iVar = 0; iVar < variables.input.length; iVar++) {
             html += this.renderVariable(variables.input[iVar]);
          }
+         html += "</div>";
       }
       if (variables.output != undefined) {
-         html += "<div><span class='variable-name'>Variables de sortie :</span></div>";
+         html += "<div class='variable-sortie variable-informations'>";
+         html += "<span>Variables de sortie :</span>";
          for (var iVar = 0; iVar < variables.output.length; iVar++) {
             html += this.renderVariable(variables.output[iVar]);
          }
+         html += "</div>";
       }
       html += "</div>";
       return html;
