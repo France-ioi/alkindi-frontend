@@ -2,13 +2,19 @@ var playFair = {
    alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z'],
 
    sampleGrid: [
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+      [{q:'unknown'}, {l:10, q:'locked'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {l:0, q:'locked'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {l:7, q:'confirmed'}, {q:'unknown'}, {l:4, q:'confirmed'}, {q:'unknown'}],
       [{l:9, q:'confirmed'}, {l:20, q:'confirmed'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}]
    ],
 
+   sampleCipheredText: "KJ LTDKY IPXJAPUJ QFILH HUBN HXBXODDQI,KO HBNIFBNB QAOKM NA DQUIM KUIJHODJAJ QO HJEYCBN.XPCZ JOBK DOKDQ YVHNB HXIDDJFYMQ JY XPCZ JGKJK BD EQOZUQYRNB QZTG ZDBYM B HYQ NA DQF MMHYACVYJG FFLUFJYMK.JKKJ KM UIPHQJ HOFK YR QBJTH LBDNA AJBPKJ.QPBU XPCZ U NQYRNJ,BSVKJG BY HQYJ LFILH KMVU APTZJQBDR DNFANNFHU GELFGLT.LPHK C UIPHQJNBR PJBYHPHO RA NXHCBQYCL J OPHG FM NJDNB KJ UIR.VPHI Z'PHPIFN,XPCZ JOBK EJGXFI RH RYAJDP RH APQ MH IJ KM HXAJRDEFLQD RH HMNADEF.MM KCKYJAJ NA HUFDDNJAQYY I'MKU VMG DMTJ QPBU KJK FXAPUMK,BHFSLF MJ KJG MN JUFTJF MF-RMKGXCZ,HUFDDNMK JOMY YR BHUIM KCKYJAJ.YM HXNA YQ HGTJ QY BHHYF YMG JYNB MYNFH VH RTLTZZHJ B YR JTBNL.XPHG FJQBK KJF MJGHYKJN RJ KB AEDNJNB ZCTLEDYJ HXIQBNJTFSKMK SMK KJCVUIMK NA XPUIB QNBDQA BQJH M DMTJ YR,M RJDH IBYQ,MCH JY BCIJRVITBK KJL CPHYJF.XTZJTVZNJK SB NMKTZHJU VBD LTDKCV-UIVDZ XTRF CJDYJF XVDFK GXFVEDYJ-UIVDL.XPHL XQYBK NA HMSTTZBN XPUIM YKJ.MDFI NA UIPHQJI ZJ EPO,TI XPCZ DMYC ZUQYRNJ KA KDBIR DQAENB TF NAFSGXCZ JY H EFORFJTQDYQI PFILH-YQCR.KJ NBZCIJJH PAYJRY HGTJ JYNB RFLTKM OBI PVHNB TSM.YJKO HQDYQ TFYK HUFDDNMK,KJG FBYO QNBJFBNF MPDNBZXQDNAIY BH RYAJDP NA APV,SMK BHUIMK J GM HXAJRDEFLQD RH HMNADEF.S",
+
+   getSampleSubstitution: function() {
+      return this.getSubstitutionFromGridCells(this.sampleGrid);
+   },
+   
    // TODO : ne pas passer self mais les parties qui seront utilisées
    // Deviendra un composant react => sebc s'en occupera
    renderGrid: function(toolName, cells, selectedRow, selectedCol) {

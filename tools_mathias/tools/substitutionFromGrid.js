@@ -37,9 +37,9 @@ function getSubstitutionFromGrid() {
    var renderSubstitutionPair = function(pair) {
       return "<table class='bigrams'>" +
             "<tr>" +
-               "<td>" + bigrams.renderBigram(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
                "<td><i class='fa fa-long-arrow-right'></i></td>" +
-               "<td>" + bigrams.renderBigram(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
             "</tr>" +
          "</table>";
    }

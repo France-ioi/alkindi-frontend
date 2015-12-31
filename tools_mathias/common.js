@@ -104,7 +104,7 @@ var common = {
    
    getCellLetter: function(alphabet, cell) {
       if (cell.q === 'unknown') {
-         return '';
+         return '&nbsp;';
       } else {
          return alphabet[cell.l];
       }
