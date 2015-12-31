@@ -1,5 +1,11 @@
 var request = require('superagent');
 
+function get (path) {
+  var req = request.get(Alkindi.config.api_url + path);
+  req.set('Accept', 'application/json');
+  return req;
+}
+
 function post (path, data) {
   var req = request.post(Alkindi.config.api_url + path);
   req.set('X-CSRF-Token', Alkindi.config.csrf_token);
@@ -9,6 +15,9 @@ function post (path, data) {
   return req;
 }
 
+export const readUser = function (user_id, callback) {
+  get('users/'+user_id).end(callback);
+};
 export const createTeam = function (user_id, callback) {
   post('users/'+user_id+'/create_team').end(callback);
 };
