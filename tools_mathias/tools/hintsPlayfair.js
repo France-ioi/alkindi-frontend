@@ -115,9 +115,9 @@ function getHintsPlayFair() {
          var query = self.state.hintQuery;
          var message;
          if (query.type === "grid") {
-            message = "lettre à la ligne " + (query.row + 1) + ", colonne " + (query.col + 1) + " de la grille.";
+            message = "lettre à la ligne <span class='dialogIndice'>" + (query.row + 1) + "</span>, colonne <span class='dialogIndice'>" + (query.col + 1) + "</span> de la grille.";
          } else {
-            message = "position de la lettre " + self.props.alphabet[query.rank] + " dans la grille";
+            message = "position de la lettre <span class='dialogIndice'>" + self.props.alphabet[query.rank] + "</span> dans la grille";
          }
          var cost = getQueryCost(query);
          return "<div class='dialog'>" +

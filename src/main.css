@@ -488,3 +488,7 @@ a.cell-link {
   border: solid black 1px;
   padding: 5px;
 }
+.dialogIndice {
+  font-family: monospace;
+  font-weight: bold;
+}
