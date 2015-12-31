@@ -12,6 +12,7 @@ import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import {Tool} from './tool';
 import * as actions from './actions';
+import * as api from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
@@ -22,8 +23,21 @@ const appSelector = function (state) {
 };
 
 let App = connect(appSelector)(PureComponent(self => {
-  const afterLogin = function (user) {
-    self.props.dispatch({type: 'SET_USER', user});
+  const loadUser = function (user_id) {
+    if (user_id === undefined)
+      user_id = self.props.user.id;
+    api.readUser(user_id, function (err, res) {
+      if (err) return; // XXX alert?
+      const result = res.body;
+      if ('user' in result) {
+        const {user} = result;
+        self.props.dispatch({type: 'SET_USER', user: user});
+        self.props.dispatch({type: 'SET_TEAM', team: user.team});
+      }
+    });
+  };
+  const afterLogin = function (user_id) {
+    loadUser(user_id);
   };
   const afterLogout = function () {
     // Reload the page after the user has logged out to obtain a new session
@@ -46,11 +60,11 @@ let App = connect(appSelector)(PureComponent(self => {
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
     if (!team)
-      return <JoinTeamScreen user={user} onLogout={afterLogout} />;
+      return <JoinTeamScreen user={user} onLogout={afterLogout} reloadUser={loadUser} />;
     let content = false;
     switch (activeTabKey) {
       case 'team':
-        content = <TeamTab user={user} team={team} haveQuestion={!!question}/>;
+        content = <TeamTab user={user} team={team} haveQuestion={!!question} reloadUser={loadUser} />;
         break;
       case 'history':
         // FIXME: we do not always need workspaces, so make the component
