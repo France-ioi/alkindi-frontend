@@ -35,10 +35,10 @@ function getSubstitutionFromGrid() {
    };
 
    var renderSubstitutionPair = function(pair) {
-      return "<table style='display:inline-block'>" +
+      return "<table class='bigrams'>" +
             "<tr>" +
                "<td>" + bigrams.render(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
-               "<td> -> </td>" +
+               "<td><i class='fa fa-long-arrow-right'></i></td>" +
                "<td>" + bigrams.render(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
             "</tr>" +
          "</table>";
@@ -52,7 +52,6 @@ function getSubstitutionFromGrid() {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
                html += renderSubstitutionPair(substitution[src1][src2]);
-               html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                html += renderSubstitutionPair(substitution[src2][src1]);
             }
          }
