@@ -468,6 +468,8 @@ a.cell-link {
   top: 2px;
   right: 2px;
   line-height: 1em;
+.qualifier-unconfirmed {
+  background-color: white;
 }
 .qualifier-confirmed {
   background-color: lightgray;
@@ -491,6 +493,12 @@ a.cell-link {
   text-align: center;
   border: solid black 1px;
   padding: 0;
+}
+.qualifier-locked {
+  background-color: lightgray;
+  background-image: url('lock.png');
+  background-repeat: no-repeat;
+  background-position: top right;
 }
 .cell-query {
   background-color: cyan;
