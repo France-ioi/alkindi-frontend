@@ -458,6 +458,16 @@ a.cell-link {
   background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;
+  position: relative;
+}
+.qualifier-locked::after {
+  content: "\f023";
+  font-family: FontAwesome;
+  font-size: 11px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 1em;
 }
 .qualifier-confirmed {
   background-color: lightgray;
@@ -492,6 +502,10 @@ a.cell-link {
   border: solid black 1px;
   padding: 5px;
 }
+.dialog table,
+.dialog table td {
+  border: none;
+}
 .dialogIndice {
   font-family: monospace;
   font-weight: bold;
@@ -501,4 +515,7 @@ a.cell-link {
 }
 .variable-informations > div {
   margin-left: 5px;
+}
+.variable-informations .code {
+  font-size: 11px;
 }

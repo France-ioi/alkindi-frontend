@@ -51,8 +51,10 @@ function getSubstitutionFromGrid() {
       for (var src1 = 0; src1 < nbLetters; src1++) {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
+               html += "<div>";
                html += renderSubstitutionPair(substitution[src1][src2]);
                html += renderSubstitutionPair(substitution[src2][src1]);
+               html += "</div>";
             }
          }
       }
@@ -80,7 +82,7 @@ function getSubstitutionFromGrid() {
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
-                     "<td><button style='width:60px'><img src='lock.png'></button></td>" +
+                     "<td><button type='button'><i class='fa fa-lock'></i></button></td>" +
                   "</tr>" +
                "</table>" +
                common.renderValidateOrCancelDialog(self.name) +

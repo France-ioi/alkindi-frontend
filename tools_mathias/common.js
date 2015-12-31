@@ -48,15 +48,15 @@ var common = {
    renderVariable: function(variable) {
       return "<div>" +
             "<span class='variable-label'>" + variable.label + " : </span>" +
-            "<div style='display:inline-block;width:140px;text-align:center;border:solid black 1px'>" + variable.name + "</div>" +
+            "<div class='code' style='display:inline-block;width:140px;text-align:center;border:solid black 1px'>" + variable.name + "</div>" +
          "</div>";
    },
 
    renderValidateOrCancelDialog: function(name) {
       return "<div style='text-align:center'>" +
-         "<button onclick='" + name + ".validateDialog()'>Valider</button>" +
+         "<button type='button' onclick='" + name + ".validateDialog()'>Valider</button>" +
          "&nbsp;&nbsp;&nbsp;" +
-         "<button onclick='" + name + ".cancelDialog()'>Annuler</button>" +
+         "<button type='button' onclick='" + name + ".cancelDialog()'>Annuler</button>" +
          "</div>";
    },
 
