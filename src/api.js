@@ -27,3 +27,6 @@ export const joinTeam = function (user_id, data, callback) {
 export const leaveTeam = function (user_id, callback) {
   post('users/'+user_id+'/leave_team').end(callback);
 };
+export const updateUserTeam = function (user_id, data, callback) {
+  post('users/'+user_id+'/update_team', data).end(callback);
+};
