@@ -96,5 +96,13 @@ var common = {
       }
       strPython += "];";
       return strPython;
+   },
+   
+   getCellLetter: function(alphabet, cell) {
+      if (cell.q === 'unknown') {
+         return '';
+      } else {
+         return alphabet[cell.l];
+      }
    }
 }

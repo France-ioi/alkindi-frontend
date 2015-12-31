@@ -16,16 +16,8 @@ function getSubstitutionFromGrid() {
       edit: undefined
    };
 
-   var getCellLetter = function(cell) {
-      if (cell.q === 'unknown') {
-         return '';
-      } else {
-         return self.props.alphabet[cell.l];
-      }
-   };
-
    var renderCellPython = function(cell) {
-      return "'" + getCellLetter(cell) + "'";
+      return "'" + common.getCellLetter(playFair.alphabet, cell) + "'";
    };
 
    var renderInstructionPython = function() {
@@ -39,29 +31,17 @@ function getSubstitutionFromGrid() {
          selectedRow = self.state.edit.row;
          selectedCol = self.state.edit.col;
       }
-      return playFair.renderGrid(self, getCellLetter, selectedRow, selectedCol);
+      return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
    };
 
-   var getPairLetterClass = function(cell) {
-      if ((cell.q == "locked") || (cell.q == "confirmed")) {
-         return "qualifier-confirmed";
-      }
-      return "";
-   }
-
    var renderSubstitutionPair = function(pair) {
-      return "<table style='display:inline-block'><tr><td>" +
-            "<table class='substitutionPair'><tr>" +
-            "<td class='" + getPairLetterClass(pair.src1) + "'>" + getCellLetter(pair.src1) + "</td>" +
-            "<td class='" + getPairLetterClass(pair.src2) + "'>" + getCellLetter(pair.src2) + "</td>" +
-         "</tr></table>" +
-         "</td>" +
-         "<td> -> </td>" +
-         "<td><table class='substitutionPair'><tr>" +
-            "<td class='" + getPairLetterClass(pair.dst1)+ "'>" + getCellLetter(pair.dst1) + "</td>" +
-            "<td class='" + getPairLetterClass(pair.dst2) + "'>" + getCellLetter(pair.dst2) + "</td>" +
-         "</tr></table>" +
-         "</td></tr></table>";
+      return "<table style='display:inline-block'>" +
+            "<tr>" +
+               "<td>" + bigrams.render(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
+               "<td> -> </td>" +
+               "<td>" + bigrams.render(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
+            "</tr>" +
+         "</table>";
    }
 
    var renderSubstitution = function() {
@@ -93,11 +73,11 @@ function getSubstitutionFromGrid() {
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Valeur d'origine :</strong></td>" +
-                     "<td>" + getCellLetter(self.props.inputGridCells[row][col]) + "</td>" +
+                     "<td>" + common.getCellLetter(playFair.alphabet, self.props.inputGridCells[row][col]) + "</td>" +
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Nouvelle valeur :</strong></td>" +
-                     "<td><input type='text' style='width:60px' value='" + getCellLetter(self.props.outputGridCells[row][col]) + "'></td>" +
+                     "<td><input type='text' style='width:60px' value='" + common.getCellLetter(playFair.alphabet, self.props.outputGridCells[row][col]) + "'></td>" +
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +

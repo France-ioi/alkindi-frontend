@@ -16,16 +16,8 @@ function getHintsPlayFair() {
       hintState: "preparing"
    }
 
-   var getCellLetter = function(cell) {
-      if (cell.q === 'unknown') {
-         return '';
-      } else {
-         return self.props.alphabet[cell.l];
-      }
-   };
-
    var renderCellPython = function(cell) {
-      return "'" + getCellLetter(cell) + "'";
+      return "'" + common.getCellLetter(playFair.alphabet, cell) + "'";
    };
 
    var renderInstructionPython = function() {
@@ -42,7 +34,7 @@ function getHintsPlayFair() {
             selectedCol = query.col;
          }
       }
-      return playFair.renderGrid(self.props.inputGridCells, getCellLetter, selectedRow, selectedCol);
+      return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
    };
 
    self.clickGridCell = function(row, col) {

@@ -11,7 +11,7 @@ var playFair = {
 
    // TODO : ne pas passer self mais les parties qui seront utilisées
    // Deviendra un composant react => sebc s'en occupera
-   renderGrid: function(cells, renderCellLetterFct, selectedRow, selectedCol) {
+   renderGrid: function(toolName, cells, selectedRow, selectedCol) {
       var strHtml = "<table class='playFairGrid'>";
       var nbRows = cells.length;
       var nbCols = cells[0].length;
@@ -23,8 +23,8 @@ var playFair = {
             if ((selectedRow === row) && (selectedCol === col)) {
                queryClass = "cell-query";
             }
-            strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + self.name + ".clickGridCell(" + row + "," + col + ")'>";
-            strHtml += renderCellLetterFct(cell);
+            strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + toolName + ".clickGridCell(" + row + "," + col + ")'>";
+            strHtml += common.getCellLetter(this.alphabet, cell);
             strHtml += "</td>";
          }
          strHtml += "</tr>";
