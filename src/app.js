@@ -43,9 +43,9 @@ let App = connect(appSelector)(PureComponent(self => {
     console.log('user: ', user);
     if (user === undefined)
       return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={afterLogin} />;
-    // Si l'utilisateur n'est pas sélectionné et qu'il n'a pas rejoint une
-    // équipe, on lui affiche l'écran de sélection d'équipe.
-    if (!user.isSelected && !team)
+    // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
+    // création d'équipe.
+    if (!team)
       return <JoinTeamScreen user={user} onLogout={afterLogout} />;
     let content = false;
     switch (activeTabKey) {
@@ -67,7 +67,7 @@ let App = connect(appSelector)(PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
-            <AlkindiLogout username={user.email} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout} />
+            <AlkindiLogout username={user.username} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout} />
           </div>
         </div>
         <div className="wrapper">{content}</div>

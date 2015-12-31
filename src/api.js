@@ -9,6 +9,12 @@ function post (path, data) {
   return req;
 }
 
-/* export const logout = function (callback) {
-  post('logout').end(callback);
-}; */
+export const createTeam = function (user_id, callback) {
+  post('users/'+user_id+'/create_team').end(callback);
+};
+export const joinTeam = function (user_id, data, callback) {
+  post('users/'+user_id+'/join_team', data).end(callback);
+};
+export const leaveTeam = function (user_id, callback) {
+  post('users/'+user_id+'/leave_team').end(callback);
+};
