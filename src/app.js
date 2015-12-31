@@ -60,11 +60,11 @@ let App = connect(appSelector)(PureComponent(self => {
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
     if (!team)
-      return <JoinTeamScreen user={user} onLogout={afterLogout} />;
+      return <JoinTeamScreen user={user} onLogout={afterLogout} reloadUser={loadUser} />;
     let content = false;
     switch (activeTabKey) {
       case 'team':
-        content = <TeamTab user={user} team={team} haveQuestion={!!question}/>;
+        content = <TeamTab user={user} team={team} haveQuestion={!!question} reloadUser={loadUser} />;
         break;
       case 'history':
         // FIXME: we do not always need workspaces, so make the component

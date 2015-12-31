@@ -9,15 +9,17 @@ import * as api from '../api';
 const JoinTeamScreen = PureComponent(self => {
   const onCreateTeam = function () {
     const user_id = self.props.user.id;
-    api.createTeam(user_id, function (result) {
-      console.log('createTeam', result);
+    api.createTeam(user_id, function (err, result) {
+      if (err) return alert(err); // XXX error handling
+      self.props.reloadUser();
     });
   };
   const onJoinTeam = function () {
     const user_id = self.props.user.id;
     const data = {code: self.refs.teamCode.value};
-    api.joinTeam(user_id, data, function (result) {
-      console.log('joinTeam', result);
+    api.joinTeam(user_id, data, function (err, result) {
+      if (err) return alert(err); // XXX error handling
+      self.props.reloadUser();
     });
   };
   const onShowJoinTeam = function () {

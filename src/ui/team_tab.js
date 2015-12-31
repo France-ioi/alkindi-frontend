@@ -3,19 +3,28 @@ import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 import * as actions from '../actions';
+import * as api from '../api';
 
 const TeamTab = PureComponent(self => {
   const onIsOpenChanged = function (event) {
-    console.log('isOpen', event.currentTarget, event.currentTarget.value);
     self.setState({
       isOpen: event.currentTarget.value === 'true'
     });
   };
   const onLeaveTeam = function () {
-    console.log('leaveTeam');
+    const user_id = self.props.user.id;
+    api.leaveTeam(user_id, function (err, result) {
+      console.log(err, result);
+      if (err) return alert(err); // XXX error handling
+      self.props.reloadUser();
+    });
   };
   const onUpdateTeam = function () {
-    console.log('updateTeam', {is_open: self.state.isOpen});
+    const data = {is_open: self.state.isOpen};
+    api.updateUserTeam(self.props.user.id, data, function (err, result) {
+      if (err) return alert(err); // XXX error handling
+      self.props.reloadUser();
+    });
   };
   const renderMember = function (member) {
     const flags = [];
