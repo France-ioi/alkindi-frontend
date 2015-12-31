@@ -46,10 +46,10 @@ var common = {
    },
 
    renderVariable: function(variable) {
-      return "<tr>" +
-            "<td>&nbsp;&nbsp;&nbsp;&nbsp;<strong>" + variable.label + " : </strong></td>" +
-            "<td><div style='display:inline-block;width:140px;text-align:center;border:solid black 1px'>" + variable.name + "</div></td>" +
-         "</tr>";
+      return "<div>" +
+            "<span class='variable-label'>" + variable.label + " : </span>" +
+            "<div style='display:inline-block;width:140px;text-align:center;border:solid black 1px'>" + variable.name + "</div>" +
+         "</div>";
    },
 
    renderValidateOrCancelDialog: function(name) {
@@ -61,21 +61,21 @@ var common = {
    },
 
    renderVariables: function(variables) {
-      var html = "<table>";
+      var html = "<div class='playfair-variables'>";
       
       if (variables.input != undefined) {
-         html += "<tr><td><strong>Variables d'entrée :</strong></td></tr>";
+         html += "<div><span class='variable-name'>Variables d'entrée :</span></div>";
          for (var iVar = 0; iVar < variables.input.length; iVar++) {
             html += this.renderVariable(variables.input[iVar]);
          }
       }
       if (variables.output != undefined) {
-         html += "<tr><td><strong>Variables de sortie :</strong></td></tr>";
+         html += "<div><span class='variable-name'>Variables de sortie :</span></div>";
          for (var iVar = 0; iVar < variables.output.length; iVar++) {
             html += this.renderVariable(variables.output[iVar]);
          }
       }
-      html += "</table>";
+      html += "</div>";
       return html;
    },
 

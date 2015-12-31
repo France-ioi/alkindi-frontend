@@ -424,3 +424,66 @@ a.cell-link {
 .dev-buttons button:focus {
   background-color: #E2D9C8;
 }
+
+/*
+
+    Interfaces et grilles PlayFair
+
+*/
+.playFairGrid,
+.playFairAlphabet,
+.substitutionPair,
+.bigrams {
+  width: auto;
+  border-collapse: collapse;
+}
+.playFairGrid td,
+.playFairAlphabet td {
+  padding: 0;
+}
+.playFairGrid tr td, .playFairAlphabet tr td {
+  width: 30px;
+  height: 30px;
+  font-size: 1.5em;
+  text-align: center;
+  border: solid black 1px;
+}
+.qualifier-locked {
+  background-color: lightgray;
+  background-image: url('lock.png');
+  background-repeat: no-repeat;
+  background-position: top right;
+}
+.qualifier-confirmed {
+  background-color: lightgray;
+}
+.qualifier-disabled {
+  background-color: gray;
+}
+.bigrams {
+  display: inline-table;
+  border: none;
+  margin-right: 15px;
+}
+.bigrams td {
+  border: none;
+  padding: 2px;
+}
+.substitutionPair tr td {
+  width: 20px;
+  height: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  border: solid black 1px;
+  padding: 0;
+}
+.cell-query {
+  background-color: cyan;
+}
+.dialog {
+  width: auto;
+  max-width: 400px;
+  background: #E0E0E0;
+  border: solid black 1px;
+  padding: 5px;
+}
