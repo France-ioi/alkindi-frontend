@@ -4,16 +4,24 @@ import {PureComponent} from '../misc';
 import {image_url} from '../assets';
 import AlkindiAuthHeader from './auth_header';
 import AlkindiLogout from './logout';
+import * as api from '../api';
 
 const JoinTeamScreen = PureComponent(self => {
   const onCreateTeam = function () {
-    console.log('createTeam', self.props.user.id);
+    const user_id = self.props.user.id;
+    api.createTeam(user_id, function (result) {
+      console.log('createTeam', result);
+    });
+  };
+  const onJoinTeam = function () {
+    const user_id = self.props.user.id;
+    const data = {code: self.refs.teamCode.value};
+    api.joinTeam(user_id, data, function (result) {
+      console.log('joinTeam', result);
+    });
   };
   const onShowJoinTeam = function () {
     self.setState({joinTeam: true});
-  };
-  const onJoinTeam = function () {
-    console.log('joinTeam', self.props.user.id, self.refs.teamCode.value);
   };
   self.render = function () {
     const {user} = self.props;
