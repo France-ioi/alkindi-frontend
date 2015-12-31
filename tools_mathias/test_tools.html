@@ -8,14 +8,19 @@
 <script type="text/javascript" src="tools/bigrams.js"></script>
 <script type="text/javascript" src="tools/hintsPlayfair.js"></script>
 <script type="text/javascript" src="tools/substitutionFromGrid.js"></script>
+<script type="text/javascript" src="tools/bigramFrequencyAnalysis.js"></script>
 <html>
 <div id='hintsPlayFair'></div>
 <br/>
 <div id='substitutionFromGrid'></div>
+<br/>
+<div id='bigramFrequencyAnalysis'></div>
 <script>
    var hintsPlayFair = getHintsPlayFair();
    var substitutionFromGrid = getSubstitutionFromGrid();
+   var bigramFrequencyAnalysis = getBigramFrequencyAnalysis();
    hintsPlayFair.render();
    substitutionFromGrid.render();
+   bigramFrequencyAnalysis.render();
 </script>
 </html>
