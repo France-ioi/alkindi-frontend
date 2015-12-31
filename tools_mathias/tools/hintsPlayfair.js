@@ -159,24 +159,26 @@ function getHintsPlayFair() {
    };
 
    var renderTool = function() {
-      return "<div style='width:700px;border: solid black 1px'>" +
-            "<div style='width:100%;border: solid black 1px;box-sizing: border-box;padding:3px'>" + 
+      return "<div class='panel panel-default'>" +
+            "<div class='panel-heading'>" + 
                renderInstructionPython() +
             "</div>" +
-            "<div style='overflow:auto'>" +
-               "<div style='float:right; margin:3px'>" + renderHintQuery() + "</div>" +
-               renderVariables() +
-               "<strong>Score disponible :</strong> " + self.props.score + " points" +
-            "</div>" +
-            "<span style='clear:both'></span>" + 
-            "<strong>Deux types d'indices sont disponibles :</strong><br/>" +
-            "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-               "Révéler une case : " + getQueryCost({ type: "grid"}) + " points" +
-               renderGrid() +
-            "</div>" +
-            "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-               "Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points" +
-               renderAlphabet() +
+            "<div class='panel-body'>" +
+               "<div style='overflow:auto'>" +
+                  "<div style='float:right; margin:3px'>" + renderHintQuery() + "</div>" +
+                  renderVariables() +
+                  "<strong>Score disponible :</strong> " + self.props.score + " points" +
+               "</div>" +
+               "<span style='clear:both'></span>" + 
+               "<strong>Deux types d'indices sont disponibles :</strong><br/>" +
+               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
+                  "Révéler une case : " + getQueryCost({ type: "grid"}) + " points" +
+                  renderGrid() +
+               "</div>" +
+               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
+                  "Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points" +
+                  renderAlphabet() +
+               "</div>" +
             "</div>" +
          "</div>";
    };

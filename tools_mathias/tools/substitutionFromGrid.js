@@ -130,23 +130,25 @@ function getSubstitutionFromGrid() {
    };
 
    var renderTool = function() {
-      return "<div style='width:700px;border: solid black 1px'>" +
-            "<div style='width:100%;border: solid black 1px;box-sizing: border-box;padding:3px'>" + 
+      return "<div class='panel panel-default'>" +
+            "<div class='panel-heading'>" + 
                renderInstructionPython() +
             "</div>" +
-            "<div style='overflow:auto'>" +
-               "<div style='float:right; margin:3px'>" +
-                  renderEditCell() +
+            "<div class='panel-body'>" +
+               "<div style='overflow:auto'>" +
+                  "<div style='float:right; margin:3px'>" +
+                     renderEditCell() +
+                  "</div>" +
+                  renderVariables() +
                "</div>" +
-               renderVariables() +
-            "</div>" +
-            "<span style='clear:both'></span>" + 
-            "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-               renderGrid() +
-            "</div>" +
-            "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-               "Substitution de bigrammes générée :<br/>" +
-               renderSubstitution() +
+               "<span style='clear:both'></span>" + 
+               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
+                  renderGrid() +
+               "</div>" +
+               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
+                  "Substitution de bigrammes générée :<br/>" +
+                  renderSubstitution() +
+               "</div>" +
             "</div>" +
          "</div>";
    };

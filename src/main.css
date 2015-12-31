@@ -431,6 +431,10 @@ a.cell-link {
     Interfaces et grilles PlayFair
 
 */
+#hintsPlayFair .panel,
+#substitutionFromGrid .panel {
+  width: 700px;
+}
 .playFairGrid,
 .playFairAlphabet,
 .substitutionPair,
@@ -491,4 +495,10 @@ a.cell-link {
 .dialogIndice {
   font-family: monospace;
   font-weight: bold;
+}
+.variable-informations > span {
+  font-weight: bold;
+}
+.variable-informations > div {
+  margin-left: 5px;
 }
