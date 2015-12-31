@@ -510,6 +510,9 @@ a.cell-link {
   font-family: monospace;
   font-weight: bold;
 }
+.dialog button.locked {
+  box-shadow: 0 0 4px #333 inset;
+}
 .variable-informations > span {
   font-weight: bold;
 }
