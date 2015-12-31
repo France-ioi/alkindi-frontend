@@ -3,21 +3,24 @@ function getHintsPlayFair() {
    
    self.name = "hintsPlayFair";
 
-   self.state = {
+   self.props = {
       alphabet: playFair.alphabet,
       inputGridCells: playFair.sampleGrid,
       score: 470,
-      hintQuery: { type:'grid', row: 2, col: 3 },
-      hintValues: [[],[,0],[],[,,,4],[]],
-      hintState: "preparing",
       outputGridVariable: "lettresGrilleIndice"
    };
+
+   self.state = {
+      hintQuery: { type:'grid', row: 2, col: 3 },
+      hintValues: [[],[,0],[],[,,,4],[]],
+      hintState: "preparing"
+   }
 
    var getCellLetter = function(cell) {
       if (cell.q === 'unknown') {
          return '';
       } else {
-         return self.state.alphabet[cell.l];
+         return self.props.alphabet[cell.l];
       }
    };
 
@@ -26,7 +29,7 @@ function getHintsPlayFair() {
    };
 
    var renderInstructionPython = function() {
-      return self.state.outputGridVariable + " = " + common.renderGridPython(self.state.inputGridCells, renderCellPython);
+      return self.props.outputGridVariable + " = " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
    };
    
    var renderGrid = function() {
@@ -39,14 +42,14 @@ function getHintsPlayFair() {
             selectedCol = query.col;
          }
       }
-      return playFair.renderGrid(self, getCellLetter, selectedRow, selectedCol);
+      return playFair.renderGrid(self.props.inputGridCells, getCellLetter, selectedRow, selectedCol);
    };
 
    self.clickGridCell = function(row, col) {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.state.inputGridCells[row][col].q === "confirmed") {
+      if (self.props.inputGridCells[row][col].q === "confirmed") {
          self.state.hintQuery = undefined;
          self.state.hintState = "invalid";
       } else {
@@ -60,7 +63,7 @@ function getHintsPlayFair() {
       if (self.state.hintState === "waiting") {
          return;
       }
-      var qualifiers = common.getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
+      var qualifiers = common.getLetterQualifiersFromGrid(self.props.inputGridCells, self.props.alphabet);
       if (qualifiers[rank] === "confirmed") {
          self.state.hintState = "invalid";
          self.cancelDialog();
@@ -72,7 +75,7 @@ function getHintsPlayFair() {
    };
    
    var renderAlphabet = function() {
-      var qualifiers = common.getLetterQualifiersFromGrid(self.state.inputGridCells, self.state.alphabet);
+      var qualifiers = common.getLetterQualifiersFromGrid(self.props.inputGridCells, self.props.alphabet);
       var strHtml = "";
 
       for (var row = 0; row < 2; row++) {
@@ -94,7 +97,7 @@ function getHintsPlayFair() {
                   }
                }
                strHtml += "<td class='" + queryClass + " qualifier-" + qualifiers[letterRank] + "' onClick='" + self.name + ".clickGridAlphabet(" + letterRank + ")'>" +
-                  self.state.alphabet[letterRank] +
+                  self.props.alphabet[letterRank] +
                   "</td>";
             }
          }
@@ -122,7 +125,7 @@ function getHintsPlayFair() {
          if (query.type === "grid") {
             message = "lettre à la ligne " + (query.row + 1) + ", colonne " + (query.col + 1) + " de la grille.";
          } else {
-            message = "position de la lettre " + self.state.alphabet[query.rank] + " dans la grille";
+            message = "position de la lettre " + self.props.alphabet[query.rank] + " dans la grille";
          }
          var cost = getQueryCost(query);
          return "<div class='dialog'>" +
@@ -158,7 +161,7 @@ function getHintsPlayFair() {
    var renderVariables = function() {
       return common.renderVariables({
          output: [
-            {label: "Grille enregistrée", name: self.state.outputGridVariable}
+            {label: "Grille enregistrée", name: self.props.outputGridVariable}
          ]
       });
    };
@@ -171,7 +174,7 @@ function getHintsPlayFair() {
             "<div style='overflow:auto'>" +
                "<div style='float:right; margin:3px'>" + renderHintQuery() + "</div>" +
                renderVariables() +
-               "<strong>Score disponible :</strong> " + self.state.score + " points" +
+               "<strong>Score disponible :</strong> " + self.props.score + " points" +
             "</div>" +
             "<span style='clear:both'></span>" + 
             "<strong>Deux types d'indices sont disponibles :</strong><br/>" +

@@ -3,12 +3,15 @@ function getSubstitutionFromGrid() {
 
    self.name = "substitutionFromGrid";
 
-   self.state = {
+   self.props = {
       alphabet: playFair.alphabet,
       inputGridCells: playFair.sampleGrid,
       outputGridCells: playFair.sampleGrid,
       inputGridVariable: "lettresGrilleIndice",
-      outputSubstitutionVariable: "substitutionDépart",
+      outputSubstitutionVariable: "substitutionDépart"
+   };
+
+   self.state = {
       editState: undefined,
       edit: undefined
    };
@@ -17,7 +20,7 @@ function getSubstitutionFromGrid() {
       if (cell.q === 'unknown') {
          return '';
       } else {
-         return self.state.alphabet[cell.l];
+         return self.props.alphabet[cell.l];
       }
    };
 
@@ -26,7 +29,7 @@ function getSubstitutionFromGrid() {
    };
 
    var renderInstructionPython = function() {
-      return self.state.outputSubstitutionVariable + " = substitutionDepuisGrille(" + self.state.inputGridVariable + ", " + common.renderGridPython(self.state.inputGridCells, renderCellPython);
+      return self.props.outputSubstitutionVariable + " = substitutionDepuisGrille(" + self.props.inputGridVariable + ", " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
    };
    
    var renderGrid = function() {
@@ -63,7 +66,7 @@ function getSubstitutionFromGrid() {
 
    var renderSubstitution = function() {
       var html = "<div style='height:100px;width:400px;border: solid black 1px;overflow-y:scroll'>";
-      var substitution = playFair.getSubstitutionFromGridCells(self.state.inputGridCells);
+      var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
       var nbLetters = playFair.alphabet.length;
       for (var src1 = 0; src1 < nbLetters; src1++) {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
@@ -90,11 +93,11 @@ function getSubstitutionFromGrid() {
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Valeur d'origine :</strong></td>" +
-                     "<td>" + getCellLetter(self.state.inputGridCells[row][col]) + "</td>" +
+                     "<td>" + getCellLetter(self.props.inputGridCells[row][col]) + "</td>" +
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Nouvelle valeur :</strong></td>" +
-                     "<td><input type='text' style='width:60px' value='" + getCellLetter(self.state.outputGridCells[row][col]) + "'></td>" +
+                     "<td><input type='text' style='width:60px' value='" + getCellLetter(self.props.outputGridCells[row][col]) + "'></td>" +
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
@@ -111,7 +114,7 @@ function getSubstitutionFromGrid() {
    };
 
    self.clickGridCell = function(row, col) {
-      var inputCell = self.state.inputGridCells[row][col];
+      var inputCell = self.props.inputGridCells[row][col];
       if (inputCell.q == 'confirmed') {
          self.state.editState = "invalid";
       } else {
@@ -138,11 +141,11 @@ function getSubstitutionFromGrid() {
    var renderVariables = function() {
       return common.renderVariables({
          input: [
-            {label: "Grille playFair", name: self.state.inputGridVariable}
+            {label: "Grille playFair", name: self.props.inputGridVariable}
          ],
          output: [
-            {label: "Grille modifiée", name: self.state.inputGridVariable},
-            {label: "Substitution générée", name: self.state.outputSubstitutionVariable}
+            {label: "Grille modifiée", name: self.props.inputGridVariable},
+            {label: "Substitution générée", name: self.props.outputSubstitutionVariable}
          ]
       });
    };

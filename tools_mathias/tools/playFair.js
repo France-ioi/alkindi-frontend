@@ -11,9 +11,8 @@ var playFair = {
 
    // TODO : ne pas passer self mais les parties qui seront utilisées
    // Deviendra un composant react => sebc s'en occupera
-   renderGrid: function(self, renderCellLetterFct, selectedRow, selectedCol) {
+   renderGrid: function(cells, renderCellLetterFct, selectedRow, selectedCol) {
       var strHtml = "<table class='playFairGrid'>";
-      var cells = self.state.inputGridCells;
       var nbRows = cells.length;
       var nbCols = cells[0].length;
       for (var row = 0; row < nbRows; row++) {
