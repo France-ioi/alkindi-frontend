@@ -38,6 +38,9 @@ option {
 .selected {
   font-weight: bold;
 }
+.panel-body {
+  position: relative;
+}
 
 div.section {
   margin-bottom: 20px;
@@ -455,8 +458,9 @@ a.cell-link {
   height: 30px;
   font-size: 1.5em;
   text-align: center;
-  border: solid black 1px;
+  border: 1px solid black;
 }
+/* grilles */
 .grillesIndices {
   margin-top: 10px;
 }
@@ -517,11 +521,12 @@ a.cell-link {
   background-color: #000;
   color: #fff;
 }
+/* boites de dialogue */
 .dialog {
   width: 50%;
   max-width: 400px;
   background: #E0E0E0;
-  border: solid black 1px;
+  border: 1px solid black;
   padding: 5px;
   position: absolute;
   top: 10px;
@@ -541,6 +546,7 @@ a.cell-link {
 .dialog button {
   padding: 0 10px;
 }
+/* variables */
 .variable-informations > span {
   font-weight: bold;
 }
@@ -550,26 +556,42 @@ a.cell-link {
 .variable-informations .code {
   font-size: 11px;
 }
-.panel-body {
-  position: relative;
+/* bigrammes */
+.bigrams {
+  display: inline-table;
+  border: none;
+  margin-right: 15px;
 }
+.bigrams td {
+  border: none;
+  padding: 2px;
+}
+.substitutionPair tr td {
+  width: 20px;
+  height: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  border: 1px solid black;
+  padding: 0;
+}
+
 .selectedBigram {
   background-color: #F0F0F0;
   padding: 3px;
-  border: solid black 1px;
+  border: 1px solid black;
 }
 .substitutionConflict {
-  border: solid red 3px;
+  border: 3px solid red;
 }
 .letterStatus-left, .letterStatus-right, .letterStatus-inside {
-  border-top: solid black 1px;
-  border-bottom: solid black 1px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 .letterStatus-left {
-  border-left: solid black 1px;
+  border-left: 1px solid black;
   margin-left: 5px;
 }
 .letterStatus-right {
-  border-right: solid black 1px;
+  border-right: 1px solid black;
   margin-right: 5px;
 }

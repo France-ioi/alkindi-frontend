@@ -21,7 +21,7 @@ function getSubstitutionFromGrid() {
    };
 
    var renderInstructionPython = function() {
-      return self.props.outputSubstitutionVariable + " = substitutionDepuisGrille(" + self.props.inputGridVariable + ", " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
+      return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = substitutionDepuisGrille(" + self.props.inputGridVariable + ", " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
    };
    
    var renderGrid = function() {
@@ -133,14 +133,12 @@ function getSubstitutionFromGrid() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'>" + 
+            "<div class='panel-heading'><span class='code'>" + 
                renderInstructionPython() +
-            "</div>" +
+            "</span></div>" +
             "<div class='panel-body'>" +
+               renderEditCell() +
                "<div style='overflow:auto'>" +
-                  "<div style='float:right; margin:3px'>" +
-                     renderEditCell() +
-                  "</div>" +
                   renderVariables() +
                "</div>" +
                "<span style='clear:both'></span>" + 
