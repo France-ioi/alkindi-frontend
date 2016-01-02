@@ -27,7 +27,7 @@ const JoinTeamScreen = PureComponent(self => {
   };
   self.render = function () {
     const {user} = self.props;
-    const {username, accessible_round} = user;
+    const {accessible_round} = user;
     const body = [];
     if (accessible_round) {
       // Affichage candidat qualifié s'il n'a pas créé ou rejoint une équipe.
@@ -80,7 +80,7 @@ const JoinTeamScreen = PureComponent(self => {
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <AlkindiLogout username={username} logoutUrl={Alkindi.config.logout_url} onLogout={this.props.onLogout}/>
+          <AlkindiLogout user={user} logoutUrl={Alkindi.config.logout_url} onLogout={this.props.onLogout}/>
         </div>
         <AlkindiAuthHeader/>
         {body}
