@@ -471,7 +471,6 @@ a.cell-link {
 }
 .qualifier-locked {
   background-color: #D3D3D3;
-  background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;
   position: relative;
@@ -493,29 +492,6 @@ a.cell-link {
 }
 .qualifier-disabled {
   background-color: #808080;
-}
-.bigrams {
-  display: inline-table;
-  border: none;
-  margin-right: 15px;
-}
-.bigrams td {
-  border: none;
-  padding: 2px;
-}
-.substitutionPair tr td {
-  width: 20px;
-  height: 20px;
-  font-size: 1.8rem;
-  text-align: center;
-  border: solid black 1px;
-  padding: 0;
-}
-.qualifier-locked {
-  background-color: #D3D3D3;
-  background-image: url('lock.png');
-  background-repeat: no-repeat;
-  background-position: top right;
 }
 .cell-query {
   background-color: #000;
