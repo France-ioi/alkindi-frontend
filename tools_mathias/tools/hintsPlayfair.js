@@ -21,7 +21,7 @@ function getHintsPlayFair() {
    };
 
    var renderInstructionPython = function() {
-      return self.props.outputGridVariable + " = " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
+      return "<span class='code-var'>" + self.props.outputGridVariable + "</span> = " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
    };
    
    var renderGrid = function() {
@@ -128,7 +128,7 @@ function getHintsPlayFair() {
       } else if (self.state.hintState === "waiting") {
          return "<div class='dialog'>En attente de réponse du serveur</div>";
       } else if (self.state.hintState === "received") {
-         return "<div class='dialog'>Indice obtenu <button onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
+         return "<div class='dialog'>Indice obtenu <button type='button' onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
       } else if (self.state.hintState === "invalid") {
          return "<div class='dialog'>Cet indice a déjà été obtenu</div>";
       }
@@ -160,24 +160,25 @@ function getHintsPlayFair() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'>" + 
+            "<div class='panel-heading'><span class='code'>" + 
                renderInstructionPython() +
-            "</div>" +
-            "<div class='panel-body'>" +
-               "<div style='overflow:auto'>" +
-                  "<div style='float:right; margin:3px'>" + renderHintQuery() + "</div>" +
+            "</span></div>" +
+            "<div class='panel-body'>" + 
+               renderHintQuery() + 
+               "<div>" +
                   renderVariables() +
                   "<strong>Score disponible :</strong> " + self.props.score + " points" +
                "</div>" +
-               "<span style='clear:both'></span>" + 
-               "<strong>Deux types d'indices sont disponibles :</strong><br/>" +
-               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-                  "Révéler une case : " + getQueryCost({ type: "grid"}) + " points" +
-                  renderGrid() +
-               "</div>" +
-               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-                  "Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points" +
-                  renderAlphabet() +
+               "<div class='grillesIndices'>" +
+                  "<p class='title'>Deux types d'indices sont disponibles :</p>" +
+                  "<div class='blocGrilleIndices'>" + 
+                     "<span>Révéler une case : " + getQueryCost({ type: "grid"}) + " points</span>" +
+                     renderGrid() +
+                  "</div>" +
+                  "<div class='blocGrilleIndices'>" +
+                     "<span>Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points</span>" +
+                     renderAlphabet() +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";
