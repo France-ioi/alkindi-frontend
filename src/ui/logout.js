@@ -20,10 +20,10 @@ let AlkindiLogout = PureComponent(self => {
     window.removeEventListener('message', messageListener);
   };
   self.render = function () {
-    const {firstname, lastname} = self.props.user;
+    const {username} = self.props.user;
     return (
       <div id="logout">
-        <span>{firstname} {lastname}</span>
+        <span>{username}</span>
         <button type='button' onClick={logout}>déconnexion</button>
       </div>
     );

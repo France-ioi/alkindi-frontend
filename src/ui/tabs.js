@@ -4,11 +4,11 @@ import classnames from 'classnames';
 import {PureComponent} from '../misc';
 
 const tabs = [
+  {key: 'team', label: "Équipe"},
   {key: 'question', label: "Sujet"},
   {key: 'cryptanalysis', label: "Cryptanalyse"},
-  {key: 'answer', label: "Soumission"},
   {key: 'history', label: "Historique"},
-  {key: 'team', label: "Équipe"},
+  {key: 'answer', label: "Soumission"},
 ];
 
 let AlkindiTabs = PureComponent(self => {
