@@ -167,7 +167,6 @@ function getHintsPlayFair() {
                renderHintQuery() + 
                "<div>" +
                   renderVariables() +
-                  "<strong>Score disponible :</strong> " + self.props.score + " points" +
                "</div>" +
                "<div class='grillesSection'>" +
                   "<p class='title'>Deux types d'indices sont disponibles :</p>" +
@@ -180,6 +179,7 @@ function getHintsPlayFair() {
                      renderAlphabet() +
                   "</div>" +
                "</div>" +
+               "<div class='score'><strong>Score disponible :</strong> " + self.props.score + " points</div>" +
             "</div>" +
          "</div>";
    };
