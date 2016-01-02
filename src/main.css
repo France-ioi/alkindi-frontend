@@ -529,8 +529,12 @@ a.cell-link {
 .variable-informations > div {
   margin-left: 5px;
 }
-.variable-informations .code {
+.variable-informations .variable-name {
+  display: inline-block;
   font-size: 11px;
+  width: 140px;
+  text-align: center;
+  border: 1px solid #000;
 }
 /* bigrammes */
 .bigrams {
