@@ -30,7 +30,11 @@ select.placeholder {
 option {
   color: #555;
 }
-
+.title {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin-bottom: 0;
+}
 .selected {
   font-weight: bold;
 }
@@ -431,10 +435,6 @@ a.cell-link {
     Interfaces et grilles PlayFair
 
 */
-#hintsPlayFair .panel,
-#substitutionFromGrid .panel {
-  width: 700px;
-}
 .playFairGrid,
 .playFairAlphabet,
 .substitutionPair,
@@ -452,6 +452,14 @@ a.cell-link {
   font-size: 1.5em;
   text-align: center;
   border: solid black 1px;
+}
+.grillesIndices {
+  margin-top: 10px;
+}
+.blocGrilleIndices {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
 }
 .qualifier-locked {
   background-color: lightgray;
@@ -502,14 +510,18 @@ a.cell-link {
   background-position: top right;
 }
 .cell-query {
-  background-color: cyan;
+  background-color: #000;
+  color: #fff;
 }
 .dialog {
-  width: auto;
+  width: 50%;
   max-width: 400px;
   background: #E0E0E0;
   border: solid black 1px;
   padding: 5px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .dialog table,
 .dialog table td {
@@ -522,6 +534,9 @@ a.cell-link {
 .dialog button.locked {
   box-shadow: 0 0 4px #333 inset;
 }
+.dialog button {
+  padding: 0 10px;
+}
 .variable-informations > span {
   font-weight: bold;
 }
@@ -530,4 +545,7 @@ a.cell-link {
 }
 .variable-informations .code {
   font-size: 11px;
+}
+.panel-body {
+  position: relative;
 }
