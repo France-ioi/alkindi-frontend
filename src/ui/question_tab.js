@@ -19,7 +19,7 @@ const QuestionTab = PureComponent(self => {
     items.push(
       <p key='prelude'>
         Cet onglet vous permettra de révéler le sujet de l'épreuve.
-        Il faudra que chaque membre de l'équipe ait donné son accour pour à accéder au sujet.
+        Il faudra que chaque membre de l'équipe ait donné son accord pour accéder au sujet.
         Pour cela, un membre peut saisir son code d'accès personnel lui-même dans le tableau.
         Il peut aussi communiquer son code à un autre membre de l'équipe pour qu'il le saisisse.
       </p>
