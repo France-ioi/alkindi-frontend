@@ -473,7 +473,9 @@ a.cell-link {
 .blocGrille {
   display: inline-block;
   vertical-align: top;
-  width: 50%;
+}
+.blocGrille:first-of-type {
+  margin-right: 45px;
 }
 .qualifier-locked {
   background-color: #D3D3D3;
