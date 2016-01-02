@@ -531,11 +531,23 @@ a.cell-link {
   padding: 0 10px;
 }
 /* variables */
+.playfair-variables {
+  border: 1px solid #000;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  display: inline-block;
+  width: 40%;
+}
 .variable-informations > span {
   font-weight: bold;
 }
 .variable-informations > div {
   margin-left: 5px;
+}
+.variable-informations .variable-label {
+  float: left;
+  width: 50%;
 }
 .variable-informations .variable-name {
   display: inline-block;
