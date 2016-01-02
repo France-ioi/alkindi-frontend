@@ -33,7 +33,7 @@ function getImproveSubstitution() {
    var letterInfos = bigramsUtils.getTextAsBigrams(self.props.inputCipheredText, self.props.alphabet).letterInfos;
 
    var renderInstructionPython = function() {
-      return self.props.outputSubstitutionVariable + " = amelioreSubstitution(" +
+      return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = amelioreSubstitution(" +
          self.props.inputCipheredTextVariable + ", " +
          self.props.inputSubstitutionVariable + ", " +
          "..." +
@@ -68,10 +68,10 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
                      "<td style='text-align:center'>" +
-                        "<button style='width:30px'><img src='lock.png'></button>" +
+                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<button style='width:30px'><img src='lock.png'></button>" +
+                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                   "</tr>" +
                "</table>" +
@@ -176,19 +176,18 @@ function getImproveSubstitution() {
    }
 
    var renderTool = function() {
-      return "<div style='width:700px;border: solid black 1px'>" +
-            "<div style='width:100%;border: solid black 1px;box-sizing: border-box;padding:3px'>" + 
+      return "<div class='panel panel-default'>" +
+            "<div class='panel-heading'><span class='code'>" + 
                renderInstructionPython() +
-            "</div>" +
-            "<div style='overflow:auto'>" +
-               "<div style='float:right; margin:3px'>" +
-                  renderEditCell() +
+            "</span></div>" +
+            "<div class='panel-body'>" +
+               renderEditCell() +
+               "<div style='overflow:auto'>" +
+                  renderVariables() +
                "</div>" +
-               renderVariables() +
-            "</div>" +
-            "<span style='clear:both'></span>" +
-            "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
-            renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
+               "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+               renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
+            "</div>" + 
          "</div>";
    };
 
