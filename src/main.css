@@ -38,6 +38,10 @@ option {
 .selected {
   font-weight: bold;
 }
+.panel-heading {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .panel-body {
   position: relative;
 }
@@ -459,6 +463,9 @@ a.cell-link {
   font-size: 1.5em;
   text-align: center;
   border: 1px solid black;
+}
+.panel-heading .code {
+  white-space: nowrap;
 }
 /* grilles */
 .grillesSection {
