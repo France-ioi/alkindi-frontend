@@ -6,8 +6,9 @@ import {PureComponent} from '../misc';
 const tabs = [
   {key: 'question', label: "Sujet"},
   {key: 'cryptanalysis', label: "Cryptanalyse"},
+  {key: 'answer', label: "Soumission"},
   {key: 'history', label: "Historique"},
-  {key: 'team', label: "Équipe"}
+  {key: 'team', label: "Équipe"},
 ];
 
 let AlkindiTabs = PureComponent(self => {
@@ -23,6 +24,7 @@ let AlkindiTabs = PureComponent(self => {
       question: !haveTeam,
       cryptanalysis: !haveQuestion,
       history: !haveQuestion,
+      answer: !haveQuestion,
       team: false
     };
     const items = tabs.map(function (tab) {
