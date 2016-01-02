@@ -38,6 +38,9 @@ option {
 .selected {
   font-weight: bold;
 }
+.panel-body {
+  position: relative;
+}
 
 textarea.full-width {
   width: 100%;
@@ -453,6 +456,7 @@ a.cell-link {
   text-align: center;
   border: 1px solid black;
 }
+/* grilles */
 .grillesIndices {
   margin-top: 10px;
 }
@@ -463,7 +467,6 @@ a.cell-link {
 }
 .qualifier-locked {
   background-color: lightgray;
-  background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;
   position: relative;
@@ -486,33 +489,11 @@ a.cell-link {
 .qualifier-disabled {
   background-color: gray;
 }
-.bigrams {
-  display: inline-table;
-  border: none;
-  margin-right: 15px;
-}
-.bigrams td {
-  border: none;
-  padding: 2px;
-}
-.substitutionPair tr td {
-  width: 20px;
-  height: 20px;
-  font-size: 1.8rem;
-  text-align: center;
-  border: 1px solid black;
-  padding: 0;
-}
-.qualifier-locked {
-  background-color: lightgray;
-  background-image: url('lock.png');
-  background-repeat: no-repeat;
-  background-position: top right;
-}
 .cell-query {
   background-color: #000;
   color: #fff;
 }
+/* boites de dialogue */
 .dialog {
   width: 50%;
   max-width: 400px;
@@ -537,6 +518,7 @@ a.cell-link {
 .dialog button {
   padding: 0 10px;
 }
+/* variables */
 .variable-informations > span {
   font-weight: bold;
 }
@@ -546,9 +528,25 @@ a.cell-link {
 .variable-informations .code {
   font-size: 11px;
 }
-.panel-body {
-  position: relative;
+/* bigrammes */
+.bigrams {
+  display: inline-table;
+  border: none;
+  margin-right: 15px;
 }
+.bigrams td {
+  border: none;
+  padding: 2px;
+}
+.substitutionPair tr td {
+  width: 20px;
+  height: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  border: 1px solid black;
+  padding: 0;
+}
+
 .selectedBigram {
   background-color: #F0F0F0;
   padding: 3px;
