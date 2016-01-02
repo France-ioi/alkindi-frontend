@@ -35,6 +35,7 @@ const TeamTab = PureComponent(self => {
     return (
       <tr key={member.user.id}>
         <td>{member.user.username}</td>
+        <td>{member.user.lastname}, {member.user.firstname}</td>
         <td>{flags.join(', ')}</td>
         <td>{new Date(member.joined_at).toLocaleString()}</td>
       </tr>);
@@ -54,7 +55,8 @@ const TeamTab = PureComponent(self => {
         <table width="100%">
           <tbody>
             <tr>
-              <th>Nom</th>
+              <th>Login</th>
+              <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
             </tr>
