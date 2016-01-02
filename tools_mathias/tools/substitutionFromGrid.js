@@ -82,7 +82,7 @@ function getSubstitutionFromGrid() {
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
-                     "<td><button type='button'><i class='fa fa-lock'></i></button></td>" +
+                     "<td><button type='button' class='locked'><i class='fa fa-lock'></i></button></td>" +
                   "</tr>" +
                "</table>" +
                common.renderValidateOrCancelDialog(self.name) +
