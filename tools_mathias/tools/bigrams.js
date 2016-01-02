@@ -39,28 +39,60 @@ var bigramsUtils = {
       }
       return letterRanks;
    },
-
-   getTextBigrams: function(text, alphabet) {
+   
+   getTextAsBigrams: function(text, alphabet) {
       var textBigrams = [];
+      var letterInfos = [];
       var curBigram = "";
       var letterRanks = this.getLetterRanks(alphabet);
+      var bigramStart = 0;
+
+      function addBigram(bigram, start, end, iBigram) {
+         textBigrams.push(bigram);
+         for (var iLetter = start; iLetter < end; iLetter++) {
+            letterInfos[iLetter].bigram = bigram;
+            letterInfos[iLetter].iBigram = iBigram;
+         }
+      }
+      
       var iLetter = 0;
+      var iBigram = 0;
       while (iLetter < text.length) {
+         letterInfos.push({});
+         var status;
          var letter = text.charAt(iLetter);
          if (letterRanks[letter] != undefined) {
             curBigram += letter;
             if (curBigram.length == 2) {
-               textBigrams.push(curBigram);
+               addBigram(curBigram, bigramStart, iLetter + 1, iBigram);
+               iBigram++;
                curBigram = "";
+               status = "right";
+            } else {
+               status = "left";
+               bigramStart = iLetter;
             }
+         } else if (curBigram.length == 0) {
+            status = "outside";
+         } else {
+            status = "inside";
          }
+         letterInfos[iLetter].status = status;
          iLetter++;
       }
       if (curBigram.length == 1) {
          curBigram += "X";
-         textBigrams.push(curBigram);
+         addBigram(curBigram, bigramStart, iLetter + 1, iBigram);
       }
-      return textBigrams;
+      return {
+         bigrams: textBigrams,
+         letterInfos: letterInfos
+      };
+   },
+
+   getTextBigrams: function(text, alphabet) {
+      var infos = this.getTextAsBigrams(text, alphabet);
+      return infos.bigrams;
    },
 
    getMostFrequentBigrams: function(text, alphabet) {
@@ -90,6 +122,22 @@ var bigramsUtils = {
       });
       bigramInfos.splice(30, bigramInfos.length - 30);
       return bigramInfos;
+   },
+
+   getBigramSubstPair: function(bigram, substitution, letterRanks) {
+      var rank1 = letterRanks[bigram.charAt(0)];
+      var rank2 = letterRanks[bigram.charAt(1)];
+      var substPair;
+      if ((substitution[rank1] != undefined) && (substitution[rank1][rank2] != undefined)) {
+         return substitution[rank1][rank2];
+      }
+      else {
+         // TODO: src1 and src2 might be needed in the future
+         return {
+            dst1: {q: "unknown"},
+            dst2 : {q:"unknown" }
+         };
+      }
    },
 
    getPairLetterClass: function(cell) {
