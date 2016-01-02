@@ -302,7 +302,7 @@ character substitutions tables
   display: table-cell;
   vertical-align: bottom;
 }
-#logout span {
+#logout > span {
   display: block;
 }
 /* Formulaires de création */
