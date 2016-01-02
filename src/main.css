@@ -554,6 +554,18 @@ a.cell-link {
   border: 1px solid black;
   padding: 0;
 }
+#bigramSubstitution {
+  border: 1px solid #000;
+  height: 136px;
+  width: 560px;
+  overflow-y: scroll;
+}
+#bigramSubstitution > div {
+  float: left;
+}
+#bigramSubstitution > div:nth-child(odd) {
+  margin-right: 30px;
+}
 
 .selectedBigram {
   background-color: #F0F0F0;
