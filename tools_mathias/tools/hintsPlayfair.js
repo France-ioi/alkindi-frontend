@@ -165,9 +165,7 @@ function getHintsPlayFair() {
             "</span></div>" +
             "<div class='panel-body'>" + 
                renderHintQuery() + 
-               "<div>" +
-                  renderVariables() +
-               "</div>" +
+               renderVariables() +
                "<div class='grillesSection'>" +
                   "<p class='title'>Deux types d'indices sont disponibles :</p>" +
                   "<div class='blocGrille'>" + 
