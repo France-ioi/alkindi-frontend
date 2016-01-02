@@ -39,6 +39,10 @@ option {
   font-weight: bold;
 }
 
+div.section {
+  margin-bottom: 20px;
+}
+
 textarea.full-width {
   width: 100%;
   max-width: 100%;
@@ -462,7 +466,7 @@ a.cell-link {
   width: 50%;
 }
 .qualifier-locked {
-  background-color: lightgray;
+  background-color: #D3D3D3;
   background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;
@@ -481,10 +485,10 @@ a.cell-link {
   background-color: white;
 }
 .qualifier-confirmed {
-  background-color: lightgray;
+  background-color: #D3D3D3;
 }
 .qualifier-disabled {
-  background-color: gray;
+  background-color: #808080;
 }
 .bigrams {
   display: inline-table;
@@ -504,7 +508,7 @@ a.cell-link {
   padding: 0;
 }
 .qualifier-locked {
-  background-color: lightgray;
+  background-color: #D3D3D3;
   background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;

@@ -6,6 +6,7 @@ import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
 import LoginScreen from './ui/login';
 import AlkindiLogout from './ui/logout';
+import QuestionTab from './ui/question_tab';
 import TeamTab from './ui/team_tab';
 import HistoryTab from './ui/history_tab';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
@@ -16,10 +17,8 @@ import * as api from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
-  const {activeTabKey, user, team, question} = state;
-  return {
-    activeTabKey, user, team, question
-  };
+  const {activeTabKey, user} = state;
+  return {activeTabKey, user};
 };
 
 let App = connect(appSelector)(PureComponent(self => {
@@ -27,12 +26,11 @@ let App = connect(appSelector)(PureComponent(self => {
     if (user_id === undefined)
       user_id = self.props.user.id;
     api.readUser(user_id, function (err, res) {
-      if (err) return; // XXX alert?
+      if (err) return alert(err);
       const result = res.body;
       if ('user' in result) {
         const {user} = result;
         self.props.dispatch({type: 'SET_USER', user: user});
-        self.props.dispatch({type: 'SET_TEAM', team: user.team});
       }
     });
   };
@@ -52,27 +50,33 @@ let App = connect(appSelector)(PureComponent(self => {
     self.props.dispatch({type: 'ADD_TOOL', toolType});
   };
   self.render = function () {
-    const {user, team, question, activeTabKey} = self.props;
-    // If we don't have a user, display the login screen.
-    console.log('user: ', user);
+    const {user, activeTabKey} = self.props;
+    const {team, round, question} = user || {};
+    const haveTeam = !!team;
+    console.log('here', user, team, question, round);
+    const haveQuestion = question !== undefined && 'id' in question;
     if (user === undefined)
       return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={afterLogin} />;
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
-    if (!team)
+    if (!haveTeam)
       return <JoinTeamScreen user={user} onLogout={afterLogout} reloadUser={loadUser} />;
     let content = false;
     switch (activeTabKey) {
-      case 'team':
-        content = <TeamTab user={user} team={team} haveQuestion={!!question} reloadUser={loadUser} />;
-        break;
-      case 'history':
-        // FIXME: we do not always need workspaces, so make the component
-        // connect directly to the store.
-        content = <HistoryTab/>;
+      case 'question':
+        content = <QuestionTab user={user} />;
         break;
       case 'cryptanalysis':
         content = <CryptanalysisTab/>;
+        break;
+      case 'answer':
+        // content = <AnswerTab />;
+        break;
+      case 'team':
+        content = <TeamTab user={user} team={team} haveQuestion={haveQuestion} reloadUser={loadUser} />;
+        break;
+      case 'history':
+        content = <HistoryTab/>;
         break;
     }
     return (
@@ -80,7 +84,7 @@ let App = connect(appSelector)(PureComponent(self => {
         <div id="header">
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
-            <AlkindiTabs activeTabKey={activeTabKey} haveTeam={!!team} haveQuestion={!!question} setActiveTab={setActiveTab} />
+            <AlkindiTabs activeTabKey={activeTabKey} haveTeam={haveTeam} haveQuestion={haveQuestion} setActiveTab={setActiveTab} />
             <AlkindiLogout user={user} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout} />
           </div>
         </div>

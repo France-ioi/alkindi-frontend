@@ -2,6 +2,8 @@
 import range from 'node-range';
 import Shuffle from 'shuffle';
 
+// pas défini (vide), défini mais pas sûr (sur fond blanc), sûr (sur fond gris)
+
 export function combineQualifiers (q1, q2) {
   if (q1 === 'given')
     return q2;

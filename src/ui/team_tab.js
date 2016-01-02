@@ -1,8 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
-import * as actions from '../actions';
 import * as api from '../api';
 
 const TeamTab = PureComponent(self => {
@@ -41,16 +39,17 @@ const TeamTab = PureComponent(self => {
       </tr>);
   }
   self.render = function () {
-    const {user, team} = self.props;
+    const {user, team, haveQuestion} = self.props;
     const body = [];
-    if (team.creator.id === user.id) {
+    const showAdminControls = !haveQuestion && team.creator.id === user.id;
+    if (showAdminControls) {
       body.push(
-        <div key='code'>
+        <div key='code' className="section">
           <p>Code d'accès de l'équipe : <strong>{team.code}</strong></p>
         </div>);
     }
     body.push(
-      <div key='members'>
+      <div key='members' className="section">
         <p>Votre équipe est constituée de :</p>
         <table width="100%">
           <tbody>
@@ -64,9 +63,9 @@ const TeamTab = PureComponent(self => {
           </tbody>
         </table>
       </div>);
-    if (team.creator.id === user.id) {
+    if (showAdminControls) {
       body.push(
-        <div key='settings'>
+        <div key='settings' className="section">
           <p>Vous pouvez modifier les réglages de votre équipe :</p>
           <p>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
@@ -81,9 +80,12 @@ const TeamTab = PureComponent(self => {
     }
     if (!self.props.haveQuestion) {
       body.push(
-        <p key='leave'>
-          <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
-        </p>
+        <div key='leave' className="section">
+          <p>Vous pouvez quitter l'équipe :</p>
+          <p key='leave'>
+            <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
+          </p>
+        </div>
       );
     }
     return (<div className="wrapper">{body}</div>);

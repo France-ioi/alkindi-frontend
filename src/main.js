@@ -32,7 +32,6 @@ window.Alkindi = (function () {
     if ('user' in config) {
       const {user} = config;
       store.dispatch({type: 'SET_USER', user: user});
-      store.dispatch({type: 'SET_TEAM', team: user.team});
     }
   };
 

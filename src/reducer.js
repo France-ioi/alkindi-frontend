@@ -24,11 +24,11 @@ const reduceSetUser = function (state, user) {
 };
 
 const reduceSetTeam = function (state, team) {
-  return {...state, team};
+  return {...state, user: {...state.user, team: team}};
 };
 
 const reduceSetQuestion = function (state, question) {
-  return {...state, question};
+  return {...state, user: {...state.user, question: question}};
 };
 
 const reduceSetWorkspaces = function (state, workspaces) {
