@@ -141,13 +141,14 @@ function getSubstitutionFromGrid() {
                "<div style='overflow:auto'>" +
                   renderVariables() +
                "</div>" +
-               "<span style='clear:both'></span>" + 
-               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-                  renderGrid() +
-               "</div>" +
-               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-                  "Substitution de bigrammes générée :<br/>" +
-                  renderSubstitution() +
+               "<div class='grillesSection'>" + 
+                  "<div class='blocGrille'>" + 
+                     renderGrid() +
+                  "</div>" +
+                  "<div class='blocGrille'>" +
+                     "Substitution de bigrammes générée :<br/>" +
+                     renderSubstitution() +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";

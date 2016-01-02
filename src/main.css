@@ -461,10 +461,10 @@ a.cell-link {
   border: 1px solid black;
 }
 /* grilles */
-.grillesIndices {
+.grillesSection {
   margin-top: 10px;
 }
-.blocGrilleIndices {
+.blocGrille {
   display: inline-block;
   vertical-align: top;
   width: 50%;
