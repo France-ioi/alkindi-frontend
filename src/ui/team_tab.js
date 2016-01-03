@@ -70,7 +70,7 @@ const TeamTab = PureComponent(self => {
       </div>);
     if (showAdminControls) {
       const accessCode = self.state.isOpen && (
-        <p>Code d'accès de l'équipe à communiquer : <strong>{team.code}</strong></p>
+        <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>
       );
       body.push(
         <div key='settings' className="section">
