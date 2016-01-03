@@ -29,10 +29,8 @@ window.Alkindi = (function () {
     Alkindi.config = config;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
-    if ('user' in config) {
-      const {user} = config;
-      store.dispatch({type: 'SET_USER', user: user});
-    }
+    if ('seed' in config)
+      store.dispatch({type: 'INIT', seed: config.seed});
   };
 
   Alkindi.install = function (mainElement) {

@@ -2,15 +2,19 @@
 import {importText, importSubstitution, applySubstitution, errorValue} from './values';
 import {newTool} from './tool';
 
-const initialState = function () {
-  return {
+const initialState = function (seed) {
+  if (seed === undefined)
+    seed = {};
+  const state = {
     toolOrder: [],
     toolMap: {},
     nextToolId: 1,
     autoRefresh: true,
     rootScope: {},
-    user: undefined,
-    team: undefined,
+    user: seed.user,
+    team: seed.team,
+    round: seed.round,
+    attempt: seed.attempt,
     activeTabKey: undefined,
     historyTab: {
       workspaces: [],
@@ -144,7 +148,7 @@ function actualReduce (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return initialState();
+      return initialState(action.seed);
     case 'AFTER_LOGOUT':
       return initialState();
     case 'SET_USER':
