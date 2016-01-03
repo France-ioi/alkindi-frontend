@@ -17,8 +17,12 @@ import * as api from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
-  const {activeTabKey, user} = state;
-  return {activeTabKey, user};
+  const {activeTabKey, enabledTabs, user, team, round, attempt} = state;
+  if (!user)
+    return {};
+  if (!team)
+    return {user, round};
+  return {activeTabKey, enabledTabs, user, team, attempt};
 };
 
 let App = connect(appSelector)(PureComponent(self => {

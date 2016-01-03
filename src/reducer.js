@@ -16,12 +16,31 @@ const initialState = function (seed) {
     round: seed.round,
     attempt: seed.attempt,
     activeTabKey: undefined,
+    enabledTabs: {},
     historyTab: {
       workspaces: [],
       currentWorkspace: undefined
     }
   };
+  return reduceSetActiveTab(state);
 };
+
+const reduceSetActiveTab = function (state, tabKey) {
+  const haveAttempt = !!state.attempt;
+  const enabledTabs = {
+    team: true,
+    question: haveAttempt,
+    cryptanalysis: haveAttempt,
+    history: false, // XXX disabled until implemented
+    answer: haveAttempt
+  };
+  // If the active tab has become disabled, select the team tab, which is
+  // always available.
+  let activeTabKey = tabKey;
+  if (activeTabKey == undefined || !enabledTabs[activeTabKey])
+    activeTabKey = 'team';
+  return {...state, activeTabKey, enabledTabs};
+}
 
 const reduceSetUser = function (state, user) {
   return {...state, user};
@@ -50,13 +69,6 @@ const reduceSetWorkspaces = function (state, workspaces) {
     newHistoryTab.allVersions = Array.prototype.concat.apply([], groups);
   }
   return {...state, historyTab: newHistoryTab};
-};
-
-const reduceSetActiveTab = function (state, tabKey) {
-  return {
-    ...state,
-    activeTabKey: tabKey
-  };
 };
 
 const reduceAddTool = function (state, toolType, toolState) {
