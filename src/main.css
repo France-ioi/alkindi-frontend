@@ -619,6 +619,7 @@ a.cell-link {
 }
 .bigrams td > * {
   padding: 0 4px;
+  font-size: 1.6rem;
 }
 .grillesSection .substitutionPair span {
   width: 20px;
@@ -683,4 +684,19 @@ a.cell-link {
 .letterStatus-right {
   border-right: 1px solid black;
   margin-right: 5px;
+}
+.x-scrollBloc {
+   overflow-x: scroll;
+   white-space: nowrap;
+   border: solid black 1px;
+   margin: 5px;
+   width: auto;
+}
+.x-scrollBloc .labels {
+  display: inline-block;
+  padding-right: 5px;
+  vertical-align: top;
+}
+.x-scrollBloc .labels > div {
+    height: 2em;
 }
