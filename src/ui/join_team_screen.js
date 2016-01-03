@@ -56,7 +56,7 @@ const JoinTeamScreen = PureComponent(self => {
     const {user, round} = self.props;
     const body = [];
     if (round) {
-      // Affichage candidat qualifié s'il n'a pas créé ou rejoint une équipe.
+      // Affichage candidat sélectionné qui n'a pas créé ou rejoint une équipe.
       body.push(
         <div key='create-team'>
           <p>
@@ -88,6 +88,7 @@ const JoinTeamScreen = PureComponent(self => {
         );
       }
     } else {
+      // Affichage candidat non-sélectionné.
       body.push(
         <div key='join-team'>
           <p>
