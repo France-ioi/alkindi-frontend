@@ -77,7 +77,7 @@ const JoinTeamScreen = PureComponent(self => {
           <div key='join-team'>
             <p>
               Vous avez choisi de rejoindre une équipe existante.
-              Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade ou votre coordinateur.
+              Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade.
             </p>
             <p className="input">
               <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
