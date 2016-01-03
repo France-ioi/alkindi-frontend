@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 import * as api from '../api';
@@ -12,16 +13,16 @@ const TeamTab = PureComponent(self => {
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
     api.leaveTeam(user_id, function (err, result) {
-      console.log(err, result);
       if (err) return alert(err); // XXX error handling
-      self.props.reloadUser();
+      self.props.reseed();
     });
   };
   const onUpdateTeam = function () {
+    const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
-    api.updateUserTeam(self.props.user.id, data, function (err, result) {
+    api.updateUserTeam(user_id, data, function (err, result) {
       if (err) return alert(err); // XXX error handling
-      self.props.reloadUser();
+      self.props.reseed();
     });
   };
   const renderMember = function (member) {
@@ -39,9 +40,11 @@ const TeamTab = PureComponent(self => {
       </tr>);
   }
   self.render = function () {
-    const {user, team, haveQuestion} = self.props;
+    const {user, team} = self.props;
+    if (!user || !team)
+      return false;
     const body = [];
-    const showAdminControls = !haveQuestion && team.creator.id === user.id;
+    const showAdminControls = !team.is_locked && team.creator.id === user.id;
     if (showAdminControls) {
       body.push(
         <div key='code' className="section">
@@ -69,16 +72,16 @@ const TeamTab = PureComponent(self => {
           <p>Vous pouvez modifier les réglages de votre équipe :</p>
           <p>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
+             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
           </p>
           <p>
             <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-closed">Bloquer les inscriptions à l'équipe</label>
+             <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
            </p>
           <button type="submit" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
         </div>);
     }
-    if (!self.props.haveQuestion) {
+    if (!team.is_locked) {
       body.push(
         <div key='leave' className="section">
           <p>Vous pouvez quitter l'équipe :</p>
@@ -97,4 +100,9 @@ const TeamTab = PureComponent(self => {
   };
 });
 
-export default TeamTab;
+const selector = function (state, props) {
+  const {user, team} = state;
+  return {user, team};
+};
+
+export default connect(selector)(TeamTab);
