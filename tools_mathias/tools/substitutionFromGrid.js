@@ -50,7 +50,7 @@ function getSubstitutionFromGrid() {
             }
          }
       }
-      return "<div id='bigramSubstitution'>" + items.join() + "</div>";
+      return "<div id='bigramSubstitution'>" + items.join('') + "</div>";
    };
 
    var renderEditCell = function() {
