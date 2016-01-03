@@ -174,7 +174,7 @@ function getBigramFrequencyAnalysis() {
                   sideClass = "substitutionConflict";
                }
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
-                     renderBigramSubst(bigram, initialSubstitution, side) + "<br/>" +
+                     renderBigramSubst(bigram, initialSubstitution, side) +
                      renderBigramSubst(bigram, newSubstitution, side) +
                   "<span class='substitutionLock'><i class='fa fa-lock'></i></span>" +
                   "</div>";

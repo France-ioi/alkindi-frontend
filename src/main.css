@@ -670,6 +670,7 @@ a.cell-link {
   font-size: 1.8rem;
   border: 1px solid #000;
   padding: 0;
+  display: block;
 }
 #bigramFrequencyAnalysis .substitutionPair .bigramLetter:first-of-type {
   border: none;
