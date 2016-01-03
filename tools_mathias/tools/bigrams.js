@@ -158,5 +158,17 @@ var bigramsUtils = {
       }
       html += "</tr></table>";
       return html;
+   },
+
+   renderSubstitutionPair: function(pair, alphabet) {
+      return "<table class='bigrams'>" +
+            "<tr>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.src1, pair.src2) + "</td>" +
+               "<td><i class='fa fa-long-arrow-right'></i></td>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst1, pair.dst2) + "</td>" +
+            "</tr>" +
+         "</table>";
    }
+
+
 }

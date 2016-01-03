@@ -34,16 +34,6 @@ function getSubstitutionFromGrid() {
       return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
    };
 
-   var renderSubstitutionPair = function(pair) {
-      return "<table class='bigrams'>" +
-            "<tr>" +
-               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
-               "<td><i class='fa fa-long-arrow-right'></i></td>" +
-               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
-            "</tr>" +
-         "</table>";
-   }
-
    var renderSubstitution = function() {
       var html = "<div id='bigramSubstitution'>";
       var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
@@ -52,8 +42,8 @@ function getSubstitutionFromGrid() {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
                html += "<div>";
-               html += renderSubstitutionPair(substitution[src1][src2]);
-               html += renderSubstitutionPair(substitution[src2][src1]);
+               html += bigramsUtils.renderSubstitutionPair(substitution[src1][src2], playFair.alphabet);
+               html += bigramsUtils.renderSubstitutionPair(substitution[src2][src1], playFair.alphabet);
                html += "</div>";
             }
          }
