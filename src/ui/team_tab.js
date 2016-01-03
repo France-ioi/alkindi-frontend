@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Alert} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import * as api from '../api';
@@ -88,6 +89,10 @@ const TeamTab = PureComponent(self => {
           <p key='leave'>
             <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
           </p>
+          <Alert bsStyle='success'>
+            L'accès au sujet sera ouvert le 9 janvier.
+            L'interface sera complétée pour vous permettre de valider la composition de votre équipe.
+          </Alert>
         </div>
       );
     }
