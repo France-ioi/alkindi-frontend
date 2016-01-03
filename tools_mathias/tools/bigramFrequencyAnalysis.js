@@ -44,36 +44,41 @@ function getBigramFrequencyAnalysis() {
          var bigram = self.mostFrequentBigrams[self.state.edit.iBigram];
          var substPair = bigramsUtils.getBigramSubstPair(bigram.v, self.props.inputSubstitution, self.letterRanks);
          return "<div class='dialog'>" +
-               "<table>" +
-                  "<tr>" +
-                     "<td><strong>Bigramme édité :</strong></td>" +
-                     "<td>" + renderBigram(bigram, 0) + "</td>" +
-                     "<td>" + renderBigram(bigram, 1) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Substitution d'origine :</strong></td>" +
-                     "<td style='text-align:center'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 0) + "</td>" +
-                     "<td style='text-align:center'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 1) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Nouvelle substitution :</strong></td>" +
-                     "<td style='text-align:center'>" + 
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Bigramme édité :</span>" +
+                     "<span class='dialogBigram editedPair'>" +
+                        "<span class='bigramLetter'>" +
+                        renderBigram(bigram, 0) +
+                        "</span>" +
+                        "<span class='bigramLetter'>" +
+                        renderBigram(bigram, 1) +
+                        "</span>" +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Substitution d'origine :</span>" +
+                     "<span class='dialogBigram dialogBigramOrig'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
+                        renderBigramSubst(bigram, self.props.inputSubstitution, 1) +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Nouvelle substitution :</span>" +
+                     "<span class='dialogBigramSubst'>" + 
                         "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst1) + "'>" +
-                     "</td>" +
-                     "<td style='text-align:center'>" +
+                     "</span>" +
+                     "<span class='dialogBigramSubst'>" +
                         "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst2) + "'>" +
-                     "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Bloquer / débloquer :</strong></td>" +
-                     "<td style='text-align:center'>" +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
+                     "<span>" +
                         "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
-                     "</td>" +
-                     "<td style='text-align:center'>" +
+                     "</span>" +
+                     "<span>" +
                         "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
-                     "</td>" +
-                  "</tr>" +
-               "</table>" +
+                     "</span>" +
+                  "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
       } else {
@@ -135,7 +140,7 @@ function getBigramFrequencyAnalysis() {
    };
 
    var renderBigram = function(bigram, side) {
-       var html = "<div style='border: solid black 1px;margin:4px;width:30px;text-align:center;background-color:white'>";
+       var html = "";
        if ((side == undefined) || (side == 0)) {
           html += bigram.v.charAt(0);
        }
@@ -145,7 +150,6 @@ function getBigramFrequencyAnalysis() {
        if ((side == undefined) || (side == 1)) {
           html += bigram.v.charAt(1);
        }
-       html += "</div>";
        return html;
    }
 
@@ -160,14 +164,16 @@ function getBigramFrequencyAnalysis() {
          bigramsHtml += "<div style='display:inline-block;margin:5px;'>" +
             bigram.r + "%<br/>" +
             "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='" + bigramClass +"'>" +
-               renderBigram(bigram);
+               "<span class='bigramLetters'>" +
+               renderBigram(bigram) +
+               "</span>";
          if (initialSubstitution != undefined) {
             for (var side = 0; side < 2; side++) {
                var sideClass = "";
                if (conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side)) {
                   sideClass = "substitutionConflict";
                }
-               bigramsHtml += "<div class='" + sideClass + "' style='display:inline-block'>" +
+               bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
                      renderBigramSubst(bigram, initialSubstitution, side) + "<br/>" +
                      renderBigramSubst(bigram, newSubstitution, side) +
                   "</div>";
@@ -194,21 +200,20 @@ function getBigramFrequencyAnalysis() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'><span class='code'>" + 
+            "<div class='panel-heading'><span class='code'>" +
                renderInstructionPython() +
             "</span></div>" +
-            "<div class='panel-body'>" + 
+            "<div class='panel-body'>" +
                renderEditCell() +
-               "<div>" +
-                  renderVariables() +
+               renderVariables() +
+               "<div class='grillesSection'>" +
+                  "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+                  "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
+                  renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
+                  "<strong>Bigrammes les plus fréquents en français :</strong>" +
+                  renderBigrams(bigramsUtils.mostFrequentFrench); +
                "</div>" +
-               "<span style='clear:both'></span>" +
-               "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
-               "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
-               renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
-               "<strong>Bigrammes les plus fréquents en français :</strong>" +
-               renderBigrams(bigramsUtils.mostFrequentFrench); + 
-            "</div>" + 
+               "</div>" +
          "</div>";
    };
 
