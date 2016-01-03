@@ -2,22 +2,45 @@
 import {importText, importSubstitution, applySubstitution, errorValue} from './values';
 import {newTool} from './tool';
 
-const initialState = function () {
-  return {
+const initialState = function (seed) {
+  if (seed === undefined)
+    seed = {};
+  const state = {
     toolOrder: [],
     toolMap: {},
     nextToolId: 1,
     autoRefresh: true,
     rootScope: {},
-    user: undefined,
-    team: undefined,
+    user: seed.user,
+    team: seed.team,
+    round: seed.round,
+    attempt: seed.attempt,
     activeTabKey: undefined,
+    enabledTabs: {},
     historyTab: {
       workspaces: [],
       currentWorkspace: undefined
     }
   };
+  return reduceSetActiveTab(state);
 };
+
+const reduceSetActiveTab = function (state, tabKey) {
+  const haveAttempt = !!state.attempt;
+  const enabledTabs = {
+    team: true,
+    question: haveAttempt,
+    cryptanalysis: haveAttempt,
+    history: false, // XXX disabled until implemented
+    answer: haveAttempt
+  };
+  // If the active tab has become disabled, select the team tab, which is
+  // always available.
+  let activeTabKey = tabKey;
+  if (activeTabKey == undefined || !enabledTabs[activeTabKey])
+    activeTabKey = 'team';
+  return {...state, activeTabKey, enabledTabs};
+}
 
 const reduceSetUser = function (state, user) {
   return {...state, user};
@@ -46,13 +69,6 @@ const reduceSetWorkspaces = function (state, workspaces) {
     newHistoryTab.allVersions = Array.prototype.concat.apply([], groups);
   }
   return {...state, historyTab: newHistoryTab};
-};
-
-const reduceSetActiveTab = function (state, tabKey) {
-  return {
-    ...state,
-    activeTabKey: tabKey
-  };
 };
 
 const reduceAddTool = function (state, toolType, toolState) {
@@ -144,7 +160,7 @@ function actualReduce (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return initialState();
+      return initialState(action.seed);
     case 'AFTER_LOGOUT':
       return initialState();
     case 'SET_USER':

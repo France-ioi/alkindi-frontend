@@ -18,22 +18,14 @@ let AlkindiTabs = PureComponent(self => {
     };
   };
   self.render = function () {
-    let {activeTabKey, haveTeam, haveQuestion} = self.props;
-    // TODO: compute disabled status of tabs.
-    const tabDisabled = {
-      question: !haveTeam,
-      cryptanalysis: !haveQuestion,
-      history: !haveQuestion,
-      answer: !haveQuestion,
-      team: false
-    };
+    let {activeTabKey, enabledTabs} = self.props;
     const items = tabs.map(function (tab) {
       const {key, label} = tab;
-      const disabled = tabDisabled[key];
-      const onClick = disabled ? false : setActiveTab(key);
+      const enabled = enabledTabs[tab.key];
+      const onClick = enabled ? setActiveTab(key) : false;
       var classes = classnames({
           actif: activeTabKey === key,
-          indisponible: disabled
+          indisponible: !enabled
         });
       return <li key={key} className={classes} onClick={onClick}><a>{label}</a></li>;
     })
