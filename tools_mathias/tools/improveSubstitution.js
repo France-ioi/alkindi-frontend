@@ -139,7 +139,7 @@ function getImproveSubstitution() {
 
    var renderBigrams = function(initialSubstitution, newSubstitution) {
       var bigramsHtml = "";
-      var nbLettersPerRow = 18;
+      var nbLettersPerRow = 22;
       var text = self.props.inputCipheredText;
       var html = "<div style='overflow-y:scroll;white-space:nowrap;border:solid black 1px;margin:5px;width:auto;height:320px'>";
       for (var iLetter = 0; iLetter < text.length; iLetter++) {

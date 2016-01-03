@@ -67,9 +67,10 @@ function getSubstitutionToPlayFairGrid() {
 
    var renderConflicts = function() {
       if (self.state.editState != "preparing") {
-         return "";
+         return "Sélectionnez une case de la grille pour voir les substitution qui la définissent.<br/>Pour les celles encadrées en rouge, les causes de conflits seront affichées.";
       }
       var letter = self.props.outputGridCells[self.state.edit.row][self.state.edit.col].l;
+      var strLetter = playFair.alphabet[letter];
       var substPairs = playFair.getSubstitutionPairsForDstCell(self.props.outputGridCells, self.props.inputSubstitution, self.state.edit.row, self.state.edit.col);
       var samePairs = [];
       var diffPairs = [];
@@ -88,7 +89,7 @@ function getSubstitutionToPlayFairGrid() {
       }
       var html = "";
       if (samePairs.length > 0) {
-         html += samePairs.length + " substitution(s) donnant la lettre " + playFair.alphabet[letter] + " en première position :<br/>" +
+         html += samePairs.length + " substitution(s) donnant la lettre " + strLetter + " en première position :<br/>" +
             "<div style='height:" + height + "px;width:550px;border: solid black 1px;overflow-y:scroll'>";
          for (var iPair = 0; iPair < samePairs.length; iPair++) {
             var pair = samePairs[iPair];
@@ -97,13 +98,17 @@ function getSubstitutionToPlayFairGrid() {
          html += "</div>";
       }
       if (diffPairs.length > 0) {
-         html += diffPairs.length + " substitution(s) donnant une lettre <strong>différente de " + playFair.alphabet[letter] + "</strong> en première position :<br/>" +
+         html += diffPairs.length + " substitution(s) donnant une lettre <strong>différente de " + strLetter + "</strong> en première position :<br/>" +
             "<div style='height:" + height + "px;width:550px;border: solid black 1px;overflow-y:scroll'>";
          for (var iPair = 0; iPair < diffPairs.length; iPair++) {
             var pair = diffPairs[iPair];
             html += bigramsUtils.renderSubstitutionPair(pair, playFair.alphabet);
          }
          html += "</div>";
+      }
+      if ((html == "") && (letter != undefined)) {
+         html += "La lettre " + strLetter + " n'est définie par aucune substitution.";
+
       }
       return html;
    };
@@ -114,10 +119,10 @@ function getSubstitutionToPlayFairGrid() {
                renderInstructionPython() +
             "</span></div>" +
             "<div class='panel-body'>" + 
-               "<div>" +
+               "<div style='overflow:auto'>" +
                   renderVariables() +
-                  "<strong>Conflits :</strong>" + // TODO : conflits
                "</div>" +
+               "<strong>Conflits :</strong><br/>" + // TODO : conflits
                "<strong>Grille Playfair reconstituée :</strong><br/>" +
                "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
                      renderGrid() +
