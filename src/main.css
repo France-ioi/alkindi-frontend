@@ -546,14 +546,14 @@ a.cell-link {
   text-align: center;
   font-family: monospace;
 }
-.dialog .editedPair .bigramLetter,
-.dialog .dialogBigramOrig .bigramLetter {
+.dialog .bigramCipheredLetter .bigramLetter,
+.dialog .dialogBigramSubstOrig .bigramLetter {
   padding: 0 10px;
 }
-.dialog .bigramLetters {
+.dialog .dialogBigramSubstOrig,
+.dialog .dialogBigramSubstOrig .bigramLetter {
   background-color: transparent;
   border: none;
-  padding: 0 10px;
 }
 .dialog table,
 .dialog table td {
@@ -667,11 +667,11 @@ a.cell-link {
   display: block;
   text-align: center;
 }
-.grillesSection .bigramLetters {
+.grillesSection .bigramCipheredLetter {
   height: 2em;
   min-width: 2.5em;
 }
-.grillesSection .bigramLetters span {
+.grillesSection .bigramCipheredLetter span {
   border: 1px solid #000;
   text-align: center;
   background-color: #fff;
