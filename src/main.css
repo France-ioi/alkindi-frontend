@@ -652,6 +652,18 @@ a.cell-link {
 }
 #bigramFrequencyAnalysis .substitutionPair {
   display: inline-block;
+  border: 3px solid #fff;
+}
+#bigramFrequencyAnalysis .selectedBigram .substitutionPair {
+  border-color: #F0F0F0;
+}
+#bigramFrequencyAnalysis .substitutionPair.substitutionConflict {
+  border-color: #C82829;
+}
+.bigramBlocSubstitution.selectedBigram {
+  background-color: #F0F0F0;
+  padding: 3px;
+  border: 1px solid #000;
 }
 #bigramFrequencyAnalysis .substitutionPair .bigramLetter {
   width: 20px;
