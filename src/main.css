@@ -447,7 +447,6 @@ a.cell-link {
 */
 .playFairGrid,
 .playFairAlphabet,
-.substitutionPair,
 .bigrams {
   width: auto;
   border-collapse: collapse;
@@ -511,10 +510,37 @@ a.cell-link {
   max-width: 400px;
   background: #f0f0f0;
   border: 1px solid black;
+  border-radius: 3px;
   padding: 5px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
+}
+.dialogLine {
+  min-height: 2em;
+}
+.dialogLabel {
+  font-weight: bold;
+  float: left;
+  width: 50%;
+}
+.dialogBigram {
+  background-color: #fff;
+  border: 1px solid #000;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.2em;
+  text-align: center;
+  font-family: monospace;
+}
+.dialog .editedPair .bigramLetter,
+.dialog .dialogBigramOrig .bigramLetter {
+  padding: 0 10px;
+}
+.dialog .bigramLetters {
+  background-color: transparent;
+  border: none;
+  padding: 0 10px;
 }
 .dialog table,
 .dialog table td {
@@ -533,7 +559,7 @@ a.cell-link {
 /* variables */
 .playfair-variables {
   border: 1px solid #000;
-  border-radius: 5px;
+  border-radius: 3px;
   margin-bottom: 5px;
   padding: 10px;
   display: inline-block;
@@ -574,13 +600,13 @@ a.cell-link {
   border: none;
   padding: 2px;
 }
-.substitutionPair tr td {
+.grillesSection .substitutionPair span {
   width: 20px;
-  height: 20px;
   font-size: 1.8rem;
   text-align: center;
-  border: 1px solid black;
+  border: 1px solid #000;
   padding: 0;
+  display: inline-block;
 }
 #bigramSubstitution {
   border: 1px solid #000;
@@ -594,7 +620,26 @@ a.cell-link {
 #bigramSubstitution > div:nth-child(odd) {
   margin-right: 30px;
 }
-
+#bigramFrequencyAnalysis  .substitutionPair {
+  display: inline-block;
+}
+#bigramFrequencyAnalysis .substitutionPair > span:first-of-type {
+  border: none;
+  background-color: transparent;
+}
+.bigramLetters {
+  border: 1px solid #000;
+  text-align: center;
+  background-color: #fff;
+}
+.grillesSection .bigramLetters {
+  display: block;
+  width: 100%;
+}
+.bigramLetter {
+  min-width: 1em;
+  display: inline-block;
+}
 .selectedBigram {
   background-color: #F0F0F0;
   padding: 3px;

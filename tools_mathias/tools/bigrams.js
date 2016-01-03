@@ -149,14 +149,13 @@ var bigramsUtils = {
    },
 
    renderBigram: function(alphabet, cell1, cell2, side) {
-      var html = "<table class='substitutionPair' style='display:inline-block'><tr>";
+      var html = "";
       if ((side == undefined) || (side == 0)) {
-         html += "<td class='" + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1) + "</td>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1) + "</span>";
       }
       if ((side == undefined) || (side == 1)) {
-         html += "<td class='" + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2) + "</td>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2) + "</span>";
       }
-      html += "</tr></table>";
       return html;
    },
 
