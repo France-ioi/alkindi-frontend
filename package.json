@@ -1,6 +1,6 @@
 {
   "name": "alkindi-r2-front",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Alkindi competition round 2 front-end",
   "authors": [
     "Epixode"
@@ -16,12 +16,12 @@
     "deepmerge": "^0.2.10",
     "es5-sham-ie8": "^1.0.1",
     "es5-shim": "^4.4.1",
-    "es6-shim": "^0.34.0",
     "font-awesome": "^4.4.0",
     "html5shiv": "^3.7.3",
     "immutable": "^3.7.5",
     "insert-stylesheet": "^0.1.0",
     "node-range": "^0.1.0",
+    "object.assign": "^4.0.3",
     "react": "^0.14.3",
     "react-bootstrap": "^0.27.3",
     "react-dom": "^0.14.2",
