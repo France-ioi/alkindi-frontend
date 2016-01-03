@@ -46,12 +46,6 @@ const TeamTab = PureComponent(self => {
       return false;
     const body = [];
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
-    if (showAdminControls) {
-      body.push(
-        <div key='code' className="section">
-          <p>Code d'accès de l'équipe : <strong>{team.code}</strong></p>
-        </div>);
-    }
     body.push(
       <div key='members' className="section">
         <p>Votre équipe est constituée de :</p>
@@ -74,6 +68,8 @@ const TeamTab = PureComponent(self => {
           <p>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
+             XXX
+             <p>Code d'accès de l'équipe : <strong>{team.code}</strong></p>
           </p>
           <p>
             <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
