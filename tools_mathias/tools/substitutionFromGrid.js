@@ -35,7 +35,7 @@ function getSubstitutionFromGrid() {
    };
 
    var renderSubstitution = function() {
-      var html = "<div style='height:100px;width:400px;border: solid black 1px;overflow-y:scroll'>";
+      var html = "<div id='bigramSubstitution'>";
       var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
       var nbLetters = playFair.alphabet.length;
       for (var src1 = 0; src1 < nbLetters; src1++) {
@@ -131,13 +131,14 @@ function getSubstitutionFromGrid() {
                "<div style='overflow:auto'>" +
                   renderVariables() +
                "</div>" +
-               "<span style='clear:both'></span>" + 
-               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-                  renderGrid() +
-               "</div>" +
-               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-                  "Substitution de bigrammes générée :<br/>" +
-                  renderSubstitution() +
+               "<div class='grillesSection'>" + 
+                  "<div class='blocGrille'>" + 
+                     renderGrid() +
+                  "</div>" +
+                  "<div class='blocGrille'>" +
+                     "Substitution de bigrammes générée :<br/>" +
+                     renderSubstitution() +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";
