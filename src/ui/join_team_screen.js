@@ -91,7 +91,14 @@ const JoinTeamScreen = PureComponent(self => {
       body.push(
         <div key='join-team'>
           <p>
-            Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade ou votre coordinateur.
+            Votre compte n'est pas rattaché à une qualification au deuxième tour du concours Alkindi. Vous avez deux possibilités pour participer :
+          </p>
+          <p>
+            Si vous vous êtes qualifié(e) lors du premier tour et disposez d'un code de qualification fourni par le coordinateur du concours dans votre établissement,
+            allez sur <a href='http://qualification.concours-alkindi.fr'>qualification.concours-alkindi.fr</a> pour le rattacher à votre compte.            
+          </p>
+          <p>
+            Si vous n'êtes pas qualifié(e), vous pouvez rejoindre une équipe créée par un(e) camarade qualifié(e) en saisissant ci-dessous le code de cette équipe.
           </p>
           <div>
             <p className="input">
