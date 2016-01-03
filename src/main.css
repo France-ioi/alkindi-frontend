@@ -619,6 +619,7 @@ a.cell-link {
 }
 .bigrams td > * {
   padding: 0 4px;
+  font-size: 1.6rem;
 }
 .grillesSection .substitutionPair span {
   width: 20px;
