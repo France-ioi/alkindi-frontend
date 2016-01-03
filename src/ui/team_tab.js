@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Alert} from 'react-bootstrap';
+import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
 import * as api from '../api';
@@ -62,19 +63,25 @@ const TeamTab = PureComponent(self => {
         </table>
       </div>);
     if (showAdminControls) {
+      const accessCode = self.state.isOpen && (
+        <p>Code d'accès de l'équipe à communiquer : <strong>{team.code}</strong></p>
+      );
       body.push(
         <div key='settings' className="section">
           <p>Vous pouvez modifier les réglages de votre équipe :</p>
-          <p>
+          <div>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
-             XXX
-             <p>Code d'accès de l'équipe : <strong>{team.code}</strong></p>
-          </p>
-          <p>
+            <div className={classnames(['radio-label', self.state.isOpen && 'radio-checked'])}>
+              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
+              {accessCode}
+            </div>
+          </div>
+          <div>
             <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
-           </p>
+            <div className={classnames(['radio-label', self.state.isOpen || 'radio-checked'])}>
+              <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
+            </div>
+           </div>
           <button type="submit" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
         </div>);
     }
