@@ -161,12 +161,12 @@ function getBigramFrequencyAnalysis() {
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
          }
-         bigramsHtml += "<div style='display:inline-block;margin:5px;'>" +
-            bigram.r + "%<br/>" +
-            "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='" + bigramClass +"'>" +
-               "<span class='bigramLetters'>" +
+         bigramsHtml += "<div class='bigramBloc'>" +
+            "<span class='frequence'>" + bigram.r + "%</span>" +
+            "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='bigramBlocSubstitution " + bigramClass +"'>" +
+               "<div class='bigramLetters'><span>" +
                renderBigram(bigram) +
-               "</span>";
+               "</span></div>";
          if (initialSubstitution != undefined) {
             for (var side = 0; side < 2; side++) {
                var sideClass = "";
@@ -176,6 +176,7 @@ function getBigramFrequencyAnalysis() {
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
                      renderBigramSubst(bigram, initialSubstitution, side) + "<br/>" +
                      renderBigramSubst(bigram, newSubstitution, side) +
+                  "<span class='substitutionLock'><i class='fa fa-lock'></i></span>" +
                   "</div>";
             }
          }
