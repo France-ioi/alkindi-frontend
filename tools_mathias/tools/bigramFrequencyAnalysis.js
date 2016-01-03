@@ -182,15 +182,15 @@ function getBigramFrequencyAnalysis() {
          bigramsHtml += "</div>" +
             "</div>";
       }
-      var html = "<div style='overflow-x:scroll;white-space:nowrap;border:solid black 1px;margin:5px;width:auto'>"+
-         "<div style='display:inline-block;padding-right:5px;vertical-align:top'>" +
-            "Fréquences&nbsp;:<br/>" +
-            "Bigrammes&nbsp;:<br/><br/>";
+      var html = "<div class='x-scrollBloc'>"+
+         "<div class='labels'>" +
+            "<div>Fréquences&nbsp;:</div>" +
+            "<div>Bigrammes&nbsp;:</div>";
       if (initialSubstitution != undefined) {
-         html += "Substitution d'origine&nbsp;:<br/><br/>";
+         html += "<div>Substitution d'origine&nbsp;:</div>";
       }
       if (newSubstitution != undefined) {
-         html += "Nouvelle substitution&nbsp;:<br/>";
+         html += "<div>Nouvelle substitution&nbsp;:</div>";
       }
       html += "</div>" +
          bigramsHtml +
