@@ -48,7 +48,7 @@ var common = {
    renderVariable: function(variable) {
       return "<div>" +
             "<span class='variable-label'>" + variable.label + " : </span>" +
-            "<div class='code' style='display:inline-block;width:140px;text-align:center;border:solid black 1px'>" + variable.name + "</div>" +
+            "<div class='code variable-name'>" + variable.name + "</div>" +
          "</div>";
    },
 

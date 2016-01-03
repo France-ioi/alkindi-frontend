@@ -32,11 +32,14 @@ option {
 }
 .title {
   font-weight: bold;
-  font-size: 1.3em;
   margin-bottom: 0;
 }
 .selected {
   font-weight: bold;
+}
+.panel-heading {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .panel-body {
   position: relative;
@@ -460,18 +463,22 @@ a.cell-link {
   text-align: center;
   border: 1px solid black;
 }
+.panel-heading .code {
+  white-space: nowrap;
+}
 /* grilles */
-.grillesIndices {
+.grillesSection {
   margin-top: 10px;
 }
-.blocGrilleIndices {
+.blocGrille {
   display: inline-block;
   vertical-align: top;
-  width: 50%;
+}
+.blocGrille:first-of-type {
+  margin-right: 45px;
 }
 .qualifier-locked {
   background-color: #D3D3D3;
-  background-image: url('lock.png');
   background-repeat: no-repeat;
   background-position: top right;
   position: relative;
@@ -493,29 +500,6 @@ a.cell-link {
 }
 .qualifier-disabled {
   background-color: #808080;
-}
-.bigrams {
-  display: inline-table;
-  border: none;
-  margin-right: 15px;
-}
-.bigrams td {
-  border: none;
-  padding: 2px;
-}
-.substitutionPair tr td {
-  width: 20px;
-  height: 20px;
-  font-size: 1.8rem;
-  text-align: center;
-  border: solid black 1px;
-  padding: 0;
-}
-.qualifier-locked {
-  background-color: #D3D3D3;
-  background-image: url('lock.png');
-  background-repeat: no-repeat;
-  background-position: top right;
 }
 .cell-query {
   background-color: #000;
@@ -547,14 +531,30 @@ a.cell-link {
   padding: 0 10px;
 }
 /* variables */
+.playfair-variables {
+  border: 1px solid #000;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  display: inline-block;
+  width: 40%;
+}
 .variable-informations > span {
   font-weight: bold;
 }
 .variable-informations > div {
   margin-left: 5px;
 }
-.variable-informations .code {
+.variable-informations .variable-label {
+  float: left;
+  width: 50%;
+}
+.variable-informations .variable-name {
+  display: inline-block;
   font-size: 11px;
+  width: 140px;
+  text-align: center;
+  border: 1px solid #000;
 }
 /* bigrammes */
 .bigrams {
@@ -573,6 +573,18 @@ a.cell-link {
   text-align: center;
   border: 1px solid black;
   padding: 0;
+}
+#bigramSubstitution {
+  border: 1px solid #000;
+  height: 136px;
+  width: 560px;
+  overflow-y: scroll;
+}
+#bigramSubstitution > div {
+  float: left;
+}
+#bigramSubstitution > div:nth-child(odd) {
+  margin-right: 30px;
 }
 
 .selectedBigram {

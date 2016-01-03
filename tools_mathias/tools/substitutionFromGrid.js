@@ -34,26 +34,16 @@ function getSubstitutionFromGrid() {
       return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
    };
 
-   var renderSubstitutionPair = function(pair) {
-      return "<table class='bigrams'>" +
-            "<tr>" +
-               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.src1, pair.src2) + "</td>" +
-               "<td><i class='fa fa-long-arrow-right'></i></td>" +
-               "<td>" + bigramsUtils.renderBigram(playFair.alphabet, pair.dst1, pair.dst2) + "</td>" +
-            "</tr>" +
-         "</table>";
-   }
-
    var renderSubstitution = function() {
-      var html = "<div style='height:100px;width:400px;border: solid black 1px;overflow-y:scroll'>";
+      var html = "<div id='bigramSubstitution'>";
       var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
       var nbLetters = playFair.alphabet.length;
       for (var src1 = 0; src1 < nbLetters; src1++) {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
                html += "<div>";
-               html += renderSubstitutionPair(substitution[src1][src2]);
-               html += renderSubstitutionPair(substitution[src2][src1]);
+               html += bigramsUtils.renderSubstitutionPair(substitution[src1][src2], playFair.alphabet);
+               html += bigramsUtils.renderSubstitutionPair(substitution[src2][src1], playFair.alphabet);
                html += "</div>";
             }
          }
@@ -141,13 +131,14 @@ function getSubstitutionFromGrid() {
                "<div style='overflow:auto'>" +
                   renderVariables() +
                "</div>" +
-               "<span style='clear:both'></span>" + 
-               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-                  renderGrid() +
-               "</div>" +
-               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-                  "Substitution de bigrammes générée :<br/>" +
-                  renderSubstitution() +
+               "<div class='grillesSection'>" + 
+                  "<div class='blocGrille'>" + 
+                     renderGrid() +
+                  "</div>" +
+                  "<div class='blocGrille'>" +
+                     "Substitution de bigrammes générée :<br/>" +
+                     renderSubstitution() +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";

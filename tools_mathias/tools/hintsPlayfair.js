@@ -165,21 +165,19 @@ function getHintsPlayFair() {
             "</span></div>" +
             "<div class='panel-body'>" + 
                renderHintQuery() + 
-               "<div>" +
-                  renderVariables() +
-                  "<strong>Score disponible :</strong> " + self.props.score + " points" +
-               "</div>" +
-               "<div class='grillesIndices'>" +
+               renderVariables() +
+               "<div class='grillesSection'>" +
                   "<p class='title'>Deux types d'indices sont disponibles :</p>" +
-                  "<div class='blocGrilleIndices'>" + 
+                  "<div class='blocGrille'>" + 
                      "<span>Révéler une case : " + getQueryCost({ type: "grid"}) + " points</span>" +
                      renderGrid() +
                   "</div>" +
-                  "<div class='blocGrilleIndices'>" +
+                  "<div class='blocGrille'>" +
                      "<span>Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points</span>" +
                      renderAlphabet() +
                   "</div>" +
                "</div>" +
+               "<div class='score'><strong>Score disponible :</strong> " + self.props.score + " points</div>" +
             "</div>" +
          "</div>";
    };
