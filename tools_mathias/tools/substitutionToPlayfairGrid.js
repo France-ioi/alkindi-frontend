@@ -115,20 +115,20 @@ function getSubstitutionToPlayFairGrid() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'><span class='code'>" + 
+            "<div class='panel-heading'><span class='code'>" +
                renderInstructionPython() +
             "</span></div>" +
-            "<div class='panel-body'>" + 
-               "<div style='overflow:auto'>" +
-                  renderVariables() +
-               "</div>" +
-               "<strong>Conflits :</strong><br/>" + // TODO : conflits
-               "<strong>Grille Playfair reconstituée :</strong><br/>" +
-               "<div style='display:inline-block;vertical-align:middle;margin:3px'>" + 
-                     renderGrid() +
-               "</div>" +
-               "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
-                  renderConflicts() +
+            "<div class='panel-body'>" +
+               renderVariables() +
+               "<div class='grillesSection'>" +
+                  "<strong>Conflits :</strong><br/>" + // TODO : conflits
+                  "<strong>Grille Playfair reconstituée :</strong><br/>" +
+                  "<div style='display:inline-block;vertical-align:middle;margin:3px'>" +
+                        renderGrid() +
+                  "</div>" +
+                  "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
+                     renderConflicts() +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";

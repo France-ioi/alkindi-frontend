@@ -128,9 +128,7 @@ function getSubstitutionFromGrid() {
             "</span></div>" +
             "<div class='panel-body'>" +
                renderEditCell() +
-               "<div style='overflow:auto'>" +
-                  renderVariables() +
-               "</div>" +
+               renderVariables() +
                "<div class='grillesSection'>" + 
                   "<div class='blocGrille'>" + 
                      renderGrid() +

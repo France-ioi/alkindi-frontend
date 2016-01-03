@@ -194,21 +194,20 @@ function getBigramFrequencyAnalysis() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'><span class='code'>" + 
+            "<div class='panel-heading'><span class='code'>" +
                renderInstructionPython() +
             "</span></div>" +
-            "<div class='panel-body'>" + 
+            "<div class='panel-body'>" +
                renderEditCell() +
-               "<div>" +
-                  renderVariables() +
+               renderVariables() +
+               "<div class='grillesSection'>" +
+                  "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+                  "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
+                  renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
+                  "<strong>Bigrammes les plus fréquents en français :</strong>" +
+                  renderBigrams(bigramsUtils.mostFrequentFrench); +
                "</div>" +
-               "<span style='clear:both'></span>" +
-               "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
-               "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
-               renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
-               "<strong>Bigrammes les plus fréquents en français :</strong>" +
-               renderBigrams(bigramsUtils.mostFrequentFrench); + 
-            "</div>" + 
+               "</div>" +
          "</div>";
    };
 
