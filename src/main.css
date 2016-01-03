@@ -73,6 +73,19 @@ table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
 
+/* radio buttons with hanging labels */
+.radio-label {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+}
+.radio-label label {
+  font-weight: normal;
+}
+.radio-label.radio-checked label {
+  font-weight: bold;
+}
+
 /* Page layout */
 .wrapper {
   max-width: 880px;
