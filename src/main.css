@@ -509,7 +509,7 @@ a.cell-link {
 .dialog {
   width: 50%;
   max-width: 400px;
-  background: #E0E0E0;
+  background: #f0f0f0;
   border: 1px solid black;
   padding: 5px;
   position: absolute;
@@ -537,7 +537,7 @@ a.cell-link {
   margin-bottom: 5px;
   padding: 10px;
   display: inline-block;
-  width: 40%;
+  width: 50%;
 }
 .variable-informations > span {
   font-weight: bold;
@@ -547,14 +547,22 @@ a.cell-link {
 }
 .variable-informations .variable-label {
   float: left;
-  width: 50%;
+  width: 40%;
+  clear: left;
+  text-align: right;
+  padding-right: 7px;
+  display: inline-block;
 }
 .variable-informations .variable-name {
   display: inline-block;
   font-size: 11px;
-  width: 140px;
   text-align: center;
   border: 1px solid #000;
+  padding: 0 5px;
+  background-color: #ffc;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: auto;
 }
 /* bigrammes */
 .bigrams {
