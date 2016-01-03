@@ -598,7 +598,14 @@ a.cell-link {
 }
 .bigrams td {
   border: none;
-  padding: 2px;
+  padding: 0;
+}
+.bigrams td:first-child,
+.bigrams td:last-child {
+  border: 1px solid #000;
+}
+.bigrams td > * {
+  padding: 0 4px;
 }
 .grillesSection .substitutionPair span {
   width: 20px;
@@ -613,6 +620,7 @@ a.cell-link {
   height: 136px;
   width: 560px;
   overflow-y: scroll;
+  padding: 10px;
 }
 #bigramSubstitution > div {
   float: left;
@@ -631,6 +639,7 @@ a.cell-link {
   border: 1px solid #000;
   text-align: center;
   background-color: #fff;
+  font-family: monospace;
 }
 .grillesSection .bigramLetters {
   display: block;
@@ -639,6 +648,8 @@ a.cell-link {
 .bigramLetter {
   min-width: 1em;
   display: inline-block;
+  text-align: center;
+  font-family: monospace;
 }
 .selectedBigram {
   background-color: #F0F0F0;
