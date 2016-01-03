@@ -4,8 +4,13 @@ import {PureComponent} from '../misc';
 import AlkindiAuthHeader from './auth_header';
 
 const LoginScreen = PureComponent(self => {
+  let loginWindow;
   const login = function () {
-    window.open(self.props.loginUrl, "alkindi:login",
+    if (loginWindow !== undefined) {
+      loginWindow.close();
+      loginWindow = undefined;
+    }
+    loginWindow = window.open(self.props.loginUrl, "alkindi:login",
       "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
   };
   const messageListener = function (event) {
