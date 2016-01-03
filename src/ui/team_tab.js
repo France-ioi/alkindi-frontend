@@ -94,7 +94,7 @@ const TeamTab = PureComponent(self => {
           </p>
           <Alert bsStyle='success'>
             L'accès au sujet sera ouvert le 9 janvier.
-            L'interface sera complétée pour vous permettre de valider la composition de votre équipe.
+            L'interface sera complétée dans les jours qui précèdent pour vous permettre de valider la composition de votre équipe.
           </Alert>
         </div>
       );
