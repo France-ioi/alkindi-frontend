@@ -716,12 +716,12 @@ a.cell-link {
   margin-right: 5px;
 }
 .x-scrollBloc {
-   overflow-x: scroll;
-   white-space: nowrap;
-   border: solid black 1px;
-   margin: 5px 0;
-   width: auto;
-   padding: 5px;
+  overflow-x: scroll;
+  white-space: nowrap;
+  border: 1px solid #000;
+  margin: 5px 0;
+  width: auto;
+  padding: 5px;
 }
 .x-scrollBloc .labels {
   display: inline-block;
@@ -729,5 +729,5 @@ a.cell-link {
   vertical-align: top;
 }
 .x-scrollBloc .labels > div {
-    height: 2em;
+  height: 2em;
 }
