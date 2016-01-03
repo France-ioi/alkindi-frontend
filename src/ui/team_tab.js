@@ -1,5 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Alert} from 'react-bootstrap';
+import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
 import * as api from '../api';
@@ -45,12 +47,6 @@ const TeamTab = PureComponent(self => {
       return false;
     const body = [];
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
-    if (showAdminControls) {
-      body.push(
-        <div key='code' className="section">
-          <p>Code d'accès de l'équipe : <strong>{team.code}</strong></p>
-        </div>);
-    }
     body.push(
       <div key='members' className="section">
         <p>Votre équipe est constituée de :</p>
@@ -67,17 +63,25 @@ const TeamTab = PureComponent(self => {
         </table>
       </div>);
     if (showAdminControls) {
+      const accessCode = self.state.isOpen && (
+        <p>Code d'accès de l'équipe à communiquer : <strong>{team.code}</strong></p>
+      );
       body.push(
         <div key='settings' className="section">
           <p>Vous pouvez modifier les réglages de votre équipe :</p>
-          <p>
+          <div>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
-          </p>
-          <p>
+            <div className={classnames(['radio-label', self.state.isOpen && 'radio-checked'])}>
+              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
+              {accessCode}
+            </div>
+          </div>
+          <div>
             <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
-             <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
-           </p>
+            <div className={classnames(['radio-label', self.state.isOpen || 'radio-checked'])}>
+              <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
+            </div>
+           </div>
           <button type="submit" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
         </div>);
     }
@@ -88,6 +92,10 @@ const TeamTab = PureComponent(self => {
           <p key='leave'>
             <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
           </p>
+          <Alert bsStyle='success'>
+            L'accès au sujet sera ouvert le 9 janvier.
+            L'interface sera complétée pour vous permettre de valider la composition de votre équipe.
+          </Alert>
         </div>
       );
     }

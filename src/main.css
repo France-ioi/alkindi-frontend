@@ -73,6 +73,19 @@ table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
 
+/* radio buttons with hanging labels */
+.radio-label {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+}
+.radio-label label {
+  font-weight: normal;
+}
+.radio-label.radio-checked label {
+  font-weight: bold;
+}
+
 /* Page layout */
 .wrapper {
   max-width: 880px;
@@ -447,7 +460,6 @@ a.cell-link {
 */
 .playFairGrid,
 .playFairAlphabet,
-.substitutionPair,
 .bigrams {
   width: auto;
   border-collapse: collapse;
@@ -509,12 +521,39 @@ a.cell-link {
 .dialog {
   width: 50%;
   max-width: 400px;
-  background: #E0E0E0;
+  background: #f0f0f0;
   border: 1px solid black;
+  border-radius: 3px;
   padding: 5px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
+}
+.dialogLine {
+  min-height: 2em;
+}
+.dialogLabel {
+  font-weight: bold;
+  float: left;
+  width: 50%;
+}
+.dialogBigram {
+  background-color: #fff;
+  border: 1px solid #000;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.2em;
+  text-align: center;
+  font-family: monospace;
+}
+.dialog .editedPair .bigramLetter,
+.dialog .dialogBigramOrig .bigramLetter {
+  padding: 0 10px;
+}
+.dialog .bigramLetters {
+  background-color: transparent;
+  border: none;
+  padding: 0 10px;
 }
 .dialog table,
 .dialog table td {
@@ -533,11 +572,11 @@ a.cell-link {
 /* variables */
 .playfair-variables {
   border: 1px solid #000;
-  border-radius: 5px;
+  border-radius: 3px;
   margin-bottom: 5px;
   padding: 10px;
   display: inline-block;
-  width: 40%;
+  width: 50%;
 }
 .variable-informations > span {
   font-weight: bold;
@@ -547,14 +586,22 @@ a.cell-link {
 }
 .variable-informations .variable-label {
   float: left;
-  width: 50%;
+  width: 40%;
+  clear: left;
+  text-align: right;
+  padding-right: 7px;
+  display: inline-block;
 }
 .variable-informations .variable-name {
   display: inline-block;
   font-size: 11px;
-  width: 140px;
   text-align: center;
   border: 1px solid #000;
+  padding: 0 5px;
+  background-color: #ffc;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: auto;
 }
 /* bigrammes */
 .bigrams {
@@ -564,21 +611,29 @@ a.cell-link {
 }
 .bigrams td {
   border: none;
-  padding: 2px;
+  padding: 0;
 }
-.substitutionPair tr td {
+.bigrams td:first-child,
+.bigrams td:last-child {
+  border: 1px solid #000;
+}
+.bigrams td > * {
+  padding: 0 4px;
+}
+.grillesSection .substitutionPair span {
   width: 20px;
-  height: 20px;
   font-size: 1.8rem;
   text-align: center;
-  border: 1px solid black;
+  border: 1px solid #000;
   padding: 0;
+  display: inline-block;
 }
 #bigramSubstitution {
   border: 1px solid #000;
   height: 136px;
   width: 560px;
   overflow-y: scroll;
+  padding: 10px;
 }
 #bigramSubstitution > div {
   float: left;
@@ -586,7 +641,29 @@ a.cell-link {
 #bigramSubstitution > div:nth-child(odd) {
   margin-right: 30px;
 }
-
+#bigramFrequencyAnalysis  .substitutionPair {
+  display: inline-block;
+}
+#bigramFrequencyAnalysis .substitutionPair > span:first-of-type {
+  border: none;
+  background-color: transparent;
+}
+.bigramLetters {
+  border: 1px solid #000;
+  text-align: center;
+  background-color: #fff;
+  font-family: monospace;
+}
+.grillesSection .bigramLetters {
+  display: block;
+  width: 100%;
+}
+.bigramLetter {
+  min-width: 1em;
+  display: inline-block;
+  text-align: center;
+  font-family: monospace;
+}
 .selectedBigram {
   background-color: #F0F0F0;
   padding: 3px;

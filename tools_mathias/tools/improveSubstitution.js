@@ -177,17 +177,17 @@ function getImproveSubstitution() {
 
    var renderTool = function() {
       return "<div class='panel panel-default'>" +
-            "<div class='panel-heading'><span class='code'>" + 
+            "<div class='panel-heading'><span class='code'>" +
                renderInstructionPython() +
             "</span></div>" +
             "<div class='panel-body'>" +
                renderEditCell() +
-               "<div style='overflow:auto'>" +
-                  renderVariables() +
+               renderVariables() +
+               "<div class='grillesSection'>" +
+                  "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+                  renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
                "</div>" +
-               "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
-               renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
-            "</div>" + 
+            "</div>" +
          "</div>";
    };
 
