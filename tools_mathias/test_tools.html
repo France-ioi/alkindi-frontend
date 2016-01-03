@@ -12,7 +12,11 @@
 <script type="text/javascript" src="tools/substitutionFromGrid.js"></script>
 <script type="text/javascript" src="tools/bigramFrequencyAnalysis.js"></script>
 <script type="text/javascript" src="tools/improveSubstitution.js"></script>
+<script type="text/javascript" src="tools/substitutionToPlayfairGrid.js"></script>
 <style>
+.cell-conflict {
+   border: solid red 3px;
+}
 </style>
 </head>
 <body class='wrapper'>
@@ -23,15 +27,19 @@
 <div id='bigramFrequencyAnalysis'></div>
 <br/>
 <div id='improveSubstitution'></div>
+<br/>
+<div id='substitutionToPlayFairGrid'></div>
 <script>
    var hintsPlayFair = getHintsPlayFair();
    var substitutionFromGrid = getSubstitutionFromGrid();
    var bigramFrequencyAnalysis = getBigramFrequencyAnalysis();
    var improveSubstitution = getImproveSubstitution();
-/*   hintsPlayFair.render();
+   var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
+   hintsPlayFair.render();
    substitutionFromGrid.render();
-   bigramFrequencyAnalysis.render();*/
+   bigramFrequencyAnalysis.render();
    improveSubstitution.render();
+   substitutionToPlayFairGrid.render();
 </script>
 </body>
 </html>
