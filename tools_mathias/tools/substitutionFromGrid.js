@@ -57,24 +57,22 @@ function getSubstitutionFromGrid() {
          var row = self.state.edit.row;
          var col = self.state.edit.col;
          return "<div class='dialog'>" +
-               "<table>" +
-                  "<tr>" +
-                     "<td><strong>Case éditée :</strong></td>" +
-                     "<td>ligne " + (row + 1) + ", colonne " + (col + 1) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Valeur d'origine :</strong></td>" +
-                     "<td>" + common.getCellLetter(playFair.alphabet, self.props.inputGridCells[row][col]) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Nouvelle valeur :</strong></td>" +
-                     "<td><input type='text' style='width:60px' value='" + common.getCellLetter(playFair.alphabet, self.props.outputGridCells[row][col]) + "'></td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Bloquer / débloquer :</strong></td>" +
-                     "<td><button type='button' class='locked'><i class='fa fa-lock'></i></button></td>" +
-                  "</tr>" +
-               "</table>" +
+               "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Case éditée :</span>" +
+                     "<span>ligne " + (row + 1) + ", colonne " + (col + 1) + "</span>" +
+               "</div>" +
+               "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Valeur d'origine :</span>" +
+                     "<span>" + common.getCellLetter(playFair.alphabet, self.props.inputGridCells[row][col]) + "</span>" +
+               "</div>" +
+               "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Nouvelle valeur :</span>" +
+                     "<span><input type='text' style='width:60px' value='" + common.getCellLetter(playFair.alphabet, self.props.outputGridCells[row][col]) + "'></span>" +
+               "</div>" +
+               "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
+                     "<span><button type='button' class='locked'><i class='fa fa-lock'></i></button></span>" +
+               "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
       } else if (self.state.editState == "invalid") {
