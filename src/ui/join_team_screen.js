@@ -49,7 +49,7 @@ const JoinTeamScreen = PureComponent(self => {
       if (res.body.success)
         self.props.onJoinTeam();
       else
-        self.setState({error: "Désolé, ce code ne vous permet pas de rejoindre une équipe.  Soit le code n'est pas valide, soit le créateur de l'équipe a vérouillé la composition de l'équipe, soit l'équipe a déjà commencé une épreuve et ne peut plus être changée."});
+        self.setState({error: "Désolé, ce code ne vous permet pas de rejoindre une équipe.  Soit le code n'est pas valide, soit le créateur de l'équipe a verrouillé la composition de l'équipe, soit l'équipe a déjà commencé une épreuve et ne peut plus être changée."});
     });
   };
   const renderJoinTeam = function (explanations) {
