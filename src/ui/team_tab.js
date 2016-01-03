@@ -49,11 +49,11 @@ const TeamTab = PureComponent(self => {
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
     body.push(
       <div key='members' className="section">
-        <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :
-            <ul>
-               <li>L'équipe doit contenir entre 1 et 4 membres.</li>
-               <li>La moitité au moins des membres doit avoir été qualifié suite au premier tour du concours.</li>
-            </ul>
+        <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
+        <ul>
+           <li>L'équipe doit contenir entre 1 et 4 membres.</li>
+           <li>La moitité au moins des membres doit avoir été qualifié suite au premier tour du concours.</li>
+        </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
         <p>Votre équipe est constituée de :</p>
         <table width="100%">

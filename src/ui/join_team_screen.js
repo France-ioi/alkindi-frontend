@@ -52,6 +52,20 @@ const JoinTeamScreen = PureComponent(self => {
         self.setState({error: "Désolé, ce code ne vous permet pas de rejoindre une équipe.  Soit le code n'est pas valide, soit le créateur de l'équipe a vérouillé la composition de l'équipe, soit l'équipe a déjà commencé une épreuve et ne peut plus être changée."});
     });
   };
+  const renderJoinTeam = function (explanations) {
+    return (
+      <div key='join-team'>
+        {explanations}
+        <div>
+          <p className="input">
+            <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
+            <input type="text" id="team-code" ref="teamCode" />
+          </p>
+          <p><button type="button" onClick={onJoinTeam}>Rejoindre une équipe</button></p>
+        </div>
+      </div>
+    );
+  };
   self.render = function () {
     const {user, round} = self.props;
     const body = [];
@@ -73,43 +87,29 @@ const JoinTeamScreen = PureComponent(self => {
         </div>
       );
       if (self.state.joinTeam) {
-        body.push(
-          <div key='join-team'>
-            <p>
-              Vous avez choisi de rejoindre une équipe existante.
-              Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade.
-            </p>
-            <p className="input">
-              <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
-              <input type="text" id="team-code" ref="teamCode" />
-            </p>
-            <p><button type="button" onClick={onJoinTeam}>Rejoindre une équipe</button></p>
-          </div>
-        );
+        body.push(renderJoinTeam(
+          <p>
+            Vous avez choisi de rejoindre une équipe existante.
+            Pour accéder à la suite du concours, vous devez saisir le code d'équipe qui vous a été communiqué par un camarade.
+          </p>
+        ));
       }
     } else {
       // Affichage candidat non-sélectionné.
-      body.push(
-        <div key='join-team'>
+      body.push(renderJoinTeam(
+        <div>
           <p>
             Votre compte n'est pas rattaché à une qualification au deuxième tour du concours Alkindi. Vous avez deux possibilités pour participer :
           </p>
           <p>
             Si vous vous êtes qualifié(e) lors du premier tour et disposez d'un code de qualification fourni par le coordinateur du concours dans votre établissement,
-            allez sur <a href='http://qualification.concours-alkindi.fr'>qualification.concours-alkindi.fr</a> pour le rattacher à votre compte.            
+            allez sur <a href='http://qualification.concours-alkindi.fr'>qualification.concours-alkindi.fr</a> pour le rattacher à votre compte.
           </p>
           <p>
             Si vous n'êtes pas qualifié(e), vous pouvez rejoindre une équipe créée par un(e) camarade qualifié(e) en saisissant ci-dessous le code de cette équipe.
           </p>
-          <div>
-            <p className="input">
-              <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
-              <input type="text" id="team-code" ref="teamCode" />
-            </p>
-            <p><button type="button" onClick={onJoinTeam}>Rejoindre une équipe</button></p>
-          </div>
         </div>
-      );
+      ));
     }
     if (self.state.pleaseWait)
       body.push(<div key='pleaseWait'><Alert bsStyle='success'>Veuillez patienter pendant le traitement de votre requête...</Alert></div>);
