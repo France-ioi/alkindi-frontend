@@ -1,4 +1,5 @@
 import React from 'react';
+import {Alert} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import {image_url} from '../assets';
@@ -6,36 +7,61 @@ import AlkindiAuthHeader from './auth_header';
 import AlkindiLogout from './logout';
 import * as api from '../api';
 
+/*
+
+JoinTeamScreen interface:
+
+  user: user object (also passed to the logout button)
+  round: round object (if the user can create a team)
+  onLogout: called after the user has logged out
+  onJoinTeam: called after the user has joined (or created) a team
+
+*/
 const JoinTeamScreen = PureComponent(self => {
-  const onCreateTeam = function () {
-    const user_id = self.props.user.id;
-    api.createTeam(user_id, function (err, result) {
-      if (err) return alert(err); // XXX error handling
-      self.props.reloadUser();
-    });
+  const beginRequest = function () {
+    self.setState({pleaseWait: true, error: false});
   };
-  const onJoinTeam = function () {
-    const user_id = self.props.user.id;
-    const data = {code: self.refs.teamCode.value};
-    api.joinTeam(user_id, data, function (err, result) {
-      if (err) return alert(err); // XXX error handling
-      self.props.reloadUser();
+  const endRequest = function (err) {
+    self.setState({
+      pleaseWait: false,
+      error: err && 'Une erreur serveur est survenue, merci de ré-essayer un peu plus tard.'
     });
   };
   const onShowJoinTeam = function () {
     self.setState({joinTeam: true});
   };
+  const onCreateTeam = function () {
+    const user_id = self.props.user.id;
+    beginRequest();
+    api.createTeam(user_id, function (err, res) {
+      endRequest(err);
+      if (err) return;
+      self.props.onJoinTeam();
+    });
+  };
+  const onJoinTeam = function () {
+    const user_id = self.props.user.id;
+    const data = {code: self.refs.teamCode.value};
+    beginRequest();
+    api.joinTeam(user_id, data, function (err, res) {
+      endRequest(err);
+      if (err) return;
+      if (res.body.success)
+        self.props.onJoinTeam();
+      else
+        self.setState({error: "Désolé, ce code ne vous permet pas de rejoindre une équipe.  Soit le code n'est pas valide, soit le créateur de l'équipe a vérouillé la composition de l'équipe, soit l'équipe a déjà commencé une épreuve et ne peut plus être changée."});
+    });
+  };
   self.render = function () {
-    const {user} = self.props;
-    const {accessible_round} = user;
+    const {user, round} = self.props;
     const body = [];
-    if (accessible_round) {
+    if (round) {
       // Affichage candidat qualifié s'il n'a pas créé ou rejoint une équipe.
       body.push(
         <div key='create-team'>
           <p>
             Vous êtes qualifié pour l'épreuve&nbsp;
-              <strong>{accessible_round.title}</strong>,
+              <strong>{round.title}</strong>,
             félicitations !
           </p>
           <p>Pour participer aux prochaines épreuves du concours, vous devez être membre d'une équipe, soit en créant une équipe, soit en rejoignant une équipe existante.</p>
@@ -77,6 +103,10 @@ const JoinTeamScreen = PureComponent(self => {
         </div>
       );
     }
+    if (self.state.pleaseWait)
+      body.push(<div key='pleaseWait'><Alert bsStyle='success'>Veuillez patienter pendant le traitement de votre requête...</Alert></div>);
+    if (self.state.error)
+      body.push(<div key='error'><Alert bsStyle='warning'>{self.state.error}</Alert></div>);
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
@@ -88,7 +118,7 @@ const JoinTeamScreen = PureComponent(self => {
     );
   };
 }, self => {
-  return {joinTeam: false};
+  return {joinTeam: false, error: false, pleaseWait: false};
 });
 
 export default JoinTeamScreen;
