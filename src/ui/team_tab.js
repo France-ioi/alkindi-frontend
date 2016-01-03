@@ -78,14 +78,14 @@ const TeamTab = PureComponent(self => {
           <div>
             <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
             <div className={classnames(['radio-label', self.state.isOpen && 'radio-checked'])}>
-              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre ou de quitter l'équipe</label>
+              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
               {accessCode}
             </div>
           </div>
           <div>
             <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
             <div className={classnames(['radio-label', self.state.isOpen || 'radio-checked'])}>
-              <label htmlFor="team-closed">Verrouiller la composition de l'équipe</label>
+              <label htmlFor="team-closed">Empêcher d'autres personnes de rejoindre l'équipe</label>
             </div>
            </div>
           <button type="submit" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
