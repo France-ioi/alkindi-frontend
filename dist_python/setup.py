@@ -53,6 +53,8 @@ class build_data(setuptools.Command):
         os.mkdir(bootstrap_dir)
         copytree('../node_modules/bootstrap/dist/css',
                  os.path.join(bootstrap_dir, 'css'))
+        copytree('../node_modules/bootstrap/dist/font',
+                 os.path.join(bootstrap_dir, 'font'))
         # fontawesome
         print("copying font-awesome assets")
         fontawesome_dir = os.path.join(target, 'font-awesome')
