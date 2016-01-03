@@ -52,7 +52,7 @@ const TeamTab = PureComponent(self => {
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
            <li>L'équipe doit contenir entre 1 et 4 membres.</li>
-           <li>La moitité au moins des membres doit avoir été qualifié suite au premier tour du concours.</li>
+           <li>La moitité au moins des membres doit avoir été qualifiée suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
         <p>Votre équipe est constituée de :</p>
