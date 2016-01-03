@@ -38,7 +38,7 @@ const QuestionTab = PureComponent(self => {
       <p key='team_constraints'>
         Pour accéder au sujet votre équipe doit contenir
         entre <strong>{round.min_team_size}</strong> et <strong>{round.max_team_size}</strong> membres,
-        et au moins <strong>{round.min_team_ratio * 100}%</strong> doivent avoir été sélectionnés.
+        et au moins <strong>{round.min_team_ratio * 100}%</strong> doivent avoir été qualifiés.
       </p>);
     if (question.team_too_small) {
       items.push(<p key='team_too_small'>Votre équipe ne contient pas assez de membres.</p>);
@@ -49,7 +49,7 @@ const QuestionTab = PureComponent(self => {
       canAccessQuestion = false;
     }
     if (question.not_enough_selected_users) {
-      items.push(<p key='not_enough_selected_users'>Votre équipe ne contient pas assez de membres sélectionnés.</p>);
+      items.push(<p key='not_enough_selected_users'>Votre équipe ne contient pas assez de membres qualifiés.</p>);
       canAccessQuestion = false;
     }
 

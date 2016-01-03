@@ -32,7 +32,7 @@ const TeamTab = PureComponent(self => {
     if (self.props.team.creator.id === member.user.id)
       flags.push('créateur');
     if (member.is_selected)
-      flags.push('sélectionné');
+      flags.push('qualifié');
     return (
       <tr key={member.user.id}>
         <td>{member.user.username}</td>
