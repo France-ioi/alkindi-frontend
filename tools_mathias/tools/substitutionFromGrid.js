@@ -35,21 +35,22 @@ function getSubstitutionFromGrid() {
    };
 
    var renderSubstitution = function() {
-      var html = "<div id='bigramSubstitution'>";
       var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
       var nbLetters = playFair.alphabet.length;
+      var items = [];
       for (var src1 = 0; src1 < nbLetters; src1++) {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
-            if ((substitution[src1] != undefined) && (substitution[src1][src2] != undefined)) {
-               html += "<div>";
-               html += bigramsUtils.renderSubstitutionPair(substitution[src1][src2], playFair.alphabet);
-               html += bigramsUtils.renderSubstitutionPair(substitution[src2][src1], playFair.alphabet);
-               html += "</div>";
+            if ((substitution[src1] !== undefined) && (substitution[src1][src2] !== undefined)) {
+               items.push(
+                  "<div>" +
+                     bigramsUtils.renderSubstitutionPair(substitution[src1][src2], playFair.alphabet) +
+                     bigramsUtils.renderSubstitutionPair(substitution[src2][src1], playFair.alphabet) +
+                  "</div>"
+               );
             }
          }
       }
-      html += "</div>";
-      return html;
+      return "<div id='bigramSubstitution'>" + items.join() + "</div>";
    };
 
    var renderEditCell = function() {
