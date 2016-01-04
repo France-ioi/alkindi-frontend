@@ -288,8 +288,8 @@ const TeamTab = PureComponent(self => {
                    ? renderStartTimedAttempt()
                    : renderTrainingInProgress())
                 : (round.allow_access
-                   ? renderTooEarly(round)
-                   : renderUnlockQuestion(attempt)))
+                   ? renderUnlockQuestion(attempt)
+                   : renderTooEarly(round)))
              : renderTimedAttemptInProgress(attempt))
         }
         {asyncHelper.render()}
