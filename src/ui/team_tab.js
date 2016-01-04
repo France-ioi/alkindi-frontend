@@ -7,7 +7,75 @@ import {PureComponent} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
 import * as api from '../api';
 
-console.log(AsyncHelper, AsyncHelper.initialState);
+const TestTeamTab = function (self) {
+  const setTeam = function (team) {
+    self.props.dispatch({type: 'SET_TEAM', team});
+  };
+  const setRound = function (round) {
+    self.props.dispatch({type: 'SET_ROUND', round});
+  };
+  const setAttempt = function (attempt) {
+    self.props.dispatch({type: 'SET_ATTEMPT', attempt});
+  };
+  const toggleRoundAccess = function () {
+    const round = self.props.round;
+    setRound({...round, allow_access: !round.allow_access});
+  };
+  const toggleTeamOk = function () {
+    const round = self.props.round;
+    setRound({...round, is_team_ok: !round.is_team_ok});
+  };
+  const setTrainingAttempt = function () {
+    const team = self.props.team;
+    setTeam({...team, is_locked: true});
+    setAttempt({is_started: false, is_training: true, is_successful: false});
+  };
+  const toggleAttemptStarted = function () {
+    const attempt = self.props.attempt;
+    if (attempt)
+      setAttempt({...attempt, is_started: !attempt.is_started});
+  };
+  const toggleAttemptSuccessful = function () {
+    const attempt = self.props.attempt;
+    if (attempt)
+      setAttempt({...attempt, is_successful: !attempt.is_successful});
+  };
+  const setTimedAttempt = function () {
+    const team = self.props.team;
+    setTeam({...team, is_locked: true}); // normalement déjà fait
+    setAttempt({
+      is_started: false, is_training: false, is_successful: false,
+      ends_at: new Date(Date.now() + 3600000).toISOString()
+    });
+  };
+  const render = function () {
+    const boolText = function (b) {
+      return (b === undefined) ? 'undefined' : b.toString();
+    };
+    const {round, attempt} = self.props;
+    return (
+      <div>
+        <hr/>
+        <button type="button" className="submit" onClick={toggleRoundAccess}>toggle round access</button>
+        &nbsp;
+        <button type="button" className="submit" onClick={toggleTeamOk}>toggle team ok</button>
+        &nbsp;
+        <button type="button" className="submit" onClick={setTrainingAttempt}>training</button>
+        <button type="button" className="submit" onClick={toggleAttemptStarted}>toggle started</button>
+        <button type="button" className="submit" onClick={toggleAttemptSuccessful}>toggle successful</button>
+        <button type="button" className="submit" onClick={setTimedAttempt}>timed</button>
+        <ul>
+          <li>round access allowed: {boolText(round.allow_access)}</li>
+          <li>team is ok for round: {boolText(round.is_team_ok)}</li>
+          <li>no attempt: {boolText(attempt === undefined)}</li>
+          <li>attempt is training: {attempt && boolText(attempt.is_training)}</li>
+          <li>attempt is successful: {attempt && boolText(attempt.is_successful)}</li>
+        </ul>
+      </div>
+    );
+  };
+  return {render};
+};
 
 const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
@@ -35,34 +103,40 @@ const TeamTab = PureComponent(self => {
       self.props.reseed();
     });
   };
-  const renderMember = function (member) {
-    const flags = [];
-    if (self.props.team.creator.id === member.user.id)
-      flags.push('créateur');
-    if (member.is_selected)
-      flags.push('qualifié');
+  const onStartAttempt = function () {
+    return;
+  };
+  const renderRoundPrelude = function (round) {
     return (
-      <tr key={member.user.id}>
-        <td>{member.user.username}</td>
-        <td>{member.user.lastname}, {member.user.firstname}</td>
-        <td>{flags.join(', ')}</td>
-        <td>{new Date(member.joined_at).toLocaleString()}</td>
-      </tr>);
-  }
-  self.render = function () {
-    const {user, team, round} = self.props;
-    if (!user || !team || !round)
-      return false;
-    const body = [];
-    const showAdminControls = !team.is_locked && team.creator.id === user.id;
-    body.push(
-      <div key='members' className="section">
+      <div key='roundPrelude'>
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
            <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
            <li>Au moins {round.min_team_ratio * 100}% des membres doit avoir été qualifiée suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
+      </div>
+    );
+  };
+  const renderTeamMembers = function (team, attempt) {
+    const codeEntry = attempt !== undefined && !attempt.is_started;
+    const renderMember = function (member) {
+      const flags = [];
+      if (team.creator.id === member.user.id)
+        flags.push('créateur');
+      if (member.is_selected)
+        flags.push('qualifié');
+      return (
+        <tr key={member.user.id}>
+          <td>{member.user.username}</td>
+          <td>{member.user.lastname}, {member.user.firstname}</td>
+          <td>{flags.join(', ')}</td>
+          <td>{new Date(member.joined_at).toLocaleString()}</td>
+          {codeEntry && <td><input type="text"/></td>}
+        </tr>);
+    };
+    return (
+      <div key='teamMembers' className="section">
         <p>Votre équipe est constituée de :</p>
         <table width="100%">
           <tbody>
@@ -71,11 +145,101 @@ const TeamTab = PureComponent(self => {
               <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
+              {codeEntry && <th>Code</th>}
             </tr>
             {team.members.map(renderMember)}
           </tbody>
         </table>
-      </div>);
+      </div>
+    );
+  };
+  const renderTooEarly = function (round) {
+    return (
+      <div key='tooEarly' className="section">
+        <Alert bsStyle='success'>
+          L'accès au sujet sera ouvert le {round.access_from}.
+          Vous pouvez dès maintenant valider la composition de votre équipe.
+        </Alert>
+      </div>
+    );
+  };
+  const renderBadTeam = function () {
+    return (
+      <div key='badTeam' className="section">
+        <Alert bsStyle='warning'>
+          La composition de votre équipe ne respecte pas les règles du tour
+          et vous ne pouvez donc pas accéder à l'entrainement.
+        </Alert>
+      </div>
+    );
+  };
+  const renderStartAttempt = function (message) {
+    return (
+      <div key='startAttempt' className="section">
+        {message}
+        <p>
+          <button type="button" className="btn btn-primary" onClick={onStartAttempt}>Démarrer</button>
+        </p>
+      </div>
+    );
+  };
+  const renderStartTraining = function () {
+    const message = (
+      <p>La composition de votre équipe vous permet d'accéder à l'entrainement.</p>
+    );
+    return renderStartAttempt(message);
+  };
+  const renderStartTimedAttempt = function () {
+    const message = (
+      <p>Vous avez terminé l'entrainement et pouvez faire une tentative en temps limité.</p>
+    );
+    return renderStartAttempt(message);
+  };
+  const renderUnlockQuestion = function (attempt) {
+    const notice = attempt.is_training &&
+      (<p>
+        Attention, après avoir accédé au sujet vous ne pourrez plus changer la
+        composition de votre équipe pendant le reste du concours.
+      </p>);
+    return (
+      <div key='unlockQuestion' className="section">
+        <p>
+          Les membres de votre équipe ont donné leur accord pour accéder au sujet,
+          vous pouvez maintenant le déverouiller en cliquant.
+        </p>
+        <p><button>Accéder au sujet</button></p>
+        {notice}
+      </div>
+    );
+  };
+  const renderTrainingInProgress = function (attempt) {
+    return (
+      <div key='trainingInProgress' className="section">
+        <p>Le sujet d'entrainement est visible dans l'onglet sujet.</p>
+      </div>
+    );
+  };
+  const renderTimedAttemptInProgress = function (attempt) {
+    // TODO: changer bsStyle en fonction du temps qui reste.
+    return (
+      <div key='timedAttemptInProgress' className="section">
+        <Alert bsStyle='success'>
+          Votre tentative en temps limité se termine le {new Date(attempt.ends_at).toLocaleString()}.
+        </Alert>
+      </div>
+    );
+  };
+  const testing = TestTeamTab(self);
+  self.render = function () {
+    const {user, team, round, attempt} = self.props;
+    if (!user || !team || !round)
+      return false;
+    const body = [];
+    const showAdminControls = !team.is_locked && team.creator.id === user.id;
+    body.push(<h1 key='title'>{round.title}</h1>);
+    if (attempt === undefined)
+      body.push(renderRoundPrelude(round));
+    body.push(renderTeamMembers(team, attempt));
     if (showAdminControls) {
       const accessCode = self.state.isOpen && (
         <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>
@@ -96,24 +260,47 @@ const TeamTab = PureComponent(self => {
               <label htmlFor="team-closed">Empêcher d'autres personnes de rejoindre l'équipe</label>
             </div>
            </div>
-          <button type="submit" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
+          <button type="button" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
         </div>);
     }
     if (!team.is_locked) {
       body.push(
         <div key='leave' className="section">
           <p>Vous pouvez quitter l'équipe :</p>
-          <p key='leave'>
+          <p>
             <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
           </p>
-          <Alert bsStyle='success'>
-            L'accès au sujet sera ouvert le 9 janvier.
-            L'interface sera complétée dans les jours qui précèdent pour vous permettre de valider la composition de votre équipe.
-          </Alert>
         </div>
       );
     }
+    console.log('render', !attempt, round.allow_access, round.is_team_ok)
+    if (attempt === undefined) {
+      // Pas encore de tentative.
+      if (!round.allow_access)
+        body.push(renderTooEarly(round)); // l'accès à l'épreuve n'est pas encore ouvert
+      if (!round.is_team_ok)
+        body.push(renderBadTeam()); // la composition de l'équipe ne respecte pas les règles
+      if (round.is_team_ok)
+        body.push(renderStartTraining()); // l'équipe peut commencer l'entrainement
+    } else {
+      if (attempt.is_training) {
+        if (attempt.is_started) {
+          if (attempt.is_successful)
+            body.push(renderStartTimedAttempt()); // l'équipe peut commencer une tentative en temps limité
+          else
+            body.push(renderTrainingInProgress());
+        } else {
+          if (round.allow_access)
+            body.push(renderTooEarly(round)); // l'accès à l'épreuve n'est pas encore ouvert
+          else
+            body.push(renderUnlockQuestion(attempt));
+        }
+      } else {
+        body.push(renderTimedAttemptInProgress(attempt));
+      }
+    }
     body.push(<div key='asyncHelper'>{asyncHelper.render()}</div>);
+    body.push(<div key='testing'>{testing.render()}</div>)
     return (<div className="wrapper">{body}</div>);
   };
 }, self => {
@@ -124,8 +311,8 @@ const TeamTab = PureComponent(self => {
 });
 
 const selector = function (state, props) {
-  const {user, team, round} = state;
-  return {user, team, round};
+  const {user, team, round, attempt} = state;
+  return {user, team, round, attempt};
 };
 
 export default connect(selector)(TeamTab);
