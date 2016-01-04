@@ -507,9 +507,7 @@ a.cell-link {
   background-color: #fff;
   border: 1px solid #000;
   display: inline-block;
-  vertical-align: top;
   font-size: 1.2em;
-  text-align: center;
 }
 .dialog .bigramCipheredLetter .bigramLetter,
 .dialog .dialogBigramSubstOrig .bigramLetter {
