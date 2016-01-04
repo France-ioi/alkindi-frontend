@@ -77,12 +77,8 @@ function getBigramFrequencyAnalysis() {
                   "</div>" +
                   "<div class='dislogLine'>" +
                      "<span class='dialogLabel'>&nbsp;</span>" +
-                     "<span class='dialogLock'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
-                     "</span>" +
-                     "<span class='dialogLock'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
-                     "</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-info-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +

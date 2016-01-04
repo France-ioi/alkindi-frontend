@@ -525,6 +525,12 @@ a.cell-link {
   width: 1.5em;
   text-align: center;
 }
+.dialog .substitutionLock {
+  display: inline-block;
+  margin-right: 4px;
+  width: 29px;
+  text-align: center;
+}
 .dialog button.lock {
   padding: 0 8px;
   margin: 0 5px 0 0;
