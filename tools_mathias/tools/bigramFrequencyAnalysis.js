@@ -69,10 +69,10 @@ function getBigramFrequencyAnalysis() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle substitution :</span>" +
                      "<span class='dialogBigramSubst'>" + 
-                        "<input id='editBigramSubstLetter1' type='text' style='width:30px' value='" + self.state.edit.letters[0] + "'>" +
+                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' style='width:30px' value='" + self.state.edit.letters[0] + "'>" +
                      "</span>" +
                      "<span class='dialogBigramSubst'>" +
-                        "<input id='editBigramSubstLetter2' type='text' style='width:30px' value='" + self.state.edit.letters[1] + "'>" +
+                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' style='width:30px' value='" + self.state.edit.letters[1] + "'>" +
                      "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
@@ -91,13 +91,15 @@ function getBigramFrequencyAnalysis() {
       }
    };
 
+   self.changeBigramSubstLetter = function(iLetter) {
+      var letter = document.getElementById("editBigramSubstLetter" + (iLetter + 1)).value;
+      self.state.edit.letters[iLetter] = letter;
+   };
+
    self.validateDialog = function() {
       var letterRanks = common.getLetterRanks(playFair.alphabet);
       // TODO: get from state and store in state on change
-      var letters = [
-         document.getElementById("editBigramSubstLetter1").value,
-         document.getElementById("editBigramSubstLetter2").value
-      ];
+      var letters = self.state.edit.letters;
       for (var iLetter = 0; iLetter < 2; iLetter++) {
          var letter = letters[iLetter];
          if ((letter != '') && (letterRanks[letter] == undefined)) {

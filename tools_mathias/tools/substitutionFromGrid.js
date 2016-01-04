@@ -79,8 +79,8 @@ function getSubstitutionFromGrid() {
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle valeur :</span>" +
                      "<span>" +
-                        "<input id='editCellLetter' type='text' maxlength=1 style='width:60px;text-align:center' " +
-                           "value='" + common.getCellLetter(playFair.alphabet, outputCell) + "'>" +
+                        "<input id='editCellLetter' onchange='" + self.name + ".changeCellLetter()' type='text' maxlength=1 style='width:60px;text-align:center' " +
+                           "value='" + self.state.edit.cellLetter + "'>" +
                      "</span>" +
                "</div>" +
                "<div class='dialogLine'>" +
@@ -102,7 +102,7 @@ function getSubstitutionFromGrid() {
 
    self.clickGridCell = function(row, col) {
       var inputCell = self.props.inputGridCells[row][col];
-      var outputCell = self.props.inputGridCells[row][col];
+      var outputCell = self.props.outputGridCells[row][col];
       if (inputCell.q == 'confirmed') {
          self.state.editState = "invalid";
       } else {
@@ -110,19 +110,24 @@ function getSubstitutionFromGrid() {
          self.state.edit = {
             row: row,
             col: col,
-            locked: (outputCell.q == "locked")
+            locked: (outputCell.q == "locked"),
+            cellLetter: common.getCellLetter(playFair.alphabet, outputCell)
          }
       }
       self.render();
    };
 
+   self.changeCellLetter  = function() {
+      self.state.edit.cellLetter = document.getElementById("editCellLetter").value;
+   };
+
    self.toggleLockLetter = function() {
       self.state.edit.locked = !self.state.edit.locked;
       self.render();
-   }
+   };
 
    self.validateDialog = function() {
-      var value = document.getElementById("editCellLetter").value;
+      var value = self.state.edit.cellLetter;
       var letterRanks = common.getLetterRanks(playFair.alphabet);
       if ((value != '') && (letterRanks[value] == undefined)) {
          alert(value + " n'est pas une valeur possible de la grille");
@@ -140,13 +145,13 @@ function getSubstitutionFromGrid() {
          }
       }
       self.cancelDialog();
-   }
+   };
 
    self.cancelDialog = function() {
       self.state.edit = undefined;
       self.state.editState = undefined;
       self.render();
-   }
+   };
 
    var renderVariables = function() {
       return common.renderVariables({
