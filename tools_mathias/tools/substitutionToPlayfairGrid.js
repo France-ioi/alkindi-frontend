@@ -76,7 +76,7 @@ function getSubstitutionToPlayFairGrid() {
       var diffPairs = [];
       for (var iPair = 0; iPair < substPairs.length; iPair++) {
          var pair = substPairs[iPair];
-         if (pair.dst1.l == letter) {
+         if (pair.dst[0].l == letter) {
             samePairs.push(pair);
          } else {
             diffPairs.push(pair);

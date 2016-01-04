@@ -120,16 +120,12 @@ var playFair = {
          substitution[cellSrc2.l] = [];
       }
       substitution[cellSrc1.l][cellSrc2.l] = {
-         src1 : {l: cellSrc1.l, q: cellSrc1.q },
-         src2 : {l: cellSrc2.l, q: cellSrc2.q },
-         dst1 : {l: cellDst1.l, q: cellDst1.q },
-         dst2 : {l: cellDst2.l, q: cellDst2.q }
+         src: [{l: cellSrc1.l, q: cellSrc1.q }, {l: cellSrc2.l, q: cellSrc2.q }],
+         dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
       };
       substitution[cellSrc2.l][cellSrc1.l] = {
-         src2 : {l: cellSrc1.l, q: cellSrc1.q },
-         src1 : {l: cellSrc2.l, q: cellSrc2.q },
-         dst2 : {l: cellDst1.l, q: cellDst1.q },
-         dst1 : {l: cellDst2.l, q: cellDst2.q }
+         src: [{l: cellSrc1.l, q: cellSrc1.q }, {l: cellSrc2.l, q: cellSrc2.q }],
+         dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
       }
    },
 
@@ -177,8 +173,8 @@ var playFair = {
          for (var l2 = l1 + 1; l2 < substitution[l1].length; l2++) {
             var substPair = substitution[l1][l2];
             if (substPair != undefined) {
-               var coordsSrc1 = letterToCoords[substPair.src1.l];
-               var coordsSrc2 = letterToCoords[substPair.src2.l];
+               var coordsSrc1 = letterToCoords[substPair.src[0].l];
+               var coordsSrc2 = letterToCoords[substPair.src[1].l];
                if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                   substPairs.push({
                      pair: substPair,
@@ -190,8 +186,8 @@ var playFair = {
             if (substitution[l2] != undefined) {
                substPair = substitution[l2][l1];
                if (substPair != undefined) {
-                  var coordsSrc1 = letterToCoords[substPair.src1.l];
-                  var coordsSrc2 = letterToCoords[substPair.src2.l];
+                  var coordsSrc1 = letterToCoords[substPair.src[0].l];
+                  var coordsSrc2 = letterToCoords[substPair.src[1].l];
                   if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                      substPairs.push({
                         pair: substPair,
@@ -213,7 +209,7 @@ var playFair = {
          var dstRow = dstCoords[iDst].row;
          var dstCol = dstCoords[iDst].col;
          var cellDst = newCells[dstRow][dstCol];
-         var substVal = substPairWithCoords.pair["dst" + (iDst + 1)];
+         var substVal = substPairWithCoords.pair.dst[iDst];
          if (substVal.q != "unknown") {
             if (cellDst.q == "unknown") {
                cellDst.l = substVal.l;

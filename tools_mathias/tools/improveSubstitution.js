@@ -5,10 +5,8 @@ function getImproveSubstitution() {
 
    var sampleSubstitutionModified = playFair.getSampleSubstitution();
    sampleSubstitutionModified[10][9] = {
-      src1: { l: 10, q:"confirmed" },
-      src2: { l: 0, q:"confirmed" },
-      dst1: { q:"unknown" },
-      dst2: { l: 21, q:"confirmed" }
+      src: [{ l: 10, q:"confirmed" }, { l: 0, q:"confirmed" }],
+      dst: [{ q:"unknown" }, { l: 21, q:"confirmed" }]
    }
 
    
@@ -59,10 +57,10 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td><strong>Nouvelle substitution :</strong></td>" +
                      "<td style='text-align:center'>" + 
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst1) + "'>" +
+                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst[0]) + "'>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst2) + "'>" +
+                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst[1]) + "'>" +
                      "</td>" +
                   "</tr>" +
                   "<tr>" +
@@ -110,7 +108,7 @@ function getImproveSubstitution() {
          return "";
       }
       var substPair = bigramsUtils.getBigramSubstPair(bigram, substitution, self.letterRanks);
-      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst1, substPair.dst2, side);
+      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst[0], substPair.dst[1], side);
    }
 
    self.clickLetter = function(iLetter, iBigram) {

@@ -124,10 +124,9 @@ var bigramsUtils = {
          return substitution[rank1][rank2];
       }
       else {
-         // TODO: src1 and src2 might be needed in the future
+         // TODO: src might be needed in the future
          return {
-            dst1: {q: "unknown"},
-            dst2 : {q:"unknown" }
+            dst: [{q: "unknown"}, {q:"unknown" }]
          };
       }
    },
@@ -154,9 +153,9 @@ var bigramsUtils = {
    renderSubstitutionPair: function(pair, alphabet) {
       return "<table class='bigrams'>" +
             "<tr>" +
-               "<td>" + bigramsUtils.renderBigram(alphabet, pair.src1, pair.src2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.src[0], pair.src[1]) + "</td>" +
                "<td><i class='fa fa-long-arrow-right'></i></td>" +
-               "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst1, pair.dst2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst[0], pair.dst[1]) + "</td>" +
             "</tr>" +
          "</table>";
    }
