@@ -78,7 +78,7 @@ function getBigramFrequencyAnalysis() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
                      "<span>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='lock " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='lock " + buttonLockedClass[0] + "'><i class='fa fa-unlock-alt'></i></button>" +
                      "</span>" +
                      "<span>" +
                         "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='lock " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
