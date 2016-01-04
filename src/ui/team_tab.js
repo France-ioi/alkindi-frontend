@@ -17,6 +17,9 @@ const TestTeamTab = function (self) {
   const setAttempt = function (attempt) {
     self.props.dispatch({type: 'SET_ATTEMPT', attempt});
   };
+  const setQuestion = function (question) {
+    self.props.dispatch({type: 'SET_QUESTION', question});
+  };
   const toggleRoundAccess = function () {
     const round = self.props.round;
     setRound({...round, allow_access: !round.allow_access});
@@ -48,11 +51,15 @@ const TestTeamTab = function (self) {
       ends_at: new Date(Date.now() + 3600000).toISOString()
     });
   };
+  const toggleQuestionAvailable = function () {
+    const question = self.props.question;
+    setQuestion(question ? undefined : {});
+  };
   const render = function () {
     const boolText = function (b) {
       return (b === undefined) ? 'undefined' : b.toString();
     };
-    const {round, attempt} = self.props;
+    const {round, attempt, question} = self.props;
     return (
       <div>
         <hr/>
@@ -64,6 +71,8 @@ const TestTeamTab = function (self) {
         <button type="button" className="submit" onClick={toggleAttemptStarted}>toggle started</button>
         <button type="button" className="submit" onClick={toggleAttemptSuccessful}>toggle successful</button>
         <button type="button" className="submit" onClick={setTimedAttempt}>timed</button>
+        &nbsp;
+        <button type="button" className="submit" onClick={toggleQuestionAvailable}>question</button>
         <ul>
           <li>round access allowed: {boolText(round.allow_access)}</li>
           <li>team is ok for round: {boolText(round.is_team_ok)}</li>
@@ -71,6 +80,7 @@ const TestTeamTab = function (self) {
           <li>attempt is training: {attempt && boolText(attempt.is_training)}</li>
           <li>attempt is started: {attempt && boolText(attempt.is_started)}</li>
           <li>attempt is successful: {attempt && boolText(attempt.is_successful)}</li>
+          <li>question available: {boolText(!!question)}</li>
         </ul>
       </div>
     );
@@ -249,14 +259,24 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderTrainingInProgress = function (attempt) {
+  const renderEnterCodesTraining = function (attempt) {
     return (
-      <div key='trainingInProgress' className="section">
-        <p>Le sujet d'entrainement est visible dans l'onglet sujet.</p>
+      <div key='timedAttemptDuration' className="section">
+        <p>
+          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
+          au sujet d'entrainement.
+        </p>
       </div>
     );
   };
-  const renderTimedAttemptDuration = function (attempt) {
+  const renderTrainingInProgress = function (attempt) {
+    return (
+      <div key='trainingInProgress' className="section">
+        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
+      </div>
+    );
+  };
+  const renderEnterCodesTimed = function (attempt) {
     return (
       <div key='timedAttemptDuration' className="section">
         <p>
@@ -278,7 +298,7 @@ const TeamTab = PureComponent(self => {
   };
   const testing = TestTeamTab(self);
   self.render = function () {
-    const {user, team, round, attempt} = self.props;
+    const {user, team, round, attempt, question} = self.props;
     if (!user || !team || !round)
       return false;
     const body = [];
@@ -299,13 +319,17 @@ const TeamTab = PureComponent(self => {
              ? (attempt.is_started
                 ? (attempt.is_successful
                    ? renderStartTimedAttempt()
-                   : renderTrainingInProgress())
+                   : (question
+                      ? renderTrainingInProgress()
+                      : renderUnlockQuestion(attempt)))
                 : (round.allow_access
-                   ? renderUnlockQuestion(attempt)
+                   ? renderEnterCodesTraining()
                    : renderTooEarly(round)))
              : (attempt.is_started
-                ? renderTimedAttemptInProgress(attempt)
-                : renderTimedAttemptDuration(attempt)))
+                ? (question
+                   ? renderTimedAttemptInProgress(attempt)
+                   : renderUnlockQuestion(attempt))
+                : renderEnterCodesTimed(attempt)))
         }
         {asyncHelper.render()}
         {testing.render()}
@@ -320,8 +344,8 @@ const TeamTab = PureComponent(self => {
 });
 
 const selector = function (state, props) {
-  const {user, team, round, attempt} = state;
-  return {user, team, round, attempt};
+  const {user, team, round, attempt, question} = state;
+  return {user, team, round, attempt, question};
 };
 
 export default connect(selector)(TeamTab);
