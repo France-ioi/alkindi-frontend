@@ -17,9 +17,6 @@ import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
 
-// Insert our stylesheet.
-require('./main.css');
-
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
 window.Alkindi = (function () {
   const Alkindi = {};
