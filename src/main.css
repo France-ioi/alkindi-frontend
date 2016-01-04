@@ -736,6 +736,8 @@ td .bigramLetter {
   background-color: #fff;
   display: block;
 }
+
+/* Amélioration de substitution */
 .y-scrollBloc {
   overflow-y: scroll;
   white-space: nowrap;
@@ -749,14 +751,23 @@ td .bigramLetter {
   text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
+  padding-top: 3px;
   width: 2em;
   line-height: 2em;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
-.letterStatus-left {
-  margin-left: 2px;
+.letterSubstBloc.letterStatus-left {
+  border-left: 1px solid transparent;
+  padding-left: 2px;
 }
-.letterStatus-right {
-  margin-right: 2px;
+.letterSubstBloc.letterStatus-right {
+  border-right: 1px solid transparent;
+  padding-right: 2px;
+}
+.letterSubstBloc.selectedBigram {
+  background-color: #F0F0F0;
+  border-color: #000;
 }
 .letterStatus-left .cipheredLetter,
 .letterStatus-right .cipheredLetter,
@@ -770,6 +781,12 @@ td .bigramLetter {
 }
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
+}
+.letterSubstBloc.letterStatus-inside .character,
+.letterSubstBloc.letterStatus-outside .character {
+  height: 2em;
+  border: 1px solid transparent;
+  margin: 2px 1px;
 }
 .letterSubstBloc .bigramLetter {
   display: block;
