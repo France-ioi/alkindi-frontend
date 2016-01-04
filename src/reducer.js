@@ -47,11 +47,19 @@ const reduceSetUser = function (state, user) {
 };
 
 const reduceSetTeam = function (state, team) {
-  return {...state, user: {...state.user, team: team}};
+  return {...state, team};
+};
+
+const reduceSetRound = function (state, round) {
+  return {...state, round};
+};
+
+const reduceSetAttempt = function (state, attempt) {
+  return {...state, attempt};
 };
 
 const reduceSetQuestion = function (state, question) {
-  return {...state, user: {...state.user, question: question}};
+  return {...state, question};
 };
 
 const reduceSetWorkspaces = function (state, workspaces) {
@@ -167,6 +175,10 @@ function actualReduce (state, action) {
       return reduceSetUser(state, action.user);
     case 'SET_TEAM':
       return reduceSetTeam(state, action.team);
+    case 'SET_ROUND':
+      return reduceSetRound(state, action.round);
+    case 'SET_ATTEMPT':
+      return reduceSetAttempt(state, action.attempt);
     case 'SET_QUESTION':
       return reduceSetQuestion(state, action.question);
     case 'SET_WORKSPACES':
