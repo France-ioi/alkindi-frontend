@@ -788,8 +788,15 @@ td .bigramLetter {
   padding-right: 2px;
 }
 .letterSubstBloc.selectedBigram {
-  background-color: #F0F0F0;
+  background-color: #000;
   border-color: #000;
+}
+.letterSubstBloc.selectedBigram .bigramLetter {
+  border: 1px solid #000;
+}
+.letterSubstBloc.selectedBigram .bigramLetter.qualifier-unconfirmed {
+  color: #fff;
+  background-color: transparent; 
 }
 .letterStatus-left .cipheredLetter,
 .letterStatus-right .cipheredLetter,
