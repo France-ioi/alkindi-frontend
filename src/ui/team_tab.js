@@ -31,6 +31,7 @@ const TestTeamTab = function (self) {
   const setTrainingAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true});
+    setQuestion(undefined);
     setAttempt({is_started: false, is_training: true, is_successful: false});
   };
   const toggleAttemptStarted = function () {
@@ -46,6 +47,7 @@ const TestTeamTab = function (self) {
   const setTimedAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true}); // normalement déjà fait
+    setQuestion(undefined);
     setAttempt({
       is_started: false, is_training: false, is_successful: false,
       ends_at: new Date(Date.now() + 3600000).toISOString()
@@ -68,7 +70,7 @@ const TestTeamTab = function (self) {
         <button type="button" className="submit" onClick={toggleTeamOk}>toggle team ok</button>
         &nbsp;
         <button type="button" className="submit" onClick={setTrainingAttempt}>training</button>
-        <button type="button" className="submit" onClick={toggleAttemptStarted}>toggle started</button>
+        <button type="button" className="submit" onClick={toggleAttemptStarted}>enter codes</button>
         <button type="button" className="submit" onClick={toggleAttemptSuccessful}>toggle successful</button>
         <button type="button" className="submit" onClick={setTimedAttempt}>timed</button>
         &nbsp;
@@ -130,7 +132,7 @@ const TeamTab = PureComponent(self => {
     );
   };
   const renderTeamMembers = function (team, attempt) {
-    const codeEntry = attempt !== undefined && !attempt.is_started;
+    const codeEntry = attempt !== undefined /* && !attempt.is_started*/;
     // TODO: if codeEntry, display own code
     const renderMember = function (member) {
       const flags = [];
