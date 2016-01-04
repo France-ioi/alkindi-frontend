@@ -57,10 +57,10 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td><strong>Nouvelle substitution :</strong></td>" +
                      "<td style='text-align:center'>" + 
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst[0]) + "'>" +
+                        "<input id='editBigramCellLetter1' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(0)' value='" + self.state.edit.letters[0] + "'>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst[1]) + "'>" +
+                        "<input id='editBigramCellLetter2' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(1)' value='" + self.state.edit.letters[1] + "'>" +
                      "</td>" +
                   "</tr>" +
                   "<tr>" +
@@ -80,8 +80,41 @@ function getImproveSubstitution() {
       }
    };
 
+   self.changeCellLetter = function(iLetter) {
+      self.state.edit.letters[iLetter] = document.getElementById("editBigramCellLetter" + (iLetter + 1)).value;
+   };
+
    self.validateDialog = function() {
-      // TODO
+      // TODO : factor with validateDialog from bigramFrequencyAnalysis
+      var letterRanks = common.getLetterRanks(playFair.alphabet);
+      // TODO: get from state and store in state on change
+      var letters = self.state.edit.letters;
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         var letter = letters[iLetter];
+         if ((letter != '') && (letterRanks[letter] == undefined)) {
+            alert(letter + " n'est pas une valeur possible de la grille");
+            return;
+         }
+      }
+      var bigram = letterInfos[self.state.edit.iLetter].bigram;
+      var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         if (letters[iLetter] != "") {
+            var cell = substPair.dst[iLetter]
+            cell.l = letterRanks[letters[iLetter]];
+            cell.q = "guess";
+            if (self.state.edit.locked[iLetter]) {
+               cell.q = "locked";
+            }
+         }
+      }
+      var rank1 = letterRanks[bigram.charAt(0)];
+      var rank2 = letterRanks[bigram.charAt(1)];
+      if (self.props.outputSubstitution[rank1] == undefined) {
+         self.props.outputSubstitution[rank1] = [];
+      }
+      self.props.outputSubstitution[rank1][rank2] = substPair;
+
       self.cancelDialog();
    }
 
@@ -113,9 +146,16 @@ function getImproveSubstitution() {
 
    self.clickLetter = function(iLetter, iBigram) {
       self.state.editState = "preparing";
+      var bigram = letterInfos[iLetter].bigram;
+      var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
       self.state.edit = {
          iLetter: iLetter,
-         iBigram: iBigram
+         iBigram: iBigram,
+         letters: [
+            common.getCellLetter(self.props.alphabet, substPair.dst[0]),
+            common.getCellLetter(self.props.alphabet, substPair.dst[1])
+         ],
+         locked: [false, false] // TODO !
       }
       self.render();
    };
