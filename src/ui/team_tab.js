@@ -69,6 +69,7 @@ const TestTeamTab = function (self) {
           <li>team is ok for round: {boolText(round.is_team_ok)}</li>
           <li>no attempt: {boolText(attempt === undefined)}</li>
           <li>attempt is training: {attempt && boolText(attempt.is_training)}</li>
+          <li>attempt is started: {attempt && boolText(attempt.is_started)}</li>
           <li>attempt is successful: {attempt && boolText(attempt.is_successful)}</li>
         </ul>
       </div>
@@ -120,6 +121,7 @@ const TeamTab = PureComponent(self => {
   };
   const renderTeamMembers = function (team, attempt) {
     const codeEntry = attempt !== undefined && !attempt.is_started;
+    // TODO: if codeEntry, display own code
     const renderMember = function (member) {
       const flags = [];
       if (team.creator.id === member.user.id)
@@ -152,6 +154,7 @@ const TeamTab = PureComponent(self => {
         </table>
       </div>
     );
+    // TODO: add button to save input codes
   };
   const renderLeaveTeam = function (team) {
     return (
@@ -225,7 +228,7 @@ const TeamTab = PureComponent(self => {
   };
   const renderStartTimedAttempt = function () {
     const message = (
-      <p>Vous avez terminé l'entrainement et pouvez faire une tentative en temps limité.</p>
+      <p>Vous avez résolu le sujet d'entrainement et pouvez faire une tentative en temps limité.</p>
     );
     return renderStartAttempt(message);
   };
@@ -250,6 +253,16 @@ const TeamTab = PureComponent(self => {
     return (
       <div key='trainingInProgress' className="section">
         <p>Le sujet d'entrainement est visible dans l'onglet sujet.</p>
+      </div>
+    );
+  };
+  const renderTimedAttemptDuration = function (attempt) {
+    return (
+      <div key='timedAttemptDuration' className="section">
+        <p>
+          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
+          au sujet, vous aurez alors 1 heure pour le résoudre.
+        </p>
       </div>
     );
   };
@@ -290,7 +303,9 @@ const TeamTab = PureComponent(self => {
                 : (round.allow_access
                    ? renderUnlockQuestion(attempt)
                    : renderTooEarly(round)))
-             : renderTimedAttemptInProgress(attempt))
+             : (attempt.is_started
+                ? renderTimedAttemptInProgress(attempt)
+                : renderTimedAttemptDuration(attempt)))
         }
         {asyncHelper.render()}
         {testing.render()}
