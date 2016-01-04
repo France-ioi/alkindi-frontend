@@ -776,6 +776,7 @@ td .bigramLetter {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   white-space: pre;
+  background-color: #fff;
 }
 .letterStatus-left .cipheredLetter {
   border-left: 1px solid black;
