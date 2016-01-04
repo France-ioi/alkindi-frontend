@@ -139,12 +139,12 @@ function getImproveSubstitution() {
 
    var renderBigrams = function(initialSubstitution, newSubstitution) {
       var bigramsHtml = "";
-      var nbLettersPerRow = 22;
+      var nbLettersPerRow = 27;
       var text = self.props.inputCipheredText;
-      var html = "<div style='overflow-y:scroll;white-space:nowrap;border:solid black 1px;margin:5px;width:auto;height:320px'>";
+      var html = "<div class='y-scrollBloc'>";
       for (var iLetter = 0; iLetter < text.length; iLetter++) {
          if ((iLetter != 0) && (iLetter % nbLettersPerRow == 0)) {
-            html += "<br/>";
+            html += "<hr />";
          }
          var letter = text.charAt(iLetter);
          var bigram = letterInfos[iLetter].bigram;
@@ -154,21 +154,21 @@ function getImproveSubstitution() {
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
          }
-         html += "<div style='display:inline-block;vertical-align:top;text-align:center;margin-top:5px;margin-bottom:5px'>" +
-            "<div onclick='" + self.name + ".clickLetter(" + iLetter + "," + iBigram + ")' class='letterStatus-" + status + " " + bigramClass +"'>" +
-               "<div style='width:30px;height:30px;'>" +letter + "</div>";
+         html += "<div class='letterSubstBloc letterStatus-" + status + " " + bigramClass +"' onclick='" + self.name + ".clickLetter(" + iLetter + "," + iBigram + ")'>" +
+               "<div class='cipheredLetter'>" +letter + "</div>";
          if (status == "left") {
-            html += renderBigramSubst(bigram, initialSubstitution, 0) + "<br/>";
-            html += renderBigramSubst(bigram, newSubstitution, 0) + "<br/>";
+            html += renderBigramSubst(bigram, initialSubstitution, 0);
+            html += renderBigramSubst(bigram, newSubstitution, 0);
+            html += "<span class='substitutionLock'><i class='fa fa-lock'></i></span>";
          } else if (status == "right") {
-            html += renderBigramSubst(bigram, initialSubstitution, 1) + "<br/>";
-            html += renderBigramSubst(bigram, newSubstitution, 1) + "<br/>";
+            html += renderBigramSubst(bigram, initialSubstitution, 1);
+            html += renderBigramSubst(bigram, newSubstitution, 1);
+            html += "<span class='substitutionLock'><i class='fa fa-lock'></i></span>";
          } else {
-            html += "<div style='width:30px;height:34px'>" +letter + "</div>";
-            html += "<div style='width:30px;height:34px'>" +letter + "</div>";
+            html += "<div>" +letter + "</div>";
+            html += "<div>" +letter + "</div>";
          }
-         html += "</div>" +
-            "</div>";
+         html += "</div>";
       }
          bigramsHtml +
       "</div>";

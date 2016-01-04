@@ -5,7 +5,7 @@ require('html5shiv');
 require('es5-shim');
 require('es5-sham-ie8');
 // IE9+ compatibility:
-require('es6-shim');
+require('object.assign').shim();
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
 import React from 'react';

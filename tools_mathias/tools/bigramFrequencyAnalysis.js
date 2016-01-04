@@ -46,7 +46,7 @@ function getBigramFrequencyAnalysis() {
          return "<div class='dialog'>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bigramme édité :</span>" +
-                     "<span class='dialogBigram editedPair'>" +
+                     "<span class='dialogBigram bigramCipheredLetter'>" +
                         "<span class='bigramLetter'>" +
                         renderBigram(bigram, 0) +
                         "</span>" +
@@ -57,7 +57,7 @@ function getBigramFrequencyAnalysis() {
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Substitution d'origine :</span>" +
-                     "<span class='dialogBigram dialogBigramOrig'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
+                     "<span class='dialogBigram dialogBigramSubstOrig'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
                         renderBigramSubst(bigram, self.props.inputSubstitution, 1) +
                      "</span>" +
                   "</div>" +
@@ -161,12 +161,12 @@ function getBigramFrequencyAnalysis() {
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
          }
-         bigramsHtml += "<div style='display:inline-block;margin:5px;'>" +
-            bigram.r + "%<br/>" +
-            "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='" + bigramClass +"'>" +
-               "<span class='bigramLetters'>" +
+         bigramsHtml += "<div class='bigramBloc'>" +
+            "<span class='frequence'>" + bigram.r + "%</span>" +
+            "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='bigramBlocSubstitution " + bigramClass +"'>" +
+               "<div class='bigramCipheredLetter'><span>" +
                renderBigram(bigram) +
-               "</span>";
+               "</span></div>";
          if (initialSubstitution != undefined) {
             for (var side = 0; side < 2; side++) {
                var sideClass = "";
@@ -174,8 +174,9 @@ function getBigramFrequencyAnalysis() {
                   sideClass = "substitutionConflict";
                }
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
-                     renderBigramSubst(bigram, initialSubstitution, side) + "<br/>" +
+                     renderBigramSubst(bigram, initialSubstitution, side) +
                      renderBigramSubst(bigram, newSubstitution, side) +
+                  "<span class='substitutionLock'><i class='fa fa-lock'></i></span>" +
                   "</div>";
             }
          }
