@@ -26,6 +26,32 @@ var playFair = {
       return this.getSubstitutionFromGridCells(this.sampleGrid2);
    },
 
+   updateCells: function(inputCells, outputCells) {
+      var nbRows = inputCells.length;
+      var nbCols = inputCells[0].length;
+      for (var row = 0; row < nbRows; row++) {
+         if (outputCells[row] == undefined) {
+            outputCells[row] = [];
+            for (var col = 0; col < nbCols; col++) {
+               if (outputCells[row][col] == undefined) {
+                  outputCells[row][col] = { q: 'unknown'};
+               }
+               var inputCell = inputCells[row][col];
+               var outputCell = outputCells[row][col];
+               if ((inputCell.q == 'confirmed') ||
+                   (inputCell.q == 'locked') ||
+                   ((inputCell.q == 'guess') && (inputCell.q != 'locked'))) {
+                  outputCell.l = inputCell.l;
+                  if (inputCell.q == 'locked') {
+                     outputCell.q = 'confirmed';
+                  } else {
+                     outputCell.q = inputCell.q;
+                  }
+               }
+            }
+         }
+      }
+   },
    
    renderGrid: function(toolName, cells, selectedRow, selectedCol, isConflictFct) {
       var strHtml = "<table class='playFairGrid'>";
@@ -45,7 +71,7 @@ var playFair = {
             }
             strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + toolName + ".clickGridCell(" + row + "," + col + ")'>" +
                "<div class='" + cellClass + "'>" +
-                  common.getCellLetter(this.alphabet, cell) +
+                  common.getCellLetter(this.alphabet, cell, true) +
                "</div>" +
             "</td>";
          }

@@ -6,7 +6,7 @@ function getSubstitutionFromGrid() {
    self.props = {
       alphabet: playFair.alphabet,
       inputGridCells: playFair.sampleGrid,
-      outputGridCells: playFair.sampleGrid,
+      outputGridCells: [],
       inputGridVariable: "lettresGrilleIndice",
       outputSubstitutionVariable: "substitutionDépart"
    };
@@ -14,6 +14,10 @@ function getSubstitutionFromGrid() {
    self.state = {
       editState: undefined,
       edit: undefined
+   };
+
+   self.compute = function() {
+      playFair.updateCells(self.props.inputGridCells, self.props.outputGridCells);
    };
 
    var renderCellPython = function(cell) {
@@ -31,11 +35,11 @@ function getSubstitutionFromGrid() {
          selectedRow = self.state.edit.row;
          selectedCol = self.state.edit.col;
       }
-      return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
+      return playFair.renderGrid(self.name, self.props.outputGridCells, selectedRow, selectedCol);
    };
 
    var renderSubstitution = function() {
-      var substitution = playFair.getSubstitutionFromGridCells(self.props.inputGridCells);
+      var substitution = playFair.getSubstitutionFromGridCells(self.props.outputGridCells);
       var nbLetters = playFair.alphabet.length;
       var items = [];
       for (var src1 = 0; src1 < nbLetters; src1++) {
@@ -57,6 +61,12 @@ function getSubstitutionFromGrid() {
       if (self.state.editState == "preparing") {
          var row = self.state.edit.row;
          var col = self.state.edit.col;
+         var inputCell = self.props.inputGridCells[row][col];
+         var outputCell = self.props.outputGridCells[row][col];
+         var buttonLockedClass = "";
+         if (self.state.edit.locked) {
+            buttonLockedClass = "locked";
+         }
          return "<div class='dialog'>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Case éditée :</span>" +
@@ -64,15 +74,22 @@ function getSubstitutionFromGrid() {
                "</div>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Valeur d'origine :</span>" +
-                     "<span>" + common.getCellLetter(playFair.alphabet, self.props.inputGridCells[row][col]) + "</span>" +
+                     "<span>" + common.getCellLetter(playFair.alphabet, inputCell, true) + "</span>" +
                "</div>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle valeur :</span>" +
-                     "<span><input type='text' style='width:60px' value='" + common.getCellLetter(playFair.alphabet, self.props.outputGridCells[row][col]) + "'></span>" +
+                     "<span>" +
+                        "<input id='editCellLetter' type='text' maxlength=1 style='width:60px;text-align:center' " +
+                           "value='" + common.getCellLetter(playFair.alphabet, outputCell) + "'>" +
+                     "</span>" +
                "</div>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
-                     "<span><button type='button' class='locked'><i class='fa fa-lock'></i></button></span>" +
+                     "<span>" +
+                        "<button id='toggleLockLetter' onclick='" + self.name + ".toggleLockLetter()' type='button' class='" + buttonLockedClass + "'>" +
+                           "<i class='fa fa-lock'></i>" +
+                        "</button>" +
+                     "</span>" +
                "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
@@ -85,20 +102,43 @@ function getSubstitutionFromGrid() {
 
    self.clickGridCell = function(row, col) {
       var inputCell = self.props.inputGridCells[row][col];
+      var outputCell = self.props.inputGridCells[row][col];
       if (inputCell.q == 'confirmed') {
          self.state.editState = "invalid";
       } else {
          self.state.editState = "preparing";
          self.state.edit = {
             row: row,
-            col: col
+            col: col,
+            locked: (outputCell.q == "locked")
          }
       }
       self.render();
    };
 
+   self.toggleLockLetter = function() {
+      self.state.edit.locked = !self.state.edit.locked;
+      self.render();
+   }
+
    self.validateDialog = function() {
-      // TODO
+      var value = document.getElementById("editCellLetter").value;
+      var letterRanks = common.getLetterRanks(playFair.alphabet);
+      if ((value != '') && (letterRanks[value] == undefined)) {
+         alert(value + " n'est pas une valeur possible de la grille");
+         return;
+      }
+      var cell = self.props.outputGridCells[self.state.edit.row][self.state.edit.col];
+      if (value == '') {
+         cell.q = 'unknown';
+         cell.l = undefined;
+      } else {
+         cell.l = letterRanks[value];
+         cell.q = "guess";
+         if (self.state.edit.locked) {
+            cell.q = "locked";
+         }
+      }
       self.cancelDialog();
    }
 
@@ -142,8 +182,10 @@ function getSubstitutionFromGrid() {
    };
 
    self.render = function() {
+      self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
    }
+
 
    return self;
 }

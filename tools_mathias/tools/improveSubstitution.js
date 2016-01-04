@@ -29,7 +29,7 @@ function getImproveSubstitution() {
       edit: undefined
    };
 
-   self.letterRanks = bigramsUtils.getLetterRanks(playFair.alphabet);
+   self.letterRanks = common.getLetterRanks(playFair.alphabet);
    var letterInfos = bigramsUtils.getTextAsBigrams(self.props.inputCipheredText, self.props.alphabet).letterInfos;
 
    var renderInstructionPython = function() {

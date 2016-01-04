@@ -29,7 +29,7 @@ function getBigramFrequencyAnalysis() {
    };
 
    self.mostFrequentBigrams = bigramsUtils.getMostFrequentBigrams(self.props.inputCipheredText, self.props.alphabet);
-   self.letterRanks = bigramsUtils.getLetterRanks(playFair.alphabet);
+   self.letterRanks = common.getLetterRanks(playFair.alphabet);
 
    var renderInstructionPython = function() {
       return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = analyseFrequenceBigrammes(" +

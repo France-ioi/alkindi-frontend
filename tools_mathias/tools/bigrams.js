@@ -32,19 +32,11 @@ var bigramsUtils = {
       { v: "IN", r: 0.8 }
    ],
 
-   getLetterRanks: function(alphabet) {
-      var letterRanks = {};
-      for (var iLetter = 0; iLetter < alphabet.length; iLetter++) {
-         letterRanks[alphabet[iLetter]] = iLetter;
-      }
-      return letterRanks;
-   },
-   
    getTextAsBigrams: function(text, alphabet) {
       var textBigrams = [];
       var letterInfos = [];
       var curBigram = "";
-      var letterRanks = this.getLetterRanks(alphabet);
+      var letterRanks = common.getLetterRanks(alphabet);
       var bigramStart = 0;
 
       function addBigram(bigram, start, end, iBigram) {
@@ -151,10 +143,10 @@ var bigramsUtils = {
    renderBigram: function(alphabet, cell1, cell2, side) {
       var html = "";
       if ((side == undefined) || (side == 0)) {
-         html += "<span class='bigramLetter " + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1) + "</span>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1, true) + "</span>";
       }
       if ((side == undefined) || (side == 1)) {
-         html += "<span class='bigramLetter " + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2) + "</span>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2, true) + "</span>";
       }
       return html;
    },
