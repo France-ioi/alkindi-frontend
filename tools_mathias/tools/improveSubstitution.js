@@ -228,8 +228,9 @@ function getImproveSubstitution() {
                html += "<span class='substitutionLock'>" + lock + "</span>";
             }
          } else {
-            html += "<div>" +letter + "</div>";
-            html += "<div>" +letter + "</div>";
+            html += "<div class='character'>" +letter + "</div>";
+            html += "<div class='character'>" +letter + "</div>";
+            html += "<div class='character'> </div>";
          }
          html += "</div>";
       }
