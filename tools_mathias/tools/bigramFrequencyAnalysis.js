@@ -69,10 +69,10 @@ function getBigramFrequencyAnalysis() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle substitution :</span>" +
                      "<span class='dialogBigramSubst'>" + 
-                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' style='width:30px' value='" + self.state.edit.letters[0] + "'>" +
+                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' value='" + self.state.edit.letters[0] + "'>" +
                      "</span>" +
                      "<span class='dialogBigramSubst'>" +
-                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' style='width:30px' value='" + self.state.edit.letters[1] + "'>" +
+                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' value='" + self.state.edit.letters[1] + "'>" +
                      "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
