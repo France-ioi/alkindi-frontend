@@ -153,6 +153,40 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+  const renderLeaveTeam = function (team) {
+    return (
+      <div key='leave' className="section">
+        <p>Vous pouvez quitter l'équipe :</p>
+        <p>
+          <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
+        </p>
+      </div>
+    );
+  };
+  const renderAdminControls = function (team) {
+    const accessCode = self.state.isOpen && (
+      <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>
+    );
+    return (
+      <div key='settings' className="section">
+        <p>Vous pouvez modifier les réglages de votre équipe :</p>
+        <div>
+          <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
+          <div className={classnames(['radio-label', self.state.isOpen && 'radio-checked'])}>
+            <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
+            {accessCode}
+          </div>
+        </div>
+        <div>
+          <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
+          <div className={classnames(['radio-label', self.state.isOpen || 'radio-checked'])}>
+            <label htmlFor="team-closed">Empêcher d'autres personnes de rejoindre l'équipe</label>
+          </div>
+         </div>
+        <button type="button" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
+      </div>
+    );
+  };
   const renderTooEarly = function (round) {
     return (
       <div key='tooEarly' className="section">
@@ -236,72 +270,32 @@ const TeamTab = PureComponent(self => {
       return false;
     const body = [];
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
-    body.push(<h1 key='title'>{round.title}</h1>);
-    if (attempt === undefined)
-      body.push(renderRoundPrelude(round));
-    body.push(renderTeamMembers(team, attempt));
-    if (showAdminControls) {
-      const accessCode = self.state.isOpen && (
-        <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>
-      );
-      body.push(
-        <div key='settings' className="section">
-          <p>Vous pouvez modifier les réglages de votre équipe :</p>
-          <div>
-            <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
-            <div className={classnames(['radio-label', self.state.isOpen && 'radio-checked'])}>
-              <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
-              {accessCode}
+    return (
+      <div className="wrapper">
+        <h1 key='title'>{round.title}</h1>
+        {attempt === undefined && renderRoundPrelude(round)}
+        {renderTeamMembers(team, attempt)}
+        {showAdminControls && renderAdminControls(team)}
+        {team.is_locked || renderLeaveTeam()}
+        {attempt === undefined
+          ? <div>
+              {round.allow_access || renderTooEarly(round)}
+              {round.is_team_ok ? renderStartTraining() : renderBadTeam()}
             </div>
-          </div>
-          <div>
-            <input type="radio" name="team-open" value="false" id="team-closed" checked={!self.state.isOpen} onChange={onIsOpenChanged} />
-            <div className={classnames(['radio-label', self.state.isOpen || 'radio-checked'])}>
-              <label htmlFor="team-closed">Empêcher d'autres personnes de rejoindre l'équipe</label>
-            </div>
-           </div>
-          <button type="button" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
-        </div>);
-    }
-    if (!team.is_locked) {
-      body.push(
-        <div key='leave' className="section">
-          <p>Vous pouvez quitter l'équipe :</p>
-          <p>
-            <button type="button" className="submit" onClick={onLeaveTeam}>Quitter l'équipe</button>
-          </p>
-        </div>
-      );
-    }
-    console.log('render', !attempt, round.allow_access, round.is_team_ok)
-    if (attempt === undefined) {
-      // Pas encore de tentative.
-      if (!round.allow_access)
-        body.push(renderTooEarly(round)); // l'accès à l'épreuve n'est pas encore ouvert
-      if (!round.is_team_ok)
-        body.push(renderBadTeam()); // la composition de l'équipe ne respecte pas les règles
-      if (round.is_team_ok)
-        body.push(renderStartTraining()); // l'équipe peut commencer l'entrainement
-    } else {
-      if (attempt.is_training) {
-        if (attempt.is_started) {
-          if (attempt.is_successful)
-            body.push(renderStartTimedAttempt()); // l'équipe peut commencer une tentative en temps limité
-          else
-            body.push(renderTrainingInProgress());
-        } else {
-          if (round.allow_access)
-            body.push(renderTooEarly(round)); // l'accès à l'épreuve n'est pas encore ouvert
-          else
-            body.push(renderUnlockQuestion(attempt));
+          : (attempt.is_training
+             ? (attempt.is_started
+                ? (attempt.is_successful
+                   ? renderStartTimedAttempt()
+                   : renderTrainingInProgress())
+                : (round.allow_access
+                   ? renderTooEarly(round)
+                   : renderUnlockQuestion(attempt)))
+             : renderTimedAttemptInProgress(attempt))
         }
-      } else {
-        body.push(renderTimedAttemptInProgress(attempt));
-      }
-    }
-    body.push(<div key='asyncHelper'>{asyncHelper.render()}</div>);
-    body.push(<div key='testing'>{testing.render()}</div>)
-    return (<div className="wrapper">{body}</div>);
+        {asyncHelper.render()}
+        {testing.render()}
+      </div>
+    );
   };
 }, self => {
   return AsyncHelper.initialState({
