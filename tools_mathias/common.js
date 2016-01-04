@@ -120,5 +120,13 @@ var common = {
          letterRanks[alphabet[iLetter]] = iLetter;
       }
       return letterRanks;
-   }   
+   },
+   
+   renderLock: function(locked) {
+      if (locked) {
+         return "<i class='fa fa-lock'></i>";
+      } else {
+         return "&nbsp;";
+      }
+   }
 }
