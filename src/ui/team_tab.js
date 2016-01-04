@@ -4,9 +4,13 @@ import {Alert} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
+import AsyncHelper from '../helpers/async_helper';
 import * as api from '../api';
 
+console.log(AsyncHelper, AsyncHelper.initialState);
+
 const TeamTab = PureComponent(self => {
+  const asyncHelper = AsyncHelper(self);
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -14,16 +18,20 @@ const TeamTab = PureComponent(self => {
   };
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
     api.leaveTeam(user_id, function (err, result) {
-      if (err) return alert(err); // XXX error handling
+      asyncHelper.endRequest(err);
+      if (err) return;
       self.props.reseed();
     });
   };
   const onUpdateTeam = function () {
     const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
+    asyncHelper.beginRequest();
     api.updateUserTeam(user_id, data, function (err, result) {
-      if (err) return alert(err); // XXX error handling
+      asyncHelper.endRequest(err);
+      if (err) return;
       self.props.reseed();
     });
   };
@@ -42,8 +50,8 @@ const TeamTab = PureComponent(self => {
       </tr>);
   }
   self.render = function () {
-    const {user, team} = self.props;
-    if (!user || !team)
+    const {user, team, round} = self.props;
+    if (!user || !team || !round)
       return false;
     const body = [];
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
@@ -51,8 +59,8 @@ const TeamTab = PureComponent(self => {
       <div key='members' className="section">
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
-           <li>L'équipe doit contenir entre 1 et 4 membres.</li>
-           <li>La moitité au moins des membres doit avoir été qualifiée suite au premier tour du concours.</li>
+           <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
+           <li>Au moins {round.min_team_ratio * 100}% des membres doit avoir été qualifiée suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
         <p>Votre équipe est constituée de :</p>
@@ -105,18 +113,19 @@ const TeamTab = PureComponent(self => {
         </div>
       );
     }
+    body.push(<div key='asyncHelper'>{asyncHelper.render()}</div>);
     return (<div className="wrapper">{body}</div>);
   };
 }, self => {
-  return {
+  return AsyncHelper.initialState({
     joinTeam: false,
-    isOpen: self.props.team.is_open
-  };
+    isOpen: self.props.team.is_open,
+  });
 });
 
 const selector = function (state, props) {
-  const {user, team} = state;
-  return {user, team};
+  const {user, team, round} = state;
+  return {user, team, round};
 };
 
 export default connect(selector)(TeamTab);
