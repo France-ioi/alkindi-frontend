@@ -73,10 +73,10 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td></td>" +
                      "<td style='text-align:center'>" +
-                        "<span class='substitutionLock'>" + renderLock(self.state.edit.locked[0]) + "</span>" +
+                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<span class='substitutionLock'>" + renderLock(self.state.edit.locked[1]) + "</span>" +
+                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
                      "</td>" +
                   "</tr>" +
                   "<tr>" +
@@ -199,14 +199,6 @@ function getImproveSubstitution() {
        return html;
    };
 
-   var renderLock = function(locked) {
-      if (locked) {
-         return "<i class='fa fa-lock'></i>";
-      } else {
-         return "&nbsp;";
-      }
-   };
-
    var renderBigrams = function(initialSubstitution, newSubstitution) {
       var nbLettersPerRow = 27;
       var text = self.props.inputCipheredText;
@@ -230,11 +222,11 @@ function getImproveSubstitution() {
             if (status == "left") {
                html += renderBigramSubst(bigram, initialSubstitution, 0);
                html += renderBigramSubst(bigram, newSubstitution, 0);               
-               html += "<span class='substitutionLock'>" + renderLock(substPair.dst[0].q == "locked") + "</span>";
+               html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[0].q == "locked") + "</span>";
             } else if (status == "right") {
                html += renderBigramSubst(bigram, initialSubstitution, 1);
                html += renderBigramSubst(bigram, newSubstitution, 1);
-               html += "<span class='substitutionLock'>" + renderLock(substPair.dst[1].q == "locked") + "</span>";
+               html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[1].q == "locked") + "</span>";
             }
          } else {
             html += "<div class='character'>" +letter + "</div>";
