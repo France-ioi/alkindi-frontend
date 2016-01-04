@@ -102,11 +102,23 @@ var common = {
       return strPython;
    },
    
-   getCellLetter: function(alphabet, cell) {
+   getCellLetter: function(alphabet, cell, useNbsp) {
       if (cell.q === 'unknown') {
-         return '&nbsp;';
+         if (useNbsp) {
+            return '&nbsp;';
+         } else {
+            return '';
+         }
       } else {
          return alphabet[cell.l];
       }
-   }
+   },
+
+   getLetterRanks: function(alphabet) {
+      var letterRanks = {};
+      for (var iLetter = 0; iLetter < alphabet.length; iLetter++) {
+         letterRanks[alphabet[iLetter]] = iLetter;
+      }
+      return letterRanks;
+   }   
 }

@@ -5,10 +5,8 @@ function getImproveSubstitution() {
 
    var sampleSubstitutionModified = playFair.getSampleSubstitution();
    sampleSubstitutionModified[10][9] = {
-      src1: { l: 10, q:"confirmed" },
-      src2: { l: 0, q:"confirmed" },
-      dst1: { q:"unknown" },
-      dst2: { l: 21, q:"confirmed" }
+      src: [{ l: 10, q:"confirmed" }, { l: 0, q:"confirmed" }],
+      dst: [{ q:"unknown" }, { l: 21, q:"confirmed" }]
    }
 
    
@@ -29,7 +27,7 @@ function getImproveSubstitution() {
       edit: undefined
    };
 
-   self.letterRanks = bigramsUtils.getLetterRanks(playFair.alphabet);
+   self.letterRanks = common.getLetterRanks(playFair.alphabet);
    var letterInfos = bigramsUtils.getTextAsBigrams(self.props.inputCipheredText, self.props.alphabet).letterInfos;
 
    var renderInstructionPython = function() {
@@ -44,6 +42,13 @@ function getImproveSubstitution() {
       if (self.state.editState == "preparing") {
          var bigram = letterInfos[self.state.edit.iLetter].bigram;
          var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.inputSubstitution, self.letterRanks);
+         var buttonLockedClass = [];
+         for (var iLetter = 0; iLetter < 2; iLetter++) {
+            buttonLockedClass[iLetter] = "";
+            if (self.state.edit.locked[iLetter]) {
+               buttonLockedClass[iLetter] = "locked";
+            }
+         }
          return "<div class='dialog'>" +
                "<table>" +
                   "<tr>" +
@@ -59,19 +64,19 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td><strong>Nouvelle substitution :</strong></td>" +
                      "<td style='text-align:center'>" + 
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst1) + "'>" +
+                        "<input id='editBigramCellLetter1' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(0)' value='" + self.state.edit.letters[0] + "'>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst2) + "'>" +
+                        "<input id='editBigramCellLetter2' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(1)' value='" + self.state.edit.letters[1] + "'>" +
                      "</td>" +
                   "</tr>" +
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
                      "<td style='text-align:center'>" +
-                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='" + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='" + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                   "</tr>" +
                "</table>" +
@@ -82,8 +87,46 @@ function getImproveSubstitution() {
       }
    };
 
+   self.changeCellLetter = function(iLetter) {
+      self.state.edit.letters[iLetter] = document.getElementById("editBigramCellLetter" + (iLetter + 1)).value;
+   };
+
+   self.toggleLockLetter = function(iLetter) {
+      self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
+      self.render();
+   }
+
    self.validateDialog = function() {
-      // TODO
+      // TODO : factor with validateDialog from bigramFrequencyAnalysis
+      var letterRanks = common.getLetterRanks(playFair.alphabet);
+      // TODO: get from state and store in state on change
+      var letters = self.state.edit.letters;
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         var letter = letters[iLetter];
+         if ((letter != '') && (letterRanks[letter] == undefined)) {
+            alert(letter + " n'est pas une valeur possible de la grille");
+            return;
+         }
+      }
+      var bigram = letterInfos[self.state.edit.iLetter].bigram;
+      var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         if (letters[iLetter] != "") {
+            var cell = substPair.dst[iLetter]
+            cell.l = letterRanks[letters[iLetter]];
+            cell.q = "guess";
+            if (self.state.edit.locked[iLetter]) {
+               cell.q = "locked";
+            }
+         }
+      }
+      var rank1 = letterRanks[bigram.charAt(0)];
+      var rank2 = letterRanks[bigram.charAt(1)];
+      if (self.props.outputSubstitution[rank1] == undefined) {
+         self.props.outputSubstitution[rank1] = [];
+      }
+      self.props.outputSubstitution[rank1][rank2] = substPair;
+
       self.cancelDialog();
    }
 
@@ -110,14 +153,24 @@ function getImproveSubstitution() {
          return "";
       }
       var substPair = bigramsUtils.getBigramSubstPair(bigram, substitution, self.letterRanks);
-      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst1, substPair.dst2, side);
+      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst[0], substPair.dst[1], side);
    }
 
    self.clickLetter = function(iLetter, iBigram) {
       self.state.editState = "preparing";
+      var bigram = letterInfos[iLetter].bigram;
+      var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
       self.state.edit = {
          iLetter: iLetter,
-         iBigram: iBigram
+         iBigram: iBigram,
+         letters: [
+            common.getCellLetter(self.props.alphabet, substPair.dst[0]),
+            common.getCellLetter(self.props.alphabet, substPair.dst[1])
+         ],
+         locked: [
+            (substPair.dst[0].q == "locked"),
+            (substPair.dst[1].q == "locked")
+         ]
       }
       self.render();
    };
@@ -138,7 +191,6 @@ function getImproveSubstitution() {
    }
 
    var renderBigrams = function(initialSubstitution, newSubstitution) {
-      var bigramsHtml = "";
       var nbLettersPerRow = 27;
       var text = self.props.inputCipheredText;
       var html = "<div class='y-scrollBloc'>";
@@ -156,22 +208,32 @@ function getImproveSubstitution() {
          }
          html += "<div class='letterSubstBloc letterStatus-" + status + " " + bigramClass +"' onclick='" + self.name + ".clickLetter(" + iLetter + "," + iBigram + ")'>" +
                "<div class='cipheredLetter'>" +letter + "</div>";
-         if (status == "left") {
-            html += renderBigramSubst(bigram, initialSubstitution, 0);
-            html += renderBigramSubst(bigram, newSubstitution, 0);
-            html += "<span class='substitutionLock'><i class='fa fa-lock'></i></span>";
-         } else if (status == "right") {
-            html += renderBigramSubst(bigram, initialSubstitution, 1);
-            html += renderBigramSubst(bigram, newSubstitution, 1);
-            html += "<span class='substitutionLock'><i class='fa fa-lock'></i></span>";
+         if ((status == "left") || (status == "right")) {
+            var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
+            if (status == "left") {
+               html += renderBigramSubst(bigram, initialSubstitution, 0);
+               html += renderBigramSubst(bigram, newSubstitution, 0);
+               var lock = "&nbsp;";
+               if (substPair.dst[0].q == "locked") {
+                  lock = "<i class='fa fa-lock'></i>";
+               }
+               html += "<span class='substitutionLock'>" + lock + "</span>";
+            } else if (status == "right") {
+               html += renderBigramSubst(bigram, initialSubstitution, 1);
+               html += renderBigramSubst(bigram, newSubstitution, 1);
+               var lock = "&nbsp;";
+               if (substPair.dst[1].q == "locked") {
+                  lock = "<i class='fa fa-lock'></i>";
+               }
+               html += "<span class='substitutionLock'>" + lock + "</span>";
+            }
          } else {
             html += "<div>" +letter + "</div>";
             html += "<div>" +letter + "</div>";
          }
          html += "</div>";
       }
-         bigramsHtml +
-      "</div>";
+      html += "</div>";
       return html;
    }
 

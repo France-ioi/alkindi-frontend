@@ -32,19 +32,11 @@ var bigramsUtils = {
       { v: "IN", r: 0.8 }
    ],
 
-   getLetterRanks: function(alphabet) {
-      var letterRanks = {};
-      for (var iLetter = 0; iLetter < alphabet.length; iLetter++) {
-         letterRanks[alphabet[iLetter]] = iLetter;
-      }
-      return letterRanks;
-   },
-   
    getTextAsBigrams: function(text, alphabet) {
       var textBigrams = [];
       var letterInfos = [];
       var curBigram = "";
-      var letterRanks = this.getLetterRanks(alphabet);
+      var letterRanks = common.getLetterRanks(alphabet);
       var bigramStart = 0;
 
       function addBigram(bigram, start, end, iBigram) {
@@ -132,10 +124,9 @@ var bigramsUtils = {
          return substitution[rank1][rank2];
       }
       else {
-         // TODO: src1 and src2 might be needed in the future
+         // TODO: src might be needed in the future
          return {
-            dst1: {q: "unknown"},
-            dst2 : {q:"unknown" }
+            dst: [{q: "unknown"}, {q:"unknown" }]
          };
       }
    },
@@ -151,10 +142,10 @@ var bigramsUtils = {
    renderBigram: function(alphabet, cell1, cell2, side) {
       var html = "";
       if ((side == undefined) || (side == 0)) {
-         html += "<span class='bigramLetter " + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1) + "</span>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell1) + "'>" + common.getCellLetter(alphabet, cell1, true) + "</span>";
       }
       if ((side == undefined) || (side == 1)) {
-         html += "<span class='bigramLetter " + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2) + "</span>";
+         html += "<span class='bigramLetter " + this.getPairLetterClass(cell2) + "'>" + common.getCellLetter(alphabet, cell2, true) + "</span>";
       }
       return html;
    },
@@ -162,9 +153,9 @@ var bigramsUtils = {
    renderSubstitutionPair: function(pair, alphabet) {
       return "<table class='bigrams'>" +
             "<tr>" +
-               "<td>" + bigramsUtils.renderBigram(alphabet, pair.src1, pair.src2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.src[0], pair.src[1]) + "</td>" +
                "<td><i class='fa fa-long-arrow-right'></i></td>" +
-               "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst1, pair.dst2) + "</td>" +
+               "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst[0], pair.dst[1]) + "</td>" +
             "</tr>" +
          "</table>";
    }

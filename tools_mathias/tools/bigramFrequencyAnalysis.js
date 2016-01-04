@@ -5,10 +5,8 @@ function getBigramFrequencyAnalysis() {
 
    var sampleSubstitutionModified = playFair.getSampleSubstitution();
    sampleSubstitutionModified[10][9] = {
-      src1: { l: 10, q:"confirmed" },
-      src2: { l: 0, q:"confirmed" },
-      dst1: { q:"unknown" },
-      dst2: { l: 21, q:"confirmed" }
+      src: [{ l: 10, q:"confirmed" }, { l: 0, q:"confirmed" }],
+      dst: [{ q:"unknown" }, { l: 21, q:"locked" }]
    }
 
    self.props = {
@@ -29,7 +27,7 @@ function getBigramFrequencyAnalysis() {
    };
 
    self.mostFrequentBigrams = bigramsUtils.getMostFrequentBigrams(self.props.inputCipheredText, self.props.alphabet);
-   self.letterRanks = bigramsUtils.getLetterRanks(playFair.alphabet);
+   self.letterRanks = common.getLetterRanks(playFair.alphabet);
 
    var renderInstructionPython = function() {
       return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = analyseFrequenceBigrammes(" +
@@ -43,6 +41,13 @@ function getBigramFrequencyAnalysis() {
       if (self.state.editState == "preparing") {
          var bigram = self.mostFrequentBigrams[self.state.edit.iBigram];
          var substPair = bigramsUtils.getBigramSubstPair(bigram.v, self.props.inputSubstitution, self.letterRanks);
+         var buttonLockedClass = [];
+         for (var iLetter = 0; iLetter < 2; iLetter++) {
+            buttonLockedClass[iLetter] = "";
+            if (self.state.edit.locked[iLetter]) {
+               buttonLockedClass[iLetter] = "locked";
+            }
+         }
          return "<div class='dialog'>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bigramme édité :</span>" +
@@ -64,19 +69,19 @@ function getBigramFrequencyAnalysis() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle substitution :</span>" +
                      "<span class='dialogBigramSubst'>" + 
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst1) + "'>" +
+                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' value='" + self.state.edit.letters[0] + "'>" +
                      "</span>" +
                      "<span class='dialogBigramSubst'>" +
-                        "<input type='text' style='width:30px' value='" + common.getCellLetter(self.props.alphabet, substPair.dst2) + "'>" +
+                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' value='" + self.state.edit.letters[1] + "'>" +
                      "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
                      "<span>" +
-                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='lock " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
                      "</span>" +
                      "<span>" +
-                        "<button type='button' class='locked'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='lock " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
                      "</span>" +
                   "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
@@ -86,8 +91,41 @@ function getBigramFrequencyAnalysis() {
       }
    };
 
+   self.changeBigramSubstLetter = function(iLetter) {
+      var letter = document.getElementById("editBigramSubstLetter" + (iLetter + 1)).value;
+      self.state.edit.letters[iLetter] = letter;
+   };
+
    self.validateDialog = function() {
-      // TODO
+      var letterRanks = common.getLetterRanks(playFair.alphabet);
+      // TODO: get from state and store in state on change
+      var letters = self.state.edit.letters;
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         var letter = letters[iLetter];
+         if ((letter != '') && (letterRanks[letter] == undefined)) {
+            alert(letter + " n'est pas une valeur possible de la grille");
+            return;
+         }
+      }
+      var bigram = self.mostFrequentBigrams[self.state.edit.iBigram];
+      var substPair = self.state.edit.substPair;
+      for (var iLetter = 0; iLetter < 2; iLetter++) {
+         if (letters[iLetter] != "") {
+            var cell = substPair.dst[iLetter]
+            cell.l = letterRanks[letters[iLetter]];
+            cell.q = "guess";
+            if (self.state.edit.locked[iLetter]) {
+               cell.q = "locked";
+            }
+         }
+      }
+      var rank1 = letterRanks[bigram.v.charAt(0)];
+      var rank2 = letterRanks[bigram.v.charAt(1)];
+      if (self.props.outputSubstitution[rank1] == undefined) {
+         self.props.outputSubstitution[rank1] = [];
+      }
+      self.props.outputSubstitution[rank1][rank2] = substPair;
+
       self.cancelDialog();
    }
 
@@ -114,7 +152,7 @@ function getBigramFrequencyAnalysis() {
          return "";
       }
       var substPair = bigramsUtils.getBigramSubstPair(bigram.v, substitution, self.letterRanks);
-      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst1, substPair.dst2, side);
+      return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst[0], substPair.dst[1], side);
    }
 
    var conflictBetweenSubstitutions = function(bigram, substitution1, substitution2, side) {
@@ -123,8 +161,8 @@ function getBigramFrequencyAnalysis() {
       }
       var substPair1 = bigramsUtils.getBigramSubstPair(bigram.v, substitution1, self.letterRanks);
       var substPair2 = bigramsUtils.getBigramSubstPair(bigram.v, substitution2, self.letterRanks);
-      var cell1 = substPair1["dst" + (side + 1)];
-      var cell2 = substPair2["dst" + (side + 1)];
+      var cell1 = substPair1.dst[side];
+      var cell2 = substPair2.dst[side];
       if ((cell1.q == 'unknown') || (cell2.q == 'unknown')) {
          return false;
       }
@@ -133,9 +171,25 @@ function getBigramFrequencyAnalysis() {
 
    self.clickBigram = function(iBigram) {
       self.state.editState = "preparing";
+      var bigram = self.mostFrequentBigrams[iBigram];
+      var substPair = bigramsUtils.getBigramSubstPair(bigram.v, self.props.outputSubstitution, self.letterRanks);
       self.state.edit = {
-         iBigram: iBigram
+         iBigram: iBigram,
+         locked: [
+            (substPair.dst[0].q == "locked"),
+            (substPair.dst[1].q == "locked")
+         ],
+         letters: [
+            common.getCellLetter(self.props.alphabet, substPair.dst[0]),
+            common.getCellLetter(self.props.alphabet, substPair.dst[1])
+         ],
+         substPair: substPair
       }
+      self.render();
+   };
+
+   self.toggleLockLetter = function(iLetter) {
+      self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
       self.render();
    };
 
@@ -157,6 +211,7 @@ function getBigramFrequencyAnalysis() {
       var bigramsHtml = "";
       for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
          var bigram = bigrams[iBigram];
+         var substPair = bigramsUtils.getBigramSubstPair(bigram.v, self.props.outputSubstitution, self.letterRanks);
          var bigramClass = "";
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
@@ -173,10 +228,14 @@ function getBigramFrequencyAnalysis() {
                if (conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side)) {
                   sideClass = "substitutionConflict";
                }
+               var lock = "&nbsp;";
+               if (substPair.dst[side].q == "locked") {
+                  lock = "<i class='fa fa-lock'></i>";
+               }
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
                      renderBigramSubst(bigram, initialSubstitution, side) +
                      renderBigramSubst(bigram, newSubstitution, side) +
-                  "<span class='substitutionLock'><i class='fa fa-lock'></i></span>" +
+                     "<span class='substitutionLock'>" + lock + "</span>" +
                   "</div>";
             }
          }
@@ -212,9 +271,9 @@ function getBigramFrequencyAnalysis() {
                   "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
                   renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
                   "<strong>Bigrammes les plus fréquents en français :</strong>" +
-                  renderBigrams(bigramsUtils.mostFrequentFrench); +
+                  renderBigrams(bigramsUtils.mostFrequentFrench) +
                "</div>" +
-               "</div>" +
+            "</div>" +
          "</div>";
    };
 

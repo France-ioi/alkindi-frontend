@@ -26,6 +26,32 @@ var playFair = {
       return this.getSubstitutionFromGridCells(this.sampleGrid2);
    },
 
+   updateCells: function(inputCells, outputCells) {
+      var nbRows = inputCells.length;
+      var nbCols = inputCells[0].length;
+      for (var row = 0; row < nbRows; row++) {
+         if (outputCells[row] == undefined) {
+            outputCells[row] = [];
+            for (var col = 0; col < nbCols; col++) {
+               if (outputCells[row][col] == undefined) {
+                  outputCells[row][col] = { q: 'unknown'};
+               }
+               var inputCell = inputCells[row][col];
+               var outputCell = outputCells[row][col];
+               if ((inputCell.q == 'confirmed') ||
+                   (inputCell.q == 'locked') ||
+                   ((inputCell.q == 'guess') && (inputCell.q != 'locked'))) {
+                  outputCell.l = inputCell.l;
+                  if (inputCell.q == 'locked') {
+                     outputCell.q = 'confirmed';
+                  } else {
+                     outputCell.q = inputCell.q;
+                  }
+               }
+            }
+         }
+      }
+   },
    
    renderGrid: function(toolName, cells, selectedRow, selectedCol, isConflictFct) {
       var strHtml = "<table class='playFairGrid'>";
@@ -45,7 +71,7 @@ var playFair = {
             }
             strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + toolName + ".clickGridCell(" + row + "," + col + ")'>" +
                "<div class='" + cellClass + "'>" +
-                  common.getCellLetter(this.alphabet, cell) +
+                  common.getCellLetter(this.alphabet, cell, true) +
                "</div>" +
             "</td>";
          }
@@ -94,16 +120,12 @@ var playFair = {
          substitution[cellSrc2.l] = [];
       }
       substitution[cellSrc1.l][cellSrc2.l] = {
-         src1 : {l: cellSrc1.l, q: cellSrc1.q },
-         src2 : {l: cellSrc2.l, q: cellSrc2.q },
-         dst1 : {l: cellDst1.l, q: cellDst1.q },
-         dst2 : {l: cellDst2.l, q: cellDst2.q }
+         src: [{l: cellSrc1.l, q: cellSrc1.q }, {l: cellSrc2.l, q: cellSrc2.q }],
+         dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
       };
       substitution[cellSrc2.l][cellSrc1.l] = {
-         src2 : {l: cellSrc1.l, q: cellSrc1.q },
-         src1 : {l: cellSrc2.l, q: cellSrc2.q },
-         dst2 : {l: cellDst1.l, q: cellDst1.q },
-         dst1 : {l: cellDst2.l, q: cellDst2.q }
+         src: [{l: cellSrc1.l, q: cellSrc1.q }, {l: cellSrc2.l, q: cellSrc2.q }],
+         dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
       }
    },
 
@@ -151,8 +173,8 @@ var playFair = {
          for (var l2 = l1 + 1; l2 < substitution[l1].length; l2++) {
             var substPair = substitution[l1][l2];
             if (substPair != undefined) {
-               var coordsSrc1 = letterToCoords[substPair.src1.l];
-               var coordsSrc2 = letterToCoords[substPair.src2.l];
+               var coordsSrc1 = letterToCoords[substPair.src[0].l];
+               var coordsSrc2 = letterToCoords[substPair.src[1].l];
                if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                   substPairs.push({
                      pair: substPair,
@@ -164,8 +186,8 @@ var playFair = {
             if (substitution[l2] != undefined) {
                substPair = substitution[l2][l1];
                if (substPair != undefined) {
-                  var coordsSrc1 = letterToCoords[substPair.src1.l];
-                  var coordsSrc2 = letterToCoords[substPair.src2.l];
+                  var coordsSrc1 = letterToCoords[substPair.src[0].l];
+                  var coordsSrc2 = letterToCoords[substPair.src[1].l];
                   if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                      substPairs.push({
                         pair: substPair,
@@ -187,7 +209,7 @@ var playFair = {
          var dstRow = dstCoords[iDst].row;
          var dstCol = dstCoords[iDst].col;
          var cellDst = newCells[dstRow][dstCol];
-         var substVal = substPairWithCoords.pair["dst" + (iDst + 1)];
+         var substVal = substPairWithCoords.pair.dst[iDst];
          if (substVal.q != "unknown") {
             if (cellDst.q == "unknown") {
                cellDst.l = substVal.l;
