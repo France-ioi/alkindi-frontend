@@ -78,7 +78,10 @@ table input {
 table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
-
+.fa-info-circle {
+  color: #0f33ff;
+  cursor: pointer;
+}
 /* radio buttons with hanging labels */
 .radio-label {
   display: inline-block;
@@ -472,7 +475,7 @@ a.cell-link {
 .playFairAlphabet,
 .dialogBigram,
 .bigramLetter,
-.cipheredLetter,
+.letterSubstBloc,
 .bigramCipheredLetter {
   font-family: monospace;
 }
@@ -527,9 +530,20 @@ a.cell-link {
 .dialog button.lock {
   padding: 0 8px;
   margin: 0 5px 0 0;
+  background-color: #fff;
+}
+.dialog button.lock:hover,
+.dialog button.lock:focus {
+  background-color: #ddd;
+}
+.dialog button.lock:focus {
+  box-shadow: 0 0 4px #333 inset;
+}
+.dialog button.lock .fa-unlock-alt {
+  color: #7a7;
 }
 .dialog button.locked {
-  box-shadow: 0 0 4px #333 inset;
+  background-color: #7a7;
 }
 .dialog table,
 .dialog table td {
@@ -646,7 +660,7 @@ a.cell-link {
   padding: 0 4px;
   font-size: 1.6rem;
 }
-.bigramLetter {
+td .bigramLetter {
   min-width: 1em;
   display: inline-block;
   text-align: center;
@@ -665,6 +679,22 @@ a.cell-link {
   margin-right: 30px;
 }
 /* Éléments spécifiques à l'outil Analyse de fréquence des bigrammes */
+.x-scrollBloc {
+  overflow-x: scroll;
+  white-space: nowrap;
+  border: 1px solid #000;
+  margin: 5px 0;
+  width: auto;
+  padding: 5px;
+}
+.x-scrollBloc .labels {
+  display: inline-block;
+  padding-right: 5px;
+  vertical-align: top;
+}
+.x-scrollBloc .labels > div {
+  height: 2em;
+}
 #bigramFrequencyAnalysis .bigramBloc {
   display: inline-block;
   margin: 0 5px 1px;
@@ -674,6 +704,16 @@ a.cell-link {
   display: block;
   height: 2em;
   text-align: center;
+}
+#bigramFrequencyAnalysis .bigramBlocSubstitution {
+  background-color: #fff;
+  padding: 3px;
+  border: 1px solid #fff;
+}
+#bigramFrequencyAnalysis .bigramBlocSubstitution.selectedBigram {
+  background-color: #F0F0F0;
+  padding: 3px;
+  border: 1px solid #000;
 }
 #bigramFrequencyAnalysis .substitutionPair {
   display: inline-block;
@@ -685,17 +725,13 @@ a.cell-link {
 #bigramFrequencyAnalysis .substitutionPair.substitutionConflict {
   border-color: #C82829;
 }
-#bigramFrequencyAnalysis .bigramBlocSubstitution.selectedBigram {
-  background-color: #F0F0F0;
-  padding: 3px;
-  border: 1px solid #000;
-}
 #bigramFrequencyAnalysis .substitutionPair .bigramLetter {
   width: 20px;
   font-size: 1.8rem;
   border: 1px solid #000;
   padding: 0;
   display: block;
+  text-align: center;
 }
 #bigramFrequencyAnalysis .substitutionPair .bigramLetter:first-of-type {
   border: none;
@@ -715,27 +751,8 @@ a.cell-link {
   background-color: #fff;
   display: block;
 }
-.bigramBlocSubstitution {
-  background-color: #fff;
-  padding: 3px;
-  border: 1px solid #fff;
-}
-.x-scrollBloc {
-  overflow-x: scroll;
-  white-space: nowrap;
-  border: 1px solid #000;
-  margin: 5px 0;
-  width: auto;
-  padding: 5px;
-}
-.x-scrollBloc .labels {
-  display: inline-block;
-  padding-right: 5px;
-  vertical-align: top;
-}
-.x-scrollBloc .labels > div {
-  height: 2em;
-}
+
+/* Amélioration de substitution */
 .y-scrollBloc {
   overflow-y: scroll;
   white-space: nowrap;
@@ -749,14 +766,23 @@ a.cell-link {
   text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
+  padding-top: 3px;
   width: 2em;
   line-height: 2em;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
-.letterStatus-left {
-  margin-left: 2px;
+.letterSubstBloc.letterStatus-left {
+  border-left: 1px solid transparent;
+  padding-left: 2px;
 }
-.letterStatus-right {
-  margin-right: 2px;
+.letterSubstBloc.letterStatus-right {
+  border-right: 1px solid transparent;
+  padding-right: 2px;
+}
+.letterSubstBloc.selectedBigram {
+  background-color: #F0F0F0;
+  border-color: #000;
 }
 .letterStatus-left .cipheredLetter,
 .letterStatus-right .cipheredLetter,
@@ -764,12 +790,19 @@ a.cell-link {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   white-space: pre;
+  background-color: #fff;
 }
 .letterStatus-left .cipheredLetter {
   border-left: 1px solid black;
 }
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
+}
+.letterSubstBloc.letterStatus-inside .character,
+.letterSubstBloc.letterStatus-outside .character {
+  height: 2em;
+  border: 1px solid transparent;
+  margin: 2px 1px;
 }
 .letterSubstBloc .bigramLetter {
   display: block;

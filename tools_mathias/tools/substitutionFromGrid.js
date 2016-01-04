@@ -69,10 +69,6 @@ function getSubstitutionFromGrid() {
          }
          return "<div class='dialog'>" +
                "<div class='dialogLine'>" +
-                     "<span class='dialogLabel'>Case éditée :</span>" +
-                     "<span>ligne " + (row + 1) + ", colonne " + (col + 1) + "</span>" +
-               "</div>" +
-               "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Valeur d'origine :</span>" +
                      "<span>" + common.getCellLetter(playFair.alphabet, inputCell, true) + "</span>" +
                "</div>" +
@@ -81,6 +77,12 @@ function getSubstitutionFromGrid() {
                      "<span>" +
                         "<input id='editCellLetter' onchange='" + self.name + ".changeCellLetter()' type='text' maxlength=1 style='width:60px;text-align:center' " +
                            "value='" + self.state.edit.cellLetter + "'>" +
+                     "</span>" +
+               "</div>" +
+               "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>&nbsp;</span>" +
+                     "<span class='dialogLock'>" +
+                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked) + "</span>" +
                      "</span>" +
                "</div>" +
                "<div class='dialogLine'>" +
@@ -159,7 +161,7 @@ function getSubstitutionFromGrid() {
             {label: "Grille playFair", name: self.props.inputGridVariable}
          ],
          output: [
-            {label: "Grille modifiée", name: self.props.inputGridVariable},
+            {label: "Grille éditée", name: self.props.inputGridVariable},
             {label: "Substitution générée", name: self.props.outputSubstitutionVariable}
          ]
       });
@@ -175,6 +177,7 @@ function getSubstitutionFromGrid() {
                renderVariables() +
                "<div class='grillesSection'>" + 
                   "<div class='blocGrille'>" + 
+                     "Grille éditée :<br/>" +
                      renderGrid() +
                   "</div>" +
                   "<div class='blocGrille'>" +
