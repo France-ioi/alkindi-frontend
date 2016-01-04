@@ -464,64 +464,17 @@ a.cell-link {
     Interfaces et grilles PlayFair
 
 */
-.playFairGrid,
-.playFairAlphabet,
-.bigrams {
-  width: auto;
-  border-collapse: collapse;
-}
-.playFairGrid td,
-.playFairAlphabet td {
-  padding: 0;
-}
-.playFairGrid tr td, .playFairAlphabet tr td {
-  width: 30px;
-  height: 30px;
-  font-size: 1.5em;
-  text-align: center;
-  border: 1px solid black;
-}
 .panel-heading .code {
   white-space: nowrap;
 }
-/* grilles */
-.grillesSection {
-  margin-top: 10px;
-}
-.blocGrille {
-  display: inline-block;
-  vertical-align: top;
-}
-.blocGrille:first-of-type {
-  margin-right: 45px;
-}
-.qualifier-locked {
-  background-color: #D3D3D3;
-  background-repeat: no-repeat;
-  background-position: top right;
-  position: relative;
-}
-.qualifier-locked::after {
-  content: "\f023";
-  font-family: FontAwesome;
-  font-size: 11px;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  line-height: 1em;
-}
-.qualifier-unconfirmed {
-  background-color: white;
-}
-.qualifier-confirmed {
-  background-color: #D3D3D3;
-}
-.qualifier-disabled {
-  background-color: #808080;
-}
-.cell-query {
-  background-color: #000;
-  color: #fff;
+/* Fonts */
+.playFairGrid,
+.playFairAlphabet,
+.dialogBigram,
+.bigramLetter,
+.cipheredLetter,
+.bigramCipheredLetter {
+  font-family: monospace;
 }
 /* boites de dialogue */
 .dialog {
@@ -534,6 +487,10 @@ a.cell-link {
   position: absolute;
   top: 15px;
   right: 15px;
+}
+.dialogIndice {
+  font-family: monospace;
+  font-weight: bold;
 }
 .dialogLine {
   min-height: 2em;
@@ -550,7 +507,6 @@ a.cell-link {
   vertical-align: top;
   font-size: 1.2em;
   text-align: center;
-  font-family: monospace;
 }
 .dialog .bigramCipheredLetter .bigramLetter,
 .dialog .dialogBigramSubstOrig .bigramLetter {
@@ -559,18 +515,25 @@ a.cell-link {
 .dialog .dialogBigramSubstOrig,
 .dialog .dialogBigramSubstOrig .bigramLetter {
   background-color: transparent;
-  border: none;
+  border-color: transparent;
+}
+.dialogBigramSubst {
+  padding: 0 5px;
+}
+.dialogBigramSubst input {
+  width: 1.5em;
+  text-align: center;
+}
+.dialog button.lock {
+  padding: 0 8px;
+  margin: 0 5px 0 0;
+}
+.dialog button.locked {
+  box-shadow: 0 0 4px #333 inset;
 }
 .dialog table,
 .dialog table td {
   border: none;
-}
-.dialogIndice {
-  font-family: monospace;
-  font-weight: bold;
-}
-.dialog button.locked {
-  box-shadow: 0 0 4px #333 inset;
 }
 .dialog button {
   padding: 0 10px;
@@ -609,6 +572,62 @@ a.cell-link {
   white-space: nowrap;
   overflow: auto;
 }
+/* grilles */
+.playFairGrid,
+.playFairAlphabet,
+.bigrams {
+  width: auto;
+  border-collapse: collapse;
+}
+.playFairGrid td,
+.playFairAlphabet td {
+  padding: 0;
+}
+.playFairGrid tr td, .playFairAlphabet tr td {
+  width: 30px;
+  height: 30px;
+  font-size: 1.5em;
+  text-align: center;
+  border: 1px solid black;
+}
+.grillesSection {
+  margin-top: 10px;
+}
+.blocGrille {
+  display: inline-block;
+  vertical-align: top;
+}
+.blocGrille:first-of-type {
+  margin-right: 45px;
+}
+.qualifier-locked {
+  background-color: #D3D3D3;
+  background-repeat: no-repeat;
+  background-position: top right;
+  position: relative;
+}
+.qualifier-locked::after {
+  content: "\f023";
+  font-family: FontAwesome;
+  font-size: 11px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 1em;
+}
+.qualifier-unconfirmed {
+  background-color: white;
+}
+.qualifier-confirmed {
+  background-color: #D3D3D3;
+}
+.qualifier-disabled {
+  background-color: #808080;
+}
+.cell-query {
+  background-color: #000;
+  color: #fff;
+}
 /* bigrammes */
 .bigrams {
   display: inline-table;
@@ -631,7 +650,6 @@ a.cell-link {
   min-width: 1em;
   display: inline-block;
   text-align: center;
-  font-family: monospace;
 }
 #bigramSubstitution {
   border: 1px solid #000;
@@ -646,6 +664,7 @@ a.cell-link {
 #bigramSubstitution > div:nth-child(odd) {
   margin-right: 30px;
 }
+/* Éléments spécifiques à l'outil Analyse de fréquence des bigrammes */
 #bigramFrequencyAnalysis .bigramBloc {
   display: inline-block;
   margin: 0 5px 1px;
@@ -666,7 +685,7 @@ a.cell-link {
 #bigramFrequencyAnalysis .substitutionPair.substitutionConflict {
   border-color: #C82829;
 }
-.bigramBlocSubstitution.selectedBigram {
+#bigramFrequencyAnalysis .bigramBlocSubstitution.selectedBigram {
   background-color: #F0F0F0;
   padding: 3px;
   border: 1px solid #000;
@@ -682,7 +701,7 @@ a.cell-link {
   border: none;
   background-color: transparent;
 }
-.substitutionPair span.substitutionLock {
+#bigramFrequencyAnalysis .substitutionPair span.substitutionLock {
   display: block;
   text-align: center;
 }
@@ -694,7 +713,6 @@ a.cell-link {
   border: 1px solid #000;
   text-align: center;
   background-color: #fff;
-  font-family: monospace;
   display: block;
 }
 .bigramBlocSubstitution {
