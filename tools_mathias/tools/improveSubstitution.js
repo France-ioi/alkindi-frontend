@@ -220,18 +220,24 @@ function getImproveSubstitution() {
          if ((status == "left") || (status == "right")) {
             var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
             if (status == "left") {
+               html += "<div class='substitutionPair'>";
                html += renderBigramSubst(bigram, initialSubstitution, 0);
                html += renderBigramSubst(bigram, newSubstitution, 0);               
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[0].q == "locked") + "</span>";
+               html += "</div>";
             } else if (status == "right") {
+               html += "<div class='substitutionPair'>";
                html += renderBigramSubst(bigram, initialSubstitution, 1);
                html += renderBigramSubst(bigram, newSubstitution, 1);
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[1].q == "locked") + "</span>";
+               html += "</div>";
             }
          } else {
+            html += "<div class='substitutionPair'>";
             html += "<div class='character'>" +letter + "</div>";
             html += "<div class='character'>" +letter + "</div>";
             html += "<div class='character'> </div>";
+            html += "</div>";
          }
          html += "</div>";
       }
