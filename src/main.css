@@ -472,7 +472,7 @@ a.cell-link {
 .playFairAlphabet,
 .dialogBigram,
 .bigramLetter,
-.cipheredLetter,
+.letterSubstBloc,
 .bigramCipheredLetter {
   font-family: monospace;
 }
@@ -646,7 +646,7 @@ a.cell-link {
   padding: 0 4px;
   font-size: 1.6rem;
 }
-.bigramLetter {
+td .bigramLetter {
   min-width: 1em;
   display: inline-block;
   text-align: center;
