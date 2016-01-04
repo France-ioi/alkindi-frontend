@@ -96,7 +96,7 @@ function plain (opts) {
 }
 
 function watched (opts) {
-    return Object.assign({}, opts, {watch: true, uglify: true});
+    return Object.assign({}, opts, {watch: true});
 }
 
 function uglified (opts) {
