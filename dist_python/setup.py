@@ -14,7 +14,7 @@ package_name = 'alkindi_r2_front'
 
 
 class build(_build):
-    sub_commands = _build.sub_commands + [('build_data', None)]
+    pass
 
 
 class bdist_egg(_bdist_egg):
@@ -25,13 +25,16 @@ class bdist_egg(_bdist_egg):
 
 class build_data(setuptools.Command):
     description = 'copy built assets into the resource package'
-    user_options = []
+    user_options = [
+        ('min', None, 'Include minified assets.')
+    ]
 
     def initialize_options(self):
-        pass
+        self.min = False
 
     def finalize_options(self):
-        pass
+        if self.min == 1:
+            self.min = True
 
     def run(self):
         target = os.path.join(package_name, 'assets')
@@ -41,10 +44,18 @@ class build_data(setuptools.Command):
         # write version
         with open(os.path.join(package_name, '__init__.py'), 'w') as f:
             print("version = '{}'".format(meta['version']), file=f)
+            print("min_build = {}".format(self.min), file=f)
         # main
         print("copying project assets")
-        copy2('../dist/main.js', target)
-        copy2('../dist/main.js.map', target)
+        if self.min:
+            copy2('../dist/main.min.js', target)
+            copy2('../dist/main.min.js.map', target)
+            copy2('../dist/main.min.css', target)
+            copy2('../dist/main.min.css.map', target)
+        else:
+            copy2('../dist/main.js', target)
+            copy2('../dist/main.js.map', target)
+            copy2('../dist/main.css', target)
         # images
         copytree('../images', os.path.join(target, 'images'))
         # bootstrap
