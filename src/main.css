@@ -608,6 +608,10 @@ a.cell-link {
   text-align: center;
   border: 1px solid black;
 }
+.playFairGrid td.cell-conflict,
+.cell-conflict {
+    border: 3px solid #C82829;
+}
 .grillesSection {
   margin-top: 10px;
 }
@@ -824,7 +828,4 @@ td .bigramLetter {
 .letterSubstBloc .bigramLetter {
   display: block;
   margin: 2px 1px;
-}
-.cell-conflict {
-   border: 3px solid #C82829;
 }
