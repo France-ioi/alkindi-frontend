@@ -470,6 +470,13 @@ a.cell-link {
 .panel-heading .code {
   white-space: nowrap;
 }
+.score {
+  margin-top: 10px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: right;
+  border-top: 4px solid #C82829;
+}
 /* Fonts */
 .playFairGrid,
 .playFairAlphabet,
