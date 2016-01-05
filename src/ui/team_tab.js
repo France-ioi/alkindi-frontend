@@ -433,7 +433,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const testing = TestTeamTab(self);
+  const testing = false && TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
@@ -487,7 +487,7 @@ const TeamTab = PureComponent(self => {
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {asyncHelper.render()}
-        {testing.render()}
+        {testing && testing.render()}
       </div>
     );
   };
