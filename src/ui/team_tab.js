@@ -27,8 +27,8 @@ const TestTeamTab = function (self) {
     setRound({...round, training_opens_at});
   };
   const toggleInvalidTeam = function () {
-    const round = self.props.round;
-    setRound({...round, has_invalid_team: !round.has_invalid_team});
+    const team = self.props.team;
+    setTeam({...team, is_invalid: !team.is_invalid});
   };
   const setTrainingAttempt = function () {
     const team = self.props.team;
@@ -68,13 +68,13 @@ const TestTeamTab = function (self) {
     const boolText = function (b) {
       return (b === undefined) ? 'undefined' : b.toString();
     };
-    const {round, attempt, question, round_has_not_started} = self.props;
+    const {team, round, attempt, question, round_has_not_started} = self.props;
     return (
       <div>
         <hr/>
         <ul>
           <li>
-            {redGreen(round.has_invalid_team, 'round has invalid team', 'round has valid team')}
+            {redGreen(team.is_invalid, 'team is invalid', 'team is valid')}
             <button type="button" className="btn btn-primary" onClick={toggleInvalidTeam}>toggle</button>
           </li>
           <li>
@@ -349,7 +349,7 @@ const TeamTab = PureComponent(self => {
         {attempt === undefined
           ? <div>
               {round_has_not_started && renderTooEarly(round)}
-              {round.has_invalid_team
+              {team.is_invalid
                ? renderBadTeam()
                : renderStartTraining()}
             </div>
