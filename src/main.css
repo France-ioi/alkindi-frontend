@@ -608,6 +608,10 @@ a.cell-link {
   text-align: center;
   border: 1px solid black;
 }
+.playFairGrid td.cell-conflict,
+.cell-conflict {
+    border: 3px solid #C82829;
+}
 .grillesSection {
   margin-top: 10px;
 }
@@ -617,6 +621,13 @@ a.cell-link {
 }
 .blocGrille:first-of-type {
   margin-right: 45px;
+}
+.y-scrollBloc {
+  overflow-y: scroll;
+  border: 1px solid #000;
+  margin: 5px 0;
+  padding: 10px;
+  height: 150px;
 }
 .qualifier-locked {
   background-color: #D3D3D3;
@@ -669,17 +680,14 @@ td .bigramLetter {
   display: inline-block;
   text-align: center;
 }
-#bigramSubstitution {
-  border: 1px solid #000;
+.y-scrollBloc.bigramSubstitution {
   height: 136px;
   width: 560px;
-  overflow-y: scroll;
-  padding: 10px;
 }
-#bigramSubstitution > div {
+.bigramSubstitution > div {
   float: left;
 }
-#bigramSubstitution > div:nth-child(odd) {
+.bigramSubstitution > div:nth-child(odd) {
   margin-right: 30px;
 }
 /* Éléments spécifiques à l'outil Analyse de fréquence des bigrammes */
@@ -764,12 +772,9 @@ td .bigramLetter {
 }
 
 /* Amélioration de substitution */
-.y-scrollBloc {
-  overflow-y: scroll;
-  white-space: nowrap;
-  border: 1px solid #000;
-  margin: 5px 0;
+#improveSubstitution .y-scrollBloc {
   height: 320px;
+  padding: 0;
 }
 .letterSubstBloc {
   display: inline-block;
@@ -779,7 +784,6 @@ td .bigramLetter {
   margin-bottom: 5px;
   padding-top: 3px;
   width: 2em;
-  line-height: 2em;
 }
 .letterSubstBloc.letterStatus-left {
   padding-left: 3px;
@@ -809,11 +813,10 @@ td .bigramLetter {
   border-right: 1px solid black;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram {
-  height: 131px;
+  height: 109px;
 }
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
-  height: 2em;
   border: 1px solid transparent;
   margin: 2px 1px;
 }
@@ -825,10 +828,20 @@ td .bigramLetter {
   display: block;
   margin: 2px 1px;
 }
-.cell-conflict {
-   border: 3px solid #C82829;
+.substituedLetter {
+  border: 1px solid #777;
+  font-family: monospace;
+  font-size: 1.8rem;
+  margin: 2px;
+  display: inline-block;
+  width: 1.1em;
+  height: 1.5em;
+  vertical-align: top;
+  text-align: center;
 }
-
+.substituedLetter.character {
+  border-color: transparent;
+}
 /* Team tab -- access codes */
 .access-code-block {
   text-align: center;
@@ -838,9 +851,18 @@ td .bigramLetter {
   margin-right: 20px;
   vertical-align: middle;
 }
-.access-code .code {
+.access-code .code, td.unlocked-code {
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 20px;
   font-weight: bold;
+  color: #080;
+}
+td.unlock-code input {
+  height: 26px;
+  padding: 2px 0;
+}
+td.unlock-code button {
+  height: 26px;
+  vertical-align: bottom;
   color: #080;
 }

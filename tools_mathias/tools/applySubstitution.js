@@ -32,18 +32,18 @@ function getApplySubstitution() {
          var status = letterInfos[iLetter].status;
          var letter;
          if ((status != "left") && (status != "right")) {
-            letter = self.props.inputCipheredText[iLetter];
+            letter = "<span class='substituedLetter character'>" +  self.props.inputCipheredText[iLetter] + "</span>";
          } else {
             var bigram = letterInfos[iLetter].bigram;
             var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.inputSubstitution, self.letterRanks);
             if (status == "left") {
-               letter = common.getCellLetter(self.props.alphabet, substPair.dst[0]);
+               letter = "<span class='substituedLetter'>" +  common.getCellLetter(self.props.alphabet, substPair.dst[0]) + "</span>";
             } else {
-               letter = common.getCellLetter(self.props.alphabet, substPair.dst[1]);
+               letter = "<span class='substituedLetter'>" + common.getCellLetter(self.props.alphabet, substPair.dst[1]) + "</span>";
             }
          }
          if (letter == '') {
-            letter = "&nbsp;";
+            letter = "<span class='substituedLetter'>&nbsp;</span>";
          }
          text += letter;
       }
@@ -80,8 +80,10 @@ function getApplySubstitution() {
             "</span></div>" +
             "<div class='panel-body'>" +
                renderVariables() +
-               "<div>" +
-                  renderText(self.props.outputDecipheredText) +
+               "<div class='grillesSection'>" +
+                  "<div class='y-scrollBloc'" +
+                     renderText(self.props.outputDecipheredText) +
+                  "</div>" +
                "</div>" +
             "</div>" +
          "</div>";
