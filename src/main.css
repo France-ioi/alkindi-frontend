@@ -828,3 +828,19 @@ td .bigramLetter {
 .cell-conflict {
    border: 3px solid #C82829;
 }
+
+/* Team tab -- access codes */
+.access-code-block {
+  text-align: center;
+  margin: 15px 0;
+}
+.access-code {
+  margin-right: 20px;
+  vertical-align: middle;
+}
+.access-code .code {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 20px;
+  font-weight: bold;
+  color: #080;
+}
