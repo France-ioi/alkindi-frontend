@@ -198,7 +198,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderTeamMembers = function (team, codeEntry) {
+  const renderTeamMembers = function (team, haveAttempt) {
     const renderMember = function (member) {
       const user_id = member.user_id;
       const flags = [];
@@ -212,7 +212,7 @@ const TeamTab = PureComponent(self => {
           <td>{member.user.lastname}, {member.user.firstname}</td>
           <td>{flags.join(', ')}</td>
           <td>{new Date(member.joined_at).toLocaleString()}</td>
-          {codeEntry &&
+          {haveAttempt &&
             (member.access_code === undefined
              ? <td className="unlock-code">
                  <input type="text" ref={'access_code_'+user_id} />
@@ -237,7 +237,7 @@ const TeamTab = PureComponent(self => {
               <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
-              {codeEntry && <th>Code d'accès</th>}
+              {haveAttempt && <th>Code de lancement du sujet</th>}
             </tr>
             {team.members.map(renderMember)}
           </tbody>
@@ -284,18 +284,21 @@ const TeamTab = PureComponent(self => {
     const {access_code} = self.state;
     return (
       <div>
-        <p>
-          Votre code de lancement personnel pour ce sujet est :
-        </p>
-        <p className="access-code-block">
-          <span className="access-code">
-            {access_code === undefined
-             ? <Button bsSize="large" onClick={onRevealAccessCode}>
-                 <i className="fa fa-unlock-alt"></i> révéler
-               </Button>
-             : <span className="code">{access_code}</span>}
-          </span>
-        </p>
+        {attempt.needs_code &&
+          <div>
+            <p>
+              Votre code de lancement personnel pour ce sujet est :
+            </p>
+            <p className="access-code-block">
+              <span className="access-code">
+                {access_code === undefined
+                 ? <Button bsSize="large" onClick={onRevealAccessCode}>
+                     <i className="fa fa-unlock-alt"></i> révéler
+                   </Button>
+                 : <span className="code">{access_code}</span>}
+              </span>
+            </p>
+          </div>}
         <p>
           {attempt.is_training
            ? <p>Vous pouvez annuler la procédure d'accès à l'entrainement et
@@ -418,9 +421,10 @@ const TeamTab = PureComponent(self => {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
-    const codeEntry = attempt !== undefined;
-    const showAdminControls = !codeEntry && !team.is_locked && team.creator.id === user.id;
-    const canLeaveTeam = !codeEntry && !team.is_locked;
+    const haveAttempt = attempt !== undefined;
+    const haveQuestion = question !== undefined;
+    const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
+    const canLeaveTeam = !haveAttempt && !team.is_locked;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
@@ -434,8 +438,8 @@ const TeamTab = PureComponent(self => {
         {attempt === undefined
          ? renderRoundPrelude(round)
          : (attempt.needs_codes && renderAttemptPrelude(attempt))}
-        {renderTeamMembers(team, codeEntry)}
-        {codeEntry && renderCodeEntry(attempt)}
+        {renderTeamMembers(team, haveAttempt)}
+        {haveAttempt && !haveQuestion && renderCodeEntry(attempt)}
         {showAdminControls && renderAdminControls(team)}
         {canLeaveTeam && renderLeaveTeam()}
         {attempt === undefined
