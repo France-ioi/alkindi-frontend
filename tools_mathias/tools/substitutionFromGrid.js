@@ -164,7 +164,7 @@ function getSubstitutionFromGrid() {
             {label: "Grille playFair", name: self.props.inputGridVariable}
          ],
          output: [
-            {label: "Grille éditée", name: self.props.ourputGridVariable},
+            {label: "Grille éditée", name: self.props.outputGridVariable},
             {label: "Substitution générée", name: self.props.outputSubstitutionVariable}
          ]
       });
