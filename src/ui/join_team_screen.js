@@ -1,10 +1,10 @@
 import React from 'react';
-import {Alert} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import {image_url} from '../assets';
 import AlkindiAuthHeader from './auth_header';
 import AlkindiLogout from './logout';
+import AsyncHelper from '../helpers/async_helper';
 import * as api from '../api';
 
 /*
@@ -18,23 +18,15 @@ JoinTeamScreen interface:
 
 */
 const JoinTeamScreen = PureComponent(self => {
-  const beginRequest = function () {
-    self.setState({pleaseWait: true, error: false});
-  };
-  const endRequest = function (err) {
-    self.setState({
-      pleaseWait: false,
-      error: err && 'Une erreur serveur est survenue, merci de ré-essayer un peu plus tard.'
-    });
-  };
+  const asyncHelper = AsyncHelper(self);
   const onShowJoinTeam = function () {
     self.setState({joinTeam: true});
   };
   const onCreateTeam = function () {
     const user_id = self.props.user.id;
-    beginRequest();
+    asyncHelper.beginRequest();
     api.createTeam(user_id, function (err, res) {
-      endRequest(err);
+      asyncHelper.endRequest(err);
       if (err) return;
       self.props.onJoinTeam();
     });
@@ -42,9 +34,9 @@ const JoinTeamScreen = PureComponent(self => {
   const onJoinTeam = function () {
     const user_id = self.props.user.id;
     const data = {code: self.refs.teamCode.value};
-    beginRequest();
+    asyncHelper.beginRequest();
     api.joinTeam(user_id, data, function (err, res) {
-      endRequest(err);
+      asyncHelper.endRequest(err);
       if (err) return;
       if (res.body.success)
         self.props.onJoinTeam();
@@ -122,11 +114,12 @@ const JoinTeamScreen = PureComponent(self => {
         </div>
         <AlkindiAuthHeader/>
         {body}
+        {asyncHelper.render()}
       </div>
     );
   };
 }, self => {
-  return {joinTeam: false, error: false, pleaseWait: false};
+  return AsyncHelper.initialState({joinTeam: false});
 });
 
 export default JoinTeamScreen;
