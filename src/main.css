@@ -367,8 +367,7 @@ character substitutions tables
   background-color: #d0cdc9;
   font-weight: bold;
 }
-button[type=submit],
-button[type=button] {
+.btn-tool {
   display: table-cell;
   font-size: 16px;
   text-decoration: none;
@@ -384,10 +383,8 @@ button[type=button] {
        -o-border-radius: 5px;
           border-radius: 5px;
 }
-button[type=submit]:hover,
-button[type=button]:hover,
-button[type=submit]:focus,
-button[type=button]:focus {
+.btn-tool:hover,
+.btn-tool:focus {
   background-color: #d0cdc9;
 }
 .general_title {

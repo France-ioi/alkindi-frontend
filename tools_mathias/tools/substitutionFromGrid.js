@@ -91,7 +91,7 @@ function getSubstitutionFromGrid() {
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
                      "<span>" +
-                        "<button id='toggleLockLetter' onclick='" + self.name + ".toggleLockLetter()' type='button' class='" + buttonLockedClass + "'>" +
+                        "<button id='toggleLockLetter' onclick='" + self.name + ".toggleLockLetter()' type='button' class='btn-tool " + buttonLockedClass + "'>" +
                            "<i class='fa fa-lock'></i>" +
                         "</button>" +
                      "</span>" +

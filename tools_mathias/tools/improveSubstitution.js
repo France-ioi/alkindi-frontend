@@ -86,10 +86,10 @@ function getImproveSubstitution() {
                   "<tr>" +
                      "<td><strong>Bloquer / débloquer :</strong></td>" +
                      "<td style='text-align:center'>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='" + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-tool " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                      "<td style='text-align:center'>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='" + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='btn-tool " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
                      "</td>" +
                   "</tr>" +
                "</table>" +

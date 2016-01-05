@@ -54,9 +54,9 @@ var common = {
 
    renderValidateOrCancelDialog: function(name) {
       return "<div style='text-align:center'>" +
-         "<button type='button' onclick='" + name + ".validateDialog()'>Valider</button>" +
+         "<button type='button' class='btn-tool' onclick='" + name + ".validateDialog()'>Valider</button>" +
          "&nbsp;&nbsp;&nbsp;" +
-         "<button type='button' onclick='" + name + ".cancelDialog()'>Annuler</button>" +
+         "<button type='button' class='btn-tool' onclick='" + name + ".cancelDialog()'>Annuler</button>" +
          "</div>";
    },
 
