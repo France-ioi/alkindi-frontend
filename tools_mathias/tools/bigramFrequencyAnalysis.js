@@ -199,7 +199,7 @@ function getBigramFrequencyAnalysis() {
 
    self.toggleLockLetter = function(iLetter) {
       self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
-      renserAll();
+      renderAll();
    };
 
    var renderBigram = function(bigram, side) {
