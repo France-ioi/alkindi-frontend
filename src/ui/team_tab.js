@@ -20,42 +20,47 @@ const TestTeamTab = function (self) {
   const setQuestion = function (question) {
     self.props.dispatch({type: 'SET_QUESTION', question});
   };
-  const toggleRoundAccess = function () {
+  const toggleBeforeRoundStart = function () {
     const round = self.props.round;
-    setRound({...round, allow_access: !round.allow_access});
+    setRound({...round, has_not_started: !round.has_not_started});
   };
-  const toggleTeamOk = function () {
+  const toggleInvalidTeam = function () {
     const round = self.props.round;
-    setRound({...round, is_team_ok: !round.is_team_ok});
+    setRound({...round, has_invalid_team: !round.has_invalid_team});
   };
   const setTrainingAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true});
     setQuestion(undefined);
-    setAttempt({need_codes: true, is_training: true, is_successful: false});
+    setAttempt({needs_codes: true, is_training: true, is_unsolved: true});
   };
-  const toggleAttemptStarted = function () {
+  const toggleCodesEntered = function () {
     const attempt = self.props.attempt;
     if (attempt)
-      setAttempt({...attempt, need_codes: !attempt.need_codes});
+      setAttempt({...attempt, needs_codes: !attempt.needs_codes});
   };
-  const toggleAttemptSuccessful = function () {
+  const toggleAttemptResolved = function () {
     const attempt = self.props.attempt;
     if (attempt)
-      setAttempt({...attempt, is_successful: !attempt.is_successful});
+      setAttempt({...attempt, is_unsolved: !attempt.is_unsolved});
   };
   const setTimedAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true}); // normalement déjà fait
     setQuestion(undefined);
     setAttempt({
-      need_codes: true, is_training: false, is_successful: false,
-      ends_at: new Date(Date.now() + 3600000).toISOString()
+      needs_codes: true, is_training: false, is_unsolved: true,
+      duration: 60, ends_at: new Date(Date.now() + 3600000).toISOString()
     });
   };
   const toggleQuestionAvailable = function () {
     const question = self.props.question;
     setQuestion(question ? undefined : {});
+  };
+  const redGreen = function (cond, ifTrue, ifFalse) {
+    return <label>{cond
+      ? <span style={{color: 'red'}}>{ifTrue}</span>
+      : <span style={{color: 'green'}}>{ifFalse}</span>}</label>;
   };
   const render = function () {
     const boolText = function (b) {
@@ -65,24 +70,33 @@ const TestTeamTab = function (self) {
     return (
       <div>
         <hr/>
-        <button type="button" className="submit" onClick={toggleRoundAccess}>toggle round access</button>
-        &nbsp;
-        <button type="button" className="submit" onClick={toggleTeamOk}>toggle team ok</button>
-        &nbsp;
-        <button type="button" className="submit" onClick={setTrainingAttempt}>training</button>
-        <button type="button" className="submit" onClick={toggleAttemptStarted}>enter codes</button>
-        <button type="button" className="submit" onClick={toggleAttemptSuccessful}>toggle successful</button>
-        <button type="button" className="submit" onClick={setTimedAttempt}>timed</button>
-        &nbsp;
-        <button type="button" className="submit" onClick={toggleQuestionAvailable}>question</button>
         <ul>
-          <li>round access allowed: {boolText(round.allow_access)}</li>
-          <li>team is ok for round: {boolText(round.is_team_ok)}</li>
-          <li>no attempt: {boolText(attempt === undefined)}</li>
-          <li>attempt is training: {attempt && boolText(attempt.is_training)}</li>
-          <li>attempt needs codes: {attempt && boolText(attempt.need_codes)}</li>
-          <li>attempt is successful: {attempt && boolText(attempt.is_successful)}</li>
-          <li>question available: {boolText(!!question)}</li>
+          <li>
+            {redGreen(round.has_not_started, 'round has not started', 'round has started')}
+            <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
+          </li>
+          <li>
+            {redGreen(round.has_invalid_team, 'round has invalid team', 'round has valid team')}
+            <button type="button" className="btn btn-primary" onClick={toggleInvalidTeam}>toggle</button>
+          </li>
+          <li>
+            {redGreen(!attempt, 'no attempt', 'attempt exists')}
+            <button type="button" className="btn btn-primary" onClick={setTrainingAttempt}>training</button>
+            <button type="button" className="btn btn-primary" onClick={setTimedAttempt}>timed</button>
+          </li>
+          {attempt && <li>{attempt.is_training ? 'attempt is training' : 'attempt is timed'}</li>}
+          {attempt && <li>
+            {redGreen(attempt.needs_codes, 'attempt needs codes', 'attempt is confirmed')}
+            <button type="button" className="btn btn-primary" onClick={toggleCodesEntered}>toggle</button>
+          </li>}
+          {attempt && <li>
+            {redGreen(!question, 'question not accessed', 'question accessed')}
+            <button type="button" className="btn btn-primary" onClick={toggleQuestionAvailable}>toggle</button>
+          </li>}
+          {attempt && <li>
+            {redGreen(attempt.is_unsolved, 'attempt is unresolved', 'attempt was solved')}
+            <button type="button" className="btn btn-primary" onClick={toggleAttemptResolved}>toggle</button>
+          </li>}
         </ul>
       </div>
     );
@@ -132,7 +146,7 @@ const TeamTab = PureComponent(self => {
     );
   };
   const renderTeamMembers = function (team, attempt) {
-    const codeEntry = attempt !== undefined /* && attempt.need_codes*/;
+    const codeEntry = attempt !== undefined /* && attempt.needs_codes*/;
     // TODO: if codeEntry, display own code
     const renderMember = function (member) {
       const flags = [];
@@ -149,7 +163,7 @@ const TeamTab = PureComponent(self => {
           {codeEntry && <td><input type="text"/></td>}
         </tr>);
     // TODO: codeEntry
-    //       ? need_codes
+    //       ? needs_codes
     //         ? display input box, button
     //         : display entered code
     //       : no code column
@@ -209,7 +223,7 @@ const TeamTab = PureComponent(self => {
   };
   const renderTooEarly = function (round) {
     return (
-      <div key='tooEarly' className="section">
+      <div className="section">
         <Alert bsStyle='success'>
           L'accès au sujet sera ouvert le {round.access_from}.
           Vous pouvez dès maintenant valider la composition de votre équipe.
@@ -229,7 +243,7 @@ const TeamTab = PureComponent(self => {
   };
   const renderStartAttempt = function (message) {
     return (
-      <div key='startAttempt' className="section">
+      <div className="section">
         {message}
         <p>
           <button type="button" className="btn btn-primary" onClick={onStartAttempt}>Démarrer</button>
@@ -249,6 +263,32 @@ const TeamTab = PureComponent(self => {
     );
     return renderStartAttempt(message);
   };
+  const renderEnterCodes = function (attempt) {
+    return (
+      <div className="section">
+        <p>
+          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
+          au sujet
+            {attempt.is_training
+             ? <span> d'entrainement</span>
+             : <span>, vous aurez alors {attempt.duration} minutes pour le résoudre</span>}.
+        </p>
+      </div>
+    );
+  };
+  const renderCodesEnteredEarly = function (round) {
+    return (
+      <div key='tooEarly' className="section">
+        <p>
+          Les membres de votre équipe ont donné leur accord pour accéder au sujet,
+          vous êtes prêts à commencer dès l'ouverture de l'épreuve.
+        </p>
+        <Alert bsStyle='success'>
+          L'accès au sujet sera ouvert le {round.access_from}.
+        </Alert>
+      </div>
+    );
+  };
   const renderUnlockQuestion = function (attempt) {
     const notice = attempt.is_training &&
       (<p>
@@ -266,30 +306,10 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderEnterCodesTraining = function (attempt) {
-    return (
-      <div key='timedAttemptDuration' className="section">
-        <p>
-          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
-          au sujet d'entrainement.
-        </p>
-      </div>
-    );
-  };
   const renderTrainingInProgress = function (attempt) {
     return (
       <div key='trainingInProgress' className="section">
         <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
-      </div>
-    );
-  };
-  const renderEnterCodesTimed = function (attempt) {
-    return (
-      <div key='timedAttemptDuration' className="section">
-        <p>
-          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
-          au sujet, vous aurez alors 1 heure pour le résoudre.
-        </p>
       </div>
     );
   };
@@ -320,21 +340,25 @@ const TeamTab = PureComponent(self => {
         {team.is_locked || renderLeaveTeam()}
         {attempt === undefined
           ? <div>
-              {round.allow_access || renderTooEarly(round)}
-              {round.is_team_ok ? renderStartTraining() : renderBadTeam()}
+              {round.has_not_started && renderTooEarly(round)}
+              {round.has_invalid_team
+               ? renderBadTeam()
+               : renderStartTraining()}
             </div>
           : (attempt.is_training
-             ? (attempt.need_codes
-                ? (!round.allow_access
+             ? (attempt.needs_codes
+                ? (round.has_not_started
                    ? renderTooEarly(round)
-                   : renderEnterCodesTraining())
-                : (!attempt.is_successful
+                   : renderEnterCodes(attempt))
+                : (attempt.is_unsolved
                    ? (question === undefined
-                      ? renderUnlockQuestion(attempt)
+                      ? (round.has_not_started
+                         ? renderCodesEnteredEarly(round)
+                         : renderUnlockQuestion(attempt))
                       : renderTrainingInProgress())
                    : renderStartTimedAttempt()))
-             : (attempt.need_codes
-                ? renderEnterCodesTimed(attempt)
+             : (attempt.needs_codes
+                ? renderEnterCodes(attempt)
                 : (question === undefined
                    ? renderUnlockQuestion(attempt)
                    : renderTimedAttemptInProgress(attempt))))
