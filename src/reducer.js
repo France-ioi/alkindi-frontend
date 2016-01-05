@@ -37,13 +37,13 @@ const reduceTick = function (state) {
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
-  const haveAttempt = !!state.attempt;
+  const haveQuestion = !!state.question;
   const enabledTabs = {
     team: true,
-    question: haveAttempt,
-    cryptanalysis: haveAttempt,
-    history: false, // XXX disabled until implemented
-    answer: haveAttempt
+    question: haveQuestion,
+    cryptanalysis: haveQuestion,
+    history: haveQuestion,
+    answer: haveQuestion
   };
   // If the active tab has become disabled, select the team tab, which is
   // always available.
