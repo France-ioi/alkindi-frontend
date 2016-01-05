@@ -151,6 +151,7 @@ const TeamTab = PureComponent(self => {
     api.cancelAttempt(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
+      self.setState({access_code: undefined});
       refresh();
     });
   }
@@ -160,7 +161,6 @@ const TeamTab = PureComponent(self => {
     api.getAccessCode(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      console.log(result);
       self.setState({access_code: result.body.code});
     });
   };
