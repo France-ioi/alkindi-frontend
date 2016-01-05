@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import {image_url} from '../assets';
@@ -57,7 +58,7 @@ const JoinTeamScreen = PureComponent(self => {
             <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
             <input type="text" id="team-code" ref="teamCode" />
           </p>
-          <p><button type="button" onClick={onJoinTeam}>Rejoindre une équipe</button></p>
+          <p><Button onClick={onJoinTeam}>Rejoindre une équipe</Button></p>
         </div>
       </div>
     );
