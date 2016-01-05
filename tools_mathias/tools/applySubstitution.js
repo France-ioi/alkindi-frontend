@@ -81,7 +81,7 @@ function getApplySubstitution() {
             "<div class='panel-body'>" +
                renderVariables() +
                "<div class='grillesSection'>" +
-                  "<div class='y-scrollBloc'" +
+                  "<div class='y-scrollBloc'>" +
                      renderText(self.props.outputDecipheredText) +
                   "</div>" +
                "</div>" +
