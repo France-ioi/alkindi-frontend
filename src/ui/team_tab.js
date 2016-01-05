@@ -318,7 +318,7 @@ const TeamTab = PureComponent(self => {
         <p>Vous pouvez annuler la procédure d'accès à {cancelThis} et
            revenir à {goBackToThat}.</p>
         <p className="text-center">
-          <Button bsSize="large" onClick={onCancelAttempt}>
+          <Button onClick={onCancelAttempt}>
             <i className="fa fa-arrow-left"/> annuler
           </Button>
         </p>
