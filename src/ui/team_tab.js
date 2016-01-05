@@ -332,6 +332,9 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+  const reseed = function () {
+    self.props.reseed();
+  };
   const testing = TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
@@ -342,6 +345,11 @@ const TeamTab = PureComponent(self => {
     // traversal corresponds to chronological order.
     return (
       <div className="wrapper">
+        <div className='pull-right'>
+          <button className='btn btn-default' onClick={reseed}>
+            <i className="fa fa-refresh"></i>
+          </button>
+        </div>
         <h1 key='title'>{round.title}</h1>
         {attempt === undefined && renderRoundPrelude(round)}
         {renderTeamMembers(team, attempt)}
