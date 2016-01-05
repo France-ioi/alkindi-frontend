@@ -7,7 +7,9 @@ function getSubstitutionFromGrid() {
       alphabet: playFair.alphabet,
       inputGridCells: playFair.sampleGrid,
       outputGridCells: [],
+      outputSubstitution: [],
       inputGridVariable: "lettresGrilleIndice",
+      outputGridVariable: "lettresGrilleEditée",
       outputSubstitutionVariable: "substitutionDépart"
    };
 
@@ -18,6 +20,7 @@ function getSubstitutionFromGrid() {
 
    self.compute = function() {
       playFair.updateCells(self.props.inputGridCells, self.props.outputGridCells);
+      self.props.outputSubstitution = playFair.getSubstitutionFromGridCells(self.props.outputGridCells);
    };
 
    var renderCellPython = function(cell) {
@@ -39,7 +42,7 @@ function getSubstitutionFromGrid() {
    };
 
    var renderSubstitution = function() {
-      var substitution = playFair.getSubstitutionFromGridCells(self.props.outputGridCells);
+      var substitution = self.props.outputSubstitution;
       var nbLetters = playFair.alphabet.length;
       var items = [];
       for (var src1 = 0; src1 < nbLetters; src1++) {
@@ -161,7 +164,7 @@ function getSubstitutionFromGrid() {
             {label: "Grille playFair", name: self.props.inputGridVariable}
          ],
          output: [
-            {label: "Grille éditée", name: self.props.inputGridVariable},
+            {label: "Grille éditée", name: self.props.ourputGridVariable},
             {label: "Substitution générée", name: self.props.outputSubstitutionVariable}
          ]
       });

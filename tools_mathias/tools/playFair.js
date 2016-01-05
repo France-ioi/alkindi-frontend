@@ -36,18 +36,7 @@ var playFair = {
                if (outputCells[row][col] == undefined) {
                   outputCells[row][col] = { q: 'unknown'};
                }
-               var inputCell = inputCells[row][col];
-               var outputCell = outputCells[row][col];
-               if ((inputCell.q == 'confirmed') ||
-                   (inputCell.q == 'locked') ||
-                   ((inputCell.q == 'guess') && (inputCell.q != 'locked'))) {
-                  outputCell.l = inputCell.l;
-                  if (inputCell.q == 'locked') {
-                     outputCell.q = 'confirmed';
-                  } else {
-                     outputCell.q = inputCell.q;
-                  }
-               }
+               common.updateCell(inputCells[row][col], outputCells[row][col]);
             }
          }
       }

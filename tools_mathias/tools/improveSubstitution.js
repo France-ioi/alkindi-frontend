@@ -15,7 +15,7 @@ function getImproveSubstitution() {
       frenchBigrams: bigramsUtils.mostFrequentFrench,
       inputCipheredText: playFair.sampleCipheredText,
       inputSubstitution: playFair.getSampleSubstitution(),
-      outputSubstitution: sampleSubstitutionModified,
+      outputSubstitution: [], //sampleSubstitutionModified,
       inputCipheredTextVariable: "texteChiffré",
       inputSubstitutionVariable: "substitution",
       outputSubstitutionVariable: "nouvelleSubstitution"
@@ -29,6 +29,10 @@ function getImproveSubstitution() {
 
    self.letterRanks = common.getLetterRanks(playFair.alphabet);
    var letterInfos = bigramsUtils.getTextAsBigrams(self.props.inputCipheredText, self.props.alphabet).letterInfos;
+
+   self.compute = function() {
+      bigramsUtils.updateSubstitution(self.props.inputSubstitution, self.props.outputSubstitution);
+   };
 
    var renderInstructionPython = function() {
       return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = amelioreSubstitution(" +
@@ -263,6 +267,7 @@ function getImproveSubstitution() {
    };
 
    self.render = function() {
+      self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
    }
 
