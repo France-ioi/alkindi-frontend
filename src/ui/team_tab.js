@@ -346,7 +346,7 @@ const TeamTab = PureComponent(self => {
     return (
       <div className="wrapper">
         <div className='pull-right'>
-          <button className='btn btn-default' onClick={reseed}>
+          <button className='btn btn-primary' onClick={reseed}>
             <i className="fa fa-refresh"></i>
           </button>
         </div>
