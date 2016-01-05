@@ -100,7 +100,9 @@ const TestTeamTab = function (self) {
             <button type="button" className="btn btn-primary" onClick={toggleAttemptResolved}>toggle</button>
           </li>}
         </ul>
-        <p>{JSON.stringify(team)}</p>
+        <p>Team: {JSON.stringify(team)}</p>
+        <p>Round: {JSON.stringify(round)}</p>
+        <p>Attempt: {JSON.stringify(attempt)}</p>
       </div>
     );
   };
