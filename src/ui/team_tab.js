@@ -299,13 +299,11 @@ const TeamTab = PureComponent(self => {
               </span>
             </p>
           </div>}
-        <p>
-          {attempt.is_training
-           ? <p>Vous pouvez annuler la procédure d'accès à l'entrainement et
-                revenir à l'étape de constitution de l'équipe.</p>
-           : <p>Vous pouvez annuler la procédure d'accès à l'épreuve en temps
-                limité et revenir à l'entrainement.</p>}
-        </p>
+        {attempt.is_training
+         ? <p>Vous pouvez annuler la procédure d'accès à l'entrainement et
+              revenir à l'étape de constitution de l'équipe.</p>
+         : <p>Vous pouvez annuler la procédure d'accès à l'épreuve en temps
+              limité et revenir à l'entrainement.</p>}
         <div>
           <Button bsSize="large" onClick={onCancelAttempt}>
             <i className="fa fa-times"></i> annuler
