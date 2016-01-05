@@ -154,6 +154,16 @@ const TeamTab = PureComponent(self => {
       refresh();
     });
   }
+  const onRevealAccessCode = function () {
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.getAccessCode(user_id, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      console.log(result);
+      self.setState({access_code: result.body.code});
+    });
+  };
   const renderRoundPrelude = function (round) {
     return (
       <div key='roundPrelude'>
@@ -229,7 +239,7 @@ const TeamTab = PureComponent(self => {
       <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>
     );
     return (
-      <div key='settings' className="section">
+      <div className="section">
         <p>Vous pouvez modifier les réglages de votre équipe :</p>
         <div>
           <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
@@ -248,12 +258,8 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const revealCode = function () {
-    // XXX get from server
-    self.setState({code: '01234567'});
-  };
   const renderCodeEntry = function () {
-    const {code} = self.state;
+    const {access_code} = self.state;
     return (
       <div>
         <p>
@@ -262,11 +268,11 @@ const TeamTab = PureComponent(self => {
         </p>
         <p className="access-code-block">
           <span className="access-code">
-            {code === undefined
-             ? <Button bsSize="large" onClick={revealCode}>
+            {access_code === undefined
+             ? <Button bsSize="large" onClick={onRevealAccessCode}>
                  <i className="fa fa-unlock-alt"></i> révéler
                </Button>
-             : <span className="code">{code}</span>}
+             : <span className="code">{access_code}</span>}
           </span>
           <Button bsSize="large" onClick={onCancelAttempt}>
             <i className="fa fa-times"></i> annuler

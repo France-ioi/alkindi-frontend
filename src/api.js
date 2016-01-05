@@ -36,3 +36,6 @@ export const startAttempt = function (user_id, callback) {
 export const cancelAttempt = function (user_id, callback) {
   post('users/'+user_id+'/cancel_attempt').end(callback);
 };
+export const getAccessCode = function (user_id, callback) {
+  get('users/'+user_id+'/access_code').end(callback);
+};
