@@ -13,7 +13,7 @@ function getBigramFrequencyAnalysis() {
       alphabet: playFair.alphabet,      
       frenchBigrams: bigramsUtils.mostFrequentFrench,
       inputCipheredText: playFair.sampleCipheredText,
-      inputSubstitution: playFair.getSampleSubstitution(),
+      inputSubstitution: [],
       outputSubstitution: [], //sampleSubstitutionModified,
       inputCipheredTextVariable: "texteChiffré",
       inputSubstitutionVariable: "substitution",
@@ -141,7 +141,7 @@ function getBigramFrequencyAnalysis() {
    self.cancelDialog = function() {
       self.state.edit = undefined;
       self.state.editState = undefined;
-      self.render();
+      renderAll();
    }
 
    var renderVariables = function() {
@@ -194,12 +194,12 @@ function getBigramFrequencyAnalysis() {
          ],
          substPair: substPair
       }
-      self.render();
+      renderAll();
    };
 
    self.toggleLockLetter = function(iLetter) {
       self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
-      self.render();
+      renserAll();
    };
 
    var renderBigram = function(bigram, side) {

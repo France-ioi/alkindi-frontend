@@ -119,7 +119,7 @@ function getSubstitutionFromGrid() {
             cellLetter: common.getCellLetter(playFair.alphabet, outputCell)
          }
       }
-      self.render();
+      renderAll();
    };
 
    self.changeCellLetter  = function() {
@@ -128,7 +128,7 @@ function getSubstitutionFromGrid() {
 
    self.toggleLockLetter = function() {
       self.state.edit.locked = !self.state.edit.locked;
-      self.render();
+      renderAll();
    };
 
    self.validateDialog = function() {
@@ -155,7 +155,7 @@ function getSubstitutionFromGrid() {
    self.cancelDialog = function() {
       self.state.edit = undefined;
       self.state.editState = undefined;
-      self.render();
+      renderAll();
    };
 
    var renderVariables = function() {

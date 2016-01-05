@@ -5,23 +5,23 @@ function getHintsPlayFair() {
 
    self.props = {
       alphabet: playFair.alphabet,
-      inputGridCells: playFair.sampleGrid,
-      score: 470,
+      outputGridCells: playFair.emptyGrid,
+      score: 500,
       outputGridVariable: "lettresGrilleIndice"
    };
 
    self.state = {
-      hintQuery: { type:'grid', row: 2, col: 3 },
-      hintValues: [[],[,0],[],[,,,4],[]],
-      hintState: "preparing"
-   }
+      hintQuery: undefined,//{ type:'grid', row: 2, col: 3 },
+      hintValues: undefined,//[[],[,0],[],[,,,4],[]],
+      hintState: "idle"//"preparing"
+   };
 
    var renderCellPython = function(cell) {
       return "'" + common.getCellLetter(playFair.alphabet, cell) + "'";
    };
 
    var renderInstructionPython = function() {
-      return "<span class='code-var'>" + self.props.outputGridVariable + "</span> = " + common.renderGridPython(self.props.inputGridCells, renderCellPython);
+      return "<span class='code-var'>" + self.props.outputGridVariable + "</span> = " + common.renderGridPython(self.props.outputGridCells, renderCellPython);
    };
    
    var renderGrid = function() {
@@ -34,28 +34,28 @@ function getHintsPlayFair() {
             selectedCol = query.col;
          }
       }
-      return playFair.renderGrid(self.name, self.props.inputGridCells, selectedRow, selectedCol);
+      return playFair.renderGrid(self.name, self.props.outputGridCells, selectedRow, selectedCol);
    };
 
    self.clickGridCell = function(row, col) {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.props.inputGridCells[row][col].q === "confirmed") {
+      if (self.props.outputGridCells[row][col].q === "confirmed") {
          self.state.hintQuery = undefined;
          self.state.hintState = "invalid";
       } else {
          self.state.hintQuery = { type:'grid', row: row, col: col };
          self.state.hintState = "preparing";
       }
-      self.render();
+      renderAll();
    };
    
    self.clickGridAlphabet = function(rank) {
       if (self.state.hintState === "waiting") {
          return;
       }
-      var qualifiers = common.getLetterQualifiersFromGrid(self.props.inputGridCells, self.props.alphabet);
+      var qualifiers = common.getLetterQualifiersFromGrid(self.props.outputGridCells, self.props.alphabet);
       if (qualifiers[rank] === "confirmed") {
          self.state.hintState = "invalid";
          self.cancelDialog();
@@ -63,11 +63,11 @@ function getHintsPlayFair() {
          self.state.hintQuery = { type:'alphabet', rank: rank };
          self.state.hintState = "preparing";
       }
-      self.render();
+      renderAll();
    };
    
    var renderAlphabet = function() {
-      var qualifiers = common.getLetterQualifiersFromGrid(self.props.inputGridCells, self.props.alphabet);
+      var qualifiers = common.getLetterQualifiersFromGrid(self.props.outputGridCells, self.props.alphabet);
       var strHtml = "";
 
       for (var row = 0; row < 2; row++) {
@@ -138,30 +138,30 @@ function getHintsPlayFair() {
    self.cancelDialog = function() {
       self.state.hintQuery = undefined;
       self.state.hintState = "idling";
-      self.render();
+      renderAll();
    };
 
    self.validateDialog = function() {
       self.state.hintState = "waiting";
-      self.render();
+      renderAll();
       setTimeout(function() {
          self.state.hintState = "received";
          var query = self.state.hintQuery;
          if (query.type == "grid") {
             var hint = playFair.getHintGrid(playFair.sampleHints, query.row, query.col);
-            self.props.inputGridCells[query.row][query.col] = {
+            self.props.outputGridCells[query.row][query.col] = {
                l: hint,
                q: 'confirmed'
             }
          } else {
             var hint = playFair.getHintAlphabet(playFair.sampleHints, query.rank);
-            self.props.inputGridCells[hint.row][hint.col] = {
+            self.props.outputGridCells[hint.row][hint.col] = {
                l: query.rank,
                q: 'confirmed'
             }
          }
          self.props.score -= getQueryCost(query);
-         self.render();
+         renderAll();
       }, 1000);
    };
 
