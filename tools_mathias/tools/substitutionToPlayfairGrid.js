@@ -71,7 +71,7 @@ function getSubstitutionToPlayFairGrid() {
 
    var renderConflicts = function() {
       if (self.state.editState != "preparing") {
-         return "Sélectionnez une case de la grille pour voir les substitution qui la définissent.<br/>Pour les celles encadrées en rouge, les causes de conflits seront affichées.";
+         return "<p>Sélectionnez une case de la grille pour voir les substitution qui la définissent.<br/>Pour les celles encadrées en rouge, les causes de conflits seront affichées.</p>";
       }
       var letter = self.props.outputGridCells[self.state.edit.row][self.state.edit.col].l;
       var strLetter = playFair.alphabet[letter];
@@ -94,7 +94,7 @@ function getSubstitutionToPlayFairGrid() {
       var html = "";
       if (samePairs.length > 0) {
          html += samePairs.length + " substitution(s) donnant la lettre " + strLetter + " en première position :<br/>" +
-            "<div style='height:" + height + "px;width:550px;border: solid black 1px;overflow-y:scroll'>";
+            "<div class='bigramSubstitution y-scrollBloc' style='height:" + height + "px;'>";
          for (var iPair = 0; iPair < samePairs.length; iPair++) {
             var pair = samePairs[iPair];
             html += bigramsUtils.renderSubstitutionPair(pair, playFair.alphabet);
@@ -102,8 +102,8 @@ function getSubstitutionToPlayFairGrid() {
          html += "</div>";
       }
       if (diffPairs.length > 0) {
-         html += diffPairs.length + " substitution(s) donnant une lettre <strong>différente de " + strLetter + "</strong> en première position :<br/>" +
-            "<div style='height:" + height + "px;width:550px;border: solid black 1px;overflow-y:scroll'>";
+         html += "<p>" + diffPairs.length + " substitution(s) donnant une lettre <strong>différente de " + strLetter + "</strong> en première position :</p>" +
+            "<div class='bigramSubstitution y-scrollBloc' style='height:" + height + "px;'>";
          for (var iPair = 0; iPair < diffPairs.length; iPair++) {
             var pair = diffPairs[iPair];
             html += bigramsUtils.renderSubstitutionPair(pair, playFair.alphabet);
@@ -125,12 +125,14 @@ function getSubstitutionToPlayFairGrid() {
             "<div class='panel-body'>" +
                renderVariables() +
                "<div class='grillesSection'>" +
-                  "<strong>Conflits :</strong><br/>" + // TODO : conflits
-                  "<strong>Grille Playfair reconstituée :</strong><br/>" +
-                  "<div style='display:inline-block;vertical-align:middle;margin:3px'>" +
+                  "<p class='title'>Conflits :</p>" + // TODO : conflits
+                  "<div class='blocGrille'>" +
+                     "<p class='title'>Grille Playfair reconstituée :</p>" +
+                     "<div style='display:inline-block;vertical-align:middle;margin:3px'>" +
                         renderGrid() +
+                     "</div>" +
                   "</div>" +
-                  "<div style='display:inline-block;vertical-align:middle;padding-left:40px'>" +
+                  "<div class='blocGrille'>" +
                      renderConflicts() +
                   "</div>" +
                "</div>" +

@@ -85,10 +85,8 @@ var playFair = {
             if ((isConflictFct != undefined) && (isConflictFct(row, col))) {
                cellClass += " cell-conflict";
             }
-            strHtml += "<td class='" + queryClass + " " + "qualifier-" + cell.q + "' onClick='" + toolName + ".clickGridCell(" + row + "," + col + ")'>" +
-               "<div class='" + cellClass + "'>" +
+            strHtml += "<td class='" + queryClass + cellClass + " " + "qualifier-" + cell.q + "' onClick='" + toolName + ".clickGridCell(" + row + "," + col + ")'>" +
                   common.getCellLetter(this.alphabet, cell, true) +
-               "</div>" +
             "</td>";
          }
          strHtml += "</tr>";

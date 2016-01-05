@@ -57,7 +57,7 @@ function getSubstitutionFromGrid() {
             }
          }
       }
-      return "<div id='bigramSubstitution'>" + items.join('') + "</div>";
+      return "<div class='bigramSubstitution y-scrollBloc'>" + items.join('') + "</div>";
    };
 
    var renderEditCell = function() {
