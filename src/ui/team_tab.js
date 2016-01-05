@@ -388,8 +388,9 @@ const TeamTab = PureComponent(self => {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
-    const showAdminControls = !team.is_locked && team.creator.id === user.id;
     const codeEntry = attempt !== undefined;
+    const showAdminControls = !codeEntry && !team.is_locked && team.creator.id === user.id;
+    const canLeaveTeam = !codeEntry && !team.is_locked;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
@@ -404,7 +405,7 @@ const TeamTab = PureComponent(self => {
         {renderTeamMembers(team, codeEntry)}
         {codeEntry && renderCodeEntry()}
         {showAdminControls && renderAdminControls(team)}
-        {team.is_locked || renderLeaveTeam()}
+        {canLeaveTeam && renderLeaveTeam()}
         {attempt === undefined
           ? <div>
               {round_has_not_started && renderTooEarly(round)}
