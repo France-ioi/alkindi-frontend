@@ -119,12 +119,19 @@ var bigramsUtils = {
    getBigramSubstPair: function(bigram, substitution, letterRanks) {
       var rank1 = letterRanks[bigram.charAt(0)];
       var rank2 = letterRanks[bigram.charAt(1)];
-      var substPair;
+      return this.cloneSubstitutionPairOrCreate(substitution, rank1, rank2);
+   },
+
+   cloneSubstitutionPairOrCreate: function(substitution, rank1, rank2) {
+      // TODO: src might be needed in the future
       if ((substitution[rank1] != undefined) && (substitution[rank1][rank2] != undefined)) {
-         return substitution[rank1][rank2];
+         var substPair = substitution[rank1][rank2];
+         return { dst: [
+            {l: substPair.dst[0].l, q: substPair.dst[0].q},
+            {l: substPair.dst[1].l, q: substPair.dst[1].q}
+         ]};
       }
       else {
-         // TODO: src might be needed in the future
          return {
             dst: [{q: "unknown"}, {q:"unknown" }]
          };
@@ -158,7 +165,27 @@ var bigramsUtils = {
                "<td>" + bigramsUtils.renderBigram(alphabet, pair.dst[0], pair.dst[1]) + "</td>" +
             "</tr>" +
          "</table>";
-   }
+   },
 
+   updateSubstitution: function(inputSubstitution, outputSubstitution) {
+      for (var l1 = 0; l1 < inputSubstitution.length; l1++) {
+         var row = inputSubstitution[l1];
+         if (row) {
+            for (var l2 = 0; l2 < row.length; l2++) {
+               var substPair = row[l2];
+               if (substPair != undefined) {
+                  var outputSubstPair = this.cloneSubstitutionPairOrCreate(outputSubstitution, l1, l2);
+                  for (var side = 0; side < 2; side++) {
+                     common.updateCell(substPair.dst[side], outputSubstPair.dst[side]);
+                  }
+                  if (outputSubstitution[l1] == undefined) {
+                     outputSubstitution[l1] = [];
+                  }
+                  outputSubstitution[l1][l2] = outputSubstPair;
+               }
+            }
+         }
+      }
+   }
 
 }
