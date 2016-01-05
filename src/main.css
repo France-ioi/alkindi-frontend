@@ -772,7 +772,7 @@ td .bigramLetter {
   height: 320px;
 }
 .letterSubstBloc {
-  display: inline-table;
+  display: inline-block;
   vertical-align: top;
   text-align: center;
   margin-top: 5px;
@@ -789,9 +789,6 @@ td .bigramLetter {
 }
 .letterSubstBloc.selectedBigram {
   background-color: #000;
-}
-.letterSubstBloc.selectedBigram .bigramLetter {
-  border: 1px solid #000;
 }
 .letterSubstBloc.selectedBigram .bigramLetter.qualifier-unconfirmed {
   color: #fff;
@@ -811,6 +808,9 @@ td .bigramLetter {
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
 }
+.letterSubstBloc.letterStatus-inside.selectedBigram {
+  height: 131px;
+}
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
   height: 2em;
@@ -824,9 +824,6 @@ td .bigramLetter {
 .letterSubstBloc .bigramLetter {
   display: block;
   margin: 2px 1px;
-}
-.letterSubstBloc .bigramLetter:nth-of-type(2) {
-  border: 1px solid #000;
 }
 .cell-conflict {
    border: 3px solid #C82829;
