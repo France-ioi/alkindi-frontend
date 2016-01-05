@@ -112,6 +112,7 @@ const TestTeamTab = function (self) {
 const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
   const refresh = function () {
+    self.setState({access_code: undefined});
     self.props.reseed();
   };
   const onIsOpenChanged = function (event) {
@@ -163,7 +164,7 @@ const TeamTab = PureComponent(self => {
     api.getAccessCode(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.setState({access_code: result.body.code});
+      self.setState({access_code: result.code});
     });
   };
   const onEnterAccessCode = function (event) {
@@ -174,7 +175,10 @@ const TeamTab = PureComponent(self => {
     element.value = '';
     asyncHelper.beginRequest();
     api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, result) {
-      asyncHelper.endRequest(err);
+      asyncHelper.endRequest(err, function (error) {
+        if (error === 'bad code')
+          return "Le code que vous avez saisi est incorrect.";
+      });
       if (err) return;
       refresh();
     });
