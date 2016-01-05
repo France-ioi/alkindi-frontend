@@ -838,9 +838,18 @@ td .bigramLetter {
   margin-right: 20px;
   vertical-align: middle;
 }
-.access-code .code {
+.access-code .code, td.unlocked-code {
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 20px;
   font-weight: bold;
+  color: #080;
+}
+td.unlock-code input {
+  height: 26px;
+  padding: 2px 0;
+}
+td.unlock-code button {
+  height: 26px;
+  vertical-align: bottom;
   color: #080;
 }
