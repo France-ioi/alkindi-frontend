@@ -112,6 +112,7 @@ const TestTeamTab = function (self) {
 const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
   const refresh = function () {
+    self.setState({access_code: undefined});
     self.props.reseed();
   };
   const onIsOpenChanged = function (event) {
@@ -163,7 +164,7 @@ const TeamTab = PureComponent(self => {
     api.getAccessCode(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.setState({access_code: result.body.code});
+      self.setState({access_code: result.code});
     });
   };
   const onEnterAccessCode = function (event) {
@@ -174,7 +175,10 @@ const TeamTab = PureComponent(self => {
     element.value = '';
     asyncHelper.beginRequest();
     api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, result) {
-      asyncHelper.endRequest(err);
+      asyncHelper.endRequest(err, function (error) {
+        if (error === 'bad code')
+          return "Le code que vous avez saisi est incorrect.";
+      });
       if (err) return;
       refresh();
     });
@@ -194,7 +198,7 @@ const TeamTab = PureComponent(self => {
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
            <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
-           <li>Au moins {round.min_team_ratio * 100}% des membres doit avoir été qualifiée suite au premier tour du concours.</li>
+           <li>Au moins {round.min_team_ratio * 100}% des membres doivent avoir été qualifiés suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
         <p>Votre équipe est constituée de :</p>
@@ -429,7 +433,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const testing = TestTeamTab(self);
+  const testing = false && TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
@@ -483,7 +487,7 @@ const TeamTab = PureComponent(self => {
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {asyncHelper.render()}
-        {testing.render()}
+        {testing && testing.render()}
       </div>
     );
   };

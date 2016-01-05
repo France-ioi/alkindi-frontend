@@ -7,11 +7,34 @@ function AsyncHelper (self) {
   const beginRequest = function () {
     self.setState({pleaseWait: true, error: false});
   };
-  const endRequest = function (err) {
-    self.setState({
-      pleaseWait: false,
-      error: err && 'Une erreur serveur est survenue, merci de ré-essayer un peu plus tard.'
-    });
+  const endRequest = function (err, appErrorHandler) {
+    if (err) {
+      console.log(err);
+      window.err = err;
+      if ('success' in err) {
+        if (typeof appErrorHandler === 'function') {
+          const message = appErrorHandler(err.error);
+          if (typeof message === 'string')
+            return setError(message);
+        }
+        const details =
+          'error' in err ? ("  Erreur: " + err.error + ".") : "";
+        setError("L'action a échouée, rafraichissez la page et ré-essayez." + details);
+      } else {
+        if ('status' in err && err.status === undefined) {
+          setError("Le serveur n'a pas pu être contacté, merci de ré-essayer un peu plus tard.");
+        } else if ('status' in err) {
+          setError("Une erreur " + err.status + " est survenue, merci de ré-essayer un peu plus tard.");
+        } else {
+          setError("Une erreur indéterminée est survenue, merci de ré-essayer un peu plus tard.");
+        }
+      }
+      return;
+    }
+    self.setState({pleaseWait: false});
+  };
+  const setError = function (err) {
+    self.setState({pleaseWait: false, error: err});
   };
   const render = function () {
     if (self.state.error)
@@ -20,7 +43,7 @@ function AsyncHelper (self) {
       return (<Alert bsStyle='success'>Veuillez patienter pendant le traitement de votre requête...</Alert>);
     return false;
   };
-  return {beginRequest, endRequest, render};
+  return {beginRequest, endRequest, setError, render};
 }
 
 AsyncHelper.initialState = function (state) {
