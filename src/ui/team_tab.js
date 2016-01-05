@@ -164,22 +164,45 @@ const TeamTab = PureComponent(self => {
       self.setState({access_code: result.body.code});
     });
   };
+  const onEnterAccessCode = function (event) {
+    const user_id = self.props.user.id;
+    const code_user_id = event.currentTarget.getAttribute('data-user_id');
+    const element = self.refs['access_code_' + code_user_id];
+    const code = element.value;
+    element.value = '';
+    asyncHelper.beginRequest();
+    api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      refresh();
+    });
+  };
   const renderRoundPrelude = function (round) {
     return (
-      <div key='roundPrelude'>
+      <div>
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
            <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
            <li>Au moins {round.min_team_ratio * 100}% des membres doit avoir été qualifiée suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
+        <p>Votre équipe est constituée de :</p>
       </div>
     );
   };
-  const renderTeamMembers = function (team, codeEntry) {
+  const renderAttemptPrelude = function (attempt) {
+    return (
+      <div>
+        <p>La moitié au moins des membres de l'équipe doit fournir son code de
+           lancement pour autoriser l'accès au sujet.</p>
+      </div>
+    );
+  };
+  const renderTeamMembers = function (team, haveAttempt) {
     const renderMember = function (member) {
+      const user_id = member.user_id;
       const flags = [];
-      if (team.creator.id === member.user.id)
+      if (team.creator.id === user_id)
         flags.push('créateur');
       if (member.is_qualified)
         flags.push('qualifié');
@@ -189,11 +212,11 @@ const TeamTab = PureComponent(self => {
           <td>{member.user.lastname}, {member.user.firstname}</td>
           <td>{flags.join(', ')}</td>
           <td>{new Date(member.joined_at).toLocaleString()}</td>
-          {codeEntry &&
+          {haveAttempt &&
             (member.access_code === undefined
              ? <td className="unlock-code">
-                 <input type="text"/>
-                 <Button bsSize="small">
+                 <input type="text" ref={'access_code_'+user_id} />
+                 <Button bsSize="small" onClick={onEnterAccessCode} data-user_id={user_id}>
                    <i className="fa fa-check"/>
                  </Button>
                </td>
@@ -207,7 +230,6 @@ const TeamTab = PureComponent(self => {
     };
     return (
       <div className="section">
-        <p>Votre équipe est constituée de :</p>
         <table width="100%">
           <tbody>
             <tr>
@@ -215,7 +237,7 @@ const TeamTab = PureComponent(self => {
               <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
-              {codeEntry && <th>Code</th>}
+              {haveAttempt && <th>Code de lancement du sujet</th>}
             </tr>
             {team.members.map(renderMember)}
           </tbody>
@@ -258,26 +280,37 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderCodeEntry = function () {
+  const renderCodeEntry = function (attempt) {
     const {access_code} = self.state;
     return (
       <div>
+        {attempt.needs_codes &&
+          <div>
+            <p>
+              Votre code de lancement personnel pour ce sujet est :
+            </p>
+            <p className="access-code-block">
+              <span className="access-code">
+                {access_code === undefined
+                 ? <Button bsSize="large" onClick={onRevealAccessCode}>
+                     <i className="fa fa-unlock-alt"></i> révéler
+                   </Button>
+                 : <span className="code">{access_code}</span>}
+              </span>
+            </p>
+          </div>}
         <p>
-          Votre code de lancement personnel vous permet d'autoriser le reste
-          de votre équipe à accéder à l'épreuve:
+          {attempt.is_training
+           ? <p>Vous pouvez annuler la procédure d'accès à l'entrainement et
+                revenir à l'étape de constitution de l'équipe.</p>
+           : <p>Vous pouvez annuler la procédure d'accès à l'épreuve en temps
+                limité et revenir à l'entrainement.</p>}
         </p>
-        <p className="access-code-block">
-          <span className="access-code">
-            {access_code === undefined
-             ? <Button bsSize="large" onClick={onRevealAccessCode}>
-                 <i className="fa fa-unlock-alt"></i> révéler
-               </Button>
-             : <span className="code">{access_code}</span>}
-          </span>
+        <div>
           <Button bsSize="large" onClick={onCancelAttempt}>
             <i className="fa fa-times"></i> annuler
           </Button>
-        </p>
+        </div>
       </div>
     );
   };
@@ -388,9 +421,10 @@ const TeamTab = PureComponent(self => {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
-    const codeEntry = attempt !== undefined;
-    const showAdminControls = !codeEntry && !team.is_locked && team.creator.id === user.id;
-    const canLeaveTeam = !codeEntry && !team.is_locked;
+    const haveAttempt = attempt !== undefined;
+    const haveQuestion = question !== undefined;
+    const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
+    const canLeaveTeam = !haveAttempt && !team.is_locked;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
@@ -401,9 +435,11 @@ const TeamTab = PureComponent(self => {
           </button>
         </div>
         <h1 key='title'>{round.title}</h1>
-        {attempt === undefined && renderRoundPrelude(round)}
-        {renderTeamMembers(team, codeEntry)}
-        {codeEntry && renderCodeEntry()}
+        {attempt === undefined
+         ? renderRoundPrelude(round)
+         : (attempt.needs_codes && renderAttemptPrelude(attempt))}
+        {renderTeamMembers(team, haveAttempt)}
+        {haveAttempt && !haveQuestion && renderCodeEntry(attempt)}
         {showAdminControls && renderAdminControls(team)}
         {canLeaveTeam && renderLeaveTeam()}
         {attempt === undefined
@@ -439,7 +475,7 @@ const TeamTab = PureComponent(self => {
 }, self => {
   return AsyncHelper.initialState({
     joinTeam: false,
-    isOpen: self.props.team.is_open,
+    isOpen: self.props.team.is_open
   });
 });
 
