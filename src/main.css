@@ -627,6 +627,7 @@ a.cell-link {
   border: 1px solid #000;
   margin: 5px 0;
   padding: 10px;
+  height: 150px;
 }
 .qualifier-locked {
   background-color: #D3D3D3;
@@ -679,7 +680,7 @@ td .bigramLetter {
   display: inline-block;
   text-align: center;
 }
-.bigramSubstitution {
+.y-scrollBloc.bigramSubstitution {
   height: 136px;
   width: 560px;
 }
