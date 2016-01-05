@@ -470,6 +470,13 @@ a.cell-link {
 .panel-heading .code {
   white-space: nowrap;
 }
+.score {
+  margin-top: 10px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: right;
+  border-top: 4px solid #C82829;
+}
 /* Fonts */
 .playFairGrid,
 .playFairAlphabet,
@@ -788,13 +795,16 @@ td .bigramLetter {
 .letterSubstBloc.letterStatus-left {
   padding-left: 3px;
 }
+.letterSubstBloc.letterStatus-left .substitutionPair {
+  margin-left: -4px;
+}
 .letterSubstBloc.letterStatus-right {
   padding-right: 3px;
 }
 .letterSubstBloc.selectedBigram {
   background-color: #000;
 }
-.letterSubstBloc.selectedBigram .bigramLetter.qualifier-unconfirmed {
+.letterSubstBloc.selectedBigram .bigramLetter:first-of-type.qualifier-unconfirmed {
   color: #fff;
   background-color: transparent; 
 }
