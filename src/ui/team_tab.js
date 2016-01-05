@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Alert} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
@@ -100,6 +100,7 @@ const TestTeamTab = function (self) {
             <button type="button" className="btn btn-primary" onClick={toggleAttemptResolved}>toggle</button>
           </li>}
         </ul>
+        <p>{JSON.stringify(team)}</p>
       </div>
     );
   };
@@ -108,6 +109,9 @@ const TestTeamTab = function (self) {
 
 const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
+  const refresh = function () {
+    self.props.reseed();
+  };
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -119,7 +123,7 @@ const TeamTab = PureComponent(self => {
     api.leaveTeam(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.props.reseed();
+      refresh();
     });
   };
   const onUpdateTeam = function () {
@@ -129,7 +133,7 @@ const TeamTab = PureComponent(self => {
     api.updateUserTeam(user_id, data, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.props.reseed();
+      refresh();
     });
   };
   const onStartAttempt = function () {
@@ -138,9 +142,18 @@ const TeamTab = PureComponent(self => {
     api.startAttempt(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.props.reseed();
+      refresh();
     });
   };
+  const onCancelAttempt = function () {
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.cancelAttempt(user_id, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      refresh();
+    });
+  }
   const renderRoundPrelude = function (round) {
     return (
       <div key='roundPrelude'>
@@ -153,9 +166,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderTeamMembers = function (team, attempt) {
-    const codeEntry = attempt !== undefined /* && attempt.needs_codes*/;
-    // TODO: if codeEntry, display own code
+  const renderTeamMembers = function (team, codeEntry) {
     const renderMember = function (member) {
       const flags = [];
       if (team.creator.id === member.user.id)
@@ -177,7 +188,7 @@ const TeamTab = PureComponent(self => {
     //       : no code column
     };
     return (
-      <div key='teamMembers' className="section">
+      <div className="section">
         <p>Votre équipe est constituée de :</p>
         <table width="100%">
           <tbody>
@@ -191,7 +202,6 @@ const TeamTab = PureComponent(self => {
             {team.members.map(renderMember)}
           </tbody>
         </table>
-        {codeEntry && <div>TODO: bouton pour annuler la tentative</div>}
       </div>
     );
     // TODO: add button to save input codes
@@ -227,6 +237,33 @@ const TeamTab = PureComponent(self => {
           </div>
          </div>
         <button type="button" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
+      </div>
+    );
+  };
+  const revealCode = function () {
+    // XXX get from server
+    self.setState({code: '01234567'});
+  };
+  const renderCodeEntry = function () {
+    const {code} = self.state;
+    return (
+      <div>
+        <p>
+          Votre code de lancement personnel vous permet d'autoriser le reste
+          de votre équipe à accéder à l'épreuve:
+        </p>
+        <p className="access-code-block">
+          <span className="access-code">
+            {code === undefined
+             ? <Button bsSize="large" onClick={revealCode}>
+                 <i className="fa fa-unlock-alt"></i> révéler
+               </Button>
+             : <span className="code">{code}</span>}
+          </span>
+          <Button bsSize="large" onClick={onCancelAttempt}>
+            <i className="fa fa-times"></i> annuler
+          </Button>
+        </p>
       </div>
     );
   };
@@ -332,27 +369,26 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const reseed = function () {
-    self.props.reseed();
-  };
   const testing = TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
+    const codeEntry = attempt !== undefined;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
       <div className="wrapper">
         <div className='pull-right'>
-          <button className='btn btn-primary' onClick={reseed}>
+          <button className='btn btn-primary' onClick={refresh}>
             <i className="fa fa-refresh"></i>
           </button>
         </div>
         <h1 key='title'>{round.title}</h1>
         {attempt === undefined && renderRoundPrelude(round)}
-        {renderTeamMembers(team, attempt)}
+        {renderTeamMembers(team, codeEntry)}
+        {codeEntry && renderCodeEntry()}
         {showAdminControls && renderAdminControls(team)}
         {team.is_locked || renderLeaveTeam()}
         {attempt === undefined

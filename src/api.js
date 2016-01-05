@@ -33,3 +33,6 @@ export const updateUserTeam = function (user_id, data, callback) {
 export const startAttempt = function (user_id, callback) {
   post('users/'+user_id+'/start_attempt').end(callback);
 };
+export const cancelAttempt = function (user_id, callback) {
+  post('users/'+user_id+'/cancel_attempt').end(callback);
+};
