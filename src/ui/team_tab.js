@@ -284,7 +284,7 @@ const TeamTab = PureComponent(self => {
     const {access_code} = self.state;
     return (
       <div>
-        {attempt.needs_code &&
+        {attempt.needs_codes &&
           <div>
             <p>
               Votre code de lancement personnel pour ce sujet est :
