@@ -3,7 +3,7 @@ import {importText, importSubstitution, applySubstitution, errorValue} from './v
 import {newTool} from './tool';
 
 const initialState = function (seed) {
-  if (seed === undefined)
+  if (!seed)
     seed = {};
   const state = {
     toolOrder: [],
@@ -22,7 +22,18 @@ const initialState = function (seed) {
       currentWorkspace: undefined
     }
   };
-  return reduceSetActiveTab(state);
+  return reduceTick(reduceSetActiveTab(state));
+};
+
+const reduceTick = function (state) {
+  const now = Date.now();
+  const {round} = state;
+  if (round !== undefined) {
+    const has_not_started = now < new Date(round.training_opens_at).getTime();
+    if (has_not_started !== state.has_not_started)
+      state = {...state, round_has_not_started: has_not_started};
+  }
+  return state;
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
@@ -51,7 +62,8 @@ const reduceSetTeam = function (state, team) {
 };
 
 const reduceSetRound = function (state, round) {
-  return {...state, round};
+  // Force a tick to update round_has_not_started.
+  return reduceTick({...state, round: round});
 };
 
 const reduceSetAttempt = function (state, attempt) {
@@ -171,6 +183,8 @@ function actualReduce (state, action) {
       return initialState(action.seed);
     case 'AFTER_LOGOUT':
       return initialState();
+    case 'TICK':
+      return reduceTick(state);
     case 'SET_USER':
       return reduceSetUser(state, action.user);
     case 'SET_TEAM':
