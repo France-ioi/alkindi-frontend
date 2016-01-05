@@ -74,10 +74,6 @@ const TestTeamTab = function (self) {
         <hr/>
         <ul>
           <li>
-            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
-            <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
-          </li>
-          <li>
             {redGreen(round.has_invalid_team, 'round has invalid team', 'round has valid team')}
             <button type="button" className="btn btn-primary" onClick={toggleInvalidTeam}>toggle</button>
           </li>
@@ -85,6 +81,10 @@ const TestTeamTab = function (self) {
             {redGreen(!attempt, 'no attempt', 'attempt exists')}
             <button type="button" className="btn btn-primary" onClick={setTrainingAttempt}>training</button>
             <button type="button" className="btn btn-primary" onClick={setTimedAttempt}>timed</button>
+          </li>
+          <li>
+            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
+            <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
           </li>
           {attempt && <li>{attempt.is_training ? 'attempt is training' : 'attempt is timed'}</li>}
           {attempt && <li>
