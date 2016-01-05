@@ -154,7 +154,7 @@ const TeamTab = PureComponent(self => {
       const flags = [];
       if (team.creator.id === member.user.id)
         flags.push('créateur');
-      if (member.is_selected)
+      if (member.is_qualified)
         flags.push('qualifié');
       return (
         <tr key={member.user.id}>
