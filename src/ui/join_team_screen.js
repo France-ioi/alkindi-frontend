@@ -103,10 +103,6 @@ const JoinTeamScreen = PureComponent(self => {
         </div>
       ));
     }
-    if (self.state.pleaseWait)
-      body.push(<div key='pleaseWait'><Alert bsStyle='success'>Veuillez patienter pendant le traitement de votre requête...</Alert></div>);
-    if (self.state.error)
-      body.push(<div key='error'><Alert bsStyle='warning'>{self.state.error}</Alert></div>);
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>

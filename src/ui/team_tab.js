@@ -22,7 +22,9 @@ const TestTeamTab = function (self) {
   };
   const toggleBeforeRoundStart = function () {
     const round = self.props.round;
-    setRound({...round, has_not_started: !round.has_not_started});
+    const training_opens_at =
+      (self.props.round_has_not_started ? new Date() : new Date(Date.now() + 600000)).toISOString();
+    setRound({...round, training_opens_at});
   };
   const toggleInvalidTeam = function () {
     const round = self.props.round;
@@ -66,13 +68,13 @@ const TestTeamTab = function (self) {
     const boolText = function (b) {
       return (b === undefined) ? 'undefined' : b.toString();
     };
-    const {round, attempt, question} = self.props;
+    const {round, attempt, question, round_has_not_started} = self.props;
     return (
       <div>
         <hr/>
         <ul>
           <li>
-            {redGreen(round.has_not_started, 'round has not started', 'round has started')}
+            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
             <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
           </li>
           <li>
@@ -152,7 +154,7 @@ const TeamTab = PureComponent(self => {
       const flags = [];
       if (team.creator.id === member.user.id)
         flags.push('créateur');
-      if (member.is_selected)
+      if (member.is_qualified)
         flags.push('qualifié');
       return (
         <tr key={member.user.id}>
@@ -225,7 +227,7 @@ const TeamTab = PureComponent(self => {
     return (
       <div className="section">
         <Alert bsStyle='success'>
-          L'accès au sujet sera ouvert le {round.access_from}.
+          L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
           Vous pouvez dès maintenant valider la composition de votre équipe.
         </Alert>
       </div>
@@ -284,7 +286,7 @@ const TeamTab = PureComponent(self => {
           vous êtes prêts à commencer dès l'ouverture de l'épreuve.
         </p>
         <Alert bsStyle='success'>
-          L'accès au sujet sera ouvert le {round.access_from}.
+          L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
         </Alert>
       </div>
     );
@@ -325,7 +327,7 @@ const TeamTab = PureComponent(self => {
   };
   const testing = TestTeamTab(self);
   self.render = function () {
-    const {user, team, round, attempt, question} = self.props;
+    const {user, team, round, attempt, question, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
@@ -340,19 +342,19 @@ const TeamTab = PureComponent(self => {
         {team.is_locked || renderLeaveTeam()}
         {attempt === undefined
           ? <div>
-              {round.has_not_started && renderTooEarly(round)}
+              {round_has_not_started && renderTooEarly(round)}
               {round.has_invalid_team
                ? renderBadTeam()
                : renderStartTraining()}
             </div>
           : (attempt.is_training
              ? (attempt.needs_codes
-                ? (round.has_not_started
+                ? (round_has_not_started
                    ? renderTooEarly(round)
                    : renderEnterCodes(attempt))
                 : (attempt.is_unsolved
                    ? (question === undefined
-                      ? (round.has_not_started
+                      ? (round_has_not_started
                          ? renderCodesEnteredEarly(round)
                          : renderUnlockQuestion(attempt))
                       : renderTrainingInProgress())
@@ -376,8 +378,8 @@ const TeamTab = PureComponent(self => {
 });
 
 const selector = function (state, props) {
-  const {user, team, round, attempt, question} = state;
-  return {user, team, round, attempt, question};
+  const {user, team, round, attempt, question, round_has_not_started} = state;
+  return {user, team, round, attempt, question, round_has_not_started};
 };
 
 export default connect(selector)(TeamTab);
