@@ -191,6 +191,7 @@ const TeamTab = PureComponent(self => {
             {team.members.map(renderMember)}
           </tbody>
         </table>
+        {codeEntry && <div>TODO: bouton pour annuler la tentative</div>}
       </div>
     );
     // TODO: add button to save input codes
