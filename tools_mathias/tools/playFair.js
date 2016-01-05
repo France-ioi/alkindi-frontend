@@ -1,6 +1,14 @@
 var playFair = {
    alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z'],
 
+   emptyGrid: [
+      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}]
+   ],
+
    sampleGrid: [
       [{q:'unknown'}, {l:10, q:'locked'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {l:0, q:'locked'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
@@ -59,12 +67,12 @@ var playFair = {
       for (var row = 0; row < nbRows; row++) {
          if (outputCells[row] == undefined) {
             outputCells[row] = [];
-            for (var col = 0; col < nbCols; col++) {
-               if (outputCells[row][col] == undefined) {
-                  outputCells[row][col] = { q: 'unknown'};
-               }
-               common.updateCell(inputCells[row][col], outputCells[row][col]);
+         }
+         for (var col = 0; col < nbCols; col++) {
+            if (outputCells[row][col] == undefined) {
+               outputCells[row][col] = { q: 'unknown'};
             }
+            common.updateCell(inputCells[row][col], outputCells[row][col]);
          }
       }
    },
@@ -140,8 +148,8 @@ var playFair = {
          dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
       };
       substitution[cellSrc2.l][cellSrc1.l] = {
-         src: [{l: cellSrc1.l, q: cellSrc1.q }, {l: cellSrc2.l, q: cellSrc2.q }],
-         dst: [{l: cellDst1.l, q: cellDst1.q }, {l: cellDst2.l, q: cellDst2.q }]
+         src: [{l: cellSrc2.l, q: cellSrc2.q }, {l: cellSrc1.l, q: cellSrc1.q }],
+         dst: [{l: cellDst2.l, q: cellDst2.q }, {l: cellDst1.l, q: cellDst1.q }]
       }
    },
 
@@ -189,8 +197,8 @@ var playFair = {
          for (var l2 = l1 + 1; l2 < substitution[l1].length; l2++) {
             var substPair = substitution[l1][l2];
             if (substPair != undefined) {
-               var coordsSrc1 = letterToCoords[substPair.src[0].l];
-               var coordsSrc2 = letterToCoords[substPair.src[1].l];
+               var coordsSrc1 = letterToCoords[l1];
+               var coordsSrc2 = letterToCoords[l2];
                if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                   substPairs.push({
                      pair: substPair,
@@ -202,8 +210,8 @@ var playFair = {
             if (substitution[l2] != undefined) {
                substPair = substitution[l2][l1];
                if (substPair != undefined) {
-                  var coordsSrc1 = letterToCoords[substPair.src[0].l];
-                  var coordsSrc2 = letterToCoords[substPair.src[1].l];
+                  var coordsSrc1 = letterToCoords[l2];
+                  var coordsSrc2 = letterToCoords[l1];
                   if ((coordsSrc1 != undefined) && (coordsSrc2 != undefined)) {
                      substPairs.push({
                         pair: substPair,

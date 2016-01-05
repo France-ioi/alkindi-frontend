@@ -106,7 +106,7 @@ function getImproveSubstitution() {
 
    self.toggleLockLetter = function(iLetter) {
       self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
-      self.render();
+      renderAll();
    };
 
    self.validateDialog = function() {
@@ -146,7 +146,7 @@ function getImproveSubstitution() {
    self.cancelDialog = function() {
       self.state.edit = undefined;
       self.state.editState = undefined;
-      self.render();
+      renderAll();
    }
 
    var renderVariables = function() {
@@ -185,7 +185,7 @@ function getImproveSubstitution() {
             (substPair.dst[1].q == "locked")
          ]
       }
-      self.render();
+      renderAll();
    };
 
    var renderBigram = function(bigram, side) {

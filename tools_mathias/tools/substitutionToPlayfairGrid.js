@@ -38,7 +38,7 @@ function getSubstitutionToPlayFairGrid() {
          row: row,
          col: col
       }
-      self.render();
+      renderAll();
    };
 
 

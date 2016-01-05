@@ -33,12 +33,29 @@
    var improveSubstitution = getImproveSubstitution();
    var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
    var applySubstitution = getApplySubstitution();
-   hintsPlayFair.render();
-   substitutionFromGrid.render();
-   bigramFrequencyAnalysis.render();
-   improveSubstitution.render();
-   substitutionToPlayFairGrid.render();
-   applySubstitution.render();
+
+
+   function renderAll() {
+      hintsPlayFair.render();
+      substitutionFromGrid.props.inputGridCells = hintsPlayFair.props.outputGridCells;
+      substitutionFromGrid.render();
+
+      bigramFrequencyAnalysis.props.inputSubstitution = substitutionFromGrid.props.outputSubstitution;
+      bigramFrequencyAnalysis.render();
+
+      improveSubstitution.props.inputSubstitution = bigramFrequencyAnalysis.props.outputSubstitution;
+      improveSubstitution.render();
+
+      substitutionToPlayFairGrid.props.inputSubstitution = improveSubstitution.props.inputSubstitution;
+      substitutionToPlayFairGrid.props.inputGridCells = substitutionFromGrid.props.outputGridCells;
+      substitutionToPlayFairGrid.render();
+
+      applySubstitution.props.inputSubstitution = improveSubstitution.props.inputSubstitution;
+      applySubstitution.render();   
+   };
+
+   renderAll();
+
 </script>
 </body>
 </html>
