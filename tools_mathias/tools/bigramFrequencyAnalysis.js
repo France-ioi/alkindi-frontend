@@ -14,7 +14,7 @@ function getBigramFrequencyAnalysis() {
       frenchBigrams: bigramsUtils.mostFrequentFrench,
       inputCipheredText: playFair.sampleCipheredText,
       inputSubstitution: playFair.getSampleSubstitution(),
-      outputSubstitution: sampleSubstitutionModified,
+      outputSubstitution: [], //sampleSubstitutionModified,
       inputCipheredTextVariable: "texteChiffré",
       inputSubstitutionVariable: "substitution",
       outputSubstitutionVariable: "nouvelleSubstitution"
@@ -28,6 +28,10 @@ function getBigramFrequencyAnalysis() {
 
    self.mostFrequentBigrams = bigramsUtils.getMostFrequentBigrams(self.props.inputCipheredText, self.props.alphabet);
    self.letterRanks = common.getLetterRanks(playFair.alphabet);
+
+   self.compute = function() {
+      bigramsUtils.updateSubstitution(self.props.inputSubstitution, self.props.outputSubstitution);
+   };
 
    var renderInstructionPython = function() {
       return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = analyseFrequenceBigrammes(" +
@@ -77,12 +81,8 @@ function getBigramFrequencyAnalysis() {
                   "</div>" +
                   "<div class='dislogLine'>" +
                      "<span class='dialogLabel'>&nbsp;</span>" +
-                     "<span class='dialogLock'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
-                     "</span>" +
-                     "<span class='dialogLock'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
-                     "</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-info-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +
@@ -287,6 +287,7 @@ function getBigramFrequencyAnalysis() {
    };
 
    self.render = function() {
+      self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
    }
 

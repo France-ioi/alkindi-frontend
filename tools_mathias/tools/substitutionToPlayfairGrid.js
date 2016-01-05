@@ -16,8 +16,12 @@ function getSubstitutionToPlayFairGrid() {
    self.state = {
    }
 
-   var generatedCells = playFair.getGridFromGridAndSubstitution(self.props.inputGridCells, self.props.inputSubstitution);
-   self.props.outputGridCells = generatedCells.cells;
+   var generatedCells;
+
+   self.compute = function() {
+      generatedCells = playFair.getGridFromGridAndSubstitution(self.props.inputGridCells, self.props.inputSubstitution);
+      self.props.outputGridCells = generatedCells.cells;
+   };
 
    var renderCellPython = function(cell) {
       return "'" + common.getCellLetter(playFair.alphabet, cell) + "'";
@@ -135,6 +139,7 @@ function getSubstitutionToPlayFairGrid() {
    };
 
    self.render = function() {
+      self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
    };
 
