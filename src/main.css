@@ -783,7 +783,6 @@ td .bigramLetter {
   margin-bottom: 5px;
   padding-top: 3px;
   width: 2em;
-  line-height: 2em;
 }
 .letterSubstBloc.letterStatus-left {
   padding-left: 3px;
@@ -813,11 +812,10 @@ td .bigramLetter {
   border-right: 1px solid black;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram {
-  height: 131px;
+  height: 109px;
 }
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
-  height: 2em;
   border: 1px solid transparent;
   margin: 2px 1px;
 }
