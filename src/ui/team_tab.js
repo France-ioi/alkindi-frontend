@@ -198,7 +198,7 @@ const TeamTab = PureComponent(self => {
         <p>Pour pouvoir accéder au sujet du concours, vous devez d'abord former une équipe respectant les règles suivantes :</p>
         <ul>
            <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
-           <li>Au moins {round.min_team_ratio * 100}% des membres doit avoir été qualifiée suite au premier tour du concours.</li>
+           <li>Au moins {round.min_team_ratio * 100}% des membres doivent avoir été qualifiés suite au premier tour du concours.</li>
         </ul>
         <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
         <p>Votre équipe est constituée de :</p>
