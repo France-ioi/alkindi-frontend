@@ -30,3 +30,9 @@ export const leaveTeam = function (user_id, callback) {
 export const updateUserTeam = function (user_id, data, callback) {
   post('users/'+user_id+'/update_team', data).end(callback);
 };
+export const startAttempt = function (user_id, callback) {
+  post('users/'+user_id+'/start_attempt').end(callback);
+};
+export const cancelAttempt = function (user_id, callback) {
+  post('users/'+user_id+'/cancel_attempt').end(callback);
+};

@@ -128,7 +128,7 @@ function getHintsPlayFair() {
       } else if (self.state.hintState === "waiting") {
          return "<div class='dialog'>En attente de réponse du serveur</div>";
       } else if (self.state.hintState === "received") {
-         return "<div class='dialog'>Indice obtenu <button type='button' onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
+         return "<div class='dialog'>Indice obtenu, grille mise à jour <button type='button' onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
       } else if (self.state.hintState === "invalid") {
          return "<div class='dialog'>Cet indice a déjà été obtenu</div>";
       }
@@ -146,6 +146,21 @@ function getHintsPlayFair() {
       self.render();
       setTimeout(function() {
          self.state.hintState = "received";
+         var query = self.state.hintQuery;
+         if (query.type == "grid") {
+            var hint = playFair.getHintGrid(playFair.sampleHints, query.row, query.col);
+            self.props.inputGridCells[query.row][query.col] = {
+               l: hint,
+               q: 'confirmed'
+            }
+         } else {
+            var hint = playFair.getHintAlphabet(playFair.sampleHints, query.rank);
+            self.props.inputGridCells[hint.row][hint.col] = {
+               l: query.rank,
+               q: 'confirmed'
+            }
+         }
+         self.props.score -= getQueryCost(query);
          self.render();
       }, 1000);
    };

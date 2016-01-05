@@ -18,6 +18,33 @@ var playFair = {
    ],
    sampleCipheredText: "KJ LTDKY IPXJAPUJ QFILH HUBN HXBXODDQI,KO HBNIFBNB QAOKM NA DQUIM KUIJHODJAJ QO HJEYCBN.XPCZ JOBK DOKDQ YVHNB HXIDDJFYMQ JY XPCZ JGKJK BD EQOZUQYRNB QZTG ZDBYM B HYQ NA DQF MMHYACVYJG FFLUFJYMK.JKKJ KM UIPHQJ HOFK YR QBJTH LBDNA AJBPKJ.QPBU XPCZ U NQYRNJ,BSVKJG BY HQYJ LFILH KMVU APTZJQBDR DNFANNFHU GELFGLT.LPHK C UIPHQJNBR PJBYHPHO RA NXHCBQYCL J OPHG FM NJDNB KJ UIR.VPHI Z'PHPIFN,XPCZ JOBK EJGXFI RH RYAJDP RH APQ MH IJ KM HXAJRDEFLQD RH HMNADEF.MM KCKYJAJ NA HUFDDNJAQYY I'MKU VMG DMTJ QPBU KJK FXAPUMK,BHFSLF MJ KJG MN JUFTJF MF-RMKGXCZ,HUFDDNMK JOMY YR BHUIM KCKYJAJ.YM HXNA YQ HGTJ QY BHHYF YMG JYNB MYNFH VH RTLTZZHJ B YR JTBNL.XPHG FJQBK KJF MJGHYKJN RJ KB AEDNJNB ZCTLEDYJ HXIQBNJTFSKMK SMK KJCVUIMK NA XPUIB QNBDQA BQJH M DMTJ YR,M RJDH IBYQ,MCH JY BCIJRVITBK KJL CPHYJF.XTZJTVZNJK SB NMKTZHJU VBD LTDKCV-UIVDZ XTRF CJDYJF XVDFK GXFVEDYJ-UIVDL.XPHL XQYBK NA HMSTTZBN XPUIM YKJ.MDFI NA UIPHQJI ZJ EPO,TI XPCZ DMYC ZUQYRNJ KA KDBIR DQAENB TF NAFSGXCZ JY H EFORFJTQDYQI PFILH-YQCR.KJ NBZCIJJH PAYJRY HGTJ JYNB RFLTKM OBI PVHNB TSM.YJKO HQDYQ TFYK HUFDDNMK,KJG FBYO QNBJFBNF MPDNBZXQDNAIY BH RYAJDP NA APV,SMK BHUIMK J GM HXAJRDEFLQD RH HMNADEF.S",
 
+   sampleHints: [
+      ['G', 'Z', 'K', 'L', 'S'],
+      ['D', 'R', 'N', 'I', 'F'], 
+      ['H', 'U', 'Y', 'T', 'C'],
+      ['A', 'B', 'E', 'J', 'M'],
+      ['O', 'P', 'Q', 'V', 'X']
+   ],
+
+   getHintGrid: function(hints, row, col) {
+      var letterRanks = common.getLetterRanks(this.alphabet);
+      var letter = hints[row][col];
+      return letterRanks[letter];
+   },
+
+   getHintAlphabet: function(hints, rank) {
+      var letterRanks = common.getLetterRanks(this.alphabet);
+      for (var row = 0; row < hints.length; row++) {
+         for (var col = 0; col < hints[row].length; col++) {
+            var curRank = letterRanks[hints[row][col]];
+            if (rank == curRank) {
+               return {row: row, col: col};
+            }
+         }
+      }
+      return null;
+   },
+
    getSampleSubstitution: function() {
       return this.getSubstitutionFromGridCells(this.sampleGrid);
    },

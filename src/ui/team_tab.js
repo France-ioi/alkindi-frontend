@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Alert} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
@@ -27,8 +27,8 @@ const TestTeamTab = function (self) {
     setRound({...round, training_opens_at});
   };
   const toggleInvalidTeam = function () {
-    const round = self.props.round;
-    setRound({...round, has_invalid_team: !round.has_invalid_team});
+    const team = self.props.team;
+    setTeam({...team, is_invalid: !team.is_invalid});
   };
   const setTrainingAttempt = function () {
     const team = self.props.team;
@@ -68,23 +68,23 @@ const TestTeamTab = function (self) {
     const boolText = function (b) {
       return (b === undefined) ? 'undefined' : b.toString();
     };
-    const {round, attempt, question, round_has_not_started} = self.props;
+    const {team, round, attempt, question, round_has_not_started} = self.props;
     return (
       <div>
         <hr/>
         <ul>
           <li>
-            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
-            <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
-          </li>
-          <li>
-            {redGreen(round.has_invalid_team, 'round has invalid team', 'round has valid team')}
+            {redGreen(team.is_invalid, 'team is invalid', 'team is valid')}
             <button type="button" className="btn btn-primary" onClick={toggleInvalidTeam}>toggle</button>
           </li>
           <li>
             {redGreen(!attempt, 'no attempt', 'attempt exists')}
             <button type="button" className="btn btn-primary" onClick={setTrainingAttempt}>training</button>
             <button type="button" className="btn btn-primary" onClick={setTimedAttempt}>timed</button>
+          </li>
+          <li>
+            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
+            <button type="button" className="btn btn-primary" onClick={toggleBeforeRoundStart}>toggle</button>
           </li>
           {attempt && <li>{attempt.is_training ? 'attempt is training' : 'attempt is timed'}</li>}
           {attempt && <li>
@@ -100,6 +100,7 @@ const TestTeamTab = function (self) {
             <button type="button" className="btn btn-primary" onClick={toggleAttemptResolved}>toggle</button>
           </li>}
         </ul>
+        <p>{JSON.stringify(team)}</p>
       </div>
     );
   };
@@ -108,6 +109,9 @@ const TestTeamTab = function (self) {
 
 const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
+  const refresh = function () {
+    self.props.reseed();
+  };
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -119,7 +123,7 @@ const TeamTab = PureComponent(self => {
     api.leaveTeam(user_id, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.props.reseed();
+      refresh();
     });
   };
   const onUpdateTeam = function () {
@@ -129,12 +133,27 @@ const TeamTab = PureComponent(self => {
     api.updateUserTeam(user_id, data, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) return;
-      self.props.reseed();
+      refresh();
     });
   };
   const onStartAttempt = function () {
-    return;
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.startAttempt(user_id, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      refresh();
+    });
   };
+  const onCancelAttempt = function () {
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.cancelAttempt(user_id, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      refresh();
+    });
+  }
   const renderRoundPrelude = function (round) {
     return (
       <div key='roundPrelude'>
@@ -147,9 +166,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderTeamMembers = function (team, attempt) {
-    const codeEntry = attempt !== undefined /* && attempt.needs_codes*/;
-    // TODO: if codeEntry, display own code
+  const renderTeamMembers = function (team, codeEntry) {
     const renderMember = function (member) {
       const flags = [];
       if (team.creator.id === member.user.id)
@@ -162,7 +179,15 @@ const TeamTab = PureComponent(self => {
           <td>{member.user.lastname}, {member.user.firstname}</td>
           <td>{flags.join(', ')}</td>
           <td>{new Date(member.joined_at).toLocaleString()}</td>
-          {codeEntry && <td><input type="text"/></td>}
+          {codeEntry &&
+            (member.access_code === undefined
+             ? <td className="unlock-code">
+                 <input type="text"/>
+                 <Button bsSize="small">
+                   <i className="fa fa-check"/>
+                 </Button>
+               </td>
+             : <td className="unlocked-code">{member.access_code}</td>)}
         </tr>);
     // TODO: codeEntry
     //       ? needs_codes
@@ -171,7 +196,7 @@ const TeamTab = PureComponent(self => {
     //       : no code column
     };
     return (
-      <div key='teamMembers' className="section">
+      <div className="section">
         <p>Votre équipe est constituée de :</p>
         <table width="100%">
           <tbody>
@@ -220,6 +245,33 @@ const TeamTab = PureComponent(self => {
           </div>
          </div>
         <button type="button" className="submit" onClick={onUpdateTeam}>Enregistrer les modifications</button>
+      </div>
+    );
+  };
+  const revealCode = function () {
+    // XXX get from server
+    self.setState({code: '01234567'});
+  };
+  const renderCodeEntry = function () {
+    const {code} = self.state;
+    return (
+      <div>
+        <p>
+          Votre code de lancement personnel vous permet d'autoriser le reste
+          de votre équipe à accéder à l'épreuve:
+        </p>
+        <p className="access-code-block">
+          <span className="access-code">
+            {code === undefined
+             ? <Button bsSize="large" onClick={revealCode}>
+                 <i className="fa fa-unlock-alt"></i> révéler
+               </Button>
+             : <span className="code">{code}</span>}
+          </span>
+          <Button bsSize="large" onClick={onCancelAttempt}>
+            <i className="fa fa-times"></i> annuler
+          </Button>
+        </p>
       </div>
     );
   };
@@ -331,19 +383,26 @@ const TeamTab = PureComponent(self => {
     if (!user || !team || !round)
       return false;
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
+    const codeEntry = attempt !== undefined;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
       <div className="wrapper">
+        <div className='pull-right'>
+          <button className='btn btn-primary' onClick={refresh}>
+            <i className="fa fa-refresh"></i>
+          </button>
+        </div>
         <h1 key='title'>{round.title}</h1>
         {attempt === undefined && renderRoundPrelude(round)}
-        {renderTeamMembers(team, attempt)}
+        {renderTeamMembers(team, codeEntry)}
+        {codeEntry && renderCodeEntry()}
         {showAdminControls && renderAdminControls(team)}
         {team.is_locked || renderLeaveTeam()}
         {attempt === undefined
           ? <div>
               {round_has_not_started && renderTooEarly(round)}
-              {round.has_invalid_team
+              {team.is_invalid
                ? renderBadTeam()
                : renderStartTraining()}
             </div>
