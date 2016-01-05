@@ -133,7 +133,13 @@ const TeamTab = PureComponent(self => {
     });
   };
   const onStartAttempt = function () {
-    return;
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.startAttempt(user_id, function (err, result) {
+      asyncHelper.endRequest(err);
+      if (err) return;
+      self.props.reseed();
+    });
   };
   const renderRoundPrelude = function (round) {
     return (
