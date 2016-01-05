@@ -303,7 +303,6 @@ const TeamTab = PureComponent(self => {
     const {user, team, round, attempt, question} = self.props;
     if (!user || !team || !round)
       return false;
-    const body = [];
     const showAdminControls = !team.is_locked && team.creator.id === user.id;
     return (
       <div className="wrapper">
