@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 
@@ -24,7 +25,7 @@ let AlkindiLogout = PureComponent(self => {
     return (
       <div id="logout">
         <span>{username}</span>
-        <button type='button' onClick={logout}>déconnexion</button>
+        <Button onClick={logout}>déconnexion</Button>
       </div>
     );
   };

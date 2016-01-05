@@ -337,6 +337,7 @@ character substitutions tables
 #logout {
   display: table-cell;
   vertical-align: bottom;
+  text-align: right;
 }
 #logout > span {
   display: block;
@@ -869,10 +870,10 @@ td .bigramLetter {
 }
 td.unlock-code input {
   height: 26px;
-  padding: 2px 0;
 }
 td.unlock-code button {
   height: 26px;
   vertical-align: bottom;
+  margin-bottom: 3px;
   color: #080;
 }
