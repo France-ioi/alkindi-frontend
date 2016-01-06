@@ -796,7 +796,7 @@ td .bigramLetter {
   padding-left: 3px;
 }
 .letterSubstBloc.letterStatus-left .substitutionPair {
-  margin-left: -4px;
+  margin-left: -3px;
 }
 .letterSubstBloc.letterStatus-right {
   padding-right: 3px;
