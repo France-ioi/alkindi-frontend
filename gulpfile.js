@@ -29,7 +29,7 @@ function updatePythonPackage (min) {
 function watchScript (options) {
     let browserifyOpts = {
         entries: [options.entry],
-        debug: true,
+        debug: false,
         transform: [
             ['babelify', {
                 presets: ["es2015", "react"],
