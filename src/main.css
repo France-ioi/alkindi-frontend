@@ -824,6 +824,8 @@ td .bigramLetter {
 }
 .letterSubstBloc.selectedBigram {
   background-color: #000;
+  height: 111px;
+  overflow: hidden;
 }
 .letterSubstBloc.selectedBigram .bigramLetter:first-of-type.qualifier-unconfirmed {
   color: #fff;
@@ -842,9 +844,6 @@ td .bigramLetter {
 }
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
-}
-.letterSubstBloc.letterStatus-inside.selectedBigram {
-  height: 109px;
 }
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
