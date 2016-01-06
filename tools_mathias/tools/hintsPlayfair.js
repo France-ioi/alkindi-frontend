@@ -121,14 +121,21 @@ function getHintsPlayFair() {
          }
          var cost = getQueryCost(query);
          return "<div class='dialog'>" +
-               "<strong>Indice demandé :</strong> " + message + "<br/>" +
-               "<strong>Coût :</strong> " + cost + " points<br/>" +
+               "<div class='dialogLine'>" +
+                  "<strong>Indice demandé :</strong> " + message + 
+               "</div>" +
+               "<div class='dialogLine'>" +
+                  "<strong>Coût :</strong> " + cost + " points" +
+               "</div>" +
+               "<div class='dialogLine'>" +
+                  "<strong>Score disponible :</strong> " + self.props.score + " points" +
+               "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
       } else if (self.state.hintState === "waiting") {
          return "<div class='dialog'>En attente de réponse du serveur</div>";
       } else if (self.state.hintState === "received") {
-         return "<div class='dialog'>Indice obtenu, grille mise à jour <button type='button' onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
+         return "<div class='dialog'>Indice obtenu, grille mise à jour <button type='button' class='btn-tool' onclick='" + self.name + ".cancelDialog()'>OK</button></div>";
       } else if (self.state.hintState === "invalid") {
          return "<div class='dialog'>Cet indice a déjà été obtenu</div>";
       }
@@ -184,11 +191,11 @@ function getHintsPlayFair() {
                "<div class='grillesSection'>" +
                   "<p class='title'>Deux types d'indices sont disponibles :</p>" +
                   "<div class='blocGrille'>" + 
-                     "<span>Révéler une case : " + getQueryCost({ type: "grid"}) + " points</span>" +
+                     "<p>Révéler une case : " + getQueryCost({ type: "grid"}) + " points</p>" +
                      renderGrid() +
                   "</div>" +
                   "<div class='blocGrille'>" +
-                     "<span>Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points</span>" +
+                     "<p>Révéler la position d'une lettre : " + getQueryCost({ type: "alphabet"}) + " points</p>" +
                      renderAlphabet() +
                   "</div>" +
                "</div>" +

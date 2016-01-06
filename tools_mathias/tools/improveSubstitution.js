@@ -55,45 +55,46 @@ function getImproveSubstitution() {
             }
          }
          return "<div class='dialog'>" +
-               "<table>" +
-                  "<tr>" +
-                     "<td><strong>Bigramme édité :</strong></td>" +
-                     "<td>" + renderBigram(bigram, 0) + "</td>" +
-                     "<td>" + renderBigram(bigram, 1) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Substitution d'origine :</strong></td>" +
-                     "<td style='text-align:center'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 0) + "</td>" +
-                     "<td style='text-align:center'>" + renderBigramSubst(bigram, self.props.inputSubstitution, 1) + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Nouvelle substitution :</strong></td>" +
-                     "<td style='text-align:center'>" + 
-                        "<input id='editBigramCellLetter1' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(0)' value='" + self.state.edit.letters[0] + "'>" +
-                     "</td>" +
-                     "<td style='text-align:center'>" +
-                        "<input id='editBigramCellLetter2' type='text' style='width:30px' onchange='" + self.name + ".changeCellLetter(1)' value='" + self.state.edit.letters[1] + "'>" +
-                     "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td></td>" +
-                     "<td style='text-align:center'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
-                     "</td>" +
-                     "<td style='text-align:center'>" +
-                        "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
-                     "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                     "<td><strong>Bloquer / débloquer :</strong></td>" +
-                     "<td style='text-align:center'>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-tool " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
-                     "</td>" +
-                     "<td style='text-align:center'>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='btn-tool " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
-                     "</td>" +
-                  "</tr>" +
-               "</table>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Bigramme édité :</span>" +
+                     "<span class='dialogBigram bigramCipheredLetter'>" +
+                        "<span class='bigramLetter'>" +
+                        renderBigram(bigram, 0) +
+                        "</span>" +
+                        "<span class='bigramLetter'>" +
+                        renderBigram(bigram, 1) +
+                        "</span>" +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Substitution d'origine :</span>" +
+                     "<span class='dialogBigram dialogBigramSubstOrig'>" +renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
+                        renderBigramSubst(bigram, self.props.inputSubstitution, 1) +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Nouvelle substitution :</span>" +
+                     "<span class='dialogLetterSubst'>" +
+                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' value='" + self.state.edit.letters[0] + "'>" +
+                     "</span>" +
+                     "<span class='dialogLetterSubst'>" +
+                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' value='" + self.state.edit.letters[1] + "'>" +
+                     "</span>" +
+                  "</div>" +
+                  "<div class='dislogLine'>" +
+                     "<span class='dialogLabel'>&nbsp;</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
+                     "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
+                  "</div>" +
+                  "<div class='dialogLine'>" +
+                     "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-info-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +
+                     "<span>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-tool lock " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
+                     "</span>" +
+                     "<span>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='btn-tool lock " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
+                     "</span>" +
+                  "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
       } else {
@@ -191,7 +192,7 @@ function getImproveSubstitution() {
    };
 
    var renderBigram = function(bigram, side) {
-       var html = "<div style='border: solid black 1px;margin:4px;width:30px;text-align:center;background-color:white'>";
+       var html = "";
        if ((side == undefined) || (side == 0)) {
           html += bigram.charAt(0);
        }
@@ -201,10 +202,8 @@ function getImproveSubstitution() {
        if ((side == undefined) || (side == 1)) {
           html += bigram.charAt(1);
        }
-       html += "</div>";
        return html;
    };
-
    var renderBigrams = function(initialSubstitution, newSubstitution) {
       var nbLettersPerRow = 27;
       var text = self.props.inputCipheredText;
