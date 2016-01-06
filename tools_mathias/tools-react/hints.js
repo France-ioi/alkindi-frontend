@@ -6,6 +6,7 @@ import {Variables} from './variables';
 import {Alphabet} from './alphabet';
 import {Grid, GridPython} from './grid';
 import {OkCancel} from './ok_cancel';
+import {getCellLetter, getLetterQualifiersFromGrid} from './tools';
 
 export default PureComponent(self => {
 
@@ -63,7 +64,7 @@ export default PureComponent(self => {
       if (self.state.hintState === "waiting") {
          return;
       }
-      const qualifiers = common.getLetterQualifiersFromGrid(self.props.gridCells, self.props.alphabet);
+      const qualifiers = getLetterQualifiersFromGrid(self.props.gridCells, self.props.alphabet);
       if (qualifiers[rank] === "confirmed") {
          hintAlreadyObtained();
       } else {
@@ -74,7 +75,7 @@ export default PureComponent(self => {
    const renderInstructionPython = function() {
       const {outputGridVariable, alphabet, gridCells} = self.props;
       const renderCell = function (cell) {
-         return "'" + common.getCellLetter(alphabet, cell) + "'";
+         return "'" + getCellLetter(alphabet, cell) + "'";
       };
       return (
          <span><span className='code-var'>{outputGridVariable}</span> = <GridPython grid={gridCells} renderCell={renderCell} /></span>
@@ -100,7 +101,7 @@ export default PureComponent(self => {
       if (hintQuery !== undefined && hintQuery.type === 'alphabet') {
          selectedLetterRank = hintQuery.rank;
       }
-      const qualifiers = common.getLetterQualifiersFromGrid(gridCells, alphabet);
+      const qualifiers = getLetterQualifiersFromGrid(gridCells, alphabet);
       return <Alphabet alphabet={alphabet} qualifiers={qualifiers} onClick={clickGridAlphabet} selectedLetterRank={selectedLetterRank} />;
    }
 

@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import range from 'node-range';
 
 import {PureComponent} from './utils';
+import {getCellLetter} from './tools';
 
 export const Grid = PureComponent(self => {
    /* Props:
@@ -32,7 +33,7 @@ export const Grid = PureComponent(self => {
          if (testConflict !== undefined && testConflict(row, col)) {
             classes.push("cell-conflict");
          }
-         let letter = common.getCellLetter(alphabet, cell, true);
+         let letter = getCellLetter(alphabet, cell, true);
          if (letter === '&nbsp;')  // XXX change getCellLetter
             letter = false;
          return <td className={classnames(classes)} onClick={onClick} data-row={row} data-col={col}>{letter}</td>;
