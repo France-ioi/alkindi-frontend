@@ -835,11 +835,15 @@ td .bigramLetter {
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
 }
+.letterStatus-inside .substitutionPair {
+    width: 100%;
+}
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
   border: 1px solid transparent;
   margin: 2px 1px;
   line-height: 2em;
+  height: 2em;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram .character,
 .letterSubstBloc.letterStatus-outside.selectedBigram .character {
