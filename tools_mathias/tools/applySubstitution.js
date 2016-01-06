@@ -61,10 +61,10 @@ function getApplySubstitution() {
       return common.renderVariables({
          input: [
             {label: "Texte chiffré analysé", name: self.props.inputCipheredTextVariable},
-            {label: "Substitution d'origine", name: self.props.inputSubstitutionVariable}
+            {label: "Substitution appliquée", name: self.props.inputSubstitutionVariable}
          ],
          output: [
-            {label: "Nouvelle subsitution", name: self.props.outputDecipheredTextVariable}
+            {label: "Texte déchiffré", name: self.props.outputDecipheredTextVariable}
          ]
       });
    };
