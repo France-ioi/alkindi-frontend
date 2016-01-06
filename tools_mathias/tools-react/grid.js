@@ -33,9 +33,7 @@ export const Grid = PureComponent(self => {
          if (testConflict !== undefined && testConflict(row, col)) {
             classes.push("cell-conflict");
          }
-         let letter = getCellLetter(alphabet, cell, true);
-         if (letter === '&nbsp;')  // XXX change getCellLetter
-            letter = false;
+         let letter = getCellLetter(alphabet, cell);
          return <td className={classnames(classes)} onClick={onClick} data-row={row} data-col={col}>{letter}</td>;
       };
       const renderRow = function (row) {
