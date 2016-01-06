@@ -647,7 +647,7 @@ a.cell-link {
   height: 150px;
 }
 .qualifier-locked {
-  background-color: #D3D3D3;
+  background-color: #ddd;
   background-repeat: no-repeat;
   background-position: top right;
   position: relative;
@@ -665,7 +665,17 @@ a.cell-link {
   background-color: white;
 }
 .qualifier-confirmed {
-  background-color: #D3D3D3;
+  background-color: #aaa;
+  position: relative;
+}
+.playFairGrid .qualifier-confirmed::after {
+  content: "\f129";
+  font-family: FontAwesome;
+  font-size: 11px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 1em;
 }
 .qualifier-disabled {
   background-image: linear-gradient(-45deg, #fff 25%, transparent 25%, transparent 50%, #fff 50%, #fff 75%, transparent 75%, transparent);
