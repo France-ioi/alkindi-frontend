@@ -199,6 +199,46 @@ var bigramsUtils = {
             }
          }
       }
-   }
+   },
 
+   conflictBetweenSubstitutions: function(bigram, substitution1, substitution2, side, letterRanks) {
+      if ((substitution1 == undefined) || (substitution2 == undefined)) {
+         return false;
+      }
+      var substPair1 = bigramsUtils.getBigramSubstPair(bigram.v, substitution1, letterRanks);
+      var substPair2 = bigramsUtils.getBigramSubstPair(bigram.v, substitution2, letterRanks);
+      var cell1 = substPair1.dst[side];
+      var cell2 = substPair2.dst[side];
+      if ((cell1.q == 'unknown') || (cell2.q == 'unknown')) {
+         return false;
+      }
+      return (cell1.l != cell2.l);
+   },
+
+   countSubstitutionConflicts: function(bigrams, initialSubstitution, newSubstitution, letterRanks) {
+      var nbConflicts = 0;
+      for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
+         var bigram = bigrams[iBigram];
+         for (var side = 0; side < 2; side++) {
+            if (bigramsUtils.conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side, letterRanks)) {
+               nbConflicts++;
+            }
+         }
+      }
+      return nbConflicts;
+   },
+
+   countAllSubstitutionConflicts: function(initialSubstitution, newSubstitution, alphabet, letterRanks) {
+      var bigrams = [];
+      for (var l1 = 0; l1 < alphabet.length; l1++) {
+         for (var l2 = 0; l2 < alphabet.length; l2++) {
+            if (l1 != l2) {
+               bigrams.push({
+                  v: alphabet[l1] + alphabet[l2]
+               });
+            }
+         }
+      }
+      return this.countSubstitutionConflicts(bigrams, initialSubstitution, newSubstitution, letterRanks);
+   }
 }

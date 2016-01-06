@@ -164,21 +164,7 @@ function getBigramFrequencyAnalysis() {
       }
       var substPair = bigramsUtils.getBigramSubstPair(bigram.v, substitution, self.letterRanks);
       return bigramsUtils.renderBigram(playFair.alphabet, substPair.dst[0], substPair.dst[1], side);
-   }
-
-   var conflictBetweenSubstitutions = function(bigram, substitution1, substitution2, side) {
-      if ((substitution1 == undefined) || (substitution2 == undefined)) {
-         return false;
-      }
-      var substPair1 = bigramsUtils.getBigramSubstPair(bigram.v, substitution1, self.letterRanks);
-      var substPair2 = bigramsUtils.getBigramSubstPair(bigram.v, substitution2, self.letterRanks);
-      var cell1 = substPair1.dst[side];
-      var cell2 = substPair2.dst[side];
-      if ((cell1.q == 'unknown') || (cell2.q == 'unknown')) {
-         return false;
-      }
-      return (cell1.l != cell2.l);
-   }
+   };
 
    self.clickBigram = function(iBigram) {
       saveScroll();
@@ -219,19 +205,6 @@ function getBigramFrequencyAnalysis() {
        return html;
    };
 
-   var countConflicts = function(bigrams, initialSubstitution, newSubstitution) {
-      var nbConflicts = 0;
-      for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
-         var bigram = bigrams[iBigram];
-         for (var side = 0; side < 2; side++) {
-            if (conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side)) {
-               nbConflicts++;
-            }
-         }
-      }
-      return nbConflicts;
-   };
-
    var renderBigrams = function(scrollDivID, bigrams, initialSubstitution, newSubstitution) {
       var bigramsHtml = "";
       for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
@@ -254,7 +227,7 @@ function getBigramFrequencyAnalysis() {
          if (initialSubstitution != undefined) {
             for (var side = 0; side < 2; side++) {
                var sideClass = "";
-               if (conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side)) {
+               if (bigramsUtils.conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side, self.letterRanks)) {
                   sideClass = "substitutionConflict";
                }
                var lock = "&nbsp;";
@@ -296,7 +269,7 @@ function getBigramFrequencyAnalysis() {
                renderEditCell() +
                renderVariables() +
                "<div class='grillesSection'>" +
-                  "<strong>Bigrammes en conflit :</strong> " + countConflicts(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) + "<br/>" +
+                  "<strong>Bigrammes en conflit :</strong> " + bigramsUtils.countSubstitutionConflicts(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution, self.letterRanks) + "<br/>" +
                   "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
                   renderBigrams(self.name + "-scrollText", self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
                   "<strong>Bigrammes les plus fréquents en français :</strong>" +
