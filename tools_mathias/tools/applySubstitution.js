@@ -15,7 +15,7 @@ function getApplySubstitution() {
       inputSubstitution: playFair.getSampleSubstitution(),
       outputDecipheredText: "",
       inputCipheredTextVariable: "texteChiffré",
-      inputSubstitutionVariable: "substitution",
+      inputSubstitutionVariable: "substitutionAméliorée",
       outputDecipheredTextVariable: "texteDéchiffré"
    };
 
@@ -60,7 +60,7 @@ function getApplySubstitution() {
    var renderVariables = function() {
       return common.renderVariables({
          input: [
-            {label: "Texte chiffré analysé", name: self.props.inputCipheredTextVariable},
+            {label: "Texte chiffré", name: self.props.inputCipheredTextVariable},
             {label: "Substitution appliquée", name: self.props.inputSubstitutionVariable}
          ],
          output: [

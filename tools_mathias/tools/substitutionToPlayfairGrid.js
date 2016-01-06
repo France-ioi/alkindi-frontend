@@ -9,7 +9,7 @@ function getSubstitutionToPlayFairGrid() {
       inputSubstitution: playFair.getSampleSubstitutionWithConflict(),
       ouputGridCells: playFair.sampleGrid,
       inputGridVariable: "lettresGrilleIndice",
-      inputSubstitutionVariable: "nouvelleSubstitution",
+      inputSubstitutionVariable: "substitutionAméliorée",
       outputGridVariable: "lettresNouvelleGrille"
    };
 
