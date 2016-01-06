@@ -525,10 +525,10 @@ a.cell-link {
   background-color: transparent;
   border-color: transparent;
 }
-.dialogBigramSubst {
+.dialogLetterSubst {
   padding: 0 5px;
 }
-.dialogBigramSubst input {
+.dialogLetterSubst input {
   width: 1.5em;
   text-align: center;
 }
