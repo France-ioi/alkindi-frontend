@@ -217,7 +217,20 @@ function getBigramFrequencyAnalysis() {
           html += bigram.v.charAt(1);
        }
        return html;
-   }
+   };
+
+   var countConflicts = function(bigrams, initialSubstitution, newSubstitution) {
+      var nbConflicts = 0;
+      for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
+         var bigram = bigrams[iBigram];
+         for (var side = 0; side < 2; side++) {
+            if (conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side)) {
+               nbConflicts++;
+            }
+         }
+      }
+      return nbConflicts;
+   };
 
    var renderBigrams = function(scrollDivID, bigrams, initialSubstitution, newSubstitution) {
       var bigramsHtml = "";
@@ -283,7 +296,7 @@ function getBigramFrequencyAnalysis() {
                renderEditCell() +
                renderVariables() +
                "<div class='grillesSection'>" +
-                  "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+                  "<strong>Bigrammes en conflit :</strong> " + countConflicts(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) + "<br/>" +
                   "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
                   renderBigrams(self.name + "-scrollText", self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
                   "<strong>Bigrammes les plus fréquents en français :</strong>" +
