@@ -221,18 +221,26 @@ function getImproveSubstitution() {
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
          }
-         html += "<div class='letterSubstBloc letterStatus-" + status + " " + bigramClass +"' onclick='" + self.name + ".clickLetter(" + iLetter + "," + iBigram + ")'>" +
+         html += "<div class='letterSubstBloc letterStatus-" + status + " " + bigramClass + "' onclick='" + self.name + ".clickLetter(" + iLetter + "," + iBigram + ")'>" +
                "<div class='cipheredLetter'>" +letter + "</div>";
          if ((status == "left") || (status == "right")) {
+            var side = 0;
+            if (status == "right") {
+               side = 1;
+            }
+            var sideClass = "";
+            if (bigramsUtils.conflictBetweenSubstitutions({ v: bigram }, initialSubstitution, newSubstitution, side, self.letterRanks)) {
+               sideClass = "substitutionConflict";
+            }
             var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
             if (status == "left") {
-               html += "<div class='substitutionPair'>";
+               html += "<div class='substitutionPair " + sideClass + "'>";
                html += renderBigramSubst(bigram, initialSubstitution, 0);
                html += renderBigramSubst(bigram, newSubstitution, 0);               
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[0].q == "locked") + "</span>";
                html += "</div>";
             } else if (status == "right") {
-               html += "<div class='substitutionPair'>";
+               html += "<div class='substitutionPair " + sideClass + "'>";
                html += renderBigramSubst(bigram, initialSubstitution, 1);
                html += renderBigramSubst(bigram, newSubstitution, 1);
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[1].q == "locked") + "</span>";
