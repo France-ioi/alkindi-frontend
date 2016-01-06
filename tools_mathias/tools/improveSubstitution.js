@@ -17,8 +17,8 @@ function getImproveSubstitution() {
       inputSubstitution: playFair.getSampleSubstitution(),
       outputSubstitution: [], //sampleSubstitutionModified,
       inputCipheredTextVariable: "texteChiffré",
-      inputSubstitutionVariable: "substitution",
-      outputSubstitutionVariable: "nouvelleSubstitution"
+      inputSubstitutionVariable: "substitutionFréquences",
+      outputSubstitutionVariable: "substitutionAméliorée"
    };
 
    self.state = {
