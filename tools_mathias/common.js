@@ -131,9 +131,8 @@ var common = {
    },
 
    updateCell: function(inputCell, outputCell) {
-      if ((inputCell.q == 'confirmed') ||
-          (inputCell.q == 'locked') ||
-          ((inputCell.q == 'guess') && (inputCell.q != 'locked'))) {
+      if ((outputCell.q == 'unknown') ||
+          ((outputCell.q == 'guess') && (inputCell.q != 'guess') && (inputCell.q != 'unknown'))) {
          outputCell.l = inputCell.l;
          if (inputCell.q == 'locked') {
             outputCell.q = 'confirmed';
