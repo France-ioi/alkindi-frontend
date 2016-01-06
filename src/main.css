@@ -712,7 +712,7 @@ td .bigramLetter {
   vertical-align: top;
 }
 .x-scrollBloc .labels > div {
-  height: 2em;
+  line-height: 2em;
 }
 #bigramFrequencyAnalysis .bigramBloc {
   display: inline-block;
@@ -728,10 +728,10 @@ td .bigramLetter {
   background-color: #fff;
   padding: 3px;
   border: 1px solid #fff;
+  margin-top: -3px;
 }
 .bigramBlocSubstitution.selectedBigram {
   background-color: #000;
-  padding: 3px;
   border: 1px solid #000;
 }
 .selectedBigram .bigramLetter,
@@ -760,7 +760,7 @@ td .bigramLetter {
   text-align: center;
 }
 .substitutionPair .bigramLetter:first-of-type {
-  border: none;
+  border-color: transparent;
   background-color: transparent;
 }
 .substitutionPair span.substitutionLock {
@@ -768,7 +768,6 @@ td .bigramLetter {
   text-align: center;
 }
 .grillesSection .bigramCipheredLetter {
-  height: 2em;
   min-width: 2.5em;
 }
 .grillesSection .bigramCipheredLetter span {
