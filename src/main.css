@@ -106,7 +106,7 @@ table input:focus {
 
 
 .textBlock {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   position: relative;
   overflow-y: auto;
 }
@@ -220,7 +220,7 @@ character substitutions tables
 
 */
 .code {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-size: 18px;
 }
 .code-kw {
@@ -494,7 +494,7 @@ a.cell-link {
 .bigramLetter,
 .letterSubstBloc,
 .bigramCipheredLetter {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
 }
 /* boites de dialogue */
 .dialog {
@@ -509,7 +509,7 @@ a.cell-link {
   right: 15px;
 }
 .dialogIndice {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-weight: bold;
 }
 .dialogLine {
@@ -852,7 +852,7 @@ td .bigramLetter {
 }
 .substituedLetter {
   border: 1px solid #777;
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-size: 1.8rem;
   margin: 2px;
   display: inline-block;
