@@ -12,7 +12,7 @@ export default PureComponent(self => {
 
    const renderInstructionPython = function () {
       return <span>
-         <span className='code-var'>{self.props.outputCipheredTextVariable}</span> = <span>{self.props.outputCipheredText}</span>
+         <span className='code-var'>{self.props.outputCipheredTextVariable}</span> = '<span>{self.props.outputCipheredText}</span>'
       </span>;
    };
 
