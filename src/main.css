@@ -80,7 +80,7 @@ table input {
 table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
-.fa-info-circle {
+.fa-question-circle {
   color: #0f33ff;
   cursor: pointer;
 }
@@ -106,7 +106,7 @@ table input:focus {
 
 
 .textBlock {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   position: relative;
   overflow-y: auto;
 }
@@ -220,7 +220,7 @@ character substitutions tables
 
 */
 .code {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-size: 18px;
 }
 .code-kw {
@@ -470,12 +470,20 @@ a.cell-link {
 .panel-heading .code {
   white-space: nowrap;
 }
-.score {
-  margin-top: 10px;
-  background-color: #f5f5f5;
-  padding: 10px;
-  text-align: right;
-  border-top: 4px solid #C82829;
+.playfair-score {
+  color: #C82829;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+.playfair-score span {
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 4px;
+  text-decoration: blink;
+}
+.playfair-score span strong {
+  color: #000;
 }
 /* Fonts */
 .playFairGrid,
@@ -484,7 +492,7 @@ a.cell-link {
 .bigramLetter,
 .letterSubstBloc,
 .bigramCipheredLetter {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
 }
 /* boites de dialogue */
 .dialog {
@@ -497,9 +505,10 @@ a.cell-link {
   position: absolute;
   top: 15px;
   right: 15px;
+  z-index: 1;
 }
 .dialogIndice {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-weight: bold;
 }
 .dialogLine {
@@ -637,7 +646,7 @@ a.cell-link {
   height: 150px;
 }
 .qualifier-locked {
-  background-color: #D3D3D3;
+  background-color: #ddd;
   background-repeat: no-repeat;
   background-position: top right;
   position: relative;
@@ -655,9 +664,21 @@ a.cell-link {
   background-color: white;
 }
 .qualifier-confirmed {
-  background-color: #D3D3D3;
+  background-color: #aaa;
+  position: relative;
+}
+.playFairGrid .qualifier-confirmed::after {
+  content: "\f129";
+  font-family: FontAwesome;
+  font-size: 11px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 1em;
 }
 .qualifier-disabled {
+  background-image: linear-gradient(-45deg, #fff 25%, transparent 25%, transparent 50%, #fff 50%, #fff 75%, transparent 75%, transparent);
+  background-size: 4px 4px;
   background-color: #808080;
 }
 .cell-query {
@@ -712,7 +733,7 @@ td .bigramLetter {
   vertical-align: top;
 }
 .x-scrollBloc .labels > div {
-  height: 2em;
+  line-height: 2em;
 }
 #bigramFrequencyAnalysis .bigramBloc {
   display: inline-block;
@@ -728,10 +749,10 @@ td .bigramLetter {
   background-color: #fff;
   padding: 3px;
   border: 1px solid #fff;
+  margin-top: -3px;
 }
 .bigramBlocSubstitution.selectedBigram {
   background-color: #000;
-  padding: 3px;
   border: 1px solid #000;
 }
 .selectedBigram .bigramLetter,
@@ -760,7 +781,7 @@ td .bigramLetter {
   text-align: center;
 }
 .substitutionPair .bigramLetter:first-of-type {
-  border: none;
+  border-color: transparent;
   background-color: transparent;
 }
 .substitutionPair span.substitutionLock {
@@ -768,7 +789,6 @@ td .bigramLetter {
   text-align: center;
 }
 .grillesSection .bigramCipheredLetter {
-  height: 2em;
   min-width: 2.5em;
 }
 .grillesSection .bigramCipheredLetter span {
@@ -803,6 +823,8 @@ td .bigramLetter {
 }
 .letterSubstBloc.selectedBigram {
   background-color: #000;
+  height: 111px;
+  overflow: hidden;
 }
 .letterSubstBloc.selectedBigram .bigramLetter:first-of-type.qualifier-unconfirmed {
   color: #fff;
@@ -822,9 +844,6 @@ td .bigramLetter {
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
 }
-.letterSubstBloc.letterStatus-inside.selectedBigram {
-  height: 109px;
-}
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
   border: 1px solid transparent;
@@ -841,7 +860,7 @@ td .bigramLetter {
 }
 .substituedLetter {
   border: 1px solid #777;
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-size: 1.8rem;
   margin: 2px;
   display: inline-block;
