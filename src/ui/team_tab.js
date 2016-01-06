@@ -183,6 +183,22 @@ const TeamTab = PureComponent(self => {
       refresh();
     });
   };
+  const onAccessTask = function () {
+    const user_id = self.props.user.id;
+    asyncHelper.beginRequest();
+    api.assignAttemptTask(user_id, function (err, result) {
+      asyncHelper.endRequest(err, function (error) {
+        if (error === 'already have a task') {
+          refresh();
+          return false;
+        }
+        if (error === 'training is not open')
+          return "L'épreuve n'est pas encore ouverte.";
+      });
+      if (err) return;
+      refresh();
+    });
+  };
   const renderRefreshButton = function () {
     return (
       <div className='pull-right'>
@@ -408,7 +424,7 @@ const TeamTab = PureComponent(self => {
           vous pouvez maintenant le déverouiller en cliquant.
         </p>
         <p className="text-center">
-          <Button bsStyle="primary" bsSize="large">
+          <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
             accéder au sujet <i className="fa fa-arrow-right"/>
           </Button>
         </p>
