@@ -126,14 +126,27 @@ var bigramsUtils = {
       // TODO: src might be needed in the future
       if ((substitution[rank1] != undefined) && (substitution[rank1][rank2] != undefined)) {
          var substPair = substitution[rank1][rank2];
-         return { dst: [
-            {l: substPair.dst[0].l, q: substPair.dst[0].q},
-            {l: substPair.dst[1].l, q: substPair.dst[1].q}
-         ]};
+         return {
+            src: [
+               {l: substPair.src[0].l, q: substPair.src[0].q},
+               {l: substPair.src[1].l, q: substPair.src[1].q}
+            ],
+            dst: [
+               {l: substPair.dst[0].l, q: substPair.dst[0].q},
+               {l: substPair.dst[1].l, q: substPair.dst[1].q}
+            ]
+         };
       }
       else {
          return {
-            dst: [{q: "unknown"}, {q:"unknown" }]
+            src: [
+               {l: rank1, q: "confirmed"},
+               {l: rank2, q: "confirmed"}
+            ],
+            dst: [
+               {q: "unknown"},
+               {q:"unknown"}
+            ]
          };
       }
    },
