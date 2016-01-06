@@ -261,7 +261,7 @@ function getImproveSubstitution() {
                renderVariables() +
                "<br/><br/>" + // TODO : with css ?
                "<div class='grillesSection'>" +
-                  "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
+                  "<strong>Nombre de conflits entre les substitutions :</strong> " + bigramsUtils.countAllSubstitutionConflicts(self.props.inputSubstitution, self.props.outputSubstitution, self.props.alphabet, self.letterRanks) + "<br/>" +
                   renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
                "</div>" +
             "</div>" +

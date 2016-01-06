@@ -269,7 +269,7 @@ function getBigramFrequencyAnalysis() {
                renderEditCell() +
                renderVariables() +
                "<div class='grillesSection'>" +
-                  "<strong>Bigrammes en conflit :</strong> " + bigramsUtils.countSubstitutionConflicts(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution, self.letterRanks) + "<br/>" +
+                  "<strong>Nombre de conflits :</strong> " + bigramsUtils.countSubstitutionConflicts(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution, self.letterRanks) + "<br/>" +
                   "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
                   renderBigrams(self.name + "-scrollText", self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
                   "<strong>Bigrammes les plus fréquents en français :</strong>" +
