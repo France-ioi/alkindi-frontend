@@ -54,9 +54,11 @@ function watchScript (options) {
     };
     bundler.on('log', gutil.log);
     bundler.on('update', rebundle);
-    bundler.on('bytes', function (count) {
-        updatePythonPackage(false);
-    });
+    if (options.updatePython) {
+        bundler.on('bytes', function (count) {
+            updatePythonPackage(false);
+        });
+    }
     rebundle();
 }
 
@@ -115,7 +117,7 @@ gulp.task('build_min', ['build_js_min', 'build_css_min'], function () {
 
 // Run 'gulp build' before 'gulp watch'.
 gulp.task('watch_js', function () {
-    watchScript({entry: 'src/main.js', output: 'main.js'});
+    watchScript({entry: 'src/main.js', output: 'main.js', updatePython: true});
 });
 gulp.task('build_css_py', ['build_css'], function () {
     return updatePythonPackage(false);
@@ -144,6 +146,10 @@ gulp.task('lint', function() {
         ]
     }))
     .pipe(eslint.format());
+});
+
+gulp.task('playfair', function () {
+    watchScript({entry: 'tools_mathias/main.jsx', output: 'playfair.js'});
 });
 
 gulp.task('default', ['build_min']);
