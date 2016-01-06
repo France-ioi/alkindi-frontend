@@ -398,8 +398,8 @@ const TeamTab = PureComponent(self => {
   const renderUnlockQuestion = function (attempt) {
     const notice = attempt.is_training &&
       (<p>
-        Attention, après avoir accédé au sujet vous ne pourrez plus changer la
-        composition de votre équipe pendant le reste du concours.
+        <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
+        plus changer la composition de votre équipe pendant le reste du concours.
       </p>);
     return (
       <div className="section">
