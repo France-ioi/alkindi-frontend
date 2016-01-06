@@ -9,11 +9,13 @@ function AsyncHelper (self) {
   };
   const endRequest = function (err, appErrorHandler) {
     if (err) {
-      console.log(err);
-      window.err = err;
       if ('success' in err) {
         if (typeof appErrorHandler === 'function') {
           const message = appErrorHandler(err.error);
+          if (message === false) {
+            self.setState({pleaseWait: false});
+            return;
+          }
           if (typeof message === 'string')
             return setError(message);
         }
