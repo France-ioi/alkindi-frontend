@@ -14,11 +14,13 @@
 <script type="text/javascript" src="tools/improveSubstitution.js"></script>
 <script type="text/javascript" src="tools/substitutionToPlayfairGrid.js"></script>
 <script type="text/javascript" src="tools/applySubstitution.js"></script>
+<script type="text/javascript" src="tools/displayText.js"></script>
 <style>
 
 </style>
 </head>
 <body class='wrapper'>
+<div id='displayText'></div>
 <div id='hintsPlayFair'></div>
 <div id='substitutionFromGrid'></div>
 <div id='bigramFrequencyAnalysis'></div>
@@ -27,6 +29,7 @@
 <div id='substitutionToPlayFairGrid'></div>
 <div id='applySubstitution'></div>
 <script>
+   var displayText = getDisplayText();
    var hintsPlayFair = getHintsPlayFair();
    var substitutionFromGrid = getSubstitutionFromGrid();
    var bigramFrequencyAnalysis = getBigramFrequencyAnalysis();
@@ -36,6 +39,8 @@
 
 
    function renderAll() {
+      displayText.render();
+      
       hintsPlayFair.render();
       substitutionFromGrid.props.inputGridCells = hintsPlayFair.props.outputGridCells;
       substitutionFromGrid.render();
