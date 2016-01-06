@@ -829,6 +829,7 @@ td .bigramLetter {
 .letterSubstBloc.letterStatus-outside .character {
   border: 1px solid transparent;
   margin: 2px 1px;
+  line-height: 2em;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram .character,
 .letterSubstBloc.letterStatus-outside.selectedBigram .character {
