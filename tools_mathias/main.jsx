@@ -55,10 +55,11 @@ const App = PureComponent(self => {
    };
 
    self.render = function () {
+      const {cipheredText, hintsGrid, score} = self.state;
       return (
          <div>
-            <DisplayText alphabet={alphabet} cipheredText={self.state.cipheredText} outputCipheredTextVariable="texteChiffré" />
-            <Hints gridCells={self.state.hintsGrid} score={self.state.score} alphabet={alphabet} outputGridVariable="lettresGrilleIndice" getQueryCost={getQueryCost} getHint={getHint} />
+            <DisplayText alphabet={alphabet} cipheredText={cipheredText} outputCipheredTextVariable="texteChiffré" />
+            <Hints alphabet={alphabet} gridCells={hintsGrid} score={score} outputGridVariable="lettresGrilleIndice" getQueryCost={getQueryCost} getHint={getHint} />
          </div>
       );
    };
