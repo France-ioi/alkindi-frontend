@@ -63,7 +63,7 @@ var common = {
    renderVariables: function(variables) {
       var html = "<div class='playfair-variables'>";
       
-      if (variables.input != undefined) {
+      if ((variables.input != undefined) && (variables.input.length > 0)) {
          html += "<div class='variable-entree variable-informations'>";
          html += "<span>Variables d'entrée :</span>";
          for (var iVar = 0; iVar < variables.input.length; iVar++) {
@@ -71,7 +71,7 @@ var common = {
          }
          html += "</div>";
       }
-      if (variables.output != undefined) {
+      if ((variables.output != undefined) && (variables.output.length > 0)) {
          html += "<div class='variable-sortie variable-informations'>";
          html += "<span>Variables de sortie :</span>";
          for (var iVar = 0; iVar < variables.output.length; iVar++) {
