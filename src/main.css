@@ -471,11 +471,21 @@ a.cell-link {
   white-space: nowrap;
 }
 .score {
+  color: #C82829;
+  text-align: center;
+  border: 1px solid #000;
   margin-top: 10px;
-  background-color: #f5f5f5;
   padding: 10px;
-  text-align: right;
-  border-top: 4px solid #C82829;
+  background-color: #f5f5f5;
+}
+.score span {
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 4px;
+  text-decoration: blink;
+}
+.score span strong {
+  color: #000;
 }
 /* Fonts */
 .playFairGrid,
