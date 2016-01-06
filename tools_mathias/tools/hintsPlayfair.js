@@ -199,7 +199,7 @@ function getHintsPlayFair() {
                      renderAlphabet() +
                   "</div>" +
                "</div>" +
-               "<div class='score'><span><strong>Score :</strong> " + self.props.score + " points</span></div>" +
+               "<div class='playfair-score'><span><strong>Score :</strong> " + self.props.score + " points</span></div>" +
             "</div>" +
          "</div>";
    };
