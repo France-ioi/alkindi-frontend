@@ -5,7 +5,7 @@ import {PureComponent} from '../misc';
 
 const tabs = [
   {key: 'team', label: "Équipe"},
-  {key: 'question', label: "Sujet"},
+  {key: 'task', label: "Sujet"},
   {key: 'cryptanalysis', label: "Cryptanalyse"},
   {key: 'history', label: "Historique"},
   {key: 'answer', label: "Soumission"},

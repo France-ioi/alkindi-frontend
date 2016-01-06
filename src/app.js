@@ -6,7 +6,7 @@ import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
 import LoginScreen from './ui/login';
 import AlkindiLogout from './ui/logout';
-import QuestionTab from './ui/question_tab';
+import TaskTab from './ui/task_tab';
 import TeamTab from './ui/team_tab';
 import HistoryTab from './ui/history_tab';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
@@ -17,12 +17,12 @@ import * as api from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt} = state;
+  const {activeTabKey, enabledTabs, user, team, round, attempt, task} = state;
   if (!user)
     return {};
   if (!team)
     return {user, round};
-  return {activeTabKey, enabledTabs, user, team, attempt};
+  return {activeTabKey, enabledTabs, user, team, round, attempt, task};
 };
 
 let App = connect(appSelector)(PureComponent(self => {
@@ -62,11 +62,11 @@ let App = connect(appSelector)(PureComponent(self => {
       return <JoinTeamScreen user={user} round={round} onLogout={afterLogout} onJoinTeam={reseed} />;
     }
     // Interface principale...
-    const {activeTabKey, enabledTabs, attempt} = self.props;
+    const {activeTabKey, enabledTabs, round, attempt, task} = self.props;
     let content = false;
     switch (activeTabKey) {
-      case 'question':
-        content = <QuestionTab user={user} />;
+      case 'task':
+        content = <TaskTab round={round} attempt={attempt} task={task} />;
         break;
       case 'cryptanalysis':
         content = <CryptanalysisTab/>;

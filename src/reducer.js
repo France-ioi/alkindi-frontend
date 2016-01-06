@@ -15,6 +15,7 @@ const initialState = function (seed) {
     team: seed.team,
     round: seed.round,
     attempt: seed.attempt,
+    task: seed.task,
     activeTabKey: undefined,
     enabledTabs: {},
     historyTab: {
@@ -37,13 +38,13 @@ const reduceTick = function (state) {
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
-  const haveQuestion = !!state.question;
+  const haveTask = !!state.task;
   const enabledTabs = {
     team: true,
-    question: haveQuestion,
-    cryptanalysis: haveQuestion,
-    history: haveQuestion,
-    answer: haveQuestion
+    task: haveTask,
+    cryptanalysis: false,
+    history: false,
+    answer: false
   };
   // If the active tab has become disabled, select the team tab, which is
   // always available.
@@ -70,8 +71,8 @@ const reduceSetAttempt = function (state, attempt) {
   return {...state, attempt};
 };
 
-const reduceSetQuestion = function (state, question) {
-  return {...state, question};
+const reduceSetTask = function (state, task) {
+  return {...state, task};
 };
 
 const reduceSetWorkspaces = function (state, workspaces) {
@@ -193,8 +194,8 @@ function actualReduce (state, action) {
       return reduceSetRound(state, action.round);
     case 'SET_ATTEMPT':
       return reduceSetAttempt(state, action.attempt);
-    case 'SET_QUESTION':
-      return reduceSetQuestion(state, action.question);
+    case 'SET_TASK':
+      return reduceSetTask(state, action.task);
     case 'SET_WORKSPACES':
       return reduceSetWorkspaces(state, action.workspaces);
     case 'SET_ACTIVE_TAB':

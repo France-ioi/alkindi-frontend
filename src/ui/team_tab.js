@@ -17,8 +17,8 @@ const TestTeamTab = function (self) {
   const setAttempt = function (attempt) {
     self.props.dispatch({type: 'SET_ATTEMPT', attempt});
   };
-  const setQuestion = function (question) {
-    self.props.dispatch({type: 'SET_QUESTION', question});
+  const setTask = function (task) {
+    self.props.dispatch({type: 'SET_TASK', task});
   };
   const toggleBeforeRoundStart = function () {
     const round = self.props.round;
@@ -33,7 +33,7 @@ const TestTeamTab = function (self) {
   const setTrainingAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true});
-    setQuestion(undefined);
+    setTask(undefined);
     setAttempt({needs_codes: true, is_training: true, is_unsolved: true});
   };
   const toggleCodesEntered = function () {
@@ -49,15 +49,15 @@ const TestTeamTab = function (self) {
   const setTimedAttempt = function () {
     const team = self.props.team;
     setTeam({...team, is_locked: true}); // normalement déjà fait
-    setQuestion(undefined);
+    setTask(undefined);
     setAttempt({
       needs_codes: true, is_training: false, is_unsolved: true,
       duration: 60, ends_at: new Date(Date.now() + 3600000).toISOString()
     });
   };
-  const toggleQuestionAvailable = function () {
-    const question = self.props.question;
-    setQuestion(question ? undefined : {});
+  const toggleTaskAvailable = function () {
+    const task = self.props.task;
+    setTask(task ? undefined : {});
   };
   const redGreen = function (cond, ifTrue, ifFalse) {
     return <label>{cond
@@ -68,7 +68,7 @@ const TestTeamTab = function (self) {
     const boolText = function (b) {
       return (b === undefined) ? 'undefined' : b.toString();
     };
-    const {team, round, attempt, question, round_has_not_started} = self.props;
+    const {team, round, attempt, task, round_has_not_started} = self.props;
     return (
       <div>
         <hr/>
@@ -92,8 +92,8 @@ const TestTeamTab = function (self) {
             <Button onClick={toggleCodesEntered}>toggle</Button>
           </li>}
           {attempt && <li>
-            {redGreen(!question, 'question not accessed', 'question accessed')}
-            <Button onClick={toggleQuestionAvailable}>toggle</Button>
+            {redGreen(!task, 'task not accessed', 'task accessed')}
+            <Button onClick={toggleTaskAvailable}>toggle</Button>
           </li>}
           {attempt && <li>
             {redGreen(attempt.is_unsolved, 'attempt is unresolved', 'attempt was solved')}
@@ -411,7 +411,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderUnlockQuestion = function (attempt) {
+  const renderUnlockTask = function (attempt) {
     const notice = attempt.is_training &&
       (<p>
         <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
@@ -451,14 +451,14 @@ const TeamTab = PureComponent(self => {
   };
   const testing = false && TestTeamTab(self);
   self.render = function () {
-    const {user, team, round, attempt, question, round_has_not_started} = self.props;
+    const {user, team, round, attempt, task, round_has_not_started} = self.props;
     if (!user || !team || !round)
       return false;
     const haveAttempt = attempt !== undefined;
-    const haveQuestion = question !== undefined;
+    const haveTask = task !== undefined;
     const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
     const canLeaveTeam = !haveAttempt && !team.is_locked;
-    const canCancelAttempt = haveAttempt && !haveQuestion;
+    const canCancelAttempt = haveAttempt && !haveTask;
     const showOwnAccessCode = canCancelAttempt && attempt.needs_codes;
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
@@ -484,16 +484,16 @@ const TeamTab = PureComponent(self => {
                    ? renderTooEarly(round)
                    : renderEnterCodes(attempt))
                 : (attempt.is_unsolved
-                   ? (question === undefined
+                   ? (task === undefined
                       ? (round_has_not_started
                          ? renderCodesEnteredEarly(round)
-                         : renderUnlockQuestion(attempt))
+                         : renderUnlockTask(attempt))
                       : renderTrainingInProgress())
                    : renderStartTimedAttempt()))
              : (attempt.needs_codes
                 ? renderEnterCodes(attempt)
-                : (question === undefined
-                   ? renderUnlockQuestion(attempt)
+                : (task === undefined
+                   ? renderUnlockTask(attempt)
                    : renderTimedAttemptInProgress(attempt))))
         }
         {showAdminControls && renderAdminControls(team)}
@@ -515,8 +515,8 @@ const TeamTab = PureComponent(self => {
 });
 
 const selector = function (state, props) {
-  const {user, team, round, attempt, question, round_has_not_started} = state;
-  return {user, team, round, attempt, question, round_has_not_started};
+  const {user, team, round, attempt, task, round_has_not_started} = state;
+  return {user, team, round, attempt, task, round_has_not_started};
 };
 
 export default connect(selector)(TeamTab);
