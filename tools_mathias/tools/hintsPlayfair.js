@@ -5,7 +5,7 @@ function getHintsPlayFair() {
 
    self.props = {
       alphabet: playFair.alphabet,
-      outputGridCells: playFair.emptyGrid,
+      outputGridCells: playFair.initialTaskGrid,
       score: 500,
       outputGridVariable: "lettresGrilleIndice"
    };
