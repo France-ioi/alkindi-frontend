@@ -80,7 +80,7 @@ table input {
 table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
-.fa-info-circle {
+.fa-question-circle {
   color: #0f33ff;
   cursor: pointer;
 }
