@@ -93,7 +93,7 @@ function getSubstitutionToPlayFairGrid() {
       }
       var html = "";
       if (samePairs.length > 0) {
-         html += samePairs.length + " substitution(s) donnant la lettre " + strLetter + " en première position :<br/>" +
+         html += samePairs.length + " substitution(s) donnent la lettre " + strLetter + " en première position :<br/>" +
             "<div class='bigramSubstitution y-scrollBloc' style='height:" + height + "px;'>";
          for (var iPair = 0; iPair < samePairs.length; iPair++) {
             var pair = samePairs[iPair];
