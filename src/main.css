@@ -525,10 +525,10 @@ a.cell-link {
   background-color: transparent;
   border-color: transparent;
 }
-.dialogBigramSubst {
+.dialogLetterSubst {
   padding: 0 5px;
 }
-.dialogBigramSubst input {
+.dialogLetterSubst input {
   width: 1.5em;
   text-align: center;
 }
@@ -592,7 +592,7 @@ a.cell-link {
   text-align: center;
   border: 1px solid #000;
   padding: 0 5px;
-  background-color: #ffc;
+  background-color: #f4f4f4;
   max-width: 100%;
   white-space: nowrap;
   overflow: auto;
@@ -796,7 +796,7 @@ td .bigramLetter {
   padding-left: 3px;
 }
 .letterSubstBloc.letterStatus-left .substitutionPair {
-  margin-left: -4px;
+  margin-left: -3px;
 }
 .letterSubstBloc.letterStatus-right {
   padding-right: 3px;

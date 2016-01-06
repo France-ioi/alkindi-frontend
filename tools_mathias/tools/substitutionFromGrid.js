@@ -77,8 +77,8 @@ function getSubstitutionFromGrid() {
                "</div>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle valeur :</span>" +
-                     "<span>" +
-                        "<input id='editCellLetter' onchange='" + self.name + ".changeCellLetter()' type='text' maxlength=1 style='width:60px;text-align:center' " +
+                     "<span class='dialogLetterSubst'>" +
+                        "<input id='editCellLetter' onchange='" + self.name + ".changeCellLetter()' type='text' maxlength=1 " +
                            "value='" + self.state.edit.cellLetter + "'>" +
                      "</span>" +
                "</div>" +
