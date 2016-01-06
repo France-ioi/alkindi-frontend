@@ -22,6 +22,7 @@ function getImproveSubstitution() {
    };
 
    self.state = {
+      scrollTop: 0,
       textBigrams: undefined,
       editState: undefined,
       edit: undefined
@@ -170,6 +171,7 @@ function getImproveSubstitution() {
    }
 
    self.clickLetter = function(iLetter, iBigram) {
+      saveScroll();
       self.state.editState = "preparing";
       var bigram = letterInfos[iLetter].bigram;
       var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
@@ -206,7 +208,7 @@ function getImproveSubstitution() {
    var renderBigrams = function(initialSubstitution, newSubstitution) {
       var nbLettersPerRow = 27;
       var text = self.props.inputCipheredText;
-      var html = "<div class='y-scrollBloc'>";
+      var html = "<div id='" + self.name + "-scrollBlock' class='y-scrollBloc'>";
       for (var iLetter = 0; iLetter < text.length; iLetter++) {
          if ((iLetter != 0) && (iLetter % nbLettersPerRow == 0)) {
             html += "<hr />";
@@ -266,9 +268,20 @@ function getImproveSubstitution() {
          "</div>";
    };
 
+   var saveScroll = function() {
+      var div = document.getElementById(self.name + "-scrollBlock");
+      self.state.scrollTop = div.scrollTop;
+   }
+   
+   var restoreScroll = function() {
+      var div = document.getElementById(self.name + "-scrollBlock");
+      div.scrollTop = self.state.scrollTop;
+   }
+
    self.render = function() {
       self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
+      restoreScroll();
    }
 
    return self;

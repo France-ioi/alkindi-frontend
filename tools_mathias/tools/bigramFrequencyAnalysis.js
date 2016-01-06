@@ -23,7 +23,9 @@ function getBigramFrequencyAnalysis() {
    self.state = {
       textBigrams: undefined,
       editState: undefined,
-      edit: undefined
+      edit: undefined,
+      scrollLeftText: 0,
+      scrollLeftFrench: 0
    };
 
    self.mostFrequentBigrams = bigramsUtils.getMostFrequentBigrams(self.props.inputCipheredText, self.props.alphabet);
@@ -179,6 +181,7 @@ function getBigramFrequencyAnalysis() {
    }
 
    self.clickBigram = function(iBigram) {
+      saveScroll();
       self.state.editState = "preparing";
       var bigram = self.mostFrequentBigrams[iBigram];
       var substPair = bigramsUtils.getBigramSubstPair(bigram.v, self.props.outputSubstitution, self.letterRanks);
@@ -216,7 +219,7 @@ function getBigramFrequencyAnalysis() {
        return html;
    }
 
-   var renderBigrams = function(bigrams, initialSubstitution, newSubstitution) {
+   var renderBigrams = function(scrollDivID, bigrams, initialSubstitution, newSubstitution) {
       var bigramsHtml = "";
       for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
          var bigram = bigrams[iBigram];
@@ -225,9 +228,13 @@ function getBigramFrequencyAnalysis() {
          if ((initialSubstitution != undefined) && (self.state.edit != undefined) && (self.state.edit.iBigram == iBigram)) {
             bigramClass = "selectedBigram";
          }
+         var clickBigram = "";
+         if (initialSubstitution != undefined) {
+            clickBigram = "onclick='" + self.name + ".clickBigram(" + iBigram + ")'";
+         }
          bigramsHtml += "<div class='bigramBloc'>" +
             "<span class='frequence'>" + bigram.r + "%</span>" +
-            "<div onclick='" + self.name + ".clickBigram(" + iBigram + ")' class='bigramBlocSubstitution " + bigramClass +"'>" +
+            "<div " + clickBigram + " class='bigramBlocSubstitution " + bigramClass +"'>" +
                "<div class='bigramCipheredLetter'><span>" +
                renderBigram(bigram) +
                "</span></div>";
@@ -251,7 +258,7 @@ function getBigramFrequencyAnalysis() {
          bigramsHtml += "</div>" +
             "</div>";
       }
-      var html = "<div class='x-scrollBloc'>"+
+      var html = "<div id='" + scrollDivID + "' class='x-scrollBloc'>"+
          "<div class='labels'>" +
             "<div>Fréquences&nbsp;:</div>" +
             "<div>Bigrammes&nbsp;:</div>";
@@ -278,17 +285,32 @@ function getBigramFrequencyAnalysis() {
                "<div class='grillesSection'>" +
                   "<strong>Bigrammes en conflit :</strong> " + "TODO" + "<br/>" +
                   "<strong>Bigrammes les plus fréquents du texte d'entrée :</strong>" +
-                  renderBigrams(self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
+                  renderBigrams(self.name + "-scrollText", self.mostFrequentBigrams, self.props.inputSubstitution, self.props.outputSubstitution) +
                   "<strong>Bigrammes les plus fréquents en français :</strong>" +
-                  renderBigrams(bigramsUtils.mostFrequentFrench) +
+                  renderBigrams(self.name + "-scrollFrench", bigramsUtils.mostFrequentFrench) +
                "</div>" +
             "</div>" +
          "</div>";
    };
 
+   var saveScroll = function() {
+      var divText = document.getElementById(self.name + "-scrollText");
+      self.state.scrollLeftText = divText.scrollLeft;
+      var divFrench = document.getElementById(self.name + "-scrollFrench");
+      self.state.scrollLeftFrench = divFrench.scrollLeft;
+   }
+
+   var restoreScroll = function() {
+      var divText = document.getElementById(self.name + "-scrollText");
+      divText.scrollLeft = self.state.scrollLeftText;
+      var divFrench = document.getElementById(self.name + "-scrollFrench");
+      divFrench.scrollLeft = self.state.scrollLeftFrench;
+   }
+
    self.render = function() {
       self.compute();
       document.getElementById(self.name).innerHTML = renderTool();
+      restoreScroll();
    }
 
    return self;
