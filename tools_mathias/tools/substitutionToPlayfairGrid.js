@@ -8,7 +8,7 @@ function getSubstitutionToPlayFairGrid() {
       inputGridCells: playFair.sampleGrid,
       inputSubstitution: playFair.getSampleSubstitutionWithConflict(),
       ouputGridCells: playFair.sampleGrid,
-      inputGridVariable: "lettresGrilleIndice",
+      inputGridVariable: "lettresGrilleÉditée",
       inputSubstitutionVariable: "substitutionAméliorée",
       outputGridVariable: "lettresNouvelleGrille"
    };
