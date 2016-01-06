@@ -204,13 +204,17 @@ function getImproveSubstitution() {
        }
        return html;
    };
+
    var renderBigrams = function(initialSubstitution, newSubstitution) {
-      var nbLettersPerRow = 27;
+      var nbLettersPerRow = 29;
       var text = self.props.inputCipheredText;
+      var lineStartCols = common.getWrappingInfos(text, nbLettersPerRow, self.props.alphabet);
       var html = "<div id='" + self.name + "-scrollBlock' class='y-scrollBloc'>";
+      var line = 0;
       for (var iLetter = 0; iLetter < text.length; iLetter++) {
-         if ((iLetter != 0) && (iLetter % nbLettersPerRow == 0)) {
+         if (lineStartCols[line + 1] == iLetter) {
             html += "<hr />";
+            line++;
          }
          var letter = text.charAt(iLetter);
          var bigram = letterInfos[iLetter].bigram;

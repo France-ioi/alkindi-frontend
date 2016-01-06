@@ -141,4 +141,38 @@ var common = {
          }
       }
    },
+
+   getWrappingInfos: function(text, maxWidth, alphabet) {
+      var letterRanks = this.getLetterRanks(alphabet);
+      var lineStartCols = [0];
+      var col = 0;
+      var nextCut = 0;
+      var lastNonAlphabet = 0;
+      var lastNonAlphabetBeforeLetter = 0;
+      for (var iLetter = 0; iLetter < text.length; iLetter++) {
+         if (col >= maxWidth) {
+            lineStartCols.push(lastNonAlphabetBeforeLetter + 1);
+            col = iLetter - (lastNonAlphabetBeforeLetter + 1);
+         }
+         var letter = text[iLetter];
+         if (letterRanks[letter] == undefined) {
+            lastNonAlphabet = iLetter;
+         } else {
+            lastNonAlphabetBeforeLetter = lastNonAlphabet;
+         }
+         col++;
+      }
+      lineStartCols.push(text.length);
+      return lineStartCols;
+   },
+
+   testWrapping: function(text, maxWidth, alphabet) {
+      var lineStartCols = this.getWrappingInfos(text, maxWidth, alphabet);
+      for (var iLine = 0; iLine < lineStartCols.length - 1; iLine++) {
+         var startCol = lineStartCols[iLine];
+         var endCol = lineStartCols[iLine + 1];
+         var line = text.substring(startCol, endCol);
+         console.log(line);
+      }
+   }
 }
