@@ -58,36 +58,33 @@ function getImproveSubstitution() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bigramme édité :</span>" +
                      "<span class='dialogBigram bigramCipheredLetter'>" +
-                        "<span class='bigramLetter'>" +
-                        renderBigram(bigram, 0) +
-                        "</span>" +
-                        "<span class='bigramLetter'>" +
-                        renderBigram(bigram, 1) +
-                        "</span>" +
+                        "<span class='bigramLetter'>" + renderBigram(bigram, 0) + "</span>" +
+                        "<span class='bigramLetter'>" + renderBigram(bigram, 1) + "</span>" +
                      "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Substitution d'origine :</span>" +
-                     "<span class='dialogBigram dialogBigramSubstOrig'>" +renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
+                     "<span class='dialogBigram dialogBigramSubstOrig'>" +
+                        renderBigramSubst(bigram, self.props.inputSubstitution, 0) +
                         renderBigramSubst(bigram, self.props.inputSubstitution, 1) +
                      "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Nouvelle substitution :</span>" +
                      "<span class='dialogLetterSubst'>" +
-                        "<input id='editBigramSubstLetter1' onchange='" + self.name + ".changeBigramSubstLetter(0)' type='text' value='" + self.state.edit.letters[0] + "'>" +
+                        "<input id='editBigramCellLetter1' onchange='" + self.name + ".changeCellLetter(0)' type='text' value='" + self.state.edit.letters[0] + "'>" +
                      "</span>" +
                      "<span class='dialogLetterSubst'>" +
-                        "<input id='editBigramSubstLetter2' onchange='" + self.name + ".changeBigramSubstLetter(1)'  type='text' value='" + self.state.edit.letters[1] + "'>" +
+                        "<input id='editBigramCellLetter2' onchange='" + self.name + ".changeCellLetter(1)'  type='text' value='" + self.state.edit.letters[1] + "'>" +
                      "</span>" +
                   "</div>" +
-                  "<div class='dislogLine'>" +
+                  "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>&nbsp;</span>" +
                      "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[0]) + "</span>" +
                      "<span class='substitutionLock'>" + common.renderLock(self.state.edit.locked[1]) + "</span>" +
                   "</div>" +
                   "<div class='dialogLine'>" +
-                     "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-info-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +
+                     "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-question-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +
                      "<span>" +
                         "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-tool lock " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
                      "</span>" +
@@ -204,13 +201,17 @@ function getImproveSubstitution() {
        }
        return html;
    };
+
    var renderBigrams = function(initialSubstitution, newSubstitution) {
-      var nbLettersPerRow = 27;
+      var nbLettersPerRow = 29;
       var text = self.props.inputCipheredText;
+      var lineStartCols = common.getWrappingInfos(text, nbLettersPerRow, self.props.alphabet);
       var html = "<div id='" + self.name + "-scrollBlock' class='y-scrollBloc'>";
+      var line = 0;
       for (var iLetter = 0; iLetter < text.length; iLetter++) {
-         if ((iLetter != 0) && (iLetter % nbLettersPerRow == 0)) {
+         if (lineStartCols[line + 1] == iLetter) {
             html += "<hr />";
+            line++;
          }
          var letter = text.charAt(iLetter);
          var bigram = letterInfos[iLetter].bigram;
