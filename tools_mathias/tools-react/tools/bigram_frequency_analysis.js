@@ -7,7 +7,7 @@ import * as Python from '../python';
 import {getCellLetter, getQualifierClass} from '../tools';
 import {getTextBigrams, getMostFrequentBigrams, getBigramSubstPair,
         countSubstitutionConflicts, identitySubstPair, applySubstitutionEdits} from '../bigram_utils';
-
+import EditPairDialog from '../ui/edit_pair_dialog';
 const nullSubstPair = {dst: [{q: "unknown"}, {q: "unknown"}]};
 
 export const Component = PureComponent(self => {
@@ -135,68 +135,18 @@ export const Component = PureComponent(self => {
       return <span>{v.charAt(0)+'\u00a0'+v.charAt(1)}</span>;
    };
 
+   const setEditPair = function (editPair) {
+      self.setState({editPair});
+   };
+
    const renderEditPair = function () {
       const {selectedPos, editPair} = self.state;
       const {alphabet, mostFrequentBigrams, inputSubstitution} = self.props.scope;
       const bigram = mostFrequentBigrams[selectedPos];
       const substPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
-      const buttonLockedClasses = [];
-      const btnToggleClasses = [];
-      for (var iSide = 0; iSide < 2; iSide++) {
-         const locked = editPair[iSide].locked;
-         buttonLockedClasses[iSide] = ['btn-toggle', 'lock', locked && "locked"];
-         btnToggleClasses[iSide] = ["fa", "fa-toggle-" + (locked ? "on" : "off")];
-      }
-      return (
-         <div className='dialog'>
-            <div className='dialogLine'>
-               <span className='dialogLabel'>Bigramme édité :</span>
-               <span className='dialogBigram bigramCipheredLetter'>
-                  <span className='bigramLetter'>
-                     {getCellLetter(alphabet, {l: bigram.l0}, true)}
-                  </span>
-                  <span className='bigramLetter'>
-                     {getCellLetter(alphabet, {l: bigram.l1}, true)}
-                  </span>
-               </span>
-            </div>
-            <div className='dialogLine'>
-               <span className='dialogLabel'>Substitution d'origine :</span>
-               <span className='dialogBigram dialogBigramSubstOrig'>
-                  {renderCell(alphabet, substPair.dst[0])}
-                  {renderCell(alphabet, substPair.dst[1])}
-               </span>
-            </div>
-            <div className='dialogLine'>
-               <span className='dialogLabel'>Nouvelle substitution :</span>
-               <span className='dialogLetterSubst'>
-                  <input type='text' value={editPair[0].letter} onChange={changeLetter} data-side='0' />
-               </span>
-               <span className='dialogLetterSubst'>
-                  <input type='text' value={editPair[1].letter} onChange={changeLetter} data-side='1' />
-               </span>
-            </div>
-            <div className='dialogLine'>
-               <span className='dialogLabel'> </span>
-               <span className='substitutionLock'>{renderLock(editPair[0].locked)}</span>
-               <span className='substitutionLock'>{renderLock(editPair[1].locked)}</span>
-            </div>
-            <div className='dialogLine'>
-               <span className='dialogLabel'>Bloquer / débloquer : <i className='fa fa-question-circle' data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>
-               <span>
-                  <button type='button' className={classnames(buttonLockedClasses[0])} onClick={toggleLock} data-side='0' >
-                     <i className={classnames(btnToggleClasses[0])}/>
-                  </button>
-               </span>
-               <span>
-                  <button type='button' className={classnames(buttonLockedClasses[1])} onClick={toggleLock} data-side='1' >
-                     <i className={classnames(btnToggleClasses[1])}/>
-                  </button>
-               </span>
-            </div>
-            <OkCancel onOk={validateDialog} onCancel={cancelDialog}/>
-         </div>
-      );
+      return <EditPairDialog
+         alphabet={alphabet} bigram={bigram} editPair={editPair} substPair={substPair}
+         onOk={validateDialog} onCancel={cancelDialog} onChange={setEditPair} />;
    };
 
    const renderFreqBigrams = function (bigrams) {
