@@ -247,8 +247,7 @@ export const applySubstitutionEdits = function (alphabet, substitution, edits) {
       }
    };
    const updateCell = function (inputCell, editedCell, outputCell) {
-      if ((editedCell.q == 'unknown') ||
-          ((editedCell.q == 'guess') && (inputCell.q != 'guess') && (inputCell.q != 'unknown'))) {
+      if (editedCell.q == 'unknown') {
          outputCell.l = inputCell.l;
          if (inputCell.q == 'locked') {
             outputCell.q = 'confirmed';
