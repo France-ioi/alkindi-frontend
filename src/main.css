@@ -566,24 +566,6 @@ a.cell-link {
   margin-right: 8px;
   margin-left: 5px;
 }
-/*.dialog button.lock {
-  padding: 0 8px;
-  margin: 0 5px 0 0;
-  background-color: #fff;
-}
-.dialog button.lock:hover,
-.dialog button.lock:focus {
-  background-color: #ddd;
-}
-.dialog button.lock:focus {
-  box-shadow: 0 0 4px #333 inset;
-}
-.dialog button.lock .fa-unlock-alt {
-  color: #7a7;
-}
-.dialog button.locked {
-  background-color: #7a7;
-}*/
 .dialog table,
 .dialog table td {
   border: none;
