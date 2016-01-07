@@ -69,7 +69,10 @@ function getSubstitutionFromGrid() {
          var buttonLockedClass = "";
          if (self.state.edit.locked) {
             buttonLockedClass = "locked";
+            btnToggleClass = "fa-toggle-on";
          }
+         else btnToggleClass = "fa-toggle-off";
+
          return "<div class='dialog'>" +
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Valeur d'origine :</span>" +
@@ -91,8 +94,8 @@ function getSubstitutionFromGrid() {
                "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer :</span>" +
                      "<span>" +
-                        "<button id='toggleLockLetter' onclick='" + self.name + ".toggleLockLetter()' type='button' class='btn-tool " + buttonLockedClass + "'>" +
-                           "<i class='fa fa-lock'></i>" +
+                        "<button id='toggleLockLetter' onclick='" + self.name + ".toggleLockLetter()' type='button' class='btn-toggle " + buttonLockedClass + "'>" +
+                           "<i class='fa  "+ btnToggleClass +"'></i>" +
                         "</button>" +
                      "</span>" +
                "</div>" +

@@ -547,7 +547,16 @@ a.cell-link {
   width: 29px;
   text-align: center;
 }
-.dialog button.lock {
+.dialog .btn-toggle {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 8px;
+  margin-left: 5px;
+}
+/*.dialog button.lock {
   padding: 0 8px;
   margin: 0 5px 0 0;
   background-color: #fff;
@@ -564,7 +573,7 @@ a.cell-link {
 }
 .dialog button.locked {
   background-color: #7a7;
-}
+}*/
 .dialog table,
 .dialog table td {
   border: none;
