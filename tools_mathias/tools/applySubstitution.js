@@ -48,6 +48,9 @@ function getApplySubstitution() {
          if (letter == '') {
             letter = "&nbsp;";
          }
+         if (qualifier == "locked") {
+            qualifier = "confirmed";
+         }
          outputText.push({letter: letter, q: qualifier, s: status});
       }
       self.props.outputDecipheredText = outputText;
@@ -76,12 +79,13 @@ function getApplySubstitution() {
       var html = "";
       for (var iCell = 0; iCell < cells.length; iCell++) {
          var cell = cells[iCell];
+         var qualifierClass = bigramsUtils.getPairLetterClass(cell); // TODO: use substitution.getQualifierClass in react version
          if (cell.q == "") {
             html += "<span class='substituedLetter character'>" +  cell.letter + "</span>";
          } else if (cell.s == "left") {
-            html += "<span class='substituedLetter'>" +  cell.letter + "</span>";
+            html += "<span class='substituedLetter " + qualifierClass + "'>" +  cell.letter + "</span>";
          } else if (cell.s == "right") {
-            html += "<span class='substituedLetter'>" + cell.letter + "</span>";
+            html += "<span class='substituedLetter " + qualifierClass + "'>" + cell.letter + "</span>";
          }
       }
       return html;
