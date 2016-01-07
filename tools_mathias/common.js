@@ -153,6 +153,21 @@ var common = {
       }
    },
 
+   updateCellNew: function(inputCell, editedCell, outputCell) {
+      if ((editedCell.q == 'unknown') ||
+          ((editedCell.q == 'guess') && (editedCell.q != 'guess') && (editedCell.q != 'unknown'))) {
+         outputCell.l = inputCell.l;
+         if (inputCell.q == 'locked') {
+            outputCell.q = 'confirmed';
+         } else {
+            outputCell.q = inputCell.q;
+         }
+      } else {
+         outputCell.l = editedCell.l;
+         outputCell.q = editedCell.q;
+      }
+   },
+
    getWrappingInfos: function(text, maxWidth, alphabet) {
       var letterRanks = common.getLetterRanks(alphabet);
       var lineStartCols = [0];
