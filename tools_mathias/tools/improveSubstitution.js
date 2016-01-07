@@ -238,14 +238,14 @@ function getImproveSubstitution() {
             var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
             if (status == "left") {
                html += "<div class='substitutionPair " + sideClass + "'>";
-               html += renderBigramSubst(bigram, initialSubstitution, 0);
-               html += renderBigramSubst(bigram, newSubstitution, 0);               
+               html += "<span class='originLetter'>" + renderBigramSubst(bigram, initialSubstitution, 0) + "</span>";
+               html += "<span class='newLetter'>" + renderBigramSubst(bigram, newSubstitution, 0) + "</span>";
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[0].q == "locked") + "</span>";
                html += "</div>";
             } else if (status == "right") {
                html += "<div class='substitutionPair " + sideClass + "'>";
-               html += renderBigramSubst(bigram, initialSubstitution, 1);
-               html += renderBigramSubst(bigram, newSubstitution, 1);
+               html += "<span class='originLetter'>" + renderBigramSubst(bigram, initialSubstitution, 1) + "</span>";
+               html += "<span class='newLetter'>" + renderBigramSubst(bigram, newSubstitution, 1) + "</span>";
                html += "<span class='substitutionLock'>" + common.renderLock(substPair.dst[1].q == "locked") + "</span>";
                html += "</div>";
             }
@@ -272,7 +272,7 @@ function getImproveSubstitution() {
                renderVariables() +
                "<br/><br/>" + // TODO : with css ?
                "<div class='grillesSection'>" +
-                  "<strong>Nombre de conflits entre les substitutions :</strong> " + bigramsUtils.countAllSubstitutionConflicts(self.props.inputSubstitution, self.props.outputSubstitution, self.props.alphabet, self.letterRanks) + "<br/>" +
+                  "<p><strong>Nombre de conflits entre les substitutions :</strong> " + bigramsUtils.countAllSubstitutionConflicts(self.props.inputSubstitution, self.props.outputSubstitution, self.props.alphabet, self.letterRanks) + "</p>" +
                   renderBigrams(self.props.inputSubstitution, self.props.outputSubstitution) +
                "</div>" +
             "</div>" +

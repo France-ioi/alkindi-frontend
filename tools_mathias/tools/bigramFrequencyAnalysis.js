@@ -238,8 +238,12 @@ function getBigramFrequencyAnalysis() {
                   lock = "<i class='fa fa-lock'></i>";
                }
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
-                     renderBigramSubst(bigram, initialSubstitution, side) +
-                     renderBigramSubst(bigram, newSubstitution, side) +
+                     "<span class='originLetter'>" +
+                        renderBigramSubst(bigram, initialSubstitution, side) +
+                     "</span>" +
+                     "<span class='newLetter'>" +
+                        renderBigramSubst(bigram, newSubstitution, side) +
+                     "</span>" +
                      "<span class='substitutionLock'>" + lock + "</span>" +
                   "</div>";
             }

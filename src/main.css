@@ -45,10 +45,10 @@ hr {
 .selected {
   font-weight: bold;
 }
-.panel-heading {
+/*.panel-heading {
   overflow: hidden;
   text-overflow: ellipsis;
-}
+}*/
 .panel-body {
   position: relative;
 }
@@ -469,6 +469,11 @@ a.cell-link {
 */
 .panel-heading .code {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 750px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .playfair-score {
   color: #C82829;
@@ -484,6 +489,15 @@ a.cell-link {
 }
 .playfair-score span strong {
   color: #000;
+}
+#hintsPlayFair .panel {
+  border-color: #C82829;
+}
+#hintsPlayFair .panel-heading {
+  background-color: #C82829;
+}
+#hintsPlayFair .panel-heading .code-var {
+  color: #fff;
 }
 /* Fonts */
 .playFairGrid,
@@ -513,6 +527,7 @@ a.cell-link {
 }
 .dialogLine {
   min-height: 2em;
+  line-height: 2em;
 }
 .dialogLabel {
   font-weight: bold;
@@ -556,24 +571,6 @@ a.cell-link {
   margin-right: 8px;
   margin-left: 5px;
 }
-/*.dialog button.lock {
-  padding: 0 8px;
-  margin: 0 5px 0 0;
-  background-color: #fff;
-}
-.dialog button.lock:hover,
-.dialog button.lock:focus {
-  background-color: #ddd;
-}
-.dialog button.lock:focus {
-  box-shadow: 0 0 4px #333 inset;
-}
-.dialog button.lock .fa-unlock-alt {
-  color: #7a7;
-}
-.dialog button.locked {
-  background-color: #7a7;
-}*/
 .dialog table,
 .dialog table td {
   border: none;
@@ -786,8 +783,12 @@ td .bigramLetter {
   display: block;
   text-align: center;
 }
-.substitutionPair .bigramLetter:first-of-type {
+.substitutionPair .originLetter .bigramLetter {
   margin-bottom: 2px;
+  border-color: transparent;
+}
+.selectedBigram .substitutionPair .originLetter .bigramLetter.qualifier-unconfirmed {
+  background-color: transparent;
 }
 .substitutionPair span.substitutionLock {
   display: block;
