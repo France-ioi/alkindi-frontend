@@ -158,7 +158,7 @@ function getHintsPlayFair() {
             var hint = playFair.getHintGrid(playFair.sampleHints, query.row, query.col);
             self.props.outputGridCells[query.row][query.col] = {
                l: hint,
-               q: 'confirmed'
+               q: 'hint'
             }
          } else {
             var hint = playFair.getHintAlphabet(playFair.sampleHints, query.rank);

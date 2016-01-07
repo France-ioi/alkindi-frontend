@@ -4,25 +4,36 @@ var common = {
          'unknown': 'unknown',
          'guess': 'guess',
          'locked': 'locked',
-         'confirmed': 'confirmed'
+         'confirmed': 'confirmed',
+         'hint': 'hint'
       },
       'guess': {
          'unknown': 'guess',
          'guess': 'guess',
          'locked': 'locked',
-         'confirmed': 'confirmed'
+         'confirmed': 'confirmed',
+         'hint': 'hint'
       },
       'locked': {
          'unknown': 'locked',
          'guess': 'locked',
          'locked': 'locked',
-         'confirmed': 'confirmed'
+         'confirmed': 'confirmed',
+         'hint': 'hint'
       },
       'confirmed': {
          'unknown': 'confirmed',
          'guess': 'confirmed',
          'locked': 'confirmed',
-         'confirmed': 'confirmed'
+         'confirmed': 'confirmed',
+         'hint': 'hint'
+      },
+      'hint': {
+         'unknown': 'hint',
+         'guess': 'hint',
+         'locked': 'hint',
+         'confirmed': 'hint',
+         'hint': 'hint'
       }
    },
 

@@ -154,6 +154,8 @@ var bigramsUtils = {
    getPairLetterClass: function(cell) {
       if ((cell.q == "locked") || (cell.q == "confirmed")) {
          return "qualifier-confirmed";
+      } else if (cell.q == "hint") {
+         return "qualifier-hint";
       } else {
          return "qualifier-unconfirmed";
       }

@@ -663,11 +663,15 @@ a.cell-link {
 .qualifier-unconfirmed {
   background-color: white;
 }
-.qualifier-confirmed {
+.qualifier-hint {
   background-color: #aaa;
   position: relative;
 }
-.playFairGrid .qualifier-confirmed::after {
+.qualifier-confirmed {
+  background-color: #ddd;
+  position: relative;
+}
+.playFairGrid .qualifier-hint::after {
   content: "\f129";
   font-family: FontAwesome;
   font-size: 11px;

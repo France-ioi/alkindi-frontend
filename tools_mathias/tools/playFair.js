@@ -11,8 +11,8 @@ var playFair = {
 
    initialTaskGrid: [
       [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
-      [{q:'unknown'}, {l:11, q:'confirmed'}, {q:'unknown'}, {q:'unknown'}, {l:10, q:'confirmed'}],
-      [{q:'unknown'}, {l:16, q:'confirmed'}, {q:'unknown'}, {q:'unknown'}, {l: 4, q:'confirmed'}],
+      [{q:'unknown'}, {l:11, q:'hint'}, {q:'unknown'}, {q:'unknown'}, {l:10, q:'hint'}],
+      [{q:'unknown'}, {l:16, q:'hint'}, {q:'unknown'}, {q:'unknown'}, {l: 4, q:'hint'}],
       [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}]
    ],
