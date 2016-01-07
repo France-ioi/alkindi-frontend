@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import range from 'node-range';
 
-import {PureComponent} from './utils';
-import {getCellLetter} from './tools';
+import {PureComponent} from '../utils';
+import {getCellLetter} from '../tools';
 
 export const Grid = PureComponent(self => {
    /* Props:

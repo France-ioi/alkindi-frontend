@@ -1,5 +1,5 @@
 import React from 'react';
-import {PureComponent} from './utils';
+import {PureComponent} from '../utils';
 
 export const Variable = PureComponent(self => {
    self.render = function () {

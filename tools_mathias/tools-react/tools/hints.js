@@ -1,12 +1,12 @@
 import classnames from 'classnames';
 import range from 'node-range';
 
-import {PureComponent} from './utils';
-import {Variables} from './variables';
-import {Alphabet} from './alphabet';
-import {Grid, GridPython} from './grid';
-import {OkCancel} from './ok_cancel';
-import {getCellLetter, getLetterQualifiersFromGrid} from './tools';
+import {PureComponent} from '../utils';
+import {Variables} from '../ui/variables';
+import {Alphabet} from '../ui/alphabet';
+import {Grid, GridPython} from '../ui/grid';
+import {OkCancel} from '../ui/ok_cancel';
+import {getCellLetter, getLetterQualifiersFromGrid} from '../tools';
 
 export default PureComponent(self => {
 
@@ -114,7 +114,7 @@ export default PureComponent(self => {
          return (
             <div className='dialog'>
                <div className='dialogLine'>
-                  <strong>Indice demandé :</strong>
+                  <strong>Indice demandé :</strong>{' '}
                   {hintQuery.type === "grid"
                    ? <span>lettre à la ligne <span className='dialogIndice'>{hintQuery.row + 1}</span>, colonne <span className='dialogIndice'>{hintQuery.col + 1}</span> de la grille.</span>
                    : <span>position de la lettre <span className='dialogIndice'>{self.props.alphabet[hintQuery.rank]}</span> dans la grille</span>}

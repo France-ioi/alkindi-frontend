@@ -1,5 +1,5 @@
-import {PureComponent} from './utils';
-import {Variables} from './variables';
+import {PureComponent} from '../utils';
+import {Variables} from '../ui/variables';
 
 export default PureComponent(self => {
 

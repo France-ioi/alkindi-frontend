@@ -1,4 +1,4 @@
-import {PureComponent} from './utils';
+import {PureComponent} from '../utils';
 
 export const OkCancel = PureComponent(self => {
    /* Props:

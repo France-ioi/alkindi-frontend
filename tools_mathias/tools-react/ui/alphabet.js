@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import range from 'node-range';
 
-import {PureComponent} from './utils';
+import {PureComponent} from '../utils';
 
 export const Alphabet = PureComponent(self => {
 
