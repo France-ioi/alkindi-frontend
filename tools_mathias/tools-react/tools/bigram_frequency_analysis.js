@@ -48,16 +48,16 @@ export const Component = PureComponent(self => {
       const side = parseInt(event.target.getAttribute('data-side'));
       editPair = editPair.slice();
       editPair[side] = {...editPair[side], letter: letter};
-      self.setState({editPair: newEditPair});
+      self.setState({editPair: editPair});
    };
 
-   const toggleLock = function () {
+   const toggleLock = function (event) {
       let {editPair} = self.state;
-      const letter = event.target.value;
-      const side = parseInt(event.target.getAttribute('data-side'));
+      const side = parseInt(event.currentTarget.getAttribute('data-side'));
+      const locked = editPair[side].locked;
       editPair = editPair.slice();
-      editPair[side] = {...editPair[side], locked: !editPair[side].locked};
-      self.setState({editPair: newEditPair});
+      editPair[side] = {...editPair[side], locked: !locked};
+      self.setState({editPair: editPair});
    };
 
    const validateDialog = function () {
@@ -108,11 +108,11 @@ export const Component = PureComponent(self => {
 
    const renderEditPair = function () {
       const {selectedPos, editPair} = self.state;
-      const {alphabet, mostFrequentBigrams, initialSubstitution} = self.props.scope;
-      var bigram = mostFrequentBigrams[selectedPos];
-      var substPair = getBigramSubstPair(initialSubstitution, bigram) || nullSubstPair;
-      var buttonLockedClasses = [];
-      var btnToggleClasses = [];
+      const {alphabet, mostFrequentBigrams, inputSubstitution} = self.props.scope;
+      const bigram = mostFrequentBigrams[selectedPos];
+      const substPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
+      const buttonLockedClasses = [];
+      const btnToggleClasses = [];
       for (var iSide = 0; iSide < 2; iSide++) {
          const locked = editPair[iSide].locked;
          buttonLockedClasses[iSide] = ['btn-toggle', 'lock', locked && "locked"];
@@ -124,10 +124,10 @@ export const Component = PureComponent(self => {
                <span className='dialogLabel'>Bigramme édité :</span>
                <span className='dialogBigram bigramCipheredLetter'>
                   <span className='bigramLetter'>
-                     {renderCell(alphabet, {l: bigram.l0})}
+                     {getCellLetter(alphabet, {l: bigram.l0}, true)}
                   </span>
-                  <span class='bigramLetter'>
-                     {renderCell(alphabet, {l: bigram.l1})}
+                  <span className='bigramLetter'>
+                     {getCellLetter(alphabet, {l: bigram.l1}, true)}
                   </span>
                </span>
             </div>
@@ -148,12 +148,12 @@ export const Component = PureComponent(self => {
                </span>
             </div>
             <div className='dialogLine'>
-               <span class='dialogLabel'> </span>
-               <span class='substitutionLock'>{renderLock(editPair[0].locked)}</span>
-               <span class='substitutionLock'>{renderLock(editPair[1].locked)}</span>
+               <span className='dialogLabel'> </span>
+               <span className='substitutionLock'>{renderLock(editPair[0].locked)}</span>
+               <span className='substitutionLock'>{renderLock(editPair[1].locked)}</span>
             </div>
             <div className='dialogLine'>
-               <span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-question-circle' data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>
+               <span className='dialogLabel'>Bloquer / débloquer : <i className='fa fa-question-circle' data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>
                <span>
                   <button type='button' className={classnames(buttonLockedClasses[0])} onClick={toggleLock} data-side='0' >
                      <i className={classnames(btnToggleClasses[0])}/>
@@ -195,24 +195,24 @@ export const Component = PureComponent(self => {
       );
    };
 
-   const renderFreqSubstBigrams = function (bigrams, initialSubstitution, newSubstitution) {
+   const renderFreqSubstBigrams = function (bigrams, inputSubstitution, outputSubstitution) {
       const {alphabet} = self.props.scope;
       const {selectedPos} = self.state;
       const testConflict = function (cell1, cell2) {
          return cell1 !== 'unknown' && cell2 !== 'unknown' && cell1.l !== cell2.l;
       };
-      const renderBigramSubstSide = function (bigram, initialPair, newPair, side) {
-         const initialCell = initialPair.dst[side];
-         const newCell = newPair.dst[side];
-         const hasConflict = testConflict(initialCell, newCell);
-         const isLocked = newCell.q === "locked";
+      const renderBigramSubstSide = function (bigram, inputPair, outputPair, side) {
+         const inputCell = inputPair.dst[side];
+         const outputCell = outputPair.dst[side];
+         const hasConflict = testConflict(inputCell, outputCell);
+         const isLocked = outputCell.q === "locked";
          return (
             <div className={classnames(['substitutionPair', hasConflict && 'substitutionConflict'])}>
                <span className='originLetter'>
-                  {renderCell(alphabet, initialCell)}
+                  {renderCell(alphabet, inputCell)}
                </span>
                <span className='newLetter'>
-                  {renderCell(alphabet, newCell)}
+                  {renderCell(alphabet, outputCell)}
                </span>
                <span className='substitutionLock'>
                   {isLocked ? <i className='fa fa-lock'></i> : ' '}
@@ -224,18 +224,15 @@ export const Component = PureComponent(self => {
          const bigramClasses = ['bigramBlocSubstitution'];
          if (selectedPos === iBigram)
             bigramClasses.push("selectedBigram")
-         const initialPair = getBigramSubstPair(initialSubstitution, bigram) || nullSubstPair;
-         const newPair = getBigramSubstPair(newSubstitution, bigram) || nullSubstPair;
-         if (bigram.v === 'KQ') {
-            console.log(initialSubstitution);
-         }
+         const inputPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
+         const outputPair = getBigramSubstPair(outputSubstitution, bigram) || nullSubstPair;
          return (
             <div className='bigramBloc' onClick={clickBigram} data-i={iBigram} >
                <span className='frequence'>{bigram.r} %</span>
                <div className={classnames(bigramClasses)}>
                   <div className='bigramCipheredLetter'>{renderBigram(bigram)}</div>
-                  {renderBigramSubstSide(bigram, initialPair, newPair, 0)}
-                  {renderBigramSubstSide(bigram, initialPair, newPair, 1)}
+                  {renderBigramSubstSide(bigram, inputPair, outputPair, 0)}
+                  {renderBigramSubstSide(bigram, inputPair, outputPair, 1)}
                </div>
             </div>
          );
