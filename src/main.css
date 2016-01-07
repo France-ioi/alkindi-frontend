@@ -786,8 +786,12 @@ td .bigramLetter {
   display: block;
   text-align: center;
 }
-.substitutionPair .bigramLetter:first-of-type {
+.substitutionPair .originLetter .bigramLetter {
   margin-bottom: 2px;
+  border-color: transparent;
+}
+.selectedBigram .substitutionPair .originLetter .bigramLetter.qualifier-unconfirmed {
+  background-color: transparent;
 }
 .substitutionPair span.substitutionLock {
   display: block;
