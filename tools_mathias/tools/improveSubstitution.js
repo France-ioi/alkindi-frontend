@@ -179,6 +179,9 @@ function getImproveSubstitution() {
       saveScroll();
       self.state.editState = "preparing";
       var bigram = letterInfos[iLetter].bigram;
+      if (bigram == undefined) {
+         return;
+      }
       var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.outputSubstitution, self.letterRanks);
       self.state.edit = {
          iLetter: iLetter,
