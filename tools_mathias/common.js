@@ -49,7 +49,7 @@ var common = {
          for (var col = 0; col < nbCols; col++) {
             var cell = gridCells[row][col];
             if (cell.q != 'unknown') {
-               letterQualifiers[cell.l] = this.maxQualifier[letterQualifiers[cell.l]][cell.q];
+               letterQualifiers[cell.l] = common.maxQualifier[letterQualifiers[cell.l]][cell.q];
             }
          }
       }
@@ -78,7 +78,7 @@ var common = {
          html += "<div class='variable-entree variable-informations'>";
          html += "<span>Variables d'entrée :</span>";
          for (var iVar = 0; iVar < variables.input.length; iVar++) {
-            html += this.renderVariable(variables.input[iVar]);
+            html += common.renderVariable(variables.input[iVar]);
          }
          html += "</div>";
       }
@@ -86,7 +86,7 @@ var common = {
          html += "<div class='variable-sortie variable-informations'>";
          html += "<span>Variables de sortie :</span>";
          for (var iVar = 0; iVar < variables.output.length; iVar++) {
-            html += this.renderVariable(variables.output[iVar]);
+            html += common.renderVariable(variables.output[iVar]);
          }
          html += "</div>";
       }
@@ -154,7 +154,7 @@ var common = {
    },
 
    getWrappingInfos: function(text, maxWidth, alphabet) {
-      var letterRanks = this.getLetterRanks(alphabet);
+      var letterRanks = common.getLetterRanks(alphabet);
       var lineStartCols = [0];
       var col = 0;
       var nextCut = 0;
@@ -178,7 +178,7 @@ var common = {
    },
 
    testWrapping: function(text, maxWidth, alphabet) {
-      var lineStartCols = this.getWrappingInfos(text, maxWidth, alphabet);
+      var lineStartCols = common.getWrappingInfos(text, maxWidth, alphabet);
       for (var iLine = 0; iLine < lineStartCols.length - 1; iLine++) {
          var startCol = lineStartCols[iLine];
          var endCol = lineStartCols[iLine + 1];

@@ -6,13 +6,13 @@ export default PureComponent(self => {
    /*
       props:
          alphabet
-         outputCipheredText
+         cipheredText
          outputCipheredTextVariable
    */
 
    const renderInstructionPython = function () {
       return <span>
-         <span className='code-var'>{self.props.outputCipheredTextVariable}</span> = '<span>{self.props.outputCipheredText}</span>'
+         <span className='code-var'>{self.props.outputCipheredTextVariable}</span> = '<span>{self.props.cipheredText}</span>'
       </span>;
    };
 
@@ -25,7 +25,7 @@ export default PureComponent(self => {
             <div className='panel-body'>
                <Variables inputVars={inputVars} outputVars={outputVars} />
                <div className='grillesSection'>
-                  <div className='y-scrollBloc'>{self.props.outputCipheredText}</div>
+                  <div className='y-scrollBloc'>{self.props.cipheredText}</div>
                </div>
             </div>
          </div>

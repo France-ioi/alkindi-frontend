@@ -759,13 +759,6 @@ td .bigramLetter {
   background-color: #000;
   border: 1px solid #000;
 }
-.selectedBigram .bigramLetter,
-.selectedBigram .substitutionLock {
-  color: #fff;
-}
-.selectedBigram .bigramLetter:nth-of-type(2) {
-  color: #000;
-}
 .substitutionPair {
   display: inline-block;
   border: 3px solid #fff;
@@ -785,12 +778,14 @@ td .bigramLetter {
   text-align: center;
 }
 .substitutionPair .bigramLetter:first-of-type {
-  border-color: transparent;
-  background-color: transparent;
+  margin-bottom: 2px;
 }
 .substitutionPair span.substitutionLock {
   display: block;
   text-align: center;
+}
+.selectedBigram .substitutionPair span.substitutionLock {
+  color: #fff;
 }
 .grillesSection .bigramCipheredLetter {
   min-width: 2.5em;
@@ -830,10 +825,6 @@ td .bigramLetter {
   height: 111px;
   overflow: hidden;
 }
-.letterSubstBloc.selectedBigram .bigramLetter:first-of-type.qualifier-unconfirmed {
-  color: #fff;
-  background-color: transparent; 
-}
 .letterStatus-left .cipheredLetter,
 .letterStatus-right .cipheredLetter,
 .letterStatus-inside .cipheredLetter {
@@ -848,11 +839,15 @@ td .bigramLetter {
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
 }
+.letterStatus-inside .substitutionPair {
+    width: 100%;
+}
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
   border: 1px solid transparent;
   margin: 2px 1px;
   line-height: 2em;
+  height: 2em;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram .character,
 .letterSubstBloc.letterStatus-outside.selectedBigram .character {

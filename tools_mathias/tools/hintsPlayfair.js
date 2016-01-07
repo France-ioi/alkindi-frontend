@@ -128,7 +128,7 @@ function getHintsPlayFair() {
                   "<strong>Coût :</strong> " + cost + " points" +
                "</div>" +
                "<div class='dialogLine'>" +
-                  "<strong>Score / points disponibles :</strong> " + self.props.score + " points" +
+                  "<strong>Points disponibles :</strong> " + self.props.score + " points" +
                "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
             "</div>";
@@ -199,7 +199,7 @@ function getHintsPlayFair() {
                      renderAlphabet() +
                   "</div>" +
                "</div>" +
-               "<div class='playfair-score'><span><strong>Score :</strong> " + self.props.score + " points</span></div>" +
+               "<div class='playfair-score'><span><strong>Points disponibles :</strong> " + self.props.score + " points</span></div>" +
             "</div>" +
          "</div>";
    };
