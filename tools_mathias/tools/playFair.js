@@ -1,14 +1,6 @@
 var playFair = {
    alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z'],
 
-   emptyGrid: [
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
-      [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}]
-   ],
-
    initialTaskGrid: [
       [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
       [{q:'unknown'}, {l:11, q:'hint'}, {q:'unknown'}, {q:'unknown'}, {l:10, q:'hint'}],
@@ -42,6 +34,17 @@ var playFair = {
       ['N', 'R', 'V', 'X', 'Z']
    ],
 
+   getEmptyGrid: function() {
+      var grid = [];
+      for (var row = 0; row < 5; row++) {
+         grid[row] = [];
+         for (var col = 0; col < 5; col++) {
+            grid[row][col] = {q: 'unknown'};
+         }
+      }
+      return grid;
+   },
+
    getHintGrid: function(hints, row, col) {
       var letterRanks = common.getLetterRanks(this.alphabet);
       var letter = hints[row][col];
@@ -69,20 +72,25 @@ var playFair = {
       return this.getSubstitutionFromGridCells(this.sampleGrid2);
    },
 
-   updateCells: function(inputCells, outputCells) {
+   updateCells: function(inputCells, editedCells) {
       var nbRows = inputCells.length;
       var nbCols = inputCells[0].length;
+      var outputCells = [];
       for (var row = 0; row < nbRows; row++) {
-         if (outputCells[row] == undefined) {
-            outputCells[row] = [];
-         }
+         outputCells[row] = [];
          for (var col = 0; col < nbCols; col++) {
-            if (outputCells[row][col] == undefined) {
-               outputCells[row][col] = { q: 'unknown'};
+            var editedCell;
+            if ((editedCells[row] != undefined) && (editedCells[row][col] != undefined)) {
+               editedCell = editedCells[row][col];
+            } else {
+               editedCell = {q: "unknown"};
             }
-            common.updateCell(inputCells[row][col], outputCells[row][col]);
+            var outputCell = {};
+            common.updateCellNew(inputCells[row][col], editedCell, outputCell);
+            outputCells[row][col] = outputCell;
          }
       }
+      return outputCells;
    },
    
    renderGrid: function(toolName, cells, selectedRow, selectedCol, isConflictFct) {

@@ -14,12 +14,13 @@ function getSubstitutionFromGrid() {
    };
 
    self.state = {
+      editedGridCells: playFair.getEmptyGrid(),
       editState: undefined,
       edit: undefined
    };
 
    self.compute = function() {
-      playFair.updateCells(self.props.inputGridCells, self.props.outputGridCells);
+      self.props.outputGridCells = playFair.updateCells(self.props.inputGridCells, self.state.editedGridCells);
       self.props.outputSubstitution = playFair.getSubstitutionFromGridCells(self.props.outputGridCells);
    };
 
@@ -141,7 +142,7 @@ function getSubstitutionFromGrid() {
          alert(value + " n'est pas une valeur possible de la grille");
          return;
       }
-      var cell = self.props.outputGridCells[self.state.edit.row][self.state.edit.col];
+      var cell = self.state.editedGridCells[self.state.edit.row][self.state.edit.col];
       if (value == '') {
          cell.q = 'unknown';
          cell.l = undefined;
