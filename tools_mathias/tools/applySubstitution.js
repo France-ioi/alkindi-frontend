@@ -99,7 +99,7 @@ function getApplySubstitution() {
       for (var iCell = 0; iCell < cells.length; iCell++) {
          var cell = cells[iCell];
          if (lineStartCols[line + 1] == iCell) {
-            html += "<hr />";
+            html += "<br />";
             line++;
          }
          var qualifierClass = bigramsUtils.getPairLetterClass(cell); // TODO: use substitution.getQualifierClass in react version
