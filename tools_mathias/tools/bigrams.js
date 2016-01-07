@@ -193,7 +193,7 @@ var bigramsUtils = {
             for (var side = 0; side < 2; side++) {
                if ((inputSubstPair.dst[side].q != "unknown") || (editedSubstPair.dst[side].q != "unknown")) {
                   updated = true;
-                  common.updateCellNew(inputSubstPair.dst[side], editedSubstPair.dst[side], outputSubstPair.dst[side]);
+                  common.updateCell(inputSubstPair.dst[side], editedSubstPair.dst[side], outputSubstPair.dst[side]);
                }
             }
             if (updated) {

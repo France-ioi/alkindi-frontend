@@ -141,19 +141,7 @@ var common = {
       }
    },
 
-   updateCell: function(inputCell, outputCell) {
-      if ((outputCell.q == 'unknown') ||
-          ((outputCell.q == 'guess') && (inputCell.q != 'guess') && (inputCell.q != 'unknown'))) {
-         outputCell.l = inputCell.l;
-         if (inputCell.q == 'locked') {
-            outputCell.q = 'confirmed';
-         } else {
-            outputCell.q = inputCell.q;
-         }
-      }
-   },
-
-   updateCellNew: function(inputCell, editedCell, outputCell) {
+   updateCell: function(inputCell, editedCell, outputCell) {
       if ((editedCell.q == 'unknown') ||
           ((editedCell.q == 'guess') && (inputCell.q != 'guess') && (inputCell.q != 'unknown'))) {
          outputCell.l = inputCell.l;

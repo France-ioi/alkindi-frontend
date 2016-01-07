@@ -86,7 +86,7 @@ var playFair = {
                editedCell = {q: "unknown"};
             }
             var outputCell = {};
-            common.updateCellNew(inputCells[row][col], editedCell, outputCell);
+            common.updateCell(inputCells[row][col], editedCell, outputCell);
             outputCells[row][col] = outputCell;
          }
       }
