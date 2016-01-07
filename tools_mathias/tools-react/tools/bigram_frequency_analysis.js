@@ -61,9 +61,39 @@ export const Component = PureComponent(self => {
    };
 
    const validateDialog = function () {
+      const {selectedPos, editPair} = self.state;
+      const {alphabet, mostFrequentBigrams} = self.props.scope;
+      const checkedEditPair = [];
+      console.log(editPair);
+      for (let iSide = 0; iSide < 2; iSide++) {
+         const {letter} = editPair[iSide];
+         if (letter === undefined || letter === '') {
+            checkedEditPair[iSide] = false;
+         } else if (letter in alphabet.ranks) {
+            const rank = alphabet.ranks[letter];
+            checkedEditPair[iSide] = editPair[iSide];
+         } else {
+            alert(letter + " n'est pas une valeur possible de la grille");
+            return;
+         }
+      }
+      const {v} = mostFrequentBigrams[selectedPos];
+      const {toolState, setToolState} = self.props;
+      let newEdits = {...toolState.substitutionEdits};
+      if (!checkedEditPair[0] && !checkedEditPair[1])
+         delete newEdits[v];
+      else
+         newEdits[v] = checkedEditPair;
+      setToolState({substitutionEdits: newEdits});
+      cancelDialog();
    };
 
    const cancelDialog = function () {
+      self.setState({
+         editState: undefined,
+         editPair: undefined,
+         selectedPos: undefined
+      });
    };
 
    const renderInstructionPython = function () {
@@ -300,95 +330,3 @@ export default self => {
   self.Component = Component;
   self.compute = compute;
 };
-
-
-/*
-
-function getBigramFrequencyAnalysis() {
-   var self = {};
-
-   self.name = "bigramFrequencyAnalysis";
-
-   var sampleSubstitutionModified = playFair.getSampleSubstitution();
-   sampleSubstitutionModified[10][9] = {
-      src: [{ l: 10, q:"confirmed" }, { l: 0, q:"confirmed" }],
-      dst: [{ q:"unknown" }, { l: 21, q:"locked" }]
-   }
-
-   self.props = {
-      alphabet: playFair.alphabet,      
-      inputCipheredText: playFair.sampleCipheredText,
-      inputSubstitution: [],
-      outputSubstitution: [], //sampleSubstitutionModified,
-      inputCipheredTextVariable: "texteChiffré",
-      inputSubstitutionVariable: "substitutionDépart",
-      outputSubstitutionVariable: "substitutionFréquences"
-   };
-
-   self.state = {
-      textBigrams: undefined,
-      editState: undefined,
-      edit: undefined,
-      scrollLeftText: 0,
-      scrollLeftFrench: 0
-   };
-
-   self.mostFrequentBigrams = bigramsUtils.getMostFrequentBigrams(self.props.inputCipheredText, self.props.alphabet);
-   self.letterRanks = common.getLetterRanks(playFair.alphabet);
-
-   self.compute = function() {
-      bigramsUtils.updateSubstitution(self.props.inputSubstitution, self.props.outputSubstitution);
-   };
-
-   self.changeBigramSubstLetter = function(iLetter) {
-      var letter = document.getElementById("editBigramSubstLetter" + (iLetter + 1)).value;
-      self.state.edit.letters[iLetter] = letter;
-   };
-
-   self.validateDialog = function() {
-      var letterRanks = common.getLetterRanks(playFair.alphabet);
-      // TODO: get from state and store in state on change
-      var letters = self.state.edit.letters;
-      for (var iLetter = 0; iLetter < 2; iLetter++) {
-         var letter = letters[iLetter];
-         if ((letter != '') && (letterRanks[letter] == undefined)) {
-            alert(letter + " n'est pas une valeur possible de la grille");
-            return;
-         }
-      }
-      var bigram = self.mostFrequentBigrams[self.state.edit.iBigram];
-      var substPair = self.state.edit.substPair;
-      for (var iLetter = 0; iLetter < 2; iLetter++) {
-         if (letters[iLetter] != "") {
-            var cell = substPair.dst[iLetter]
-            cell.l = letterRanks[letters[iLetter]];
-            cell.q = "guess";
-            if (self.state.edit.locked[iLetter]) {
-               cell.q = "locked";
-            }
-         }
-      }
-      var rank1 = letterRanks[bigram.v.charAt(0)];
-      var rank2 = letterRanks[bigram.v.charAt(1)];
-      if (self.props.outputSubstitution[rank1] == undefined) {
-         self.props.outputSubstitution[rank1] = [];
-      }
-      self.props.outputSubstitution[rank1][rank2] = substPair;
-
-      self.cancelDialog();
-   }
-
-   self.cancelDialog = function() {
-      self.state.edit = undefined;
-      self.state.editState = undefined;
-      renderAll();
-   }
-
-   self.toggleLockLetter = function(iLetter) {
-      self.state.edit.locked[iLetter] = !self.state.edit.locked[iLetter];
-      renderAll();
-   };
-
-   return self;
-}
-*/
