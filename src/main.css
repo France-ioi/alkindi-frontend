@@ -513,6 +513,7 @@ a.cell-link {
 }
 .dialogLine {
   min-height: 2em;
+  line-height: 2em;
 }
 .dialogLabel {
   font-weight: bold;
