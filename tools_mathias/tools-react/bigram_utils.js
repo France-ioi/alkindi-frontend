@@ -284,6 +284,5 @@ export const applySubstitutionEdits = function (alphabet, substitution, edits) {
       }
    }
 
-   console.log(outputSubstitution);
    return outputSubstitution;
 }
