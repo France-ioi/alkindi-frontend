@@ -70,10 +70,14 @@ function getSubstitutionToPlayFairGrid() {
    };
 
    var renderConflicts = function() {
+      var defaultMsg = "<p>Sélectionnez une case de la grille pour voir les substitution qui la définissent.<br/>Pour les celles encadrées en rouge, les causes de conflits seront affichées.</p>";
       if (self.state.editState != "preparing") {
-         return "<p>Sélectionnez une case de la grille pour voir les substitution qui la définissent.<br/>Pour les celles encadrées en rouge, les causes de conflits seront affichées.</p>";
+         return defaultMsg;
       }
       var letter = self.props.outputGridCells[self.state.edit.row][self.state.edit.col].l;
+      if (letter == undefined) {
+         return defaultMsg;
+      }
       var strLetter = playFair.alphabet[letter];
       var substPairs = playFair.getSubstitutionPairsForDstCell(self.props.outputGridCells, self.props.inputSubstitution, self.state.edit.row, self.state.edit.col);
       var samePairs = [];
@@ -93,7 +97,7 @@ function getSubstitutionToPlayFairGrid() {
       }
       var html = "";
       if (samePairs.length > 0) {
-         html += samePairs.length + " substitution(s) donnent la lettre " + strLetter + " en première position :<br/>" +
+         html += samePairs.length + " substitution(s) donne(nt) la lettre " + strLetter + " en première position :<br/>" +
             "<div class='bigramSubstitution y-scrollBloc' style='height:" + height + "px;'>";
          for (var iPair = 0; iPair < samePairs.length; iPair++) {
             var pair = samePairs[iPair];
