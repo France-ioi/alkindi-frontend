@@ -778,8 +778,15 @@ td .bigramLetter {
   margin-bottom: 2px;
   border-color: transparent;
 }
+.selectedBigram .substitutionPair .originLetter .bigramLetter {
+  color: #fff;
+}
 .selectedBigram .substitutionPair .originLetter .bigramLetter.qualifier-unconfirmed {
   background-color: transparent;
+}
+.selectedBigram .substitutionPair .originLetter .bigramLetter.qualifier-confirmed {
+  border-color: #000;
+  color: #000;
 }
 .substitutionPair span.substitutionLock {
   display: block;
