@@ -49,31 +49,3 @@ export const Grid = PureComponent(self => {
    };
 
 });
-
-export const GridPython = PureComponent(self => {
-   /* Props:
-         grid
-         renderCell
-   */
-   self.render = function () {
-      const {grid, renderCell} = self.props;
-      const nbRows = grid.length;
-      const nbCols = grid[0].length;
-      let strPython = "[";
-      for (let row = 0; row < nbRows; row++) {
-         if (row !== 0)
-            strPython += ", "
-         strPython += "[";
-         for (let col = 0; col < nbCols; col++) {
-            if (col != 0) {
-               strPython += ", ";
-            }
-            const cell = grid[row][col];
-            strPython += renderCell(grid[row][col]);
-         }
-         strPython += "]";
-      }
-      strPython += "];";
-      return <span>{strPython}</span>;
-   };
-});

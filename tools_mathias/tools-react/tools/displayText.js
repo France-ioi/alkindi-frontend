@@ -1,5 +1,6 @@
 import {PureComponent} from '../utils';
 import {Variables} from '../ui/variables';
+import * as Python from '../python';
 
 export default PureComponent(self => {
 
@@ -11,9 +12,13 @@ export default PureComponent(self => {
    */
 
    const renderInstructionPython = function () {
-      return <span>
-         <span className='code-var'>{self.props.outputCipheredTextVariable}</span> = '<span>{self.props.cipheredText}</span>'
-      </span>;
+      const {outputCipheredTextVariable, cipheredText} = self.props;
+      return (
+         <Python.Assign>
+            <Python.Var name={outputCipheredTextVariable}/>
+            <Python.StrLit value={cipheredText}/>
+         </Python.Assign>
+      );
    };
 
    self.render = function() {
@@ -21,7 +26,9 @@ export default PureComponent(self => {
       const outputVars = [{label: "Texte chiffré", name: self.props.outputCipheredTextVariable}];
       return (
          <div className='panel panel-default'>
-            <div className='panel-heading'><span className='code'>{renderInstructionPython()}</span></div>
+            <div className='panel-heading'>
+               <span className='code'>{renderInstructionPython()}</span>
+            </div>
             <div className='panel-body'>
                <Variables inputVars={inputVars} outputVars={outputVars} />
                <div className='grillesSection'>

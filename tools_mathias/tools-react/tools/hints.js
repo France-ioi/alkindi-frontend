@@ -4,9 +4,10 @@ import range from 'node-range';
 import {PureComponent} from '../utils';
 import {Variables} from '../ui/variables';
 import {Alphabet} from '../ui/alphabet';
-import {Grid, GridPython} from '../ui/grid';
+import {Grid} from '../ui/grid';
 import {OkCancel} from '../ui/ok_cancel';
 import {getCellLetter, getLetterQualifiersFromGrid} from '../tools';
+import * as Python from '../python';
 
 export default PureComponent(self => {
 
@@ -78,7 +79,10 @@ export default PureComponent(self => {
          return "'" + getCellLetter(alphabet, cell) + "'";
       };
       return (
-         <span><span className='code-var'>{outputGridVariable}</span> = <GridPython grid={gridCells} renderCell={renderCell} /></span>
+         <Python.Assign>
+            <Python.Var name={outputGridVariable}/>
+            <Python.Grid grid={gridCells} renderCell={renderCell} />
+         </Python.Assign>
       );
    };
 
