@@ -177,7 +177,6 @@ const reduceStep = function (state) {
 };
 
 function actualReduce (state, action) {
-  let newState = state;
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':

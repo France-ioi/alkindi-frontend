@@ -9,21 +9,24 @@ import {OkCancel} from '../ui/ok_cancel';
 import {getCellLetter, getLetterQualifiersFromGrid} from '../tools';
 import * as Python from '../python';
 
-export default PureComponent(self => {
+export const Component = PureComponent(self => {
 
-   /* props:
-         alphabet
-         gridCells
-         score
-         outputGridVariable
-         getQueryCost(query)
-         getHint(query, callback)
+   /*
+      props:
+         scope:
+            alphabet
+            hintsGrid
+            score
+            getQueryCost(query)
+            getHint(query, callback)
+         toolState:
+            outputGridVariable
    */
 
    const validateDialog = function() {
       let {hintQuery} = self.state;
       self.setState({hintState: "waiting"});
-      self.props.getHint(hintQuery, function (err) {
+      self.props.scope.getHint(hintQuery, function (err) {
          // TODO: handle err
          self.setState({hintState: "received"});
       });
@@ -54,7 +57,7 @@ export default PureComponent(self => {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.props.gridCells[row][col].q === "confirmed") {
+      if (self.props.scope.hintsGrid[row][col].q === "confirmed") {
          hintAlreadyObtained();
       } else {
          prepareQuery({type:'grid', row: row, col: col});
@@ -65,7 +68,8 @@ export default PureComponent(self => {
       if (self.state.hintState === "waiting") {
          return;
       }
-      const qualifiers = getLetterQualifiersFromGrid(self.props.gridCells, self.props.alphabet);
+      const {alphabet, hintsGrid} = self.props.scope;
+      const qualifiers = getLetterQualifiersFromGrid(hintsGrid, alphabet);
       if (qualifiers[rank] === "confirmed") {
          hintAlreadyObtained();
       } else {
@@ -74,20 +78,21 @@ export default PureComponent(self => {
    };
 
    const renderInstructionPython = function() {
-      const {outputGridVariable, alphabet, gridCells} = self.props;
+      const {alphabet, hintsGrid} = self.props.scope;
+      const {outputGridVariable} = self.props.toolState;
       const renderCell = function (cell) {
          return "'" + getCellLetter(alphabet, cell) + "'";
       };
       return (
          <Python.Assign>
             <Python.Var name={outputGridVariable}/>
-            <Python.Grid grid={gridCells} renderCell={renderCell} />
+            <Python.Grid grid={hintsGrid} renderCell={renderCell} />
          </Python.Assign>
       );
    };
 
    const renderGrid = function() {
-      const {alphabet, gridCells} = self.props;
+      const {alphabet, hintsGrid} = self.props.scope;
       let selectedRow;
       let selectedCol;
       const query = self.state.hintQuery;
@@ -95,24 +100,24 @@ export default PureComponent(self => {
          selectedRow = query.row;
          selectedCol = query.col;
       }
-      return <Grid alphabet={alphabet} grid={gridCells} selectedRow={selectedRow} selectedCol={selectedCol} onClick={clickGridCell} />;
+      return <Grid alphabet={alphabet} grid={hintsGrid} selectedRow={selectedRow} selectedCol={selectedCol} onClick={clickGridCell} />;
    };
 
    const renderAlphabet = function () {
-      const {alphabet, gridCells} = self.props;
+      const {alphabet, hintsGrid} = self.props.scope;
       const {hintQuery} = self.state;
       let selectedLetterRank;
       if (hintQuery !== undefined && hintQuery.type === 'alphabet') {
          selectedLetterRank = hintQuery.rank;
       }
-      const qualifiers = getLetterQualifiersFromGrid(gridCells, alphabet);
+      const qualifiers = getLetterQualifiersFromGrid(hintsGrid, alphabet);
       return <Alphabet alphabet={alphabet} qualifiers={qualifiers} onClick={clickGridAlphabet} selectedLetterRank={selectedLetterRank} />;
    }
 
    const renderHintQuery = function () {
       const {hintState} = self.state;
       if (hintState === "preparing") {
-         const {score, getQueryCost} = self.props;
+         const {alphabet, score, getQueryCost} = self.props.scope;
          const {hintQuery} = self.state;
          const cost = getQueryCost(hintQuery);
          return (
@@ -121,7 +126,7 @@ export default PureComponent(self => {
                   <strong>Indice demandé :</strong>{' '}
                   {hintQuery.type === "grid"
                    ? <span>lettre à la ligne <span className='dialogIndice'>{hintQuery.row + 1}</span>, colonne <span className='dialogIndice'>{hintQuery.col + 1}</span> de la grille.</span>
-                   : <span>position de la lettre <span className='dialogIndice'>{self.props.alphabet[hintQuery.rank]}</span> dans la grille</span>}
+                   : <span>position de la lettre <span className='dialogIndice'>{alphabet[hintQuery.rank]}</span> dans la grille</span>}
                </div>
                <div className='dialogLine'>
                   <strong>Coût :</strong> {cost} points
@@ -148,7 +153,8 @@ export default PureComponent(self => {
    };
 
    self.render = function() {
-      const {outputGridVariable, score, getQueryCost} = self.props;
+      const {score, getQueryCost} = self.props.scope;
+      const {outputGridVariable} = self.props.toolState;
       const outputVars = [{label: "Grille enregistrée", name: outputGridVariable}];
       return (
          <div className='panel panel-default'>
@@ -182,3 +188,15 @@ export default PureComponent(self => {
       hintState: "idle"
    };
 });
+
+export const compute = function (toolState, scope) {
+   scope.outputGrid = scope.hintsGrid;
+};
+
+export default self => {
+   self.state = {
+      outputGridVariable: undefined
+   };
+   self.Component = Component;
+   self.compute = compute;
+};
