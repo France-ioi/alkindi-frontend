@@ -485,6 +485,15 @@ a.cell-link {
 .playfair-score span strong {
   color: #000;
 }
+#hintsPlayFair .panel {
+  border-color: #C82829;
+}
+#hintsPlayFair .panel-heading {
+  background-color: #C82829;
+}
+#hintsPlayFair .panel-heading .code-var {
+  color: #fff;
+}
 /* Fonts */
 .playFairGrid,
 .playFairAlphabet,
