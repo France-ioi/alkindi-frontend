@@ -8,6 +8,14 @@ export const makeAlphabet = function (chars) {
    for (var iSymbol = 0; iSymbol < size; iSymbol++) {
       ranks[symbols[iSymbol]] = iSymbol;
    }
+   const cellFromInput = function (symbol, locked) {
+      if (symbol === undefined || symbol === '')
+         return {q: 'unknown'};
+      if (symbol in ranks) {
+         const rank = ranks[symbol];
+         return {l: rank, q: locked ? 'guess': 'locked'};
+      }
+   };
    return {chars, symbols, size, ranks};
 };
 
@@ -117,7 +125,6 @@ export const getQualifierClass = function (q) {
   Elements of the grid are objects with properties 'letter' and 'locked'.
 */
 export const applyGridEdit = function (alphabet, inputGrid, editGrid) {
-   // XXX get alphabet from inputGrid
    const nbRows = inputGrid.length;
    const nbCols = inputGrid[0].length;
    const resultRows = [];

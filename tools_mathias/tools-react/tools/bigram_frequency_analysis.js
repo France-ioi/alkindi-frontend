@@ -6,7 +6,7 @@ import {OkCancel} from '../ui/ok_cancel';
 import * as Python from '../python';
 import {getCellLetter, getQualifierClass} from '../tools';
 import {getTextBigrams, getMostFrequentBigrams, getBigramSubstPair,
-        countSubstitutionConflicts, identitySubstPair} from '../bigram_utils';
+        countSubstitutionConflicts, identitySubstPair, applySubstitutionEdits} from '../bigram_utils';
 
 const nullSubstPair = {dst: [{q: "unknown"}, {q: "unknown"}]};
 
@@ -64,7 +64,6 @@ export const Component = PureComponent(self => {
       const {selectedPos, editPair} = self.state;
       const {alphabet, mostFrequentBigrams} = self.props.scope;
       const checkedEditPair = [];
-      console.log(editPair);
       for (let iSide = 0; iSide < 2; iSide++) {
          const {letter} = editPair[iSide];
          if (letter === undefined || letter === '') {
@@ -229,7 +228,7 @@ export const Component = PureComponent(self => {
       const {alphabet} = self.props.scope;
       const {selectedPos} = self.state;
       const testConflict = function (cell1, cell2) {
-         return cell1 !== 'unknown' && cell2 !== 'unknown' && cell1.l !== cell2.l;
+         return cell1.q !== 'unknown' && cell2.q !== 'unknown' && cell1.l !== cell2.l;
       };
       const renderBigramSubstSide = function (bigram, inputPair, outputPair, side) {
          const inputCell = inputPair.dst[side];
@@ -318,10 +317,11 @@ export const Component = PureComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
+   const {substitutionEdits} = toolState;
    const {alphabet, inputCipheredText, inputSubstitution} = scope;
    scope.textBigrams = getTextBigrams(inputCipheredText, alphabet);
    scope.mostFrequentBigrams = getMostFrequentBigrams(scope.textBigrams);
-   scope.outputSubstitution = inputSubstitution; // XXX substitutionEdits
+   scope.outputSubstitution = applySubstitutionEdits(alphabet, inputSubstitution, substitutionEdits);
 };
 
 export default self => {

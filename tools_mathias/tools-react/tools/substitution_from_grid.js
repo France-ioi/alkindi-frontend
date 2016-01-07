@@ -74,7 +74,7 @@ export const Component = PureComponent(self => {
       const {alphabet} = scope;
       const {editGrid} = toolState;
       const {editCell, selectedRow, selectedCol} = self.state;
-      const letter = editCell.letter.trim().toUpperCase();
+      const letter = editCell.letter.trim().toUpperCase();  // XXX
       let edit;
       if (letter === '') {
          edit = undefined;
