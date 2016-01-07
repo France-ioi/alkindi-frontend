@@ -75,10 +75,33 @@ function getApplySubstitution() {
       });
    };
 
+   var getFakeTextFromCells = function(cells) {
+      var text = "";
+      for (var iCell = 0; iCell < cells.length; iCell++) {
+         var qualifier = cells[iCell].q;
+         var letter;
+         if (qualifier == "") {
+            letter = " ";
+         } else {
+            letter = self.props.alphabet[0];
+         }
+         text += letter;
+      }
+      return text;
+   };
+
    var renderText = function(cells) {
+      var nbLettersPerRow = 29;
+      var text = getFakeTextFromCells(cells);
+      var lineStartCols = common.getWrappingInfos(text, 29, self.props.alphabet);
       var html = "";
+      var line = 0;
       for (var iCell = 0; iCell < cells.length; iCell++) {
          var cell = cells[iCell];
+         if (lineStartCols[line + 1] == iCell) {
+            html += "<hr />";
+            line++;
+         }
          var qualifierClass = bigramsUtils.getPairLetterClass(cell); // TODO: use substitution.getQualifierClass in react version
          if (cell.q == "") {
             html += "<span class='substituedLetter character'>" +  cell.letter + "</span>";
