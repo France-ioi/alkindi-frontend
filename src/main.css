@@ -45,10 +45,10 @@ hr {
 .selected {
   font-weight: bold;
 }
-.panel-heading {
+/*.panel-heading {
   overflow: hidden;
   text-overflow: ellipsis;
-}
+}*/
 .panel-body {
   position: relative;
 }
@@ -469,6 +469,11 @@ a.cell-link {
 */
 .panel-heading .code {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 750px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .playfair-score {
   color: #C82829;
