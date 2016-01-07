@@ -228,7 +228,7 @@ export const Component = PureComponent(self => {
       const {alphabet} = self.props.scope;
       const {selectedPos} = self.state;
       const testConflict = function (cell1, cell2) {
-         return cell1 !== 'unknown' && cell2 !== 'unknown' && cell1.l !== cell2.l;
+         return cell1.q !== 'unknown' && cell2.q !== 'unknown' && cell1.l !== cell2.l;
       };
       const renderBigramSubstSide = function (bigram, inputPair, outputPair, side) {
          const inputCell = inputPair.dst[side];
