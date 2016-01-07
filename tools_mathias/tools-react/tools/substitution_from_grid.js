@@ -6,8 +6,7 @@ import {Grid} from '../ui/grid';
 import {Substitution} from '../ui/substitution';
 import {OkCancel} from '../ui/ok_cancel';
 import * as Python from '../python';
-import {put, at, getLetterRank, getCellLetter, applyGridEdit,
-        getSubstitutionFromGridCells} from '../tools';
+import {put, at, getCellLetter, applyGridEdit, getSubstitutionFromGridCells} from '../tools';
 
 export const Component = PureComponent(self => {
 
@@ -80,7 +79,7 @@ export const Component = PureComponent(self => {
       if (letter === '') {
          edit = undefined;
       } else {
-         const rank = getLetterRank(alphabet, letter);
+         const rank = alphabet.ranks[letter];
          if (rank === undefined) {
             alert(letter + " n'est pas une valeur possible de la grille");
             return;

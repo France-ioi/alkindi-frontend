@@ -7,7 +7,9 @@ import {PureComponent} from './utils';
 import TextInput from './tools/text_input';
 import Hints from './tools/hints';
 import SubstitutionFromGrid from './tools/substitution_from_grid';
-import {at, put} from './tools';
+import BigramFrequencyAnalysis from './tools/bigram_frequency_analysis';
+import {at, put, makeAlphabet} from './tools';
+import {mostFrequentFrench, decodeBigram} from './bigram_utils';
 
 const selectApp = function (state) {
    const {tools} = state;
@@ -31,15 +33,8 @@ const App = connect(selectApp)(PureComponent(self => {
 
 }));
 
-const initialState = {
-   tools: [],
-   score: 500,
-   hintsGrid: playFair.initialTaskGrid
-};
-
 const recompute = function (state) {
    const {score, hintsGrid, tools} = state;
-   const {alphabet} = playFair;
    const newTools = [];
    for (let pc = 0; pc < tools.length; pc += 1) {
       const tool = tools[pc];
@@ -88,8 +83,9 @@ const reducer = function (state, action) {
    let newState = state;
    switch (action.type) {
       case '@@redux/INIT':
+         return {};
       case 'INIT':
-         newState = initialState;
+         newState = action.state;
          break;
       case 'ADD_TOOL':
          newState = reduceAddTool(state, action.factory, action.toolState, action.temporaryGetScope);
@@ -110,6 +106,22 @@ const reducer = function (state, action) {
 
 const store = createStore(reducer);
 
+//
+// Tools setup
+//
+
+const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ')
+store.dispatch({
+   type: 'INIT',
+   state: {
+      tools: [],
+      score: 500,
+      hintsGrid: playFair.initialTaskGrid,
+      alphabet: alphabet
+   }
+});
+
+
 store.dispatch({
    type: 'ADD_TOOL',
    factory: TextInput,
@@ -118,7 +130,7 @@ store.dispatch({
    },
    temporaryGetScope: function (state, tools) {
       return {
-         alphabet: playFair.alphabet,
+         alphabet: state.alphabet,
          text: playFair.sampleCipheredText
       };
    }
@@ -157,7 +169,7 @@ store.dispatch({
             }
          }, 1000);
       };
-      return {alphabet: playFair.alphabet, getQueryCost, getHint, hintsGrid, score};
+      return {alphabet: state.alphabet, getQueryCost, getHint, hintsGrid, score};
    }
 })
 
@@ -171,8 +183,28 @@ store.dispatch({
    },
    temporaryGetScope: function (state, tools) {
       return {
-         alphabet: playFair.alphabet,
+         alphabet: state.alphabet,
          inputGrid: tools[1].scope.outputGrid
+      };
+   }
+});
+
+const decodedMostFrequentFrench = mostFrequentFrench.map(decodeBigram.bind(null, alphabet));
+store.dispatch({
+   type: 'ADD_TOOL',
+   factory: BigramFrequencyAnalysis,
+   toolState: {
+      inputCipheredTextVariable: 'texteChiffré',
+      inputSubstitutionVariable: 'substitutionDépart',
+      outputSubstitutionVariable: 'substitutionFréquences',
+      substitutionEdits: []
+   },
+   temporaryGetScope: function (state, tools) {
+      return {
+         alphabet: state.alphabet,
+         inputCipheredText: tools[0].scope.output,
+         mostFrequentFrench: decodedMostFrequentFrench,
+         inputSubstitution: tools[2].scope.outputSubstitution
       };
    }
 });

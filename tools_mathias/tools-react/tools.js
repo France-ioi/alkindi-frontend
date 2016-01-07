@@ -1,6 +1,73 @@
 
-export const {getLetterQualifiersFromGrid} = window.common;
 export const {getSubstitutionFromGridCells} = window.playFair;
+
+export const makeAlphabet = function (chars) {
+   const symbols = chars.split('');
+   const size = symbols.length;
+   var ranks = {};
+   for (var iSymbol = 0; iSymbol < size; iSymbol++) {
+      ranks[symbols[iSymbol]] = iSymbol;
+   }
+   return {chars, symbols, size, ranks};
+};
+
+const maxQualifier = {
+   'unknown': {
+      'unknown': 'unknown',
+      'guess': 'guess',
+      'locked': 'locked',
+      'confirmed': 'confirmed',
+      'hint': 'hint'
+   },
+   'guess': {
+      'unknown': 'guess',
+      'guess': 'guess',
+      'locked': 'locked',
+      'confirmed': 'confirmed',
+      'hint': 'hint'
+   },
+   'locked': {
+      'unknown': 'locked',
+      'guess': 'locked',
+      'locked': 'locked',
+      'confirmed': 'confirmed',
+      'hint': 'hint'
+   },
+   'confirmed': {
+      'unknown': 'confirmed',
+      'guess': 'confirmed',
+      'locked': 'confirmed',
+      'confirmed': 'confirmed',
+      'hint': 'hint'
+   },
+   'hint': {
+      'unknown': 'hint',
+      'guess': 'hint',
+      'locked': 'hint',
+      'confirmed': 'hint',
+      'hint': 'hint'
+   }
+};
+
+/* Returns an array giving for each letter of the alphabet, the max qualifier for that letter in the grid */
+export const getLetterQualifiersFromGrid = function (gridCells, alphabet) {
+   const {size} = alphabet;
+   const letterQualifiers = [];
+   for (let iLetter = 0; iLetter < alphabet.size; iLetter++) {
+      letterQualifiers[iLetter] = 'unknown';
+   }
+   const nbRows = gridCells.length;
+   const nbCols = gridCells[0].length;
+   for (let row = 0; row < nbRows; row++) {
+      for (let col = 0; col < nbCols; col++) {
+         const cell = gridCells[row][col];
+         if (cell.q != 'unknown') {
+            letterQualifiers[cell.l] = common.maxQualifier[letterQualifiers[cell.l]][cell.q];
+         }
+      }
+   }
+   return letterQualifiers;
+};
 
 export const at = function (index, func) {
    return function (array) {
@@ -30,24 +97,20 @@ export const getCellLetter = function (alphabet, cell, useNbsp) {
          return '';
       }
    } else {
-      return alphabet[cell.l];
+      return alphabet.symbols[cell.l];
    }
 };
 
-export const getLetterRank = function (alphabet, letter) {
-   for (var iLetter = 0; iLetter < alphabet.length; iLetter++) {
-      if (alphabet[iLetter] === letter)
-         return iLetter;
+export const getQualifierClass = function (q) {
+   if ((q == "locked") || (q == "confirmed")) {
+      return "qualifier-confirmed";
+   } else if (q == "hint") {
+      return "qualifier-hint";
+   } else {
+      return "qualifier-unconfirmed";
    }
 };
 
-export const getLetterRanks = function (alphabet) {
-   var letterRanks = {};
-   for (var iLetter = 0; iLetter < alphabet.length; iLetter++) {
-      letterRanks[alphabet[iLetter]] = iLetter;
-   }
-   return letterRanks;
-};
 
 /*
   Apply an editGrid to a grid.
@@ -58,7 +121,7 @@ export const applyGridEdit = function (alphabet, inputGrid, editGrid) {
    const nbRows = inputGrid.length;
    const nbCols = inputGrid[0].length;
    const resultRows = [];
-   const letterRanks = getLetterRanks(alphabet);  // XXX make alphabet an object
+   const letterRanks = alphabet.ranks;
    for (var row = 0; row < nbRows; row++) {
       const inputRow = inputGrid[row];
       const editRow = editGrid[row];

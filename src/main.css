@@ -745,12 +745,12 @@ td .bigramLetter {
 .x-scrollBloc .labels > div {
   line-height: 2em;
 }
-#bigramFrequencyAnalysis .bigramBloc {
+#bigramFrequencyAnalysis .bigramBloc, .bigramFrequencyAnalysis .bigramBloc {
   display: inline-block;
   margin: 0 5px 1px;
   vertical-align: top;
 }
-#bigramFrequencyAnalysis .frequence {
+#bigramFrequencyAnalysis .frequence, .bigramFrequencyAnalysis .frequence {
   display: block;
   height: 2em;
   text-align: center;
@@ -808,7 +808,7 @@ td .bigramLetter {
 }
 
 /* Amélioration de substitution */
-#improveSubstitution .y-scrollBloc {
+#improveSubstitution .y-scrollBloc, .improveSubstitution .y-scrollBloc {
   height: 320px;
   padding: 0;
 }
