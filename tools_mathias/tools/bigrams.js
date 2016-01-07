@@ -182,25 +182,29 @@ var bigramsUtils = {
          "</table>";
    },
 
-   updateSubstitution: function(inputSubstitution, outputSubstitution) {
-      for (var l1 = 0; l1 < inputSubstitution.length; l1++) {
-         var row = inputSubstitution[l1];
-         if (row) {
-            for (var l2 = 0; l2 < row.length; l2++) {
-               var substPair = row[l2];
-               if (substPair != undefined) {
-                  var outputSubstPair = this.cloneSubstitutionPairOrCreate(outputSubstitution, l1, l2);
-                  for (var side = 0; side < 2; side++) {
-                     common.updateCell(substPair.dst[side], outputSubstPair.dst[side]);
-                  }
-                  if (outputSubstitution[l1] == undefined) {
-                     outputSubstitution[l1] = [];
-                  }
-                  outputSubstitution[l1][l2] = outputSubstPair;
+   updateSubstitution: function(alphabet, inputSubstitution, editedSubstitution) {
+      var outputSubstitution = [];
+      for (var l1 = 0; l1 < alphabet.length; l1++) {
+         for (var l2 = 0; l2 < alphabet.length; l2++) {
+            var inputSubstPair = this.cloneSubstitutionPairOrCreate(inputSubstitution, l1, l2);
+            var editedSubstPair = this.cloneSubstitutionPairOrCreate(editedSubstitution, l1, l2);
+            var outputSubstPair = this.cloneSubstitutionPairOrCreate(outputSubstitution, l1, l2);
+            var updated = false;
+            for (var side = 0; side < 2; side++) {
+               if ((inputSubstPair.dst[side].q != "unknown") || (editedSubstPair.dst[side].q != "unknown")) {
+                  updated = true;
+                  common.updateCellNew(inputSubstPair.dst[side], editedSubstPair.dst[side], outputSubstPair.dst[side]);
                }
+            }
+            if (updated) {
+               if (outputSubstitution[l1] == undefined) {
+                  outputSubstitution[l1] = [];
+               }
+               outputSubstitution[l1][l2] = outputSubstPair;
             }
          }
       }
+      return outputSubstitution;
    },
 
    conflictBetweenSubstitutions: function(bigram, substitution1, substitution2, side, letterRanks) {

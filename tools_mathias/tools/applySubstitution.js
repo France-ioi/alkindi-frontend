@@ -27,27 +27,33 @@ function getApplySubstitution() {
 
    self.compute = function() {
       var letterInfos = bigramsUtils.getTextAsBigrams(self.props.inputCipheredText, self.props.alphabet).letterInfos;
-      var text = "";
+      var outputText = [];
       for (var iLetter = 0; iLetter < letterInfos.length; iLetter++) {
          var status = letterInfos[iLetter].status;
          var letter;
+         var qualifier = "";
          if ((status != "left") && (status != "right")) {
-            letter = "<span class='substituedLetter character'>" +  self.props.inputCipheredText[iLetter] + "</span>";
+            letter = self.props.inputCipheredText[iLetter];
          } else {
             var bigram = letterInfos[iLetter].bigram;
             var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.inputSubstitution, self.letterRanks);
             if (status == "left") {
-               letter = "<span class='substituedLetter'>" +  common.getCellLetter(self.props.alphabet, substPair.dst[0]) + "</span>";
+               letter = common.getCellLetter(self.props.alphabet, substPair.dst[0]);
+               qualifier = substPair.dst[0].q;
             } else {
-               letter = "<span class='substituedLetter'>" + common.getCellLetter(self.props.alphabet, substPair.dst[1]) + "</span>";
+               letter = common.getCellLetter(self.props.alphabet, substPair.dst[1]);
+               qualifier = substPair.dst[1].q;
             }
          }
          if (letter == '') {
-            letter = "<span class='substituedLetter'>&nbsp;</span>";
+            letter = "&nbsp;";
          }
-         text += letter;
+         if (qualifier == "locked") {
+            qualifier = "confirmed";
+         }
+         outputText.push({letter: letter, q: qualifier, s: status});
       }
-      self.props.outputDecipheredText = text;
+      self.props.outputDecipheredText = outputText;
    };
 
    var renderInstructionPython = function() {
@@ -69,8 +75,20 @@ function getApplySubstitution() {
       });
    };
 
-   var renderText = function(text) {
-      return text;
+   var renderText = function(cells) {
+      var html = "";
+      for (var iCell = 0; iCell < cells.length; iCell++) {
+         var cell = cells[iCell];
+         var qualifierClass = bigramsUtils.getPairLetterClass(cell); // TODO: use substitution.getQualifierClass in react version
+         if (cell.q == "") {
+            html += "<span class='substituedLetter character'>" +  cell.letter + "</span>";
+         } else if (cell.s == "left") {
+            html += "<span class='substituedLetter " + qualifierClass + "'>" +  cell.letter + "</span>";
+         } else if (cell.s == "right") {
+            html += "<span class='substituedLetter " + qualifierClass + "'>" + cell.letter + "</span>";
+         }
+      }
+      return html;
    };
 
    var renderTool = function() {
