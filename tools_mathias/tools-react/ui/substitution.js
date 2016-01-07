@@ -23,7 +23,7 @@ export const Substitution = PureComponent(self => {
 
    self.render = function () {
       const {alphabet, substitution} = self.props;
-      const nbLetters = playFair.alphabet.length;
+      const nbLetters = alphabet.size;
       const items = [];
       const renderCell = function (cell) {
          const letter = getCellLetter(alphabet, cell, true);

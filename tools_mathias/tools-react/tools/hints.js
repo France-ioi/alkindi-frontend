@@ -126,7 +126,7 @@ export const Component = PureComponent(self => {
                   <strong>Indice demandé :</strong>{' '}
                   {hintQuery.type === "grid"
                    ? <span>lettre à la ligne <span className='dialogIndice'>{hintQuery.row + 1}</span>, colonne <span className='dialogIndice'>{hintQuery.col + 1}</span> de la grille.</span>
-                   : <span>position de la lettre <span className='dialogIndice'>{alphabet[hintQuery.rank]}</span> dans la grille</span>}
+                   : <span>position de la lettre <span className='dialogIndice'>{alphabet.symbols[hintQuery.rank]}</span> dans la grille</span>}
                </div>
                <div className='dialogLine'>
                   <strong>Coût :</strong> {cost} points

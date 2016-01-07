@@ -13,6 +13,7 @@ export const Alphabet = PureComponent(self => {
 
    self.render = function () {
       const {alphabet, qualifiers, selectedLetterRank} = self.props;
+      const {symbols} = alphabet;
       const renderCell = function (letterRank) {
          if (letterRank === 22) {
             return <td className='qualifier-disabled'></td>;
@@ -24,7 +25,7 @@ export const Alphabet = PureComponent(self => {
          if (selectedLetterRank === letterRank) {
             classes.push("cell-query");
          }
-         return <td className={classnames(classes)} onClick={onClick} data-letter-rank={letterRank}>{alphabet[letterRank]}</td>;
+         return <td className={classnames(classes)} onClick={onClick} data-letter-rank={letterRank}>{symbols[letterRank]}</td>;
       };
       const renderRow = function (row) {
          return (

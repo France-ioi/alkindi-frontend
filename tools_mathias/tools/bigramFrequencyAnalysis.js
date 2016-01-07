@@ -24,6 +24,7 @@ function getBigramFrequencyAnalysis() {
       textBigrams: undefined,
       editState: undefined,
       edit: undefined,
+      editedSubstitution: [],
       scrollLeftText: 0,
       scrollLeftFrench: 0
    };
@@ -32,7 +33,7 @@ function getBigramFrequencyAnalysis() {
    self.letterRanks = common.getLetterRanks(playFair.alphabet);
 
    self.compute = function() {
-      bigramsUtils.updateSubstitution(self.props.inputSubstitution, self.props.outputSubstitution);
+      self.props.outputSubstitution = bigramsUtils.updateSubstitution(self.props.alphabet, self.props.inputSubstitution, self.state.editedSubstitution);
    };
 
    var renderInstructionPython = function() {
@@ -124,21 +125,24 @@ function getBigramFrequencyAnalysis() {
       var bigram = self.mostFrequentBigrams[self.state.edit.iBigram];
       var substPair = self.state.edit.substPair;
       for (var iLetter = 0; iLetter < 2; iLetter++) {
+         var cell = substPair.dst[iLetter]
          if (letters[iLetter] != "") {
-            var cell = substPair.dst[iLetter]
             cell.l = letterRanks[letters[iLetter]];
             cell.q = "guess";
             if (self.state.edit.locked[iLetter]) {
                cell.q = "locked";
             }
+         } else {
+            cell.q = "unknown";
+            cell.l = undefined;
          }
       }
       var rank1 = letterRanks[bigram.v.charAt(0)];
       var rank2 = letterRanks[bigram.v.charAt(1)];
-      if (self.props.outputSubstitution[rank1] == undefined) {
-         self.props.outputSubstitution[rank1] = [];
+      if (self.state.editedSubstitution[rank1] == undefined) {
+         self.state.editedSubstitution[rank1] = [];
       }
-      self.props.outputSubstitution[rank1][rank2] = substPair;
+      self.state.editedSubstitution[rank1][rank2] = substPair;
 
       self.cancelDialog();
    }
