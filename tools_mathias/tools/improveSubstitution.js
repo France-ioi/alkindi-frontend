@@ -48,11 +48,14 @@ function getImproveSubstitution() {
          var bigram = letterInfos[self.state.edit.iLetter].bigram;
          var substPair = bigramsUtils.getBigramSubstPair(bigram, self.props.inputSubstitution, self.letterRanks);
          var buttonLockedClass = [];
+         var btnToggleClass = [];
          for (var iLetter = 0; iLetter < 2; iLetter++) {
             buttonLockedClass[iLetter] = "";
             if (self.state.edit.locked[iLetter]) {
                buttonLockedClass[iLetter] = "locked";
+               btnToggleClass[iLetter] = "fa-toggle-on";
             }
+            else btnToggleClass[iLetter] = "fa-toggle-off";
          }
          return "<div class='dialog'>" +
                   "<div class='dialogLine'>" +
@@ -86,10 +89,10 @@ function getImproveSubstitution() {
                   "<div class='dialogLine'>" +
                      "<span class='dialogLabel'>Bloquer / débloquer : <i class='fa fa-question-circle'  data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>" +
                      "<span>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-tool lock " + buttonLockedClass[0] + "'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(0)' class='btn-toggle lock " + buttonLockedClass[0] + "'><i class='fa "+ btnToggleClass[0] + "'></i></button>" +
                      "</span>" +
                      "<span>" +
-                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='btn-tool lock " + buttonLockedClass[1] + "'><i class='fa fa-lock'></i></button>" +
+                        "<button type='button' onclick='" + self.name + ".toggleLockLetter(1)' class='btn-toggle lock " + buttonLockedClass[1] + "'><i class='fa "+ btnToggleClass[1] +"'></i></button>" +
                      "</span>" +
                   "</div>" +
                common.renderValidateOrCancelDialog(self.name) +
