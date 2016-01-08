@@ -37,7 +37,7 @@ export const Alphabet = PureComponent(self => {
             </table>
          );
       };
-      return <div>{renderRow(0)}<br/>{renderRow(1)}</div>;
+      return <div>{[renderRow(0), <br/>, renderRow(1)]}</div>;
    };
 
 });
