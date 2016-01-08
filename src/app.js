@@ -24,7 +24,7 @@ const appSelector = function (state) {
 };
 
 let App = connect(appSelector)(PureComponent(self => {
-  const reseed = function (user_id) {
+  const refresh = function (user_id) {
     if (user_id === undefined)
       user_id = self.props.user.id;
     api.readUser(user_id, function (err, res) {
@@ -44,13 +44,13 @@ let App = connect(appSelector)(PureComponent(self => {
     // Si on n'a pas d'utilisateur, on affiche l'écran de login.
     const {user} = self.props;
     if (user === undefined)
-      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={reseed} />;
+      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={refresh} />;
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
     const {team} = self.props;
     if (team === undefined) {
       const {round} = self.props;
-      return <JoinTeamScreen user={user} round={round} onLogout={afterLogout} onJoinTeam={reseed} />;
+      return <JoinTeamScreen user={user} round={round} onLogout={afterLogout} onJoinTeam={refresh} />;
     }
     // Interface principale...
     const {activeTabKey, enabledTabs, round, attempt, task} = self.props;
@@ -60,13 +60,13 @@ let App = connect(appSelector)(PureComponent(self => {
         content = <TaskTab round={round} attempt={attempt} task={task} />;
         break;
       case 'cryptanalysis':
-        content = <PlayFairTab/>;
+        content = <PlayFairTab refresh={refresh} />;
         break;
       case 'answer':
         // content = <AnswerTab />;
         break;
       case 'team':
-        content = <TeamTab reseed={reseed} />;
+        content = <TeamTab refresh={refresh} />;
         break;
       case 'history':
         content = <HistoryTab/>;

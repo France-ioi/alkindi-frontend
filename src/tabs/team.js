@@ -114,7 +114,7 @@ const TeamTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
   const refresh = function () {
     self.setState({access_code: undefined});
-    self.props.reseed();
+    self.props.refresh();
   };
   const onIsOpenChanged = function (event) {
     self.setState({
