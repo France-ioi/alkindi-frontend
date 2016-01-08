@@ -102,6 +102,12 @@ export const put = function (value) {
    };
 };
 
+export const weakenCell = function (cell) {
+   if (cell.q === 'locked')
+      return {...cell, q: 'confirmed'};
+   return cell;
+};
+
 export const getCellLetter = function (alphabet, cell, useNbsp) {
    if (cell.q === 'unknown') {
       if (useNbsp) {
