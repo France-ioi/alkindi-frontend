@@ -105,13 +105,13 @@ export const Component = PureComponent(self => {
       return <span className={classnames(classes)}>{getCellLetter(alphabet, cell, true)}</span>;
    };
 
-   const renderBigramSubstSide = function (key, alphabet, bigram, inputPair, outputPair, side) {
+   const renderBigramSubstSide = function (alphabet, bigram, inputPair, outputPair, side) {
       const inputCell = inputPair.dst[side];
       const outputCell = outputPair.dst[side];
       const hasConflict = testConflict(inputCell, outputCell);
       const isLocked = outputCell.q === "locked";
       return (
-         <div key={key} className={classnames(['substitutionPair', hasConflict && 'substitutionConflict'])}>
+         <div className={classnames(['substitutionPair', hasConflict && 'substitutionConflict'])}>
             <span className='originLetter'>
                {renderCell(alphabet, inputCell)}
             </span>
@@ -125,7 +125,7 @@ export const Component = PureComponent(self => {
       );
    };
 
-   const renderLiteralSubstSide = function (key, letter) {
+   const renderLiteralSubstSide = function (letter) {
       return (
          <div className='substitutionPair'>
             <div className='character'>{letter}</div>
@@ -143,7 +143,7 @@ export const Component = PureComponent(self => {
       const elements = [];
       for (let iLetter = 0; iLetter < inputCipheredText.length; iLetter++) {
          if (lineStartCols[line + 1] === iLetter) {
-            elements.push(<hr key={'l'+iLetter}/>);
+            elements.push(<hr/>);
             line++;
          }
          const letter = inputCipheredText[iLetter];
@@ -153,9 +153,9 @@ export const Component = PureComponent(self => {
          if (side !== undefined) {
             const inputPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
             const outputPair = getBigramSubstPair(outputSubstitution, bigram) || nullSubstPair;
-            substBlock = renderBigramSubstSide(iLetter, alphabet, bigram, inputPair, outputPair, side);
+            substBlock = renderBigramSubstSide(alphabet, bigram, inputPair, outputPair, side);
          } else {
-            substBlock = renderLiteralSubstSide(iLetter, letter);
+            substBlock = renderLiteralSubstSide(letter);
          }
          const bigramClasses = [
             'letterSubstBloc',
@@ -204,11 +204,11 @@ export const Component = PureComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {substitutionEdits, nbLettersPerRow} = toolState;
-   const {alphabet, inputCipheredText, inputSubstitution, outputSubstitution} = scope;
+   const {alphabet, inputCipheredText, inputSubstitution} = scope;
    scope.letterInfos = getTextAsBigrams(inputCipheredText, alphabet).letterInfos;
    scope.lineStartCols = getStringWrapping(inputCipheredText, nbLettersPerRow, alphabet);
    scope.outputSubstitution = applySubstitutionEdits(alphabet, inputSubstitution, substitutionEdits);
-   scope.nConflicts = countAllSubstitutionConflicts(inputSubstitution, outputSubstitution, alphabet);
+   scope.nConflicts = countAllSubstitutionConflicts(inputSubstitution, scope.outputSubstitution, alphabet);
 };
 
 export default self => {
