@@ -30,7 +30,7 @@ export default PureComponent(self => {
 
    const validateDialog = function () {
       const {alphabet, editCell, onOk} = self.props;
-      const letter = editCell.letter.trim().toUpperCase();  // XXX
+      const letter = editCell.letter || '';
       let edit;
       if (letter === '') {
          edit = {};
