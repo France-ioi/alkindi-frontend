@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button, Panel} from 'react-bootstrap';
 
-import code from '../code';
-import ToolHeader from '../ui/tool_header';
-import TextDisplay from '../ui/text_display';
+import {PureComponent, stateSetters} from '../../misc';
+import code from '../utils/code';
 import SelectVariable from '../ui/select_variable';
-import {PureComponent, stateSetters} from '../misc';
+import TextDisplay from '../ui/text_display';
+import ToolHeader from '../ui/tool_header';
 
 export const renderTitle = function (tool) {
   return code.wrap([

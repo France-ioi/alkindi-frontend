@@ -2,15 +2,15 @@ import React from 'react';
 import {Alert, Button, ButtonGroup, Panel} from 'react-bootstrap';
 import deepmerge from 'deepmerge';
 
-import code from '../code';
-import ToolHeader from '../ui/tool_header';
-import SubstitutionEditor from '../ui/substitution_editor';
-import SelectAlphabet from '../ui/select_alphabet';
+import {PureComponent, stateSetters} from '../../misc';
+import alphabets from '../utils/alphabets';
+import code from '../utils/code';
+import {importSubstitution, runSubstitutionInitializer} from '../utils/values';
 import InputVariableName from '../ui/input_variable_name';
+import SelectAlphabet from '../ui/select_alphabet';
+import SubstitutionEditor from '../ui/substitution_editor';
 import SubstitutionInitializer from '../ui/substitution_initializer';
-import alphabets from '../alphabets';
-import {PureComponent, stateSetters} from '../misc';
-import {importSubstitution, runSubstitutionInitializer} from '../values';
+import ToolHeader from '../ui/tool_header';
 
 export const renderTitle = function (tool) {
   const {outputVarName} = tool.state;
