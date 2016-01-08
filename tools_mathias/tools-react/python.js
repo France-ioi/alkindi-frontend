@@ -37,11 +37,13 @@ export const Call = PureComponent(self => {
          children
    */
    self.render = function () {
+      const args = self.props.children.filter(arg => arg);
       return (
          <span>
             {self.props.name}
             {'('}
-            {intersperse(self.props.children, ', ')}
+            {intersperse(args, ', ')}
+            {')'}
          </span>
       );
    };
