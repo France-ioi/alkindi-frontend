@@ -130,9 +130,9 @@ export const Component = PureComponent(self => {
    };
 
    const renderFreqBigrams = function (bigrams) {
-      const renderFreqBigram = function (bigram) {
+      const renderFreqBigram = function (bigram, i) {
          return (
-            <div className='bigramBloc'>
+            <div key={i} className='bigramBloc'>
                <span className='frequence'>{bigram.r} %</span>
                <div className='bigramBlocSubstitution'>
                   <div className='bigramCipheredLetter'>
@@ -183,7 +183,7 @@ export const Component = PureComponent(self => {
          const inputPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
          const outputPair = getBigramSubstPair(outputSubstitution, bigram) || nullSubstPair;
          return (
-            <div className='bigramBloc' onClick={clickBigram} data-i={iBigram} >
+            <div key={iBigram} className='bigramBloc' onClick={clickBigram} data-i={iBigram} >
                <span className='frequence'>{bigram.r} %</span>
                <div className={classnames(bigramClasses)}>
                   <div className='bigramCipheredLetter'>{renderBigram(bigram)}</div>

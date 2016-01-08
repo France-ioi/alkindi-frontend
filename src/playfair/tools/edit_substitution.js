@@ -147,7 +147,7 @@ export const Component = PureComponent(self => {
       const elements = [];
       for (let iLetter = 0; iLetter < inputCipheredText.length; iLetter++) {
          if (lineStartCols[line + 1] === iLetter) {
-            elements.push(<hr/>);
+            elements.push(<hr key={'l'+line}/>);
             line++;
          }
          const letter = inputCipheredText[iLetter];
@@ -167,7 +167,7 @@ export const Component = PureComponent(self => {
             iBigram !== undefined && selectedBigramPos === iBigram && 'selectedBigram'
          ];
          elements.push(
-            <div className={classnames(bigramClasses)} onClick={clickBigram} data-i={iLetter}>
+            <div key={iLetter} className={classnames(bigramClasses)} onClick={clickBigram} data-i={iLetter}>
                <div className='cipheredLetter'>{letter}</div>
                {substBlock}
             </div>

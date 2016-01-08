@@ -50,10 +50,10 @@ export const Component = PureComponent(self => {
       return <Variables inputVars={inputVars} outputVars={outputVars} />;
    };
 
-   const renderCell = function (alphabet, cell) {
+   const renderCell = function (alphabet, cell, key) {
       const classes = ['substituedLetter', getQualifierClass(cell.q)];
       const letter = 'l' in cell ? getCellLetter(alphabet, cell, true) : cell.c;
-      return <span className={classnames(classes)}>{letter}</span>;
+      return <span key={key} className={classnames(classes)}>{letter}</span>;
    };
 
    const renderText = function () {
@@ -62,11 +62,11 @@ export const Component = PureComponent(self => {
       const elements = [];
       for (let iCell = 0; iCell < outputText.length; iCell++) {
          if (lineStartCols[line + 1] === iCell) {
-            elements.push(<hr/>);
+            elements.push(<hr key={'l'+line}/>);
             line++;
          }
          const cell = outputText[iCell];
-         elements.push(renderCell(alphabet, cell));
+         elements.push(renderCell(alphabet, cell, iCell));
       }
       return <div className='y-scrollBloc'>{elements}</div>;
    };

@@ -47,7 +47,7 @@ export const Substitution = PureComponent(self => {
          for (var src2 = src1 + 1; src2 < nbLetters; src2++) {
             if ((substitution[src1] !== undefined) && (substitution[src1][src2] !== undefined)) {
                items.push(
-                  <div>
+                  <div key={src1*nbLetters+src2}>
                      {renderPair(substitution[src1][src2])}
                      {renderPair(substitution[src2][src1])}
                   </div>
