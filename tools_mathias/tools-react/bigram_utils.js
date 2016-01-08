@@ -291,4 +291,23 @@ export const applySubstitutionEdits = function (alphabet, substitution, edits) {
    }
 
    return outputSubstitution;
-}
+};
+
+export const applySubstitution = function (alphabet, substitution, letterInfos) {
+   const outputText = [];
+   for (var iLetter = 0; iLetter < letterInfos.length; iLetter++) {
+      const letterInfo = letterInfos[iLetter];
+      const {status} = letterInfo;
+      const side = sideOfStatus[status];
+      let cell;
+      if (side === undefined) {
+         cell = {c: letterInfo.letter};
+      } else {
+         const bigram = letterInfo.bigram;
+         const substPair = getBigramSubstPair(substitution, bigram) || nullSubstPair;
+         cell = weakenCell(substPair.dst[side]);
+      }
+      outputText.push(cell);
+   }
+   return outputText;
+};
