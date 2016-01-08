@@ -1,3 +1,4 @@
+import {weakenCell} from './tools';
 
 export const mostFrequentFrench = [
    { v: "ES", r: 3.1 },
@@ -31,6 +32,8 @@ export const mostFrequentFrench = [
    { v: "RA", r: 0.9 },
    { v: "IN", r: 0.8 }
 ];
+
+export const sideOfStatus = {'left': 0, 'right': 1};
 
 export const decodeBigram = function (alphabet, bigram) {
    const {v} = bigram;
@@ -154,11 +157,11 @@ export const identitySubstPair = function (bigram) {
 };
 
 export const testSubstitutionConflict = function (substitution1, substitution2, bigram, side) {
-   var substPair1 = getBigramSubstPair(substitution1, bigram);
-   var substPair2 = getBigramSubstPair(substitution2, bigram);
-   var q1 = substPair1 && substPair1.dst[side].q;
-   var q2 = substPair2 && substPair2.dst[side].q;
-   if (!q1 || !q2 || q1 === 'unknown' || q2 === 'unknown') {
+   var substPair1 = getBigramSubstPair(substitution1, bigram) || nullSubstPair;
+   var substPair2 = getBigramSubstPair(substitution2, bigram) || nullSubstPair;
+   var q1 = substPair1.dst[side].q;
+   var q2 = substPair2.dst[side].q;
+   if (q1 === 'unknown' || q2 === 'unknown') {
       return false;
    }
    return substPair1.dst[side].l !== substPair2.dst[side].l;
