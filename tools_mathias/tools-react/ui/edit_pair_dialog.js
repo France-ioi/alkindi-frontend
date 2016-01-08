@@ -12,6 +12,11 @@ export default PureComponent(self => {
       focusSide
    */
 
+   const keyDown = function (event) {
+      if (event.keyCode === 13)
+         validateDialog();
+   };
+
    const changeLetter = function (event) {
       let {editPair, onChange} = self.props;
       const letter = event.target.value;
@@ -67,7 +72,10 @@ export default PureComponent(self => {
 
    const setFocus = function () {
       const el = inputElements[self.props.focusSide||0];
-      el && el.focus();
+      if (el) {
+         el.focus();
+         el.setSelectionRange(0, 1);
+      }
    };
 
    self.componentDidMount = function () {
@@ -116,10 +124,10 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                <span className='dialogLabel'>Nouvelle substitution :</span>
                <span className='dialogLetterSubst'>
-                  <input ref={refInput} type='text' value={editPair[0].letter} onChange={changeLetter} data-side='0' />
+                  <input ref={refInput} type='text' value={editPair[0].letter} onKeyDown={keyDown} onChange={changeLetter} data-side='0' />
                </span>
                <span className='dialogLetterSubst'>
-                  <input ref={refInput} type='text' value={editPair[1].letter} onChange={changeLetter} data-side='1' />
+                  <input ref={refInput} type='text' value={editPair[1].letter} onKeyDown={keyDown} onChange={changeLetter} data-side='1' />
                </span>
             </div>
             <div className='dialogLine'>
