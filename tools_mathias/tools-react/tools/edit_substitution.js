@@ -4,9 +4,9 @@ import {PureComponent} from '../utils';
 import {Variables} from '../ui/variables';
 import {OkCancel} from '../ui/ok_cancel';
 import * as Python from '../python';
-import {getCellLetter, getQualifierClass, getWrappingInfos, testConflict} from '../tools';
+import {getCellLetter, getQualifierClass, getStringWrapping, testConflict} from '../tools';
 import {getTextAsBigrams, getMostFrequentBigrams, getBigramSubstPair, nullSubstPair,
-        countAllSubstitutionConflicts, applySubstitutionEdits} from '../bigram_utils';
+        countAllSubstitutionConflicts, applySubstitutionEdits, sideOfStatus} from '../bigram_utils';
 import EditPairDialog from '../ui/edit_pair_dialog';
 
 export const Component = PureComponent(self => {
@@ -24,8 +24,6 @@ export const Component = PureComponent(self => {
             inputSubstitution
             outputSubstitution
    */
-
-   const sideOfStatus = {'left': 0, 'right': 1};
 
    const clickBigram = function (event) {
       const {substitutionEdits} = self.props.toolState;
@@ -208,7 +206,7 @@ export const compute = function (toolState, scope) {
    const {substitutionEdits, nbLettersPerRow} = toolState;
    const {alphabet, inputCipheredText, inputSubstitution, outputSubstitution} = scope;
    scope.letterInfos = getTextAsBigrams(inputCipheredText, alphabet).letterInfos;
-   scope.lineStartCols = getWrappingInfos(inputCipheredText, nbLettersPerRow, alphabet);
+   scope.lineStartCols = getStringWrapping(inputCipheredText, nbLettersPerRow, alphabet);
    scope.outputSubstitution = applySubstitutionEdits(alphabet, inputSubstitution, substitutionEdits);
    scope.nConflicts = countAllSubstitutionConflicts(inputSubstitution, outputSubstitution, alphabet);
 };

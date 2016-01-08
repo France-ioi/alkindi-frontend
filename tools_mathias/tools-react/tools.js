@@ -140,8 +140,8 @@ export const getQualifierClass = function (q) {
    return qualifierClasses[q];
 };
 
-export const getWrappingInfos = function (text, maxWidth, alphabet) {
-   // TODO: describe how output relates to input
+export const getStringWrapping = function (text, maxWidth, alphabet) {
+   // Returns a list of positions in the input text.
    const lineStartCols = [0];
    let col = 0;
    let lastNonAlphabet = 0;
@@ -164,6 +164,30 @@ export const getWrappingInfos = function (text, maxWidth, alphabet) {
    return lineStartCols;
 };
 
+export const getCellsWrapping = function (cells, maxWidth) {
+   // Returns a list of positions in the input cell array.
+   const lineStartCols = [0];
+   let col = 0;
+   let lastNonAlphabet = 0;
+   let lastNonAlphabetBeforeLetter = 0;
+   for (let iCell = 0; iCell < cells.length; iCell++) {
+      if (col >= maxWidth) {
+         const startCol = lastNonAlphabetBeforeLetter + 1;
+         lineStartCols.push(startCol);
+         col = iCell - startCol;
+      }
+      const cell = cells[iCell];
+      // If it has a 'q' it's a symbol, otherwise it's a literal.
+      if ('q' in cell) {
+         lastNonAlphabetBeforeLetter = lastNonAlphabet;
+      } else {
+         lastNonAlphabet = iCell;
+      }
+      col++;
+   }
+   lineStartCols.push(cells.length);
+   return lineStartCols;
+};
 
 /*
   Apply an editGrid to a grid.
