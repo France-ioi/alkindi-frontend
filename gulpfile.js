@@ -149,7 +149,7 @@ gulp.task('lint', function() {
     .pipe(eslint.format());
 });
 
-gulp.task('playfair', function () {
+gulp.task('playfair', ['watch_css'], function () {
     watchScript({entry: 'tools_mathias/tools-react/main.js', output: 'playfair.js'});
 });
 
