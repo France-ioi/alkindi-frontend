@@ -124,14 +124,17 @@ export const getCellLetter = function (alphabet, cell, useNbsp) {
    }
 };
 
+const qualifierClasses = {
+   'hint': 'qualifier-hint',
+   'confirmed': 'qualifier-confirmed',
+   'locked': 'qualifier-confirmed',
+   'guess': 'qualifier-unconfirmed',
+   'unknown': 'qualifier-unconfirmed'
+};
 export const getQualifierClass = function (q) {
-   if ((q == "locked") || (q == "confirmed")) {
-      return "qualifier-confirmed";
-   } else if (q == "hint") {
-      return "qualifier-hint";
-   } else {
-      return "qualifier-unconfirmed";
-   }
+   if (q === undefined)
+      return 'character'; // literal
+   return qualifierClasses[q];
 };
 
 export const getWrappingInfos = function (text, maxWidth, alphabet) {
