@@ -4,13 +4,16 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 
 import {PureComponent} from './utils';
+import {at, put, makeAlphabet} from './tools';
+import {mostFrequentFrench, decodeBigram} from './bigram_utils';
+
+// Tools:
 import TextInput from './tools/text_input';
 import Hints from './tools/hints';
 import SubstitutionFromGrid from './tools/substitution_from_grid';
 import BigramFrequencyAnalysis from './tools/bigram_frequency_analysis';
 import EditSubstitution from './tools/edit_substitution';
-import {at, put, makeAlphabet} from './tools';
-import {mostFrequentFrench, decodeBigram} from './bigram_utils';
+import ApplySubstitution from './tools/apply_substitution';
 
 const selectApp = function (state) {
    const {tools} = state;
@@ -224,6 +227,23 @@ store.dispatch({
          alphabet: state.alphabet,
          inputCipheredText: tools[0].scope.output,
          mostFrequentFrench: decodedMostFrequentFrench,
+         inputSubstitution: tools[3].scope.outputSubstitution
+      };
+   }
+});
+
+store.dispatch({
+   type: 'ADD_TOOL',
+   factory: ApplySubstitution,
+   toolState: {
+      inputTextVariable: 'texteChiffré',
+      inputSubstitutionVariable: 'substitutionÉditée',
+      outputTextVariable: 'texteDéchiffré'
+   },
+   temporaryGetScope: function (state, tools) {
+      return {
+         alphabet: state.alphabet,
+         inputText: tools[0].scope.output,
          inputSubstitution: tools[3].scope.outputSubstitution
       };
    }
