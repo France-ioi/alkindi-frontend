@@ -7,7 +7,7 @@ const eol = require('gulp-eol');
 const eslint = require('gulp-eslint');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-const cssnano = require('gulp-cssnano');
+const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
 const browserify = require('browserify');
 const watchify = require('watchify');
@@ -34,8 +34,7 @@ function watchScript (options) {
             ['babelify', {
                 presets: ["es2015", "react"],
                 plugins: ["transform-object-rest-spread"]
-            }],
-            'browserify-css'
+            }]
         ]
     };
     browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
@@ -84,15 +83,17 @@ function buildScript (options) {
 }
 
 function buildCss(options) {
+    const processors = [
+        require('postcss-import')({from: options.entry})
+    ];
+    if (options.uglify)
+        processors.push(require('cssnano'));
     var stream = gulp.src(options.entry)
-        .pipe(rename(options.output));
-    if (options.uglify) {
-        stream = stream
-            .pipe(sourcemaps.init())
-            .pipe(cssnano())
-            .pipe(sourcemaps.write("."));
-    }
-    return stream.pipe(gulp.dest('dist'));
+        .pipe(rename(options.output))
+        .pipe(sourcemaps.init())
+        .pipe(postcss(processors))
+        .pipe(sourcemaps.write("."))
+        .pipe(gulp.dest('dist'));
 }
 
 gulp.task('build_js', function () {
