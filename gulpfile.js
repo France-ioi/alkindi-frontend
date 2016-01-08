@@ -149,8 +149,9 @@ gulp.task('lint', function() {
     .pipe(eslint.format());
 });
 
-gulp.task('playfair', ['watch_css'], function () {
+gulp.task('playfair', function () {
     watchScript({entry: 'tools_mathias/tools-react/main.js', output: 'playfair.js'});
+    gulp.watch('src/**/*.css', ['build_css']);
 });
 
 gulp.task('default', ['build_min']);
