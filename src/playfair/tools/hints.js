@@ -1,3 +1,4 @@
+import React from 'react';
 
 import {PureComponent} from '../utils/generic';
 import {getCellLetter} from '../utils/cell';
