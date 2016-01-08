@@ -42,8 +42,8 @@ function watchScript (options) {
     const rebundle = function () {
         let p = bundler.bundle()
             .on('error', function (err) {
-                console.log(err.codeFrame);
                 console.log(err.message);
+                console.log(err.codeFrame);
                 this.emit('end');
             })
             .pipe(source(options.output))
