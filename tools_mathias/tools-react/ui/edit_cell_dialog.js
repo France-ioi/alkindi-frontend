@@ -11,6 +11,11 @@ export default PureComponent(self => {
       alphabet, initialCell, editCell, onOk, onCancel, onChange
    */
 
+   const keyDown = function (event) {
+      if (event.keyCode === 13)
+         validateDialog();
+   };
+
    const changeLetter = function (event) {
       const {editCell, onChange} = self.props;
       const letter = event.target.value;
@@ -41,9 +46,32 @@ export default PureComponent(self => {
             alert(letter + " n'est pas une valeur possible de la grille");
             return;
          }
-         edit = editCell;
+         edit = {...editCell, letter: letter};
       }
       onOk(edit);
+   };
+
+   let inputElement;
+   const refInput = function (el) {
+      inputElement = el;
+   };
+
+   const setFocus = function () {
+      if (inputElement) {
+         inputElement.focus();
+         inputElement.setSelectionRange(0, 1);
+      }
+   };
+
+   self.componentDidMount = function () {
+      // When the component mounts, select the input box.
+      setFocus();
+   };
+
+   self.componentDidUpdate = function (prevProps, prevState) {
+      // Focus the input box when the editCell changes.
+      if (prevProps.editCell !== self.props.editCell)
+         setFocus();
    };
 
    self.render = function () {
@@ -67,7 +95,7 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                   <span className='dialogLabel'>Nouvelle valeur :</span>
                   <span className='dialogLetterSubst'>
-                     <input type='text' maxLength='1' value={letter} onChange={changeLetter} />
+                     <input ref={refInput} type='text' maxLength='1' value={letter} onKeyDown={keyDown} onChange={changeLetter} />
                   </span>
             </div>
             <div className='dialogLine'>
