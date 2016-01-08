@@ -4,11 +4,10 @@ import {PureComponent} from '../utils';
 import {Variables} from '../ui/variables';
 import {OkCancel} from '../ui/ok_cancel';
 import * as Python from '../python';
-import {getCellLetter, getQualifierClass} from '../tools';
-import {getTextBigrams, getMostFrequentBigrams, getBigramSubstPair,
+import {getCellLetter, getQualifierClass, testConflict} from '../tools';
+import {getTextBigrams, getMostFrequentBigrams, getBigramSubstPair, nullSubstPair,
         countSubstitutionConflicts, applySubstitutionEdits} from '../bigram_utils';
 import EditPairDialog from '../ui/edit_pair_dialog';
-const nullSubstPair = {dst: [{q: "unknown"}, {q: "unknown"}]};
 
 export const Component = PureComponent(self => {
 
@@ -156,9 +155,6 @@ export const Component = PureComponent(self => {
       const {alphabet} = self.props.scope;
       const {editable} = self.props.toolState;
       const {selectedPos} = self.state;
-      const testConflict = function (cell1, cell2) {
-         return cell1.q !== 'unknown' && cell2.q !== 'unknown' && cell1.l !== cell2.l;
-      };
       const renderBigramSubstSide = function (bigram, inputPair, outputPair, side) {
          const inputCell = inputPair.dst[side];
          const outputCell = outputPair.dst[side];
