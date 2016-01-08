@@ -42,40 +42,9 @@ export const Component = PureComponent(self => {
       });
    };
 
-   const changeLetter = function (event) {
-      let {editPair} = self.state;
-      const letter = event.target.value;
-      const side = parseInt(event.target.getAttribute('data-side'));
-      editPair = editPair.slice();
-      editPair[side] = {...editPair[side], letter: letter};
-      self.setState({editPair: editPair});
-   };
-
-   const toggleLock = function (event) {
-      let {editPair} = self.state;
-      const side = parseInt(event.currentTarget.getAttribute('data-side'));
-      const locked = editPair[side].locked;
-      editPair = editPair.slice();
-      editPair[side] = {...editPair[side], locked: !locked};
-      self.setState({editPair: editPair});
-   };
-
-   const validateDialog = function () {
+   const validateDialog = function (checkedEditPair) {
       const {selectedPos, editPair} = self.state;
       const {alphabet, mostFrequentBigrams} = self.props.scope;
-      const checkedEditPair = [];
-      for (let iSide = 0; iSide < 2; iSide++) {
-         const {letter} = editPair[iSide];
-         if (letter === undefined || letter === '') {
-            checkedEditPair[iSide] = false;
-         } else if (letter in alphabet.ranks) {
-            const rank = alphabet.ranks[letter];
-            checkedEditPair[iSide] = editPair[iSide];
-         } else {
-            alert(letter + " n'est pas une valeur possible de la grille");
-            return;
-         }
-      }
       const {v} = mostFrequentBigrams[selectedPos];
       const {toolState, setToolState} = self.props;
       let newEdits = {...toolState.substitutionEdits};

@@ -29,6 +29,24 @@ export default PureComponent(self => {
       onChange(editPair);
    };
 
+   const validateDialog = function () {
+      const {alphabet, editPair} = self.props;
+      const checkedEditPair = [];
+      for (let iSide = 0; iSide < 2; iSide++) {
+         const {letter} = editPair[iSide];
+         if (letter === undefined || letter === '') {
+            checkedEditPair[iSide] = false;
+         } else if (letter in alphabet.ranks) {
+            const rank = alphabet.ranks[letter];
+            checkedEditPair[iSide] = editPair[iSide];
+         } else {
+            alert(letter + " n'est pas une valeur possible de la grille");
+            return;
+         }
+      }
+      self.props.onOk(checkedEditPair);
+   };
+
    const renderCell = function (alphabet, cell) {
       const classes = ['bigramLetter', getQualifierClass(cell.q)];
       return <span className={classnames(classes)}>{getCellLetter(alphabet, cell, true)}</span>;
@@ -120,7 +138,7 @@ export default PureComponent(self => {
                   </button>
                </span>
             </div>
-            <OkCancel onOk={onOk} onCancel={onCancel}/>
+            <OkCancel onOk={validateDialog} onCancel={onCancel}/>
          </div>
       );
    };
