@@ -1,3 +1,4 @@
+import React from 'react';
 import intersperse from 'intersperse';
 
 import {PureComponent} from '../utils/generic';

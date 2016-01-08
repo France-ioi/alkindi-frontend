@@ -1,3 +1,4 @@
+import React from 'react';
 import classnames from 'classnames';
 import range from 'node-range';
 
@@ -34,10 +35,10 @@ export const Grid = PureComponent(self => {
             classes.push("cell-conflict");
          }
          let letter = getCellLetter(alphabet, cell);
-         return <td className={classnames(classes)} onClick={onClick} data-row={row} data-col={col}>{letter}</td>;
+         return <td key={row*nbCols+col} className={classnames(classes)} onClick={onClick} data-row={row} data-col={col}>{letter}</td>;
       };
       const renderRow = function (row) {
-         return <tr>{range(0, nbCols).map(col => renderCell(row, col))}</tr>;
+         return <tr key={row}>{range(0, nbCols).map(col => renderCell(row, col))}</tr>;
       };
       return (
          <table className='playFairGrid'>

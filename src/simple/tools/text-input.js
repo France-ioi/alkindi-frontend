@@ -1,14 +1,14 @@
 import React from 'react';
 import {Button, Panel} from 'react-bootstrap';
 
-import code from '../code';
-import TextInput from '../ui/text_input';
-import ToolHeader from '../ui/tool_header';
+import {PureComponent, stateSetters} from '../../misc';
+import code from '../utils/code';
+import {importText} from '../utils/values';
+import alphabets from '../utils/alphabets';
 import InputVariableName from '../ui/input_variable_name';
 import SelectAlphabet from '../ui/select_alphabet';
-import {importText} from '../values';
-import alphabets from '../alphabets';
-import {PureComponent, stateSetters} from '../misc';
+import TextInput from '../ui/text_input';
+import ToolHeader from '../ui/tool_header';
 
 export const renderTitle = function (tool) {
   const maxTextLength = 20;

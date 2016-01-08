@@ -1,3 +1,4 @@
+import React from 'react';
 import classnames from 'classnames';
 import Tooltip from 'rc-tooltip';
 
@@ -19,7 +20,7 @@ export default PureComponent(self => {
 
    const changeLetter = function (event) {
       let {editPair, onChange} = self.props;
-      const letter = event.target.value;
+      const letter = event.target.value.toUpperCase();
       const side = parseInt(event.target.getAttribute('data-side'));
       editPair = editPair.slice();
       editPair[side] = {...editPair[side], letter: letter};

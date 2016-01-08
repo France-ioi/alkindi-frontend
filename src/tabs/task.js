@@ -12,6 +12,7 @@ const TaskTab = PureComponent(self => {
       <div className="wrapper">
         <h1>{round.title}</h1>
         <div dangerouslySetInnerHTML={{__html: task.pre_html}}/>
+        <p>Voici le message découvert sur le corps de {task.firstname} :</p>
         <div className="grillesSection">
           <div className="y-scrollBloc task-cipher-text">{task.cipher_text}</div>
         </div>

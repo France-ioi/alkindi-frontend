@@ -1,3 +1,4 @@
+import React from 'react';
 
 import {PureComponent} from '../utils/generic';
 import {getCellLetter} from '../utils/cell';
@@ -26,9 +27,8 @@ export const Component = PureComponent(self => {
    const validateDialog = function() {
       let {hintQuery} = self.state;
       self.setState({hintState: "waiting"});
-      self.props.scope.getHint(hintQuery, function (_err) {
-         if (_err) return alert(_err); // TODO: handle err
-         self.setState({hintState: "received"});
+      self.props.scope.getHint(hintQuery, function (err) {
+         self.setState({hintState: err ? "error" : "received"});
       });
    };
 
@@ -57,7 +57,7 @@ export const Component = PureComponent(self => {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.props.scope.hintsGrid[row][col].q === "confirmed") {
+      if (self.props.scope.hintsGrid[row][col].q === "hint") {
          hintAlreadyObtained();
       } else {
          prepareQuery({type:'grid', row: row, col: col});
@@ -143,6 +143,13 @@ export const Component = PureComponent(self => {
          return (
             <div className='dialog'>
                Indice obtenu, grille mise à jour
+               <button type='button' className='btn-tool' onClick={cancelDialog}>OK</button>
+            </div>
+         );
+      } else if (hintState === "error") {
+         return (
+            <div className='dialog'>
+               Une erreur s'est produite et l'indice n'a pas été obtenu.
                <button type='button' className='btn-tool' onClick={cancelDialog}>OK</button>
             </div>
          );

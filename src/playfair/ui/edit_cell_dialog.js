@@ -1,3 +1,4 @@
+import React from 'react';
 import classnames from 'classnames';
 
 import {OkCancel} from './ok_cancel';
@@ -17,7 +18,7 @@ export default PureComponent(self => {
 
    const changeLetter = function (event) {
       const {editCell, onChange} = self.props;
-      const letter = event.target.value;
+      const letter = event.target.value.toUpperCase();
       onChange({...editCell, letter});
    };
 
@@ -29,7 +30,7 @@ export default PureComponent(self => {
 
    const validateDialog = function () {
       const {alphabet, editCell, onOk} = self.props;
-      const letter = editCell.letter.trim().toUpperCase();  // XXX
+      const letter = editCell.letter || '';
       let edit;
       if (letter === '') {
          edit = {};

@@ -2,7 +2,7 @@ import React from 'react';
 import range from 'node-range';
 import {Button,DropdownButton,MenuItem} from 'react-bootstrap';
 
-import {substString,toIndices,toChar} from '../alpha';
+import {substString,toIndices,toChar} from '../utils/alpha';
 
 const ExpandToggleButton = React.createClass({
   render: function () {

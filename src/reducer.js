@@ -1,27 +1,24 @@
 
-import {newTool} from './tool';
+// import {newTool} from './tool';
 
-const initialState = function (seed) {
+const initialState = {
+  toolOrder: [],
+  toolMap: {},
+  nextToolId: 1,
+  autoRefresh: true,
+  rootScope: {},
+  activeTabKey: undefined,
+  enabledTabs: {},
+  historyTab: {
+    revisions: [],
+    currentRevision: undefined
+  }
+};
+
+const seedState = function (seed, oldState) {
   if (!seed)
     seed = {};
-  const state = {
-    toolOrder: [],
-    toolMap: {},
-    nextToolId: 1,
-    autoRefresh: true,
-    rootScope: {},
-    user: seed.user,
-    team: seed.team,
-    round: seed.round,
-    attempt: seed.attempt,
-    task: seed.task,
-    activeTabKey: undefined,
-    enabledTabs: {},
-    historyTab: {
-      workspaces: [],
-      currentWorkspace: undefined
-    }
-  };
+  const state = {...initialState, ...oldState, ...seed};
   return reduceTick(reduceSetActiveTab(state));
 };
 
@@ -41,14 +38,14 @@ const reduceSetActiveTab = function (state, tabKey) {
   const enabledTabs = {
     team: true,
     task: haveTask,
-    cryptanalysis: false,
+    cryptanalysis: haveTask,
     history: false,
     answer: false
   };
   // If the active tab has become disabled, select the team tab, which is
   // always available.
-  let activeTabKey = tabKey;
-  if (activeTabKey == undefined || !enabledTabs[activeTabKey])
+  let activeTabKey = tabKey || state.activeTabKey;
+  if (activeTabKey === undefined || !enabledTabs[activeTabKey])
     activeTabKey = 'team';
   return {...state, activeTabKey, enabledTabs};
 }
@@ -92,6 +89,7 @@ const reduceSetWorkspaces = function (state, workspaces) {
 };
 
 const reduceAddTool = function (state, toolType, toolState) {
+  return state; // XXX disabled
   const tool = newTool(toolType, toolState);
   const {nextToolId, toolPointer, toolMap, toolOrder} = state;
   const toolId = 't' + nextToolId;
@@ -179,9 +177,9 @@ const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return initialState(action.seed);
+      return seedState(action.seed, state);
     case 'AFTER_LOGOUT':
-      return initialState();
+      return seedState();
     case 'TICK':
       return reduceTick(state);
     case 'SET_USER':

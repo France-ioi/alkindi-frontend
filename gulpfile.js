@@ -40,7 +40,7 @@ function watchScript (options) {
     browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
     let bundler = watchify(browserify(browserifyOpts));
     const rebundle = function () {
-        let p = bundler.bundle()
+        return bundler.bundle()
             .on('error', function (err) {
                 console.log(err.message);
                 console.log(err.codeFrame);
@@ -48,9 +48,8 @@ function watchScript (options) {
             })
             .pipe(source(options.output))
             .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}));
-        return p
-            .pipe(sourcemaps.write("."))
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(sourcemaps.write("./"))
             .pipe(chmod(644))
             .pipe(eol("\n"))
             .pipe(gulp.dest("dist"));
