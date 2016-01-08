@@ -44,8 +44,8 @@ const reduceSetActiveTab = function (state, tabKey) {
   };
   // If the active tab has become disabled, select the team tab, which is
   // always available.
-  let activeTabKey = tabKey;
-  if (activeTabKey == undefined || !enabledTabs[activeTabKey])
+  let activeTabKey = tabKey || state.activeTabKey;
+  if (activeTabKey === undefined || !enabledTabs[activeTabKey])
     activeTabKey = 'team';
   return {...state, activeTabKey, enabledTabs};
 }
