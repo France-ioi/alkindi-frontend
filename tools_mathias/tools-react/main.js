@@ -197,7 +197,8 @@ store.dispatch({
       inputCipheredTextVariable: 'texteChiffré',
       inputSubstitutionVariable: 'substitutionGénérée',
       outputSubstitutionVariable: 'substitutionFréquences',
-      substitutionEdits: []
+      substitutionEdits: [],
+      editable: false
    },
    temporaryGetScope: function (state, tools) {
       return {

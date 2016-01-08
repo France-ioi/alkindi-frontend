@@ -19,6 +19,7 @@ export const Component = PureComponent(self => {
             inputSubstitutionVariable
             outputSubstitutionVariable
             substitutionEdits
+            editable
          scope:
             alphabet
             frenchBigrams
@@ -30,7 +31,9 @@ export const Component = PureComponent(self => {
    */
 
    const clickBigram = function (event) {
-      const {substitutionEdits} = self.props.toolState;
+      const {substitutionEdits, editable} = self.props.toolState;
+      if (!editable)
+         return;
       const {alphabet, mostFrequentBigrams} = self.props.scope;
       const iBigram = parseInt(event.currentTarget.getAttribute('data-i'));
       const bigram = mostFrequentBigrams[iBigram];
