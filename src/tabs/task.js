@@ -5,26 +5,21 @@ import {PureComponent} from '../misc';
 
 const TaskTab = PureComponent(self => {
   self.render = function () {
-    const {round, attempt, task} = self.props;
+    const {user_id, round, attempt, task} = self.props;
     if (!round || !attempt || !task)
       return false;
     return (
       <div className="wrapper">
         <h1>{round.title}</h1>
-        <div dangerouslySetInnerHTML={{__html: task.pre_html}}/>
-        <p>Voici le message découvert sur le corps de {task.firstname} :</p>
-        <div className="grillesSection">
-          <div className="y-scrollBloc task-cipher-text">{task.cipher_text}</div>
-        </div>
-        <div dangerouslySetInnerHTML={{__html: task.post_html}}/>
+        <iframe className='task' src={'api/users/'+user_id+'/task.html'}/>
       </div>
     );
   };
 });
 
 const selector = function (state, _props) {
-  const {round, attempt, task} = state;
-  return {round, attempt, task};
+  const {user, round, attempt, task} = state;
+  return {user_id: user.id, round, attempt, task};
 };
 
 export default connect(selector)(TaskTab);
