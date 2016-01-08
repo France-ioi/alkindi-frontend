@@ -7,7 +7,7 @@ function getHintsPlayFair() {
       alphabet: playFair.alphabet,
       outputGridCells: playFair.initialTaskGrid,
       score: 500,
-      outputGridVariable: "lettresGrilleIndice"
+      outputGridVariable: "lettresGrilleIndices"
    };
 
    self.state = {

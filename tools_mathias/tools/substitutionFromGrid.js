@@ -8,7 +8,7 @@ function getSubstitutionFromGrid() {
       inputGridCells: playFair.sampleGrid,
       outputGridCells: [],
       outputSubstitution: [],
-      inputGridVariable: "lettresGrilleIndice",
+      inputGridVariable: "lettresGrilleIndices",
       outputGridVariable: "lettresGrilleEditée",
       outputSubstitutionVariable: "substitutionGénérée"
    };
