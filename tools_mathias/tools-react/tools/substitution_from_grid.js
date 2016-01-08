@@ -7,6 +7,7 @@ import {Substitution} from '../ui/substitution';
 import {OkCancel} from '../ui/ok_cancel';
 import * as Python from '../python';
 import {put, at, getCellLetter, applyGridEdit, getSubstitutionFromGridCells} from '../tools';
+import EditCellDialog from '../ui/edit_cell_dialog';
 
 export const Component = PureComponent(self => {
 
@@ -38,35 +39,11 @@ export const Component = PureComponent(self => {
    };
 
    const clickGridCell = function (row, col) {
-      const {inputGrid} = self.props.scope;
-      const inputCell = inputGrid[row][col];
-      const {q} = inputCell;
-      if (q === 'confirmed' || q === 'hint') {
-         self.setState({
-            editState: "invalid",
-            selectedRow: row,
-            selectedCol: col
-         });
-      } else {
-         self.setState({
-            editState: "preparing",
-            selectedRow: row,
-            selectedCol: col,
-            editCell: getEditCell(row, col)
-         });
-      }
-   };
-
-   const changeLetter = function (event) {
-      const {editCell} = self.state;
-      const letter = event.target.value;
-      self.setState({editCell: {...editCell, letter}});
-   };
-
-   const toggleLock = function () {
-      const {editCell} = self.state;
-      const locked = !editCell.locked;
-      self.setState({editCell: {...editCell, locked}});
+      self.setState({
+         selectedRow: row,
+         selectedCol: col,
+         editCell: getEditCell(row, col)
+      });
    };
 
    const validateDialog = function () {
@@ -133,49 +110,17 @@ export const Component = PureComponent(self => {
       return <Substitution alphabet={alphabet} substitution={outputSubstitution}/>;
    };
 
-   const renderPreparingEditCell = function() {
-      const {scope} = self.props;
-      const {editCell, selectedRow, selectedCol} = self.state;
-      const {letter, locked} = editCell;
-      const {alphabet, inputGrid} = scope;
-      const inputCell = inputGrid[selectedRow][selectedCol];
-      const buttonClasses = ['btn-toggle', locked && "locked"];
-      const iconClasses = ['fa', locked ? "fa-toggle-on" : "fa-toggle-off"];
-      return (
-         <div className='dialog'>
-            <div className='dialogLine'>
-                  <span className='dialogLabel'>Valeur d'origine :</span>
-                  <span>{getCellLetter(alphabet, inputCell)}</span>
-            </div>
-            <div className='dialogLine'>
-                  <span className='dialogLabel'>Nouvelle valeur :</span>
-                  <span className='dialogLetterSubst'>
-                     <input type='text' maxLength='1' value={letter} onChange={changeLetter} />
-                  </span>
-            </div>
-            <div className='dialogLine'>
-                  <span className='dialogLabel'>{'\u00a0'}</span>
-                  <span className='dialogLock'>
-                     <span className='substitutionLock'>
-                        {locked ? <i className='fa fa-lock'/> : '\u00a0'}
-                     </span>
-                  </span>
-            </div>
-            <div className='dialogLine'>
-                  <span className='dialogLabel'>Bloquer / débloquer :</span>
-                  <span>
-                     <button type='button' className={classnames(buttonClasses)} onClick={toggleLock}>
-                        <i className={classnames(iconClasses)} />
-                     </button>
-                  </span>
-            </div>
-            <OkCancel onOk={validateDialog} onCancel={cancelDialog}/>
-         </div>
-      );
+   const setEditCell = function (editCell) {
+      self.setState({editCell});
    };
 
-   const renderInvalidEditCell = function () {
-      return <div className='dialog'>Le contenu de cette case est déjà confirmé</div>;
+   const renderEditCell = function () {
+      const {alphabet, inputGrid} = self.props.scope;
+      const {editCell, selectedRow, selectedCol} = self.state;
+      const initialCell = inputGrid[selectedRow][selectedCol];
+      return <EditCellDialog
+         alphabet={alphabet} initialCell={initialCell} editCell={editCell}
+         onOk={validateDialog} onCancel={cancelDialog} onChange={setEditCell} />;
    };
 
    self.render = function () {
@@ -187,15 +132,14 @@ export const Component = PureComponent(self => {
          {label: "Grille éditée", name: outputGridVariable},
          {label: "Substitution générée", name: outputSubstitutionVariable}
       ];
-      const {editState} = self.state;
+      const {editCell} = self.state;
       return (
          <div className='panel panel-default'>
             <div className='panel-heading'><span className='code'>
                {renderInstructionPython()}
             </span></div>
             <div className='panel-body'>
-               {editState === 'preparing' && renderPreparingEditCell.apply(this, arguments)}
-               {editState === 'invalid' && renderInvalidEditCell()}
+               {editCell && renderEditCell()}
                <Variables inputVars={inputVars} outputVars={outputVars} />
                <div className='grillesSection'>
                   <div className='blocGrille'>
