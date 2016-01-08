@@ -173,18 +173,18 @@ export const countSubstitutionConflicts = function (bigrams, initialSubstitution
    return nbConflicts;
 };
 
-export const countAllSubstitutionConflicts = function(initialSubstitution, newSubstitution, alphabet, letterRanks) {
+export const countAllSubstitutionConflicts = function(initialSubstitution, newSubstitution, alphabet) {
    var bigrams = [];
-   for (var l1 = 0; l1 < alphabet.length; l1++) {
-      for (var l2 = 0; l2 < alphabet.length; l2++) {
+   for (var l1 = 0; l1 < alphabet.size; l1++) {
+      for (var l2 = 0; l2 < alphabet.size; l2++) {
          if (l1 != l2) {
             bigrams.push({
-               v: alphabet[l1] + alphabet[l2]
+               v: alphabet.symbols[l1] + alphabet.symbols[l2]
             });
          }
       }
    }
-   return countSubstitutionConflicts(bigrams, initialSubstitution, newSubstitution, letterRanks);
+   return countSubstitutionConflicts(bigrams, initialSubstitution, newSubstitution);
 };
 
 
