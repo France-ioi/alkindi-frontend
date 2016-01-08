@@ -1,8 +1,5 @@
 
 import React from 'react';
-import range from 'node-range';
-
-import {toChar} from '../alpha';
 
 export default React.createClass({
   propTypes: function () {

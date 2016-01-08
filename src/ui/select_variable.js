@@ -6,7 +6,8 @@ import {Input} from 'react-bootstrap';
 import {PureComponent} from '../misc';
 
 const BareSelectVariable = PureComponent(self => {
-  const onChange = function (event) {
+  // XXX avoid use of refs
+  const onChange = function (_event) {
     self.props.onChange(self.refs.input.getValue());
   };
   self.render = function () {
@@ -27,7 +28,7 @@ BareSelectVariable.propTypes = {
 
 BareSelectVariable.defaultProps = {
   label: 'Select a variable',
-  onChange: function (value) {}
+  onChange: function (_value) {}
 };
 
 const WithVariables = connect(createSelector(
@@ -46,7 +47,7 @@ const WithVariables = connect(createSelector(
           continue;
       }
       variables.push(variable);
-    };
+    }
     return variables;
   },
   function (variables) {

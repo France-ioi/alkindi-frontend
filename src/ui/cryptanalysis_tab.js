@@ -14,9 +14,6 @@ const selector = function (state) {
 };
 
 const CryptanalysisTab = PureComponent(self => {
-  const setActiveTab = function (tabKey) {
-    self.props.dispatch(actions.setActiveTab(tabKey));
-  };
   const addTool = function (event) {
     const toolType = event.currentTarget.getAttribute('data-tooltype');
     self.props.dispatch(actions.addTool(toolType));

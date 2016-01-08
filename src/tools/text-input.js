@@ -12,9 +12,9 @@ import {PureComponent, stateSetters} from '../misc';
 
 export const renderTitle = function (tool) {
   const maxTextLength = 20;
-  const {input, alphabetName, outputVarName} = tool.state;
+  const {input, outputVarName} = tool.state;
   const shortenedInput = (input.length > maxTextLength) ? input.slice(0, maxTextLength) + '…' : input;
-  // TODO: include alphabetName in the display?
+  // Consider: include alphabetName in the display
   return code.wrap([code.variable('1', outputVarName), ' = "', shortenedInput, '"']);
 };
 
@@ -37,7 +37,7 @@ export const Component = PureComponent(self => {
 
 export const Configure = PureComponent(self => {
   const setters = stateSetters(self, ['outputVarName', 'alphabetName']);
-  const close = function (event) {
+  const close = function (_event) {
     const {alphabetName, outputVarName} = self.state;
     self.props.update({configuring: false, alphabetName, outputVarName});
   };

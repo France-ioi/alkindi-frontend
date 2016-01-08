@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Button, ButtonGroup} from 'react-bootstrap';
 
 import {PureComponent} from './misc';
 import AlkindiTabs from './ui/tabs';
@@ -11,7 +10,6 @@ import TeamTab from './ui/team_tab';
 import HistoryTab from './ui/history_tab';
 import CryptanalysisTab from './ui/cryptanalysis_tab';
 import JoinTeamScreen from './ui/join_team_screen';
-import {Tool} from './tool';
 import * as actions from './actions';
 import * as api from './api';
 import {image_url} from './assets';
@@ -34,9 +32,6 @@ let App = connect(appSelector)(PureComponent(self => {
       self.props.dispatch({type: 'INIT', seed: res.body});
     });
   };
-  const afterLogin = function (user_id) {
-    reseed(user_id);
-  };
   const afterLogout = function () {
     // Reload the page after the user has logged out to obtain a new session
     // and CSRF token.
@@ -44,10 +39,6 @@ let App = connect(appSelector)(PureComponent(self => {
   };
   const setActiveTab = function (tabKey) {
     self.props.dispatch(actions.setActiveTab(tabKey));
-  };
-  const addTool = function (event) {
-    const toolType = event.currentTarget.getAttribute('data-tooltype');
-    self.props.dispatch({type: 'ADD_TOOL', toolType});
   };
   self.render = function () {
     // Si on n'a pas d'utilisateur, on affiche l'écran de login.

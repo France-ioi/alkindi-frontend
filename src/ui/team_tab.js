@@ -60,14 +60,15 @@ const TestTeamTab = function (self) {
     setTask(task ? undefined : {});
   };
   const redGreen = function (cond, ifTrue, ifFalse) {
-    return <label>{cond
-      ? <span style={{color: 'red'}}>{ifTrue}</span>
-      : <span style={{color: 'green'}}>{ifFalse}</span>}</label>;
+    return (
+      <label>
+        {cond
+        ? <span style={{color: 'red'}}>{ifTrue}</span>
+        : <span style={{color: 'green'}}>{ifFalse}</span>}
+      </label>
+    );
   };
   const render = function () {
-    const boolText = function (b) {
-      return (b === undefined) ? 'undefined' : b.toString();
-    };
     const {team, round, attempt, task, round_has_not_started} = self.props;
     return (
       <div>
@@ -123,7 +124,7 @@ const TeamTab = PureComponent(self => {
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
     asyncHelper.beginRequest();
-    api.leaveTeam(user_id, function (err, result) {
+    api.leaveTeam(user_id, function (err, _result) {
       asyncHelper.endRequest(err);
       if (err) return;
       refresh();
@@ -133,7 +134,7 @@ const TeamTab = PureComponent(self => {
     const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
     asyncHelper.beginRequest();
-    api.updateUserTeam(user_id, data, function (err, result) {
+    api.updateUserTeam(user_id, data, function (err, _result) {
       asyncHelper.endRequest(err);
       if (err) return;
       refresh();
@@ -142,7 +143,7 @@ const TeamTab = PureComponent(self => {
   const onStartAttempt = function () {
     const user_id = self.props.user.id;
     asyncHelper.beginRequest();
-    api.startAttempt(user_id, function (err, result) {
+    api.startAttempt(user_id, function (err, _result) {
       asyncHelper.endRequest(err);
       if (err) return;
       refresh();
@@ -151,7 +152,7 @@ const TeamTab = PureComponent(self => {
   const onCancelAttempt = function () {
     const user_id = self.props.user.id;
     asyncHelper.beginRequest();
-    api.cancelAttempt(user_id, function (err, result) {
+    api.cancelAttempt(user_id, function (err, _result) {
       asyncHelper.endRequest(err);
       if (err) return;
       self.setState({access_code: undefined});
@@ -174,7 +175,7 @@ const TeamTab = PureComponent(self => {
     const code = element.value;
     element.value = '';
     asyncHelper.beginRequest();
-    api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, result) {
+    api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, _result) {
       asyncHelper.endRequest(err, function (error) {
         if (error === 'bad code')
           return "Le code que vous avez saisi est incorrect.";
@@ -186,7 +187,7 @@ const TeamTab = PureComponent(self => {
   const onAccessTask = function () {
     const user_id = self.props.user.id;
     asyncHelper.beginRequest();
-    api.assignAttemptTask(user_id, function (err, result) {
+    api.assignAttemptTask(user_id, function (err, _result) {
       asyncHelper.endRequest(err, function (error) {
         if (error === 'already have a task') {
           refresh();
@@ -221,7 +222,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderAttemptPrelude = function (attempt) {
+  const renderAttemptPrelude = function (_attempt) {
     return (
       <div>
         <p>La moitié au moins des membres de l'équipe doit fournir son code de
@@ -271,7 +272,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderLeaveTeam = function (team) {
+  const renderLeaveTeam = function () {
     return (
       <div className="section">
         <p>Vous pouvez quitter l'équipe :</p>
@@ -309,7 +310,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderOwnAccessCode = function (attempt) {
+  const renderOwnAccessCode = function () {
     const {access_code} = self.state;
     return (
       <div>
@@ -432,7 +433,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderTrainingInProgress = function (attempt) {
+  const renderTrainingInProgress = function () {
     return (
       <div className="section">
         <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
@@ -470,7 +471,7 @@ const TeamTab = PureComponent(self => {
          ? renderRoundPrelude(round)
          : (attempt.needs_codes && renderAttemptPrelude(attempt))}
         {renderTeamMembers(team, haveAttempt)}
-        {showOwnAccessCode && renderOwnAccessCode(attempt)}
+        {showOwnAccessCode && renderOwnAccessCode()}
         {attempt === undefined
           ? <div>
               {round_has_not_started && renderTooEarly(round)}
@@ -514,7 +515,7 @@ const TeamTab = PureComponent(self => {
   });
 });
 
-const selector = function (state, props) {
+const selector = function (state, _props) {
   const {user, team, round, attempt, task, round_has_not_started} = state;
   return {user, team, round, attempt, task, round_has_not_started};
 };

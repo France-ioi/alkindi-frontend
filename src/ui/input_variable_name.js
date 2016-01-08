@@ -26,7 +26,7 @@ InputVariableName.defaultProps = {
   label: "Variable name",
   placeholder: "Enter variable name",
   value: '',
-  onChange: function (value) {}
+  onChange: function (_value) {}
 };
 
 export default InputVariableName;

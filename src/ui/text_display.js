@@ -23,18 +23,20 @@ export const Text = React.createClass({
       lineHeight: 30
     };
   },
-  getInitialState: function (props) {
+  getInitialState: function (_props) {
     return {
       scrollTop: 0,
       cursor: 0
     };
   },
-  componentWillReceiveProps: function (props) {
+  componentWillReceiveProps: function (_props) {
     // TODO: find position for each line number,
     // store in state.
+    /*
     let linePositions = [];
-    const {text} = this.props;
+    const {text} = props;
     this.setState({linePositions});
+    */
   },
   render: function () {
     const {text, columns, lines, lineHeight, editable} = this.props;
@@ -108,7 +110,7 @@ export const Text = React.createClass({
       <span className='textPos'>{position}</span> {cols}
     </div>);
   },
-  onScroll: function (event) {
+  onScroll: function (_event) {
     const scrollTop = this.refs.container.scrollTop;
     this.setState({scrollTop});
   },
@@ -153,17 +155,16 @@ export const Text = React.createClass({
     const position = this.state.cursor;
     const oldText = this.props.text;
     const insert = importText(oldText.alphabet, ch, 'input');
-    console.log(insert);
     if (insert.items.length > 0) {
       const newText = editText(oldText, {position, insert});
       this.props.setText(newText);
       this.setState({cursor: position + insert.items.length});
     }
   },
-  onMouseEnter: function (event) {
+  onMouseEnter: function (_event) {
     this.refs.container.focus();
   },
-  onMouseLeave: function (event) {
+  onMouseLeave: function (_event) {
     this.refs.container.blur();
   }
 });

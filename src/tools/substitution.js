@@ -72,7 +72,7 @@ export default React.createClass({
           <span>Issu de la variable :</span>
           <SelectVariable variable={this.props.inputVar} mustExist={true} onSelect={this.setInputVar} />
         </div>
-        <div className="char-base cipher">abcdef</div>
+        <div className="char-base cipher">{output}</div>
       </div>);
 
     // substitution section
@@ -100,7 +100,7 @@ export default React.createClass({
     items.push(
       <div key='output'>
         <div>
-          <ExpandToggleButton eventKey='output' onClick={this.toggleExpand} />
+          <ExpandToggleButton collapsed={this.state.collapsed.output} eventKey='output' onClick={this.toggleExpand} />
           <span>Texte après substitution</span>
         </div>
         <div className="char-base">abcdef</div>
@@ -117,14 +117,14 @@ export default React.createClass({
       // collapsed version
       return (
         <div key={section}>
-          <ExpandButton eventKey={section} onClick={this.onExpandItem} />
+          <ExpandToggleButton collapsed={this.state.collapsed[section]} eventKey={section} onClick={this.toggleExpand} />
           <span>{title}</span>
         </div>);
     } else {
       // expanded version
       const minimize = (
         <div key={section}>
-          <CollapseButton eventKey={section} onChange={this.onCollapseItem} />
+          <ExpandToggleButton collapsed={this.state.collapsed[section]} eventKey={section} onClick={this.toggleExpand} />
           <span>{title}</span>
         </div>);
       return (

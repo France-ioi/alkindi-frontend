@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
-import TextDisplay from '../ui/text_display';
 
 const TaskTab = PureComponent(self => {
   self.render = function () {
@@ -22,7 +21,7 @@ const TaskTab = PureComponent(self => {
   };
 });
 
-const selector = function (state, props) {
+const selector = function (state, _props) {
   const {round, attempt, task} = state;
   return {round, attempt, task};
 };

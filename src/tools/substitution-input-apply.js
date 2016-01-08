@@ -1,10 +1,8 @@
 
 import React from 'react';
-import {Alert, Button, ButtonGroup, Input, Panel} from 'react-bootstrap';
-import classnames from 'classnames';
+import {Alert, Button, ButtonGroup, Panel} from 'react-bootstrap';
 import deepmerge from 'deepmerge';
 
-import code from '../code';
 import ToolHeader from '../ui/tool_header';
 import SubstitutionEditor from '../ui/substitution_editor';
 import SelectAlphabet from '../ui/select_alphabet';
@@ -35,7 +33,7 @@ export const Component = PureComponent(self => {
     const {tool} = self.props;
     const {outputScope} = tool;
     const parentScope = Object.getPrototypeOf(tool.outputScope);
-    const {collapsed, inputVarName, outputVarName} = tool.state;
+    const {inputVarName, outputVarName} = tool.state;
     const header = <ToolHeader {...self.props} title={renderTitle(tool)} />;
     const body = [];
     // Show the input text if available.
@@ -65,7 +63,7 @@ export const Component = PureComponent(self => {
     }
     return (<Panel header={header}>{body}</Panel>);
   };
-}, self => {
+}, _self => {
   return {
     selected: undefined
   };

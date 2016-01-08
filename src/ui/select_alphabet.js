@@ -1,7 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {createSelector} from 'reselect';
-import {Input, DropdownButton, MenuItem} from 'react-bootstrap';
+import {Input} from 'react-bootstrap';
 
 import alphabets from '../alphabets';
 import {PureComponent} from '../misc';

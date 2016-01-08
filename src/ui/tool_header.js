@@ -3,7 +3,7 @@ import {Button, ButtonGroup, Label} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
-import {removeTool, updateTool} from '../actions';
+import {removeTool} from '../actions';
 
 const ToolHeader = PureComponent(self => {
   const collapseClicked = function () {

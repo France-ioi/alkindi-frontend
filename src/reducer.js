@@ -1,5 +1,4 @@
 
-import {importText, importSubstitution, applySubstitution, errorValue} from './values';
 import {newTool} from './tool';
 
 const initialState = function (seed) {
@@ -76,10 +75,10 @@ const reduceSetTask = function (state, task) {
 };
 
 const reduceSetWorkspaces = function (state, workspaces) {
-  const {historyTab} = state;
   const currentWorkspace = undefined;
   // TODO: retain currentWorkspace based on historyTab.currentWorkspace.id
   // being present in workspaces
+  // const {historyTab} = state;
   const newHistoryTab = {
     workspaces,
     currentWorkspace
@@ -176,7 +175,7 @@ const reduceStep = function (state) {
   };
 };
 
-function actualReduce (state, action) {
+const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
@@ -208,13 +207,14 @@ function actualReduce (state, action) {
     case 'STEP':
       return reduceStep(state);
     default:
-      console.log('dropped unknown action', action);
-      return state;
+      throw action;
   }
 };
 
-export default function reduce (state, action) {
+export const reduce = function (state, action) {
   const newState = actualReduce(state, action);
   // console.log('reduce', action, state, newState);
   return newState;
 };
+
+export default reduce;

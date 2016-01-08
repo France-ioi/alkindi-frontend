@@ -9,7 +9,7 @@ export function combineQualifiers (q1, q2) {
     return q2;
   if (q2 === 'given')
     return q1;
-  console.log('COMBINE QUALIFIERS', q1, q2);
+  // console.log('COMBINE QUALIFIERS', q1, q2);
   return 'complex';
 }
 
@@ -116,10 +116,8 @@ function getShuffleMapping (alphabet) {
 }
 
 export function runSubstitutionInitializer (initializer, alphabet) {
-  if (alphabet === undefined) {
-    console.log('warning: cannot initialize substitution');
+  if (alphabet === undefined)
     return;
-  }
   switch (initializer.type) {
   case 'identity':
     return getIdentityMapping(alphabet);

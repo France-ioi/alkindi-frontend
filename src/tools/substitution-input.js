@@ -1,6 +1,5 @@
 import React from 'react';
-import {Alert, Button, ButtonGroup, Input, Panel} from 'react-bootstrap';
-import classnames from 'classnames';
+import {Alert, Button, ButtonGroup, Panel} from 'react-bootstrap';
 import deepmerge from 'deepmerge';
 
 import code from '../code';
@@ -36,17 +35,19 @@ export const Component = PureComponent(self => {
     let body;
     if (outputScope.hasOwnProperty(outputVarName)) {
       const substitution = outputScope[outputVarName];
-      body = <div>
-        <Button className='pull-right' onClick={reset}>reset</Button>
-        <SubstitutionEditor substitution={substitution} updatePairs={updatePairs} />
-      </div>;
+      body = (
+        <div>
+          <Button className='pull-right' onClick={reset}>reset</Button>
+          <SubstitutionEditor substitution={substitution} updatePairs={updatePairs} />
+        </div>
+      );
     } else {
       body = <Alert bsStyle='warning'>no substitution</Alert>;
     }
     const header = <ToolHeader {...self.props} title={renderTitle(tool)} />;
     return (<Panel header={header}>{body}</Panel>);
   };
-}, self => {
+}, _self => {
   return {
     selected: undefined
   };
@@ -83,7 +84,7 @@ export const Configure = PureComponent(self => {
       </Panel>
     );
   };
-}, self => {
+}, _self => {
   const {alphabetName, initializer, outputVarName} = self.props.tool.state;
   return {alphabetName, initializer, outputVarName};
 });

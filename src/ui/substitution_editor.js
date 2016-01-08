@@ -70,7 +70,7 @@ export const SubstitutionEditor = PureComponent(self => {
     };
     return (<div className='substitution-editor' style={style}>{charPairs}</div>);
   }
-}, self => {
+}, _self => {
   return {
     selectedIndex: undefined
   };
@@ -82,7 +82,7 @@ SubstitutionEditor.propTypes = {
 };
 
 SubstitutionEditor.defaultProps = {
-  updatePairs: function (pairs) {}
+  updatePairs: function (_pairs) {}
 };
 
 export default SubstitutionEditor;

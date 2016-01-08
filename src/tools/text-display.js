@@ -27,7 +27,7 @@ export const Component = PureComponent(self => {
 
 export const Configure = PureComponent(self => {
   const setters = stateSetters(self, ['inputVarName']);
-  const close = function (event) {
+  const close = function (_event) {
     const {inputVarName} = self.state;
     self.props.update({configuring: false, inputVarName});
   };
@@ -48,7 +48,7 @@ export const Configure = PureComponent(self => {
   return {inputVarName};
 });
 
-export const compute = function (state, scope) {
+export const compute = function (_state, _scope) {
 };
 
 export default self => {

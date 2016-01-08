@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 
 import {PureComponent} from '../misc';
-import * as actions from '../actions';
 
 const HistoryTabSelector = createSelector(
   function (state) {
@@ -32,31 +31,34 @@ const HistoryTab = PureComponent(self => {
       const latestVersion = workspace.versions[0];
       const rowClass = (workspace === currentWorkspace) ? 'selected' : '';
       return (
-        <tr key={workspace.id}>
+        <tr className={rowClass}>
           <td>{workspace.title}</td>
           <td style={{width:'20%'}}>{latestVersion.updatedAt}</td>
           <td style={{width:'20%'}}>{latestVersion.owner.fullname}</td>
           <td><button type="button">utiliser</button></td>
-        </tr>);
+        </tr>
+      );
     });
+    workspaceRows.push(
+      <tr className={currentWorkspace===undefined?'selected':''}>
+        <td colSpan="4"><button type="button">afficher toutes les versions</button></td>
+      </tr>
+    );
     return (
       <table className="workspace-list">
         {workspaceListHead}
         <tbody>
           {workspaceRows}
-          <tr className={currentWorkspace===undefined?'selected':''}>
-            <td colSpan="4"><button type="button">afficher toutes les versions</button></td>
-          </tr>
         </tbody>
       </table>);
   };
-  const renderCurrentWorkspace = function (workspace) {
+  const renderWorkspace = function (workspace) {
     return (
       <div>
         <div key='rename'>
           <p>
-            <label for="workspace-name">Modifier le nom de l'espace de travail : </label>
-            <input id="workspace-name" type="text" value={workspace.title} />
+            <label htmlFor="workspace-name">Modifier le nom de l'espace de travail : </label>
+            <input type="text" value={workspace.title} />
           </p>
           <button type="button">Enregistrer le nom</button>
         </div>
@@ -111,9 +113,14 @@ const HistoryTab = PureComponent(self => {
       currentWorkspace === undefined ?
         renderAllVersions(allVersions) :
         renderWorkspace(currentWorkspace);
-    return (<div className="wrapper">{workspacesSection}{versionsSection}</div>);
+    return (
+      <div className="wrapper">
+        {workspacesSection}
+        {versionsSection}
+      </div>
+    );
   };
-}, self => {
+}, _self => {
   return {};
 });
 
