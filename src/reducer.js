@@ -41,7 +41,7 @@ const reduceSetActiveTab = function (state, tabKey) {
   const enabledTabs = {
     team: true,
     task: haveTask,
-    cryptanalysis: false,
+    cryptanalysis: haveTask,
     history: false,
     answer: false
   };

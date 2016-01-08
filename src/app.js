@@ -8,7 +8,7 @@ import AlkindiLogout from './ui/logout';
 import TaskTab from './ui/task_tab';
 import TeamTab from './ui/team_tab';
 import HistoryTab from './ui/history_tab';
-import CryptanalysisTab from './ui/cryptanalysis_tab';
+import PlayFairTab from './ui/playfair_tab';
 import JoinTeamScreen from './ui/join_team_screen';
 import * as actions from './actions';
 import * as api from './api';
@@ -60,7 +60,7 @@ let App = connect(appSelector)(PureComponent(self => {
         content = <TaskTab round={round} attempt={attempt} task={task} />;
         break;
       case 'cryptanalysis':
-        content = <CryptanalysisTab/>;
+        content = <PlayFairTab/>;
         break;
       case 'answer':
         // content = <AnswerTab />;
