@@ -37,7 +37,7 @@ function getImproveSubstitution() {
    };
 
    var renderInstructionPython = function() {
-      return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = amelioreSubstitution(" +
+      return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = éditeSubstitution(" +
          self.props.inputCipheredTextVariable + ", " +
          self.props.inputSubstitutionVariable + ", " +
          "..." +
