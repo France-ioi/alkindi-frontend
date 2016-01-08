@@ -3,6 +3,9 @@ import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
+import AsyncHelper from '../helpers/async_helper';
+import * as api from '../api';
+
 import PlayFair from '../playfair';
 import {makeAlphabet} from '../playfair/utils/cell';
 
@@ -49,6 +52,7 @@ const initialToolStates = [
 
 const PlayFairTab = PureComponent(self => {
 
+  const asyncHelper = AsyncHelper(self);
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
@@ -60,7 +64,13 @@ const PlayFairTab = PureComponent(self => {
   };
 
   const getHint = function (query, callback) {
-    callback('not implemented');
+    const user_id = self.props.user_id;
+    asyncHelper.beginRequest();
+    api.getHint(user_id, query, function (err, result) {
+      asyncHelper.endRequest(err);
+      callback(err);
+      self.props.refresh();
+    });
   };
 
   const setToolState = function (id, data) {
@@ -96,8 +106,8 @@ const PlayFairTab = PureComponent(self => {
 });
 
 const selector = function (state) {
-  const {task} = state;
-  return {task};
+  const {user, task} = state;
+  return {user_id: user.id, task};
 };
 
 export default connect(selector)(PlayFairTab);
