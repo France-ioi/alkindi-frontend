@@ -6,7 +6,7 @@ import {Provider, connect} from 'react-redux';
 import {PureComponent, at, put} from './utils/generic';
 import {makeAlphabet} from './utils/cell';
 
-import PlayFair from './playfair';
+import PlayFair from '.';
 
 const container = document.getElementById('react-container');
 if (container) {
