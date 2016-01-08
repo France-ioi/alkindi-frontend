@@ -111,11 +111,13 @@ const PlayFairTab = PureComponent(self => {
     }
     self.setState({loading: true});
     api.loadRevision(my_latest_revision_id, function (err, result) {
-      self.setState({loading: false});
-      if (err) return alert(err); // XXX
+      if (err) {
+        self.setState({loading: false});
+        return alert(err);
+      }
       const revision = result.workspace_revision;
       const toolStates = revision.state.map(tool => tool.state);
-      self.setState({toolStates: toolStates});
+      self.setState({loading: false, toolStates: toolStates});
     });
   }
 
