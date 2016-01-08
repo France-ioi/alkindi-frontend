@@ -8,6 +8,7 @@ import TextInput from './tools/text_input';
 import Hints from './tools/hints';
 import SubstitutionFromGrid from './tools/substitution_from_grid';
 import BigramFrequencyAnalysis from './tools/bigram_frequency_analysis';
+import EditSubstitution from './tools/edit_substitution';
 import {at, put, makeAlphabet} from './tools';
 import {mostFrequentFrench, decodeBigram} from './bigram_utils';
 
@@ -185,6 +186,24 @@ store.dispatch({
       return {
          alphabet: state.alphabet,
          inputGrid: tools[1].scope.outputGrid
+      };
+   }
+});
+
+store.dispatch({
+   type: 'ADD_TOOL',
+   factory: EditSubstitution,
+   toolState: {
+      inputCipheredTextVariable: 'texteChiffré',
+      inputSubstitutionVariable: 'substitutionGénérée',
+      outputSubstitutionVariable: 'substitutionÉditée',
+      substitutionEdits: []
+   },
+   temporaryGetScope: function (state, tools) {
+      return {
+         alphabet: state.alphabet,
+         inputCipheredText: tools[0].scope.output,
+         inputSubstitution: tools[2].scope.outputSubstitution
       };
    }
 });
