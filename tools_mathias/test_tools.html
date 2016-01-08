@@ -23,10 +23,10 @@
 <div id='displayText'></div>
 <div id='hintsPlayFair'></div>
 <div id='substitutionFromGrid'></div>
-<div id='bigramFrequencyAnalysis'></div>
 <div id='improveSubstitution'></div>
+<div id='bigramFrequencyAnalysis'></div>
 <br/>
-<div id='substitutionToPlayFairGrid'></div>
+<!--<div id='substitutionToPlayFairGrid'></div>-->
 <div id='applySubstitution'></div>
 <script>
    var displayText = getDisplayText();
@@ -34,7 +34,7 @@
    var substitutionFromGrid = getSubstitutionFromGrid();
    var bigramFrequencyAnalysis = getBigramFrequencyAnalysis();
    var improveSubstitution = getImproveSubstitution();
-   var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
+//   var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
    var applySubstitution = getApplySubstitution();
 
 
@@ -45,16 +45,16 @@
       substitutionFromGrid.props.inputGridCells = hintsPlayFair.props.outputGridCells;
       substitutionFromGrid.render();
 
-      bigramFrequencyAnalysis.props.inputSubstitution = substitutionFromGrid.props.outputSubstitution;
-      bigramFrequencyAnalysis.render();
-
-      improveSubstitution.props.inputSubstitution = bigramFrequencyAnalysis.props.outputSubstitution;
+      improveSubstitution.props.inputSubstitution = substitutionFromGrid.props.outputSubstitution;
       improveSubstitution.render();
 
+      bigramFrequencyAnalysis.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
+      bigramFrequencyAnalysis.render();
+/*
       substitutionToPlayFairGrid.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
       substitutionToPlayFairGrid.props.inputGridCells = substitutionFromGrid.props.outputGridCells;
       substitutionToPlayFairGrid.render();
-
+*/
       applySubstitution.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
       applySubstitution.render();   
    };
