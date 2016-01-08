@@ -54,3 +54,6 @@ export const enterAccessCode = function (user_id, data, callback) {
 export const assignAttemptTask = function (user_id, callback) {
   post('users/'+user_id+'/assign_attempt_task').end(withSuccessCheck(callback));
 };
+export const getHint = function (user_id, data, callback) {
+  post('users/'+user_id+'/get_hint', data).end(withSuccessCheck(callback));
+};
