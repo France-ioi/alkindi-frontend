@@ -3,6 +3,26 @@ import * as PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
 
 export {PureRenderMixin};
 
+export const at = function (index, func) {
+   return function (array) {
+      if (array === undefined) {
+         const result = [];
+         result[index] = func();
+         return result;
+      } else {
+         const result = array.slice();
+         result[index] = func(array[index]);
+         return result;
+      }
+   };
+};
+
+export const put = function (value) {
+   return function (_) {
+      return value;
+   };
+};
+
 /* A pure component must always render the same for given props and state.
 */
 
