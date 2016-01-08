@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
@@ -66,6 +67,10 @@ const PlayFairTab = PureComponent(self => {
     alert('not implemented');
   };
 
+  const saveState = function () {
+    alert('not implemented');
+  };
+
   self.render = function () {
     const {task} = self.props;
     const taskApi = {
@@ -76,8 +81,15 @@ const PlayFairTab = PureComponent(self => {
       getQueryCost,
       getHint
     };
+    const changed = false;
+    const saveStyle = changed ? 'primary' : 'default';
     return (
-      <PlayFair task={taskApi} toolStates={initialToolStates} setToolState={setToolState}/>
+      <div>
+        <div className="crypto-tab-header">
+          <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>Enregistrer cette version</Button>
+        </div>
+        <PlayFair task={taskApi} toolStates={initialToolStates} setToolState={setToolState}/>
+      </div>
     );
   };
 
