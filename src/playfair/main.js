@@ -178,4 +178,5 @@ const App = connect(selectApp)(PureComponent(self => {
 }));
 
 const store = createStore(reducer);
+const container = document.getElementById('react-container');
 ReactDOM.render(<Provider store={store}><App/></Provider>, container);
