@@ -1,5 +1,5 @@
 
-import {newTool} from './tool';
+// import {newTool} from './tool';
 
 const initialState = function (seed) {
   if (!seed)
@@ -92,6 +92,7 @@ const reduceSetWorkspaces = function (state, workspaces) {
 };
 
 const reduceAddTool = function (state, toolType, toolState) {
+  return state; // XXX disabled
   const tool = newTool(toolType, toolState);
   const {nextToolId, toolPointer, toolMap, toolOrder} = state;
   const toolId = 't' + nextToolId;
