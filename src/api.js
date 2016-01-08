@@ -61,5 +61,5 @@ export const storeRevision = function (user_id, data, callback) {
   post('users/'+user_id+'/store_revision', data).end(withSuccessCheck(callback));
 };
 export const loadRevision = function (revision_id, callback) {
-  get('workspace_revisions/'+revision_id).end(callback);
+  get('workspace_revisions/'+revision_id).end(withSuccessCheck(callback));
 };

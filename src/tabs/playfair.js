@@ -91,14 +91,14 @@ const PlayFairTab = PureComponent(self => {
     const title = "Révision du " + new Date().toLocaleString();
     const data = {title, state, parent_id: parentRevisionId};
     self.setState({changed: false});
-    api.storeRevision(user_id, data, function (err, res) {
+    api.storeRevision(user_id, data, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) {
         self.setState({changed: true});
         return;
       }
       self.setState({
-        parentRevisionId: res.body.revision_id
+        parentRevisionId: result.revision_id
       });
     });
   };
@@ -109,12 +109,12 @@ const PlayFairTab = PureComponent(self => {
       self.setState({
         loading: true
       });
-      api.loadRevision(my_latest_revision_id, function (err, res) {
+      api.loadRevision(my_latest_revision_id, function (err, result) {
         self.setState({
           loading: false
         });
         if (err) return alert(err); // XXX
-        const revision = res.body.workspace_revision;
+        const revision = result.workspace_revision;
         const toolStates = revision.state.map(tool => tool.state);
         self.setState({toolStates: toolStates});
       });
