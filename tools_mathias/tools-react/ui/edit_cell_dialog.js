@@ -39,7 +39,7 @@ export default PureComponent(self => {
       const letter = editCell.letter.trim().toUpperCase();  // XXX
       let edit;
       if (letter === '') {
-         edit = undefined;
+         edit = {};
       } else {
          const rank = alphabet.ranks[letter];
          if (rank === undefined) {
