@@ -73,7 +73,7 @@ export const Component = PureComponent(self => {
          <Python.Call name="analyseFrequenceBigrammes">
             <Python.Var name={inputCipheredTextVariable}/>
             <Python.Var name={inputSubstitutionVariable}/>
-            <span>…</span>
+            {editable && <span>…</span>}
          </Python.Call>
       );
       if (!editable)
