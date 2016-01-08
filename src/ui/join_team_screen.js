@@ -2,7 +2,6 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
-import {image_url} from '../assets';
 import AlkindiAuthHeader from './auth_header';
 import AlkindiLogout from './logout';
 import AsyncHelper from '../helpers/async_helper';
@@ -26,7 +25,7 @@ const JoinTeamScreen = PureComponent(self => {
   const onCreateTeam = function () {
     const user_id = self.props.user.id;
     asyncHelper.beginRequest();
-    api.createTeam(user_id, function (err, result) {
+    api.createTeam(user_id, function (err, _result) {
       asyncHelper.endRequest(err);
       if (err) {
         if (err === 'generic')
@@ -40,7 +39,7 @@ const JoinTeamScreen = PureComponent(self => {
     const user_id = self.props.user.id;
     const data = {code: self.refs.teamCode.value};
     asyncHelper.beginRequest();
-    api.joinTeam(user_id, data, function (err, result) {
+    api.joinTeam(user_id, data, function (err, _result) {
       asyncHelper.endRequest(err, function (error) {
         if (error === 'bad code')
           return "Ce code ne vous permet pas de rejoindre une équipe.  Soit le code n'est pas valide, soit le créateur de l'équipe a verrouillé la composition de l'équipe, soit l'équipe a déjà commencé une épreuve et ne peut plus être changée.";
@@ -119,7 +118,7 @@ const JoinTeamScreen = PureComponent(self => {
       </div>
     );
   };
-}, self => {
+}, _self => {
   return AsyncHelper.initialState({joinTeam: false});
 });
 

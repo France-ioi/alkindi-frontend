@@ -10,7 +10,8 @@ const LoginScreen = PureComponent(self => {
       loginWindow.close();
       loginWindow = undefined;
     }
-    loginWindow = window.open(self.props.loginUrl, "alkindi:login",
+    const {loginUrl} = self.props;
+    loginWindow = window.open(loginUrl, "alkindi:login",
       "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
   };
   const messageListener = function (event) {
@@ -26,7 +27,6 @@ const LoginScreen = PureComponent(self => {
     window.removeEventListener('message', messageListener);
   };
   self.render = function () {
-    const {loginUrl} = self.props;
     return (
       <div className="wrapper">
         <AlkindiAuthHeader/>

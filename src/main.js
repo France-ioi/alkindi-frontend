@@ -18,6 +18,7 @@ import reducer from './reducer';
 import App from './app';
 
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
+/*global Alkindi*/
 window.Alkindi = (function () {
   const Alkindi = {};
 
@@ -41,7 +42,7 @@ window.Alkindi = (function () {
         return;
       store.dispatch({type: 'STEP'});
     }
-    const autoStepInterval = setInterval(autoStepCallback, 100);
+    const _autoStepInterval = setInterval(autoStepCallback, 100);
     // Insert HTML.
     ReactDOM.render(<Provider store={store}><App/></Provider>, mainElement);
   };

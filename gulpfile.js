@@ -40,7 +40,7 @@ function watchScript (options) {
     browserifyOpts = Object.assign({}, watchify.args, browserifyOpts);
     let bundler = watchify(browserify(browserifyOpts));
     const rebundle = function () {
-        let p = bundler.bundle()
+        return bundler.bundle()
             .on('error', function (err) {
                 console.log(err.message);
                 console.log(err.codeFrame);
@@ -48,9 +48,8 @@ function watchScript (options) {
             })
             .pipe(source(options.output))
             .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}));
-        return p
-            .pipe(sourcemaps.write("."))
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(sourcemaps.write("./"))
             .pipe(chmod(644))
             .pipe(eol("\n"))
             .pipe(gulp.dest("dist"));
@@ -137,9 +136,13 @@ gulp.task('lint', function() {
     .pipe(eslint({
         extends: "eslint:recommended",
         ecmaFeatures: {
+            arrowFunctions: true,
             blockBindings: true,
-            jsx: true,
+            destructuring: true,
             modules: true,
+            jsx: true,
+            objectLiteralComputedProperties: true,
+            unicodeCodePointEscapes: true,
             experimentalObjectRestSpread: true
         },
         plugins: [
@@ -148,14 +151,36 @@ gulp.task('lint', function() {
         envs: [
             'browser',
             'commonjs'
-        ]
+        ],
+        globals: {
+            'Alkindi': false
+        },
+        'rules': {
+            // jsx-quotes
+            "no-unused-vars": [2, {"args": "after-used", "argsIgnorePattern": "^_"}],
+            "react/jsx-uses-react": 1,
+            "react/jsx-uses-vars": 1,
+            "react/jsx-no-bind": 1,
+            "react/jsx-no-duplicate-props": 1,
+            "react/jsx-no-undef": 1,
+            "react/jsx-pascal-case": 1,
+            // "react/no-danger": 1,
+            "react/no-deprecated": 1,
+            "react/no-did-mount-set-state": 1,
+            "react/no-did-update-set-state": 1,
+            "react/no-direct-mutation-state": 1,
+            "react/no-is-mounted": 1,
+            // "react/no-string-refs": 1,
+            "react/no-unknown-property": 1,
+            "react/self-closing-comp": 1,
+            "react/wrap-multilines": 1
+        }
     }))
     .pipe(eslint.format());
 });
 
 gulp.task('playfair', function () {
-    watchScript({entry: 'tools_mathias/tools-react/main.js', output: 'playfair.js'});
-    gulp.watch('src/**/*.css', ['build_css']);
+    watchScript({entry: 'src/playfair/main.js', output: 'playfair.js'});
 });
 
 gulp.task('default', ['build_min']);
