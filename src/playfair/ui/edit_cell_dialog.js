@@ -18,7 +18,7 @@ export default PureComponent(self => {
 
    const changeLetter = function (event) {
       const {editCell, onChange} = self.props;
-      const letter = event.target.value;
+      const letter = event.target.value.toUpperCase();
       onChange({...editCell, letter});
    };
 
