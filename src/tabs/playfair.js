@@ -127,8 +127,8 @@ const PlayFairTab = PureComponent(self => {
     const {task} = self.props;
     const {toolStates, changed} = self.state;
     const taskApi = {
-      score: 500,
       alphabet: alphabet,
+      score: task.score,
       cipheredText: task.cipher_text,
       hintsGrid: task.hints,
       getQueryCost,
