@@ -226,7 +226,6 @@ export const Component = PureComponent(self => {
                {editPair && renderEditPair()}
                {renderVariables()}
                <div className='bigramFrequencyAnalysis grillesSection'>
-                  <strong>Nombre de conflits :</strong> {nConflicts}<br/>
                   <strong>Bigrammes les plus fréquents du texte d'entrée :</strong>
                   {textBigrams}
                   <strong>Bigrammes les plus fréquents en français :</strong>
