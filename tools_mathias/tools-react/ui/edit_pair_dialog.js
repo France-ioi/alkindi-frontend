@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import Tooltip from 'rc-tooltip';
 
 import {PureComponent} from '../utils';
 import {OkCancel} from '../ui/ok_cancel';
@@ -56,6 +57,8 @@ export default PureComponent(self => {
       }
    };
 
+   const lockUnlockTooltip = <p>TODO: documenter le fonctionnement du vérouillage.</p>;
+
    self.render = function () {
       const {alphabet, bigram, editPair, substPair, onOk, onCancel} = self.props;
       const buttonLockedClasses = [];
@@ -100,7 +103,12 @@ export default PureComponent(self => {
                <span className='substitutionLock'>{renderLock(editPair[1].locked)}</span>
             </div>
             <div className='dialogLine'>
-               <span className='dialogLabel'>Bloquer / débloquer : <i className='fa fa-question-circle' data-toggle='tooltip' data-placement='top' title='Aide contextuelle'></i></span>
+               <span className='dialogLabel'>
+                  Bloquer / débloquer : 
+                  <Tooltip animation="zoom" trigger="hover click" overlay={lockUnlockTooltip}>
+                     <i className='fa fa-question-circle'/>
+                  </Tooltip>
+               </span>
                <span>
                   <button type='button' className={classnames(buttonLockedClasses[0])} onClick={toggleLock} data-side='0' >
                      <i className={classnames(btnToggleClasses[0])}/>

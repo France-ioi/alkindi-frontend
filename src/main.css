@@ -907,3 +907,5 @@ td.unlock-code button {
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 16px;
 }
+
+@import "rc-tooltip/assets/bootstrap";
