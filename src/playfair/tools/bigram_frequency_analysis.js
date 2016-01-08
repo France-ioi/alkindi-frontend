@@ -210,7 +210,8 @@ export const Component = PureComponent(self => {
 
    self.render = function () {
       const {editPair} = self.state;
-      const {scope} = self.props;
+      const {scope, toolState} = self.props;
+      const {editable} = toolState;
       const {inputSubstitution, outputSubstitution, mostFrequentFrench, mostFrequentBigrams} = scope;
       const nConflicts = countSubstitutionConflicts(mostFrequentBigrams, inputSubstitution, outputSubstitution);
       const textBigrams = renderFreqSubstBigrams(mostFrequentBigrams, inputSubstitution, outputSubstitution);
@@ -226,7 +227,7 @@ export const Component = PureComponent(self => {
                {editPair && renderEditPair()}
                {renderVariables()}
                <div className='bigramFrequencyAnalysis grillesSection'>
-                  <strong>Nombre de conflits :</strong> {nConflicts}<br/>
+                  {editable && <p><strong>Nombre de conflits :</strong> {nConflicts}</p>}
                   <strong>Bigrammes les plus fréquents du texte d'entrée :</strong>
                   {textBigrams}
                   <strong>Bigrammes les plus fréquents en français :</strong>
