@@ -77,6 +77,11 @@ export const getLetterQualifiersFromGrid = function (gridCells, alphabet) {
    return letterQualifiers;
 };
 
+
+export const testConflict = function (cell1, cell2) {
+   return cell1.q !== 'unknown' && cell2.q !== 'unknown' && cell1.l !== cell2.l;
+};
+
 export const at = function (index, func) {
    return function (array) {
       if (array === undefined) {
@@ -117,6 +122,30 @@ export const getQualifierClass = function (q) {
    } else {
       return "qualifier-unconfirmed";
    }
+};
+
+export const getWrappingInfos = function (text, maxWidth, alphabet) {
+   // TODO: describe how output relates to input
+   const lineStartCols = [0];
+   let col = 0;
+   let lastNonAlphabet = 0;
+   let lastNonAlphabetBeforeLetter = 0;
+   for (let iLetter = 0; iLetter < text.length; iLetter++) {
+      if (col >= maxWidth) {
+         const startCol = lastNonAlphabetBeforeLetter + 1;
+         lineStartCols.push(startCol);
+         col = iLetter - startCol;
+      }
+      const letter = text[iLetter];
+      if (letter in alphabet.ranks) {
+         lastNonAlphabetBeforeLetter = lastNonAlphabet;
+      } else {
+         lastNonAlphabet = iLetter;
+      }
+      col++;
+   }
+   lineStartCols.push(text.length);
+   return lineStartCols;
 };
 
 
