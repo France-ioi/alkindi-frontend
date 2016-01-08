@@ -37,7 +37,7 @@ function getBigramFrequencyAnalysis() {
    };
 
    var renderInstructionPython = function() {
-      return "<span class='code-var'>" + self.props.outputSubstitutionVariable + "</span> = analyseFrequenceBigrammes(" +
+      return "analyseFrequenceBigrammes(" +
          self.props.inputCipheredTextVariable + ", " +
          self.props.inputSubstitutionVariable + ", " +
          "..." +
