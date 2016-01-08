@@ -136,6 +136,10 @@ export const getBigramSubstPair = function (substitution, bigram) {
    }
 };
 
+export const nullSubstPair = {
+   dst: [{q: "unknown"}, {q: "unknown"}]
+};
+
 export const identitySubstPair = function (bigram) {
    return {
       src: [
