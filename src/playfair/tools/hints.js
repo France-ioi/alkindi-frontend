@@ -58,7 +58,7 @@ export const Component = PureComponent(self => {
       if (self.state.hintState === "waiting") {
          return;
       }
-      if (self.props.scope.hintsGrid[row][col].q === "confirmed") {
+      if (self.props.scope.hintsGrid[row][col].q === "hint") {
          hintAlreadyObtained();
       } else {
          prepareQuery({type:'grid', row: row, col: col});
