@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
-import {PureComponent} from '../misc';
+import {PureComponent, at, put} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
 import * as api from '../api';
 
@@ -74,15 +74,58 @@ const PlayFairTab = PureComponent(self => {
   };
 
   const setToolState = function (id, data) {
-    alert('not implemented');
+    const {toolStates} = self.state;
+    self.setState({
+      changed: true,
+      toolStates: at(id, put(data))(toolStates)
+    });
   };
 
   const saveState = function () {
-    alert('not implemented');
+    const user_id = self.props.user_id;
+    const {toolStates, parentRevisionId} = self.state;
+    const state = toolStates.map(function (toolState) {
+      return {state: toolState};
+    });
+    asyncHelper.beginRequest();
+    const title = "Révision du " + new Date().toLocaleString();
+    const data = {title, state, parent_id: parentRevisionId};
+    self.setState({changed: false});
+    api.storeRevision(user_id, data, function (err, res) {
+      asyncHelper.endRequest(err);
+      if (err) {
+        self.setState({changed: true});
+        return;
+      }
+      self.setState({
+        parentRevisionId: res.body.revision_id
+      });
+    });
   };
 
+  self.componentWillMount = function () {
+    const {my_latest_revision_id} = self.props;
+    if (my_latest_revision_id !== undefined) {
+      self.setState({
+        loading: true
+      });
+      api.loadRevision(my_latest_revision_id, function (err, res) {
+        self.setState({
+          loading: false
+        });
+        if (err) return alert(err); // XXX
+        const revision = res.body.workspace_revision;
+        const toolStates = revision.state.map(tool => tool.state);
+        self.setState({toolStates: toolStates});
+      });
+    }
+  }
+
   self.render = function () {
+    if (self.state.loading)
+      return (<div>Chargement en cours, veuillez patienter...</div>);
     const {task} = self.props;
+    const {toolStates, changed} = self.state;
     const taskApi = {
       score: 500,
       alphabet: alphabet,
@@ -91,23 +134,28 @@ const PlayFairTab = PureComponent(self => {
       getQueryCost,
       getHint
     };
-    const changed = false;
     const saveStyle = changed ? 'primary' : 'default';
     return (
       <div>
         <div className="crypto-tab-header">
           <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>Enregistrer cette version</Button>
         </div>
-        <PlayFair task={taskApi} toolStates={initialToolStates} setToolState={setToolState}/>
+        <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
     );
   };
 
+}, _self => {
+  return {
+    toolStates: initialToolStates,
+    changed: false,
+    parentRevisionId: undefined
+  }
 });
 
 const selector = function (state) {
-  const {user, task} = state;
-  return {user_id: user.id, task};
+  const {user, task, my_latest_revision_id} = state;
+  return {user_id: user.id, task, my_latest_revision_id};
 };
 
 export default connect(selector)(PlayFairTab);
