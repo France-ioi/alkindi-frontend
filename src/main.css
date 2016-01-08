@@ -481,22 +481,22 @@ a.cell-link {
   top: 10px;
   right: 15px;
 }
-.playfair-score span {
+.playfair-score > span {
   text-transform: uppercase;
   font-weight: bold;
   padding: 4px;
   text-decoration: blink;
 }
-.playfair-score span strong {
+.playfair-score > span strong {
   color: #000;
 }
-#hintsPlayFair .panel {
+#hintsPlayFair .panel, .hintsPlayFair.panel {
   border-color: #C82829;
 }
-#hintsPlayFair .panel-heading {
+#hintsPlayFair .panel-heading, .hintsPlayFair .panel-heading {
   background-color: #C82829;
 }
-#hintsPlayFair .panel-heading .code-var {
+#hintsPlayFair .panel-heading .code-var, .hintsPlayFair .panel-heading .code-var {
   color: #fff;
 }
 /* Fonts */

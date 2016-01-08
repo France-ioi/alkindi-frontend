@@ -157,7 +157,7 @@ export const Component = PureComponent(self => {
       const {outputGridVariable} = self.props.toolState;
       const outputVars = [{label: "Grille enregistrée", name: outputGridVariable}];
       return (
-         <div className='panel panel-default'>
+         <div className='panel panel-default hintsPlayFair'>
             <div className='panel-heading'>
                <span className='code'>{renderInstructionPython()}</span>
             </div>
@@ -175,7 +175,9 @@ export const Component = PureComponent(self => {
                      {renderAlphabet()}
                   </div>
                </div>
-               <div className='score'><strong>Score disponible :</strong> {score} points</div>
+               <div className='playfair-score'>
+                  <span><strong>Points disponible :</strong> {score} points</span>
+               </div>
             </div>
          </div>
       );
