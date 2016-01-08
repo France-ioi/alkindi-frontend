@@ -41,7 +41,11 @@ function watchScript (options) {
     let bundler = watchify(browserify(browserifyOpts));
     const rebundle = function () {
         let p = bundler.bundle()
-            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+            .on('error', function (err) {
+                console.log(err.codeFrame);
+                console.log(err.message);
+                this.emit('end');
+            })
             .pipe(source(options.output))
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}));
