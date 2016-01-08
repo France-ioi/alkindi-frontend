@@ -176,7 +176,7 @@ export const Component = PureComponent(self => {
                   </div>
                </div>
                <div className='playfair-score'>
-                  <span><strong>Points disponible :</strong> {score} points</span>
+                  <span><strong>Points disponibles :</strong> {score} points</span>
                </div>
             </div>
          </div>
