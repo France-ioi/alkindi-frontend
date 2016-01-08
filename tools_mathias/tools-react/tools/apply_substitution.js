@@ -64,7 +64,7 @@ export const Component = PureComponent(self => {
          const cell = outputText[iCell];
          elements.push(renderCell(alphabet, cell));
       }
-      return <div className='y-scrollBloc'>{elements}</div>;
+      return <div className='y-scrollBloc applySubstitution'>{elements}</div>;
    };
 
    self.render = function () {

@@ -761,7 +761,6 @@ td .bigramLetter {
   width: 20px;
   font-size: 1.8rem;
   border: 1px solid #000;
-  padding: 0;
   display: block;
   text-align: center;
 }
@@ -880,6 +879,9 @@ td .bigramLetter {
 }
 .substituedLetter.character {
   border-color: transparent;
+}
+.applySubstitution hr {
+  margin: 3px 0;
 }
 /* Team tab -- access codes */
 .access-code-block {
