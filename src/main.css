@@ -655,23 +655,22 @@ a.cell-link {
   background-color: #ddd;
   background-repeat: no-repeat;
   background-position: top right;
-  position: relative;
 }
 .qualifier-locked::after {
   content: "\f023";
   font-family: FontAwesome;
   font-size: 11px;
-  position: absolute;
-  top: 2px;
-  right: 2px;
   line-height: 1em;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 3px;
+  margin-right: -6px;
 }
 .qualifier-unconfirmed {
   background-color: white;
 }
 .qualifier-hint {
   background-color: #aaa;
-  position: relative;
 }
 .qualifier-confirmed {
   background-color: #ddd;
