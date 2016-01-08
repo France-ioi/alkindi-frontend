@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import range from 'node-range';
 
-import {PureComponent} from '../utils';
-import {getCellLetter} from '../tools';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter} from '../utils/cell';
 
 export const Grid = PureComponent(self => {
    /* Props:
@@ -11,7 +11,7 @@ export const Grid = PureComponent(self => {
          selectedRow
          selectedCol
          onClick
-   */;
+   */
 
    const onClick = function (event) {
       const element = event.currentTarget;

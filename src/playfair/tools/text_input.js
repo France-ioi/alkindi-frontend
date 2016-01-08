@@ -1,6 +1,8 @@
-import {PureComponent} from '../utils';
+
+import {PureComponent} from '../utils/generic';
+
 import {Variables} from '../ui/variables';
-import * as Python from '../python';
+import * as Python from '../ui/python';
 
 export const Component = PureComponent(self => {
 

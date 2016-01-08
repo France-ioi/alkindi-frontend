@@ -1,13 +1,13 @@
 import classnames from 'classnames';
 
-import {PureComponent} from '../utils';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter, getQualifierClass, testConflict} from '../utils/cell';
+import {getTextBigrams, getMostFrequentBigrams} from '../utils/bigram';
+import {getBigramSubstPair, nullSubstPair, countSubstitutionConflicts, applySubstitutionEdits} from '../utils/bigram_subst';
+
 import {Variables} from '../ui/variables';
-import {OkCancel} from '../ui/ok_cancel';
-import * as Python from '../python';
-import {getCellLetter, getQualifierClass, testConflict} from '../tools';
-import {getTextBigrams, getMostFrequentBigrams, getBigramSubstPair, nullSubstPair,
-        countSubstitutionConflicts, applySubstitutionEdits} from '../bigram_utils';
 import EditPairDialog from '../ui/edit_pair_dialog';
+import * as Python from '../ui/python';
 
 export const Component = PureComponent(self => {
 
@@ -33,7 +33,7 @@ export const Component = PureComponent(self => {
       const {substitutionEdits, editable} = self.props.toolState;
       if (!editable)
          return;
-      const {alphabet, mostFrequentBigrams} = self.props.scope;
+      const {mostFrequentBigrams} = self.props.scope;
       const iBigram = parseInt(event.currentTarget.getAttribute('data-i'));
       const bigram = mostFrequentBigrams[iBigram];
       const editPair = substitutionEdits[bigram.v] || [{locked: false}, {locked: false}];
@@ -45,8 +45,8 @@ export const Component = PureComponent(self => {
    };
 
    const validateDialog = function (checkedEditPair) {
-      const {selectedPos, editPair} = self.state;
-      const {alphabet, mostFrequentBigrams} = self.props.scope;
+      const {selectedPos} = self.state;
+      const {mostFrequentBigrams} = self.props.scope;
       const {v} = mostFrequentBigrams[selectedPos];
       const {toolState, setToolState} = self.props;
       let newEdits = {...toolState.substitutionEdits};
@@ -121,13 +121,14 @@ export const Component = PureComponent(self => {
       const {alphabet, mostFrequentBigrams, inputSubstitution} = self.props.scope;
       const bigram = mostFrequentBigrams[selectedPos];
       const substPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
-      return <EditPairDialog
-         alphabet={alphabet} bigram={bigram} editPair={editPair} substPair={substPair}
-         onOk={validateDialog} onCancel={cancelDialog} onChange={setEditPair} />;
+      return (
+         <EditPairDialog
+            alphabet={alphabet} bigram={bigram} editPair={editPair} substPair={substPair}
+            onOk={validateDialog} onCancel={cancelDialog} onChange={setEditPair} />
+      );
    };
 
    const renderFreqBigrams = function (bigrams) {
-      const {alphabet} = self.props.scope;
       const renderFreqBigram = function (bigram) {
          return (
             <div className='bigramBloc'>
@@ -208,9 +209,8 @@ export const Component = PureComponent(self => {
 
    self.render = function () {
       const {editPair} = self.state;
-      const {toolState, scope} = self.props;
-      const {inputCipheredTextVariable, inputSubstitutionVariable, outputSubstitutionVariable} = toolState;
-      const {alphabet, inputSubstitution, outputSubstitution, mostFrequentFrench, mostFrequentBigrams} = scope;
+      const {scope} = self.props;
+      const {inputSubstitution, outputSubstitution, mostFrequentFrench, mostFrequentBigrams} = scope;
       const nConflicts = countSubstitutionConflicts(mostFrequentBigrams, inputSubstitution, outputSubstitution);
       const textBigrams = renderFreqSubstBigrams(mostFrequentBigrams, inputSubstitution, outputSubstitution);
       const frenchBigrams = renderFreqBigrams(mostFrequentFrench);
@@ -236,7 +236,7 @@ export const Component = PureComponent(self => {
       );
    };
 
-}, self => {
+}, _self => {
    return {
       editState: undefined,
       edit: undefined
@@ -244,7 +244,7 @@ export const Component = PureComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {substitutionEdits, compute} = toolState;
+   const {substitutionEdits} = toolState;
    const {alphabet, inputCipheredText, inputSubstitution} = scope;
    scope.textBigrams = getTextBigrams(inputCipheredText, alphabet);
    scope.mostFrequentBigrams = getMostFrequentBigrams(scope.textBigrams);

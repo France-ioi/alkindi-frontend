@@ -1,9 +1,8 @@
 import classnames from 'classnames';
-import Tooltip from 'rc-tooltip';
 
-import {PureComponent} from '../utils';
-import {OkCancel} from '../ui/ok_cancel';
-import {getCellLetter} from '../tools';
+import {OkCancel} from './ok_cancel';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter} from '../utils/cell';
 
 export default PureComponent(self => {
 
@@ -26,12 +25,6 @@ export default PureComponent(self => {
       const {editCell, onChange} = self.props;
       const locked = !editCell.locked;
       onChange({...editCell, locked});
-   };
-
-   const renderEditCell = function() {
-   };
-
-   const renderInvalidEditCell = function () {
    };
 
    const validateDialog = function () {
@@ -68,7 +61,7 @@ export default PureComponent(self => {
       setFocus();
    };
 
-   self.componentDidUpdate = function (prevProps, prevState) {
+   self.componentDidUpdate = function (prevProps, _prevState) {
       // Focus the input box when the editCell changes.
       if (prevProps.editCell !== self.props.editCell)
          setFocus();

@@ -1,12 +1,13 @@
-import classnames from 'classnames';
 
-import {PureComponent} from '../utils';
+import {PureComponent, put, at} from '../utils/generic';
+import {getCellLetter} from '../utils/cell';
+import {applyGridEdit} from '../utils/grid';
+import {getSubstitutionFromGridCells} from '../utils/playfair';
+
 import {Variables} from '../ui/variables';
 import {Grid} from '../ui/grid';
 import {Substitution} from '../ui/substitution';
-import {OkCancel} from '../ui/ok_cancel';
-import * as Python from '../python';
-import {put, at, getCellLetter, applyGridEdit, getSubstitutionFromGridCells} from '../tools';
+import * as Python from '../ui/python';
 import EditCellDialog from '../ui/edit_cell_dialog';
 
 export const Component = PureComponent(self => {
@@ -105,9 +106,11 @@ export const Component = PureComponent(self => {
       const {alphabet, inputGrid} = self.props.scope;
       const {editCell, selectedRow, selectedCol} = self.state;
       const initialCell = inputGrid[selectedRow][selectedCol];
-      return <EditCellDialog
-         alphabet={alphabet} initialCell={initialCell} editCell={editCell}
-         onOk={validateDialog} onCancel={cancelDialog} onChange={setEditCell} />;
+      return (
+         <EditCellDialog
+            alphabet={alphabet} initialCell={initialCell} editCell={editCell}
+            onOk={validateDialog} onCancel={cancelDialog} onChange={setEditCell} />
+      );
    };
 
    self.render = function () {
@@ -143,12 +146,12 @@ export const Component = PureComponent(self => {
       );
    };
 
-}, self => {
+}, _self => {
    return {
       editState: undefined,
       selectedCol: undefined,
       selectedRow: undefined,
-      editCell: undefined,
+      editCell: undefined
    };
 });
 

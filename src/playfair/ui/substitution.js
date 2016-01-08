@@ -1,8 +1,7 @@
 import classnames from 'classnames';
-import range from 'node-range';
 
-import {PureComponent} from '../utils';
-import {getCellLetter} from '../tools';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter} from '../utils/cell';
 
 export const Substitution = PureComponent(self => {
 

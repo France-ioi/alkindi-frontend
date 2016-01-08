@@ -1,13 +1,13 @@
-import classnames from 'classnames';
-import range from 'node-range';
 
-import {PureComponent} from '../utils';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter} from '../utils/cell';
+import {getLetterQualifiersFromGrid} from '../utils/grid';
+
 import {Variables} from '../ui/variables';
 import {Alphabet} from '../ui/alphabet';
 import {Grid} from '../ui/grid';
 import {OkCancel} from '../ui/ok_cancel';
-import {getCellLetter, getLetterQualifiersFromGrid} from '../tools';
-import * as Python from '../python';
+import * as Python from '../ui/python';
 
 export const Component = PureComponent(self => {
 
@@ -26,8 +26,8 @@ export const Component = PureComponent(self => {
    const validateDialog = function() {
       let {hintQuery} = self.state;
       self.setState({hintState: "waiting"});
-      self.props.scope.getHint(hintQuery, function (err) {
-         // TODO: handle err
+      self.props.scope.getHint(hintQuery, function (_err) {
+         if (_err) return alert(_err); // TODO: handle err
          self.setState({hintState: "received"});
       });
    };
@@ -183,7 +183,7 @@ export const Component = PureComponent(self => {
       );
    };
 
-}, self => {
+}, _self => {
    return {
       hintQuery: undefined,
       hintValues: undefined,

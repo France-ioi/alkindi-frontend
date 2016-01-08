@@ -1,6 +1,6 @@
 import intersperse from 'intersperse';
 
-import {PureComponent} from './utils';
+import {PureComponent} from '../utils/generic';
 
 export const StrLit = PureComponent(self => {
    /* Props:
@@ -67,7 +67,6 @@ export const Grid = PureComponent(self => {
             if (col != 0) {
                strPython += ", ";
             }
-            const cell = grid[row][col];
             strPython += renderCell(grid[row][col]);
          }
          strPython += "]";

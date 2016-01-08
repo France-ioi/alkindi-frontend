@@ -1,12 +1,13 @@
 import classnames from 'classnames';
 
-import {PureComponent} from '../utils';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter, getQualifierClass, testConflict} from '../utils/cell';
+import {getStringWrapping} from '../utils/wrapping';
+import {getTextAsBigrams, sideOfStatus} from '../utils/bigram';
+import {getBigramSubstPair, nullSubstPair, countAllSubstitutionConflicts, applySubstitutionEdits} from '../utils/bigram_subst';
+
 import {Variables} from '../ui/variables';
-import {OkCancel} from '../ui/ok_cancel';
-import * as Python from '../python';
-import {getCellLetter, getQualifierClass, getStringWrapping, testConflict} from '../tools';
-import {getTextAsBigrams, getMostFrequentBigrams, getBigramSubstPair, nullSubstPair,
-        countAllSubstitutionConflicts, applySubstitutionEdits, sideOfStatus} from '../bigram_utils';
+import * as Python from '../ui/python';
 import EditPairDialog from '../ui/edit_pair_dialog';
 
 export const Component = PureComponent(self => {
@@ -27,7 +28,7 @@ export const Component = PureComponent(self => {
 
    const clickBigram = function (event) {
       const {substitutionEdits} = self.props.toolState;
-      const {alphabet, letterInfos} = self.props.scope;
+      const {letterInfos} = self.props.scope;
       const iLetter = parseInt(event.currentTarget.getAttribute('data-i'));
       const bigram = letterInfos[iLetter].bigram;
       const editPair = substitutionEdits[bigram.v] || [{locked: false}, {locked: false}];
@@ -38,8 +39,8 @@ export const Component = PureComponent(self => {
    };
 
    const validateDialog = function (checkedEditPair) {
-      const {selectedLetterPos, editPair} = self.state;
-      const {alphabet, letterInfos} = self.props.scope;
+      const {selectedLetterPos} = self.state;
+      const {letterInfos} = self.props.scope;
       const {v} = letterInfos[selectedLetterPos].bigram;
       const {toolState, setToolState} = self.props;
       let newEdits = {...toolState.substitutionEdits};
@@ -95,9 +96,11 @@ export const Component = PureComponent(self => {
       const bigram = letterInfo.bigram;
       const side = sideOfStatus[letterInfo.status];
       const substPair = getBigramSubstPair(inputSubstitution, bigram) || nullSubstPair;
-      return <EditPairDialog
-         alphabet={alphabet} bigram={bigram} editPair={editPair} substPair={substPair}
-         onOk={validateDialog} onCancel={cancelDialog} onChange={setEditPair} focusSide={side} />;
+      return (
+         <EditPairDialog
+            alphabet={alphabet} bigram={bigram} editPair={editPair} substPair={substPair}
+            onOk={validateDialog} onCancel={cancelDialog} onChange={setEditPair} focusSide={side} />
+      );
    };
 
    const renderCell = function (alphabet, cell) {
@@ -174,7 +177,7 @@ export const Component = PureComponent(self => {
 
    self.render = function () {
       const {editPair} = self.state;
-      const {toolState, scope} = self.props;
+      const {scope} = self.props;
       const {nConflicts} = scope;
       return (
          <div className='panel panel-default'>
@@ -195,7 +198,7 @@ export const Component = PureComponent(self => {
       );
    };
 
-}, self => {
+}, _self => {
    return {
       editPair: undefined,
       selectedLetterPos: undefined

@@ -3,17 +3,54 @@ import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 
-import {PureComponent} from './utils';
-import {at, put, makeAlphabet} from './tools';
-import {mostFrequentFrench, decodeBigram} from './bigram_utils';
+import {PureComponent, at, put} from './utils/generic';
+import {makeAlphabet} from './utils/cell';
+import {mostFrequentFrench, decodeBigram} from './utils/bigram';
 
-// Tools:
 import TextInput from './tools/text_input';
 import Hints from './tools/hints';
 import SubstitutionFromGrid from './tools/substitution_from_grid';
 import BigramFrequencyAnalysis from './tools/bigram_frequency_analysis';
 import EditSubstitution from './tools/edit_substitution';
 import ApplySubstitution from './tools/apply_substitution';
+
+/*** + demo + ***/
+
+const initialTaskGrid = [
+   [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+   [{q:'unknown'}, {l:11, q:'hint'}, {q:'unknown'}, {q:'unknown'}, {l:10, q:'hint'}],
+   [{q:'unknown'}, {l:16, q:'hint'}, {q:'unknown'}, {q:'unknown'}, {l: 4, q:'hint'}],
+   [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}],
+   [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}]
+];
+
+const sampleCipheredText = "KQ CVG XSVR ACHZ JDSKQ CBAVHM, AKV TKMV QKAONPXTP, OD CSACQ MT ZTAZQ BONP NI MQUGQTN. BSPV QKAIHVACBQZ, PTSC PCDSVCQZTPL ICKLNADVC PVQ MCK TIEUTQQTYV KCQVTQCK MQ OD YLIVTQFZ. QKKQ KC QNSPZC IDVO PV HTCAF PDNMQ ZMGUKQ. NSSC KQ QNSPZCZQN MP CZQPAT FAVT DZCVPT MPASAZT NLYVCVPXLS. NSSC O FNLSUQZMH HQIPTSGB MQ ALISZMPAO I NSSC MQ TJDVQ KT QVD. OTBV O JFVFTMQV DS RSPY CIPQ OT ZHIQZL AG UYN TQ OD TSDHAVDJYLR AS IDITZIO. TSJZZM FT AKMQ MQ EUJCQXMZTZA P'CKA OIO TJAC OTBV KQO VKALBCK, MF KQO IM CQVACC IJ-ICKYLSC, TZ KQC IUMJGQXNPQ A'PVT MPCZQ ADVAQZT. FT FLAT ZQ MSAQ TP NSIPV TIK CQNFZ TFVDA TB IVUBSHGT M PV CAQZYV. CSVUMH OD BNSTQMBVC KSVNIPAT : FTPZCNQVCKCR KCK KQFNQNCK MQ NSQNT HZQPTA DZCT I TJAC PV, G QDJQ ACHZ, FQF TQ IHOQAUSDMH KQO CSPQTY. CDJQTY ST HNLIBAC IB PTDHZQ LPQTVP TQ MQ UVXPA-PCHE TQ NTQNDVTKMR MJV-ZTGC. KQ ZQCSOQNA LPQTVP KCND NSQNT FKQ. OTBV SLTISDKCB QQ HYN, BNTZRBQ KF HNDRA PTDHZQ IV MQYVYLSC TQ K YSPOCNDDVT CPIQNC-ZAVPF-CBAVHM. KQ ZQCSOQNA LPQTVP ALAC TQZQ IJUVKC ONV XTAZQ QST. FQKD ITPZT IVRT EUJCQXCK, KQL ICHN GZQAJQZY CLNZMPA KQ VPZMNL MQ PLR, YCK IPQNCK KQ TSMQ IB TIMQPNYV. \n254292628";
+const sampleHints = [
+   ['P', 'B', 'U', 'G', 'H'],
+   ['O', 'L', 'S', 'Y', 'K'],
+   ['T', 'Q', 'C', 'F', 'E'],
+   ['A', 'D', 'I', 'J', 'M'],
+   ['N', 'R', 'V', 'X', 'Z']
+];
+
+const getHintGrid = function (alphabet, hints, row, col) {
+   var letter = hints[row][col];
+   return alphabet.ranks[letter];
+};
+
+const getHintAlphabet = function (alphabet, hints, rank) {
+   for (var row = 0; row < hints.length; row++) {
+      for (var col = 0; col < hints[row].length; col++) {
+         const curRank = alphabet.ranks[hints[row][col]];
+         if (rank === curRank) {
+            return {row: row, col: col};
+         }
+      }
+   }
+};
+
+
+/*** - demo - ***/
 
 const selectApp = function (state) {
    const {tools} = state;
@@ -26,11 +63,18 @@ const App = connect(selectApp)(PureComponent(self => {
       self.props.dispatch({type: 'SET_TOOL_STATE', id: id, data: data});
    };
 
+   const setters = [];
+   const setter = function (i) {
+      if (!(i in setters))
+         setters[i] = setToolState.bind(null, i);
+      return setters[i];
+   };
+
    self.render = function () {
       const {tools} = self.props;
       const renderTool = function (tool, i) {
          const {Component, state, scope} = tool;
-         return (<Component key={i} toolState={state} scope={scope} setToolState={setToolState.bind(null, i)} />);
+         return (<Component key={i} toolState={state} scope={scope} setToolState={setter(i)} />);
       };
       return <div>{tools.map(renderTool)}</div>;
    };
@@ -38,7 +82,7 @@ const App = connect(selectApp)(PureComponent(self => {
 }));
 
 const recompute = function (state) {
-   const {score, hintsGrid, tools} = state;
+   const {tools} = state;
    const newTools = [];
    for (let pc = 0; pc < tools.length; pc += 1) {
       const tool = tools[pc];
@@ -78,8 +122,8 @@ const reduceRevealHint = function (state, row, col, hint, cost) {
    let {score, hintsGrid} = state;
    return {
       ...state,
-      hintsGrid: at(row, at(col, put(hint)))(hintsGrid),
-      score: score - cost
+      score: score - cost,
+      hintsGrid: at(row, at(col, put(hint)))(hintsGrid)
    };
 };
 
@@ -101,8 +145,7 @@ const reducer = function (state, action) {
          newState = reduceRevealHint(state, action.row, action.col, action.hint, action.cost);
          break;
       default:
-         console.log('dropped action', action);
-         return state;
+         throw action;
    }
    if (newState !== state)
       return recompute(newState);
@@ -120,7 +163,7 @@ store.dispatch({
    state: {
       tools: [],
       score: 500,
-      hintsGrid: playFair.initialTaskGrid,
+      hintsGrid: initialTaskGrid,
       alphabet: alphabet
    }
 });
@@ -132,10 +175,10 @@ store.dispatch({
    toolState: {
       outputVariable: "texteChiffré"
    },
-   temporaryGetScope: function (state, tools) {
+   temporaryGetScope: function (state, _tools) {
       return {
          alphabet: state.alphabet,
-         text: playFair.sampleCipheredText
+         text: sampleCipheredText
       };
    }
 });
@@ -146,7 +189,7 @@ store.dispatch({
    toolState: {
       outputGridVariable: "lettresGrilleIndices"
    },
-   temporaryGetScope: function (state, tools) {
+   temporaryGetScope: function (state, _tools) {
       const {hintsGrid, score} = state;
       const getQueryCost = function (query) {
          if (query.type === "grid")
@@ -158,15 +201,14 @@ store.dispatch({
       const getHint = function (query, callback) {
          setTimeout(function () {
             const cost = getQueryCost(query);
-            let hint;
             if (query.type == "grid") {
                const {row, col} = query;
-               const hint = {l: playFair.getHintGrid(playFair.sampleHints, row, col), q: 'hint'};
+               const hint = {l: getHintGrid(alphabet, sampleHints, row, col), q: 'hint'};
                store.dispatch({type: 'REVEAL_HINT', row, col, hint, cost});
                callback(false);
             } else {
                const {rank} = query;
-               const {row, col} = playFair.getHintAlphabet(playFair.sampleHints, rank);
+               const {row, col} = getHintAlphabet(alphabet, sampleHints, rank);
                const hint = {l: rank, q: 'hint'};
                store.dispatch({type: 'REVEAL_HINT', row, col, hint, cost});
                callback(false);

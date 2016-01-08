@@ -181,8 +181,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('playfair', function () {
-    watchScript({entry: 'tools_mathias/tools-react/main.js', output: 'playfair.js'});
-    gulp.watch('src/**/*.css', ['build_css']);
+    watchScript({entry: 'src/playfair/main.js', output: 'playfair.js'});
 });
 
 gulp.task('default', ['build_min']);

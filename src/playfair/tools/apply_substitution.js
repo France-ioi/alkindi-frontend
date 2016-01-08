@@ -1,10 +1,13 @@
 import classnames from 'classnames';
 
-import {PureComponent} from '../utils';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter, getQualifierClass} from '../utils/cell';
+import {getCellsWrapping} from '../utils/wrapping';
+import {getTextAsBigrams} from '../utils/bigram';
+import {applySubstitution} from '../utils/bigram_subst';
+
 import {Variables} from '../ui/variables';
-import * as Python from '../python';
-import {getCellLetter, getQualifierClass, getCellsWrapping} from '../tools';
-import {getTextAsBigrams, applySubstitution} from '../bigram_utils';
+import * as Python from '../ui/python';
 
 export const Component = PureComponent(self => {
 
@@ -83,7 +86,7 @@ export const Component = PureComponent(self => {
       );
    };
 
-}, self => {
+}, _self => {
    return {
       editPair: undefined,
       selectedLetterPos: undefined

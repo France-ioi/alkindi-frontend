@@ -1,9 +1,9 @@
 import classnames from 'classnames';
 import Tooltip from 'rc-tooltip';
 
-import {PureComponent} from '../utils';
-import {OkCancel} from '../ui/ok_cancel';
-import {getCellLetter, getQualifierClass} from '../tools';
+import {OkCancel} from './ok_cancel';
+import {PureComponent} from '../utils/generic';
+import {getCellLetter, getQualifierClass} from '../utils/cell';
 
 export default PureComponent(self => {
 
@@ -43,7 +43,6 @@ export default PureComponent(self => {
          if (letter === undefined || letter === '') {
             checkedEditPair[iSide] = false;
          } else if (letter in alphabet.ranks) {
-            const rank = alphabet.ranks[letter];
             checkedEditPair[iSide] = editPair[iSide];
          } else {
             alert(letter + " n'est pas une valeur possible de la grille");
@@ -83,7 +82,7 @@ export default PureComponent(self => {
       setFocus();
    };
 
-   self.componentDidUpdate = function (prevProps, prevState) {
+   self.componentDidUpdate = function (prevProps, _prevState) {
       // Focus the input box when the bigram changes.
       // Need to check the letters, we may get a new identical object due to compute.
       if (prevProps.bigram.v !== self.props.bigram.v)
@@ -93,7 +92,7 @@ export default PureComponent(self => {
    const lockUnlockTooltip = <p>TODO: documenter le fonctionnement du vérouillage.</p>;
 
    self.render = function () {
-      const {alphabet, bigram, editPair, substPair, onOk, onCancel} = self.props;
+      const {alphabet, bigram, editPair, substPair, onCancel} = self.props;
       const buttonLockedClasses = [];
       const btnToggleClasses = [];
       for (var iSide = 0; iSide < 2; iSide++) {
@@ -137,7 +136,7 @@ export default PureComponent(self => {
             </div>
             <div className='dialogLine'>
                <span className='dialogLabel'>
-                  Bloquer / débloquer : 
+                  {'Bloquer / débloquer : '}
                   <Tooltip animation="zoom" trigger="hover click" overlay={lockUnlockTooltip}>
                      <i className='fa fa-question-circle'/>
                   </Tooltip>
