@@ -33,8 +33,7 @@ option {
   color: #555;
 }
 hr {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 0;
   border: 0;
   border-top: 1px solid #000;
 }
@@ -745,10 +744,7 @@ td .bigramLetter {
   text-align: center;
 }
 .bigramBlocSubstitution {
-  background-color: #fff;
   padding: 3px;
-  border: 1px solid #fff;
-  margin-top: -3px;
 }
 .bigramBlocSubstitution.selectedBigram {
   background-color: #000;
@@ -756,10 +752,7 @@ td .bigramLetter {
 }
 .substitutionPair {
   display: inline-block;
-  border: 3px solid #fff;
-}
-.selectedBigram .substitutionPair {
-  border-color: #000;
+  border: 3px solid transparent;
 }
 .substitutionPair.substitutionConflict {
   border-color: #C82829;
@@ -801,10 +794,14 @@ td .bigramLetter {
   display: block;
 }
 
-/* Amélioration de substitution */
-#improveSubstitution .y-scrollBloc, .improveSubstitution .y-scrollBloc {
+/* Edit substitution */
+.originLetter {
+  overflow: hidden;
+}
+.editSubstitution .y-scrollBloc, #improveSubstitution .y-scrollBloc, .improveSubstitution .y-scrollBloc {
   height: 320px;
   padding: 0;
+  line-height: 1.5;
 }
 .letterSubstBloc {
   display: inline-block;
@@ -814,6 +811,8 @@ td .bigramLetter {
   margin-bottom: 5px;
   padding-top: 3px;
   width: 2em;
+  overflow: hidden;
+  height: 117px;
 }
 .letterSubstBloc.letterStatus-left {
   padding-left: 3px;
@@ -826,8 +825,6 @@ td .bigramLetter {
 }
 .letterSubstBloc.selectedBigram {
   background-color: #000;
-  height: 111px;
-  overflow: hidden;
 }
 .letterStatus-left .cipheredLetter,
 .letterStatus-right .cipheredLetter,
@@ -843,8 +840,12 @@ td .bigramLetter {
 .letterStatus-right .cipheredLetter {
   border-right: 1px solid black;
 }
-.letterStatus-inside .substitutionPair {
-    width: 100%;
+.letterStatus-inside .substitutionPair,
+.letterStatus-outside .substitutionPair {
+  width: 100%;
+}
+.letterSubstBloc.letterStatus-outside .cipheredLetter {
+  border: 1px solid transparent;
 }
 .letterSubstBloc.letterStatus-inside .character,
 .letterSubstBloc.letterStatus-outside .character {
@@ -852,6 +853,11 @@ td .bigramLetter {
   margin: 2px 1px;
   line-height: 2em;
   height: 2em;
+  margin-top: 4px;
+}
+.letterSubstBloc.letterStatus-inside .character:last-of-type,
+.letterSubstBloc.letterStatus-outside .character:last-of-type {
+  height: 20px;
 }
 .letterSubstBloc.letterStatus-inside.selectedBigram .character,
 .letterSubstBloc.letterStatus-outside.selectedBigram .character {

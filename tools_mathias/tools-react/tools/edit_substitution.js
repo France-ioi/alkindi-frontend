@@ -186,7 +186,7 @@ export const Component = PureComponent(self => {
             <div className='panel-body'>
                {editPair && renderEditPair()}
                {renderVariables()}
-               <div className='bigramFrequencyAnalysis grillesSection'>
+               <div className='editSubstitution grillesSection'>
                   <strong>Nombre de conflits entre les substitutions :</strong> {nConflicts}<br/>
                   {renderSubstBigrams()}
                </div>
