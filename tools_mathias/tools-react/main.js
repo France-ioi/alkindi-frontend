@@ -214,7 +214,7 @@ store.dispatch({
    factory: BigramFrequencyAnalysis,
    toolState: {
       inputCipheredTextVariable: 'texteChiffré',
-      inputSubstitutionVariable: 'substitutionGénérée',
+      inputSubstitutionVariable: 'substitutionÉditée',
       outputSubstitutionVariable: 'substitutionFréquences',
       substitutionEdits: [],
       editable: false
@@ -224,7 +224,7 @@ store.dispatch({
          alphabet: state.alphabet,
          inputCipheredText: tools[0].scope.output,
          mostFrequentFrench: decodedMostFrequentFrench,
-         inputSubstitution: tools[2].scope.outputSubstitution
+         inputSubstitution: tools[3].scope.outputSubstitution
       };
    }
 });
