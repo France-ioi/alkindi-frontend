@@ -179,7 +179,7 @@ store.dispatch({
    toolState: {
       inputGridVariable: 'lettresGrilleIndices',
       outputGridVariable: 'lettresGrilleEditée',
-      outputSubstitutionVariable: 'substitutionDépart'
+      outputSubstitutionVariable: 'substitutionGénérée'
    },
    temporaryGetScope: function (state, tools) {
       return {
@@ -195,7 +195,7 @@ store.dispatch({
    factory: BigramFrequencyAnalysis,
    toolState: {
       inputCipheredTextVariable: 'texteChiffré',
-      inputSubstitutionVariable: 'substitutionDépart',
+      inputSubstitutionVariable: 'substitutionGénérée',
       outputSubstitutionVariable: 'substitutionFréquences',
       substitutionEdits: []
    },
