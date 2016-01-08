@@ -8,7 +8,8 @@ import {getCellLetter, getQualifierClass} from '../tools';
 export default PureComponent(self => {
 
    /* props:
-      alphabet, bigram, editPair, substPair, onOk, onCancel, onChange
+      alphabet, bigram, editPair, substPair, onOk, onCancel, onChange,
+      focusSide
    */
 
    const changeLetter = function (event) {
@@ -56,23 +57,29 @@ export default PureComponent(self => {
       return cond ? <i className='fa fa-lock'></i> : ' ';
    };
 
-   let inputElement;
-   const setInput = function (el) {
-      inputElement = el;
+   const inputElements = [];
+   const refInput = function (el) {
+      if (el) {
+         const side = parseInt(el.getAttribute('data-side'));
+         inputElements[side] = el;
+      }
+   };
+
+   const setFocus = function () {
+      const el = inputElements[self.props.focusSide||0];
+      el && el.focus();
    };
 
    self.componentDidMount = function () {
       // When the component mounts, select the input box.
-      inputElement.focus();
+      setFocus();
    };
 
    self.componentDidUpdate = function (prevProps, prevState) {
       // Focus the input box when the bigram changes.
       // Need to check the letters, we may get a new identical object due to compute.
-      if (prevProps.bigram.v !== self.props.bigram.v) {
-         console.log(prevProps.bigram, self.props.bigram);
-         inputElement.focus();
-      }
+      if (prevProps.bigram.v !== self.props.bigram.v)
+         setFocus();
    };
 
    const lockUnlockTooltip = <p>TODO: documenter le fonctionnement du vérouillage.</p>;
@@ -109,10 +116,10 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                <span className='dialogLabel'>Nouvelle substitution :</span>
                <span className='dialogLetterSubst'>
-                  <input ref={setInput} type='text' value={editPair[0].letter} onChange={changeLetter} data-side='0' />
+                  <input ref={refInput} type='text' value={editPair[0].letter} onChange={changeLetter} data-side='0' />
                </span>
                <span className='dialogLetterSubst'>
-                  <input type='text' value={editPair[1].letter} onChange={changeLetter} data-side='1' />
+                  <input ref={refInput} type='text' value={editPair[1].letter} onChange={changeLetter} data-side='1' />
                </span>
             </div>
             <div className='dialogLine'>
