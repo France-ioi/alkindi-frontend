@@ -105,20 +105,18 @@ const PlayFairTab = PureComponent(self => {
 
   self.componentWillMount = function () {
     const {my_latest_revision_id} = self.props;
-    if (my_latest_revision_id !== undefined) {
-      self.setState({
-        loading: true
-      });
-      api.loadRevision(my_latest_revision_id, function (err, result) {
-        self.setState({
-          loading: false
-        });
-        if (err) return alert(err); // XXX
-        const revision = result.workspace_revision;
-        const toolStates = revision.state.map(tool => tool.state);
-        self.setState({toolStates: toolStates});
-      });
+    if (my_latest_revision_id === null) {
+      self.setState({toolStates: initialToolStates});
+      return;
     }
+    self.setState({loading: true});
+    api.loadRevision(my_latest_revision_id, function (err, result) {
+      self.setState({loading: false});
+      if (err) return alert(err); // XXX
+      const revision = result.workspace_revision;
+      const toolStates = revision.state.map(tool => tool.state);
+      self.setState({toolStates: toolStates});
+    });
   }
 
   self.render = function () {
@@ -147,7 +145,8 @@ const PlayFairTab = PureComponent(self => {
 
 }, _self => {
   return {
-    toolStates: initialToolStates,
+    loading: false,
+    toolStates: undefined,
     changed: false,
     parentRevisionId: undefined
   }
