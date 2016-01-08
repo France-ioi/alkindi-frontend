@@ -1,27 +1,24 @@
 
 // import {newTool} from './tool';
 
-const initialState = function (seed) {
+const initialState = {
+  toolOrder: [],
+  toolMap: {},
+  nextToolId: 1,
+  autoRefresh: true,
+  rootScope: {},
+  activeTabKey: undefined,
+  enabledTabs: {},
+  historyTab: {
+    revisions: [],
+    currentRevision: undefined
+  }
+};
+
+const seedState = function (seed, oldState) {
   if (!seed)
     seed = {};
-  const state = {
-    toolOrder: [],
-    toolMap: {},
-    nextToolId: 1,
-    autoRefresh: true,
-    rootScope: {},
-    user: seed.user,
-    team: seed.team,
-    round: seed.round,
-    attempt: seed.attempt,
-    task: seed.task,
-    activeTabKey: undefined,
-    enabledTabs: {},
-    historyTab: {
-      workspaces: [],
-      currentWorkspace: undefined
-    }
-  };
+  const state = {...initialState, ...oldState, ...seed};
   return reduceTick(reduceSetActiveTab(state));
 };
 
@@ -180,9 +177,9 @@ const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return initialState(action.seed);
+      return seedState(action.seed, state);
     case 'AFTER_LOGOUT':
-      return initialState();
+      return seedState();
     case 'TICK':
       return reduceTick(state);
     case 'SET_USER':
