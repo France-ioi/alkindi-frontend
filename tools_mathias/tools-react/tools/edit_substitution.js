@@ -34,7 +34,6 @@ export const Component = PureComponent(self => {
       const bigram = letterInfos[iLetter].bigram;
       const editPair = substitutionEdits[bigram.v] || [{locked: false}, {locked: false}];
       self.setState({
-         editState: "preparing",
          editPair: editPair,
          selectedLetterPos: iLetter
       });
@@ -56,7 +55,6 @@ export const Component = PureComponent(self => {
 
    const cancelDialog = function () {
       self.setState({
-         editState: undefined,
          editPair: undefined,
          selectedLetterPos: undefined
       });
@@ -201,7 +199,6 @@ export const Component = PureComponent(self => {
 
 }, self => {
    return {
-      editState: undefined,
       editPair: undefined,
       selectedLetterPos: undefined
    };
