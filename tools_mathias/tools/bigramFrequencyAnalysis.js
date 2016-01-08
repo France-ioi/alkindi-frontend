@@ -16,8 +16,8 @@ function getBigramFrequencyAnalysis() {
       inputSubstitution: [],
       outputSubstitution: [], //sampleSubstitutionModified,
       inputCipheredTextVariable: "texteChiffré",
-      inputSubstitutionVariable: "substitutionDépart",
-      outputSubstitutionVariable: "substitutionFréquences"
+      inputSubstitutionVariable: "substitutionÉditée"
+      //outputSubstitutionVariable: "substitutionFréquences"
    };
 
    self.state = {

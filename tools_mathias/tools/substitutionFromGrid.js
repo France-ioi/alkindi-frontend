@@ -10,7 +10,7 @@ function getSubstitutionFromGrid() {
       outputSubstitution: [],
       inputGridVariable: "lettresGrilleIndice",
       outputGridVariable: "lettresGrilleEditée",
-      outputSubstitutionVariable: "substitutionDépart"
+      outputSubstitutionVariable: "substitutionGénérée"
    };
 
    self.state = {
