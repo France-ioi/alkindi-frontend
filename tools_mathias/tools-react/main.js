@@ -140,7 +140,7 @@ store.dispatch({
    type: 'ADD_TOOL',
    factory: Hints,
    toolState: {
-      outputGridVariable: "lettresGrilleIndice"
+      outputGridVariable: "lettresGrilleIndices"
    },
    temporaryGetScope: function (state, tools) {
       const {hintsGrid, score} = state;
@@ -177,7 +177,7 @@ store.dispatch({
    type: 'ADD_TOOL',
    factory: SubstitutionFromGrid,
    toolState: {
-      inputGridVariable: 'lettresGrilleIndice',
+      inputGridVariable: 'lettresGrilleIndices',
       outputGridVariable: 'lettresGrilleEditée',
       outputSubstitutionVariable: 'substitutionDépart'
    },

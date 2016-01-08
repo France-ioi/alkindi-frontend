@@ -15,7 +15,7 @@ function getApplySubstitution() {
       inputSubstitution: playFair.getSampleSubstitution(),
       outputDecipheredText: "",
       inputCipheredTextVariable: "texteChiffré",
-      inputSubstitutionVariable: "substitutionAméliorée",
+      inputSubstitutionVariable: "substitutionÉditée",
       outputDecipheredTextVariable: "texteDéchiffré"
    };
 

@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="../src/main.css?v=3">
-<script type="text/javascript" src="common.js?v=3"></script>
-<script type="text/javascript" src="tools/playFair.js?v=3"></script>
-<script type="text/javascript" src="tools/bigrams.js?v=3"></script>
-<script type="text/javascript" src="tools/hintsPlayfair.js?v=3"></script>
-<script type="text/javascript" src="tools/substitutionFromGrid.js?v=3"></script>
-<script type="text/javascript" src="tools/bigramFrequencyAnalysis.js?v=3"></script>
-<script type="text/javascript" src="tools/improveSubstitution.js?v=3"></script>
-<script type="text/javascript" src="tools/substitutionToPlayfairGrid.js?v=3"></script>
-<script type="text/javascript" src="tools/applySubstitution.js?v=3"></script>
-<script type="text/javascript" src="tools/displayText.js?v=3"></script>
+<link rel="stylesheet" type="text/css" href="../src/main.css?v=4">
+<script type="text/javascript" src="common.js?v=4"></script>
+<script type="text/javascript" src="tools/playFair.js?v=4"></script>
+<script type="text/javascript" src="tools/bigrams.js?v=4"></script>
+<script type="text/javascript" src="tools/hintsPlayfair.js?v=4"></script>
+<script type="text/javascript" src="tools/substitutionFromGrid.js?v=4"></script>
+<script type="text/javascript" src="tools/bigramFrequencyAnalysis.js?v=4"></script>
+<script type="text/javascript" src="tools/improveSubstitution.js?v=4"></script>
+<script type="text/javascript" src="tools/substitutionToPlayfairGrid.js?v=4"></script>
+<script type="text/javascript" src="tools/applySubstitution.js?v=4"></script>
+<script type="text/javascript" src="tools/displayText.js?v=4"></script>
 <style>
 
 </style>
@@ -23,10 +23,10 @@
 <div id='displayText'></div>
 <div id='hintsPlayFair'></div>
 <div id='substitutionFromGrid'></div>
-<div id='bigramFrequencyAnalysis'></div>
 <div id='improveSubstitution'></div>
+<div id='bigramFrequencyAnalysis'></div>
 <br/>
-<div id='substitutionToPlayFairGrid'></div>
+<!--<div id='substitutionToPlayFairGrid'></div>-->
 <div id='applySubstitution'></div>
 <script>
    var displayText = getDisplayText();
@@ -34,7 +34,7 @@
    var substitutionFromGrid = getSubstitutionFromGrid();
    var bigramFrequencyAnalysis = getBigramFrequencyAnalysis();
    var improveSubstitution = getImproveSubstitution();
-   var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
+//   var substitutionToPlayFairGrid = getSubstitutionToPlayFairGrid();
    var applySubstitution = getApplySubstitution();
 
 
@@ -45,16 +45,16 @@
       substitutionFromGrid.props.inputGridCells = hintsPlayFair.props.outputGridCells;
       substitutionFromGrid.render();
 
-      bigramFrequencyAnalysis.props.inputSubstitution = substitutionFromGrid.props.outputSubstitution;
-      bigramFrequencyAnalysis.render();
-
-      improveSubstitution.props.inputSubstitution = bigramFrequencyAnalysis.props.outputSubstitution;
+      improveSubstitution.props.inputSubstitution = substitutionFromGrid.props.outputSubstitution;
       improveSubstitution.render();
 
+      bigramFrequencyAnalysis.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
+      bigramFrequencyAnalysis.render();
+/*
       substitutionToPlayFairGrid.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
       substitutionToPlayFairGrid.props.inputGridCells = substitutionFromGrid.props.outputGridCells;
       substitutionToPlayFairGrid.render();
-
+*/
       applySubstitution.props.inputSubstitution = improveSubstitution.props.outputSubstitution;
       applySubstitution.render();   
    };
