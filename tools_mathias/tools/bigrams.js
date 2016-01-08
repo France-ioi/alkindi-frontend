@@ -9,7 +9,9 @@ var bigramsUtils = {
       { v: "NT", r: 1.6 },
       { v: "ER", r: 1.5 },
       { v: "TE", r: 1.5 },
-      { v: "ET", r: 1.4 },
+      { v: "ET", r: 1.4 }
+   
+   /*,
       { v: "EL", r: 1.4 },
       { v: "AN", r: 1.4 },
       { v: "SE", r: 1.3 },
@@ -29,7 +31,7 @@ var bigramsUtils = {
       { v: "UE", r: 0.9 },
       { v: "TI", r: 0.9 },
       { v: "RA", r: 0.9 },
-      { v: "IN", r: 0.8 }
+      { v: "IN", r: 0.8 }*/
    ],
 
    getTextAsBigrams: function(text, alphabet) {
@@ -112,7 +114,7 @@ var bigramsUtils = {
          }
          return 0;
       });
-      bigramInfos.splice(30, bigramInfos.length - 30);
+      bigramInfos.splice(10, bigramInfos.length - 10);
       return bigramInfos;
    },
 

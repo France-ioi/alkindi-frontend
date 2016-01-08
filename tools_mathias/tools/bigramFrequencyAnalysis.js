@@ -160,7 +160,7 @@ function getBigramFrequencyAnalysis() {
             {label: "Substitution d'origine", name: self.props.inputSubstitutionVariable}
          ],
          output: [
-            {label: "Nouvelle subsitution", name: self.props.outputSubstitutionVariable}
+//            {label: "Nouvelle subsitution", name: self.props.outputSubstitutionVariable}
          ]
       });
    };
@@ -222,9 +222,10 @@ function getBigramFrequencyAnalysis() {
             bigramClass = "selectedBigram";
          }
          var clickBigram = "";
-         if (initialSubstitution != undefined) {
+/*         if (initialSubstitution != undefined) {
             clickBigram = "onclick='" + self.name + ".clickBigram(" + iBigram + ")'";
          }
+*/
          bigramsHtml += "<div class='bigramBloc'>" +
             "<span class='frequence'>" + bigram.r + "%</span>" +
             "<div " + clickBigram + " class='bigramBlocSubstitution " + bigramClass +"'>" +
@@ -234,6 +235,7 @@ function getBigramFrequencyAnalysis() {
          if (initialSubstitution != undefined) {
             for (var side = 0; side < 2; side++) {
                var sideClass = "";
+/*
                if (bigramsUtils.conflictBetweenSubstitutions(bigram, initialSubstitution, newSubstitution, side, self.letterRanks)) {
                   sideClass = "substitutionConflict";
                }
@@ -241,14 +243,16 @@ function getBigramFrequencyAnalysis() {
                if (substPair.dst[side].q == "locked") {
                   lock = "<i class='fa fa-lock'></i>";
                }
+*/
                bigramsHtml += "<div class='substitutionPair " + sideClass + "'>" +
                      "<span class='originLetter'>" +
                         renderBigramSubst(bigram, initialSubstitution, side) +
                      "</span>" +
-                     "<span class='newLetter'>" +
+/*                     "<span class='newLetter'>" +
                         renderBigramSubst(bigram, newSubstitution, side) +
                      "</span>" +
                      "<span class='substitutionLock'>" + lock + "</span>" +
+*/
                   "</div>";
             }
          }
@@ -260,11 +264,12 @@ function getBigramFrequencyAnalysis() {
             "<div>Fréquences&nbsp;:</div>" +
             "<div>Bigrammes&nbsp;:</div>";
       if (initialSubstitution != undefined) {
-         html += "<div>Substitution d'origine&nbsp;:</div>";
+         html += "<div>Substitution proposée&nbsp;:</div>";
       }
-      if (newSubstitution != undefined) {
+/*    if (newSubstitution != undefined) {
          html += "<div>Nouvelle substitution&nbsp;:</div>";
       }
+*/
       html += "</div>" +
          bigramsHtml +
       "</div>";
