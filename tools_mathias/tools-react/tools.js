@@ -1,4 +1,8 @@
 
+// Cells in the alphabet always have a qualifier (cell.q) (which could be
+// 'unknown', in which case cell.l is absent).
+// Literals never have a qualifier, e.g. {c: ' '}.
+
 export const {getSubstitutionFromGridCells} = window.playFair;
 
 export const makeAlphabet = function (chars) {
