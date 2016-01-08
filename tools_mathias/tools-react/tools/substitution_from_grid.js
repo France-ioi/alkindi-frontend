@@ -46,25 +46,12 @@ export const Component = PureComponent(self => {
       });
    };
 
-   const validateDialog = function () {
-      const {toolState, setToolState, scope} = self.props;
-      const {alphabet} = scope;
+   const validateDialog = function (editCell) {
+      const {toolState, setToolState} = self.props;
+      const {selectedRow, selectedCol} = self.state;
       const {editGrid} = toolState;
-      const {editCell, selectedRow, selectedCol} = self.state;
-      const letter = editCell.letter.trim().toUpperCase();  // XXX
-      let edit;
-      if (letter === '') {
-         edit = undefined;
-      } else {
-         const rank = alphabet.ranks[letter];
-         if (rank === undefined) {
-            alert(letter + " n'est pas une valeur possible de la grille");
-            return;
-         }
-         edit = editCell;
-      }
       setToolState({
-         editGrid: at(selectedRow, at(selectedCol, put(edit)))(editGrid)
+         editGrid: at(selectedRow, at(selectedCol, put(editCell)))(editGrid)
       });
       cancelDialog();
    };
