@@ -2,13 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {PureComponent} from './misc';
-import AlkindiTabs from './ui/tabs';
 import LoginScreen from './ui/login';
 import AlkindiLogout from './ui/logout';
-import TaskTab from './ui/task_tab';
-import TeamTab from './ui/team_tab';
-import HistoryTab from './ui/history_tab';
-import PlayFairTab from './ui/playfair_tab';
+import AlkindiTabs from './ui/tabs';
+import TaskTab from './tabs/task';
+import TeamTab from './tabs/team';
+import HistoryTab from './tabs/history';
+import PlayFairTab from './tabs/playfair';
 import JoinTeamScreen from './ui/join_team_screen';
 import * as actions from './actions';
 import * as api from './api';
