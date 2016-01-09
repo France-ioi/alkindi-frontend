@@ -138,8 +138,7 @@ export const Component = PureComponent(self => {
                   <div className='blocGrille'>
                      <p>
                         {'Grille éditée : '}
-                        <Tooltip content={<p>Cliquez sur une case pour proposer ou modifier la lettre qu
-e vous pensez qu’elle contient.</p>}/>
+                        <Tooltip content={<p>Cliquez sur une case pour proposer ou modifier la lettre que vous pensez qu’elle contient.</p>}/>
                      </p>
                      {renderGrid()}
                   </div>
