@@ -32,12 +32,13 @@ window.onerror = function (message, url, line, column, error) {
       strError = err.toString();
       printer = 'null';
     }};
+    console.log(printer, strError);
     img.src = logUrl + '?' + [
+      'version=' + encodeURIComponent(Alkindi.config.front_version),
       'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id),
       'url=' + encodeURIComponent(url),
       'line=' + encodeURIComponent(line),
       'column=' + encodeURIComponent(column),
-      'version=' + encodeURIComponent(Alkindi.config.front_version),
       'message=' + encodeURIComponent(message),
       'printer=' + encodeURIComponent(printer),
       'error=' + encodeURIComponent(strError)
