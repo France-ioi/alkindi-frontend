@@ -8,10 +8,12 @@ const TaskTab = PureComponent(self => {
     const {user_id, round, attempt, task} = self.props;
     if (!round || !attempt || !task)
       return false;
+    // const taskUrl = 'api/users/'+user_id+'/task.html';
+    const taskUrl = 'http://concours-alkindi.fr/docs/tour2_outils/';
     return (
       <div className="wrapper">
         <h1>{round.title}</h1>
-        <iframe className='task' src={'api/users/'+user_id+'/task.html'}/>
+        <iframe className='task' src={taskUrl} />
       </div>
     );
   };
