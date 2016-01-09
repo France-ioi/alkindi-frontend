@@ -192,8 +192,7 @@ export const Component = PureComponent(self => {
                         {'Révéler la position d\'une lettre : '}
                         {getQueryCost({type: "alphabet"})}
                         {' points '}
-                        <Tooltip content={<p>Cliquer sur une lettre non grisée ci-des
-sous pour demander sa position au sein de la grille.</p>}/>
+                        <Tooltip content={<p>Cliquer sur une lettre non grisée ci-dessous pour demander sa position au sein de la grille.</p>}/>
                      </p>
                      {renderAlphabet()}
                   </div>
