@@ -203,13 +203,19 @@ const PlayFairTab = PureComponent(self => {
     return (
       <div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
-          <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>Enregistrer cette version</Button>
+          <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>
+            <i className="fa fa-save"/>
+            {' Enregistrer cette version'}
+          </Button>
           <span style={{marginLeft: '10px', marginRight: '40px'}}>
             <Tooltip animation="zoom" trigger="hover click" overlay={saveStateTooltip}>
               <i className='fa fa-question-circle'/>
             </Tooltip>
           </span>
-          <Button onClick={resetState}>Repartir de zéro</Button>
+          <Button onClick={resetState}>
+            <i className="fa fa-eraser"/>
+            {' Repartir de zéro'}
+          </Button>
           <span style={{marginLeft: '10px'}}>
             <Tooltip animation="zoom" trigger="hover click" overlay={resetStateTooltip}>
               <i className='fa fa-question-circle'/>
