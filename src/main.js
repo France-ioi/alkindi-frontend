@@ -27,6 +27,7 @@ window.onerror = function (message, url, line, column, error) {
   try {
     const img = document.createElement('img');
     img.src = logUrl + '?' + [
+      'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id),
       'url=' + encodeURIComponent(url),
       'line=' + encodeURIComponent(line),
       'column=' + encodeURIComponent(column),
