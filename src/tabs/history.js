@@ -4,6 +4,7 @@ import {createSelector} from 'reselect';
 
 import {PureComponent} from '../misc';
 
+/*
 const HistoryTabSelector = createSelector(
   function (state) {
     return state.historyTab;
@@ -12,8 +13,10 @@ const HistoryTabSelector = createSelector(
     return historyTab;
   }
 );
+*/
 
 const HistoryTab = PureComponent(self => {
+/*
   const workspaceListHead = (
     <thead>
       <tr>
@@ -106,17 +109,22 @@ const HistoryTab = PureComponent(self => {
       </table>
     );
   };
+*/
   self.render = function () {
+    /*
     const {workspaces, currentWorkspace, allVersions} = self.props;
     const workspacesSection = renderWorkspacesTable(workspaces, currentWorkspace);
     const versionsSection =
       currentWorkspace === undefined ?
         renderAllVersions(allVersions) :
         renderWorkspace(currentWorkspace);
+    */
     return (
       <div className="wrapper">
-        {workspacesSection}
-        {versionsSection}
+        <p>
+          Ici vous pourrez très bientôt (dans le courrant du week-end) accéder
+          à toutes vos version enregistrées et à celles de vos co-équipiers.
+        </p>
       </div>
     );
   };
@@ -124,4 +132,4 @@ const HistoryTab = PureComponent(self => {
   return {};
 });
 
-export default connect(HistoryTabSelector)(HistoryTab);
+export default HistoryTab;

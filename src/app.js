@@ -7,8 +7,9 @@ import AlkindiLogout from './ui/logout';
 import AlkindiTabs from './ui/tabs';
 import TaskTab from './tabs/task';
 import TeamTab from './tabs/team';
-import HistoryTab from './tabs/history';
 import PlayFairTab from './tabs/playfair';
+import HistoryTab from './tabs/history';
+import AnswersTab from './tabs/answers';
 import JoinTeamScreen from './ui/join_team_screen';
 import * as actions from './actions';
 import * as api from './api';
@@ -70,6 +71,9 @@ let App = connect(appSelector)(PureComponent(self => {
         break;
       case 'history':
         content = <HistoryTab/>;
+        break;
+      case 'answers':
+        content = <AnswersTab/>;
         break;
     }
     return (
