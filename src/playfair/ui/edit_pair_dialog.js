@@ -124,10 +124,10 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                <span className='dialogLabel'>Nouvelle substitution :</span>
                <span className='dialogLetterSubst'>
-                  <input ref={refInput} type='text' value={editPair[0].letter} onKeyDown={keyDown} onChange={changeLetter} data-side='0' />
+                  <input type='text' value={editPair[0].letter} maxLength='1' ref={refInput} onKeyDown={keyDown} onChange={changeLetter} data-side='0' />
                </span>
                <span className='dialogLetterSubst'>
-                  <input ref={refInput} type='text' value={editPair[1].letter} onKeyDown={keyDown} onChange={changeLetter} data-side='1' />
+                  <input type='text' value={editPair[1].letter} maxLength='1' ref={refInput} onKeyDown={keyDown} onChange={changeLetter} data-side='1' />
                </span>
             </div>
             <div className='dialogLine'>
