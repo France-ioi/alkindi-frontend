@@ -123,7 +123,7 @@ const HistoryTab = PureComponent(self => {
       <div className="wrapper">
         <p>
           Ici vous pourrez très bientôt (dans le courrant du week-end) accéder
-          à toutes vos version enregistrées et à celles de vos co-équipiers.
+          à toutes vos versions enregistrées et à celles de vos co-équipiers.
         </p>
       </div>
     );

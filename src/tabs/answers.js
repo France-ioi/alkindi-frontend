@@ -13,6 +13,10 @@ const AnswersTab = PureComponent(self => {
           Ici vous pourrez très bientôt (dans le courrant du week-end) valider
           votre réponse au sujet d'entrainement, puis aux sujets en temps limité.
         </p>
+        <p>
+          La réponse au sujet comportera trois parties : une adresse et deux
+          nombres.
+        </p>
       </div>
     );
   };
