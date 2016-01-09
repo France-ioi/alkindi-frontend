@@ -54,7 +54,7 @@
 	<p>
 	Votre amie Alice a récupéré une pochette contenant un message chiffré (allez lire la Bande dessinée de son aventure quand vous avez un peu de temps). Voici le texte :
 	</p>
-	{{ TEXTE CHIFFRÉ }}
+	${cipher_text}
 	<p>
 	Votre but est de l’aider à déchiffrer ce texte, et d’y trouver une adresse et deux nombres à calculer pour accéder à un coffre.
 	</p>
@@ -62,7 +62,7 @@
 	Vous avez remarqué plusieurs choses qui vont vous aider :
 	</p>
 	<p>
-	<strong>Prénom :</strong> sur la pochette se trouve le prénom du destinataire du message : {{ PRÉNOM }}. Notez que ce prénom n’est probablement pas présent dans le message.
+	<strong>Prénom :</strong> sur la pochette se trouve le prénom du destinataire du message : ${firstname}. Notez que ce prénom n’est probablement pas présent dans le message.
 	</p>
 	<p>
 	<strong>Type de chiffrement :</strong> Alice a identifié le type de chiffrement utilisé. Il s’agit du chiffrement appelé Playfair. Une description de son principe en est donnée plus bas.
