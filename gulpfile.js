@@ -15,8 +15,9 @@ const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const cp = require('child_process');
 
-function updatePythonPackage (min) {
-    const opt = ('build_data' + (min ? ' --min' : '')) + ' build';
+function updatePythonPackage (options) {
+    const opt =
+        'build_data' + (options.min ? ' --min' : '') + ' build';
     cp.exec('cd dist_python; ./setup.py ' + opt, function (err, stdout, stderr) {
         if (err) {
             gutil.log(gutil.colors.red('Failed'), 'to update python package\n', stderr);
@@ -58,7 +59,7 @@ function watchScript (options) {
     bundler.on('update', rebundle);
     if (options.updatePython) {
         bundler.on('bytes', function (count) {
-            updatePythonPackage(false);
+            updatePythonPackage({min: false});
         });
     }
     rebundle();
@@ -106,7 +107,7 @@ gulp.task('build_css', function () {
     return buildCss({entry: 'src/main.css', output: 'main.css'});
 });
 gulp.task('build', ['build_js', 'build_css'], function () {
-    return updatePythonPackage(false);
+    return updatePythonPackage({min: false});
 });
 
 gulp.task('build_js_min', function () {
@@ -116,7 +117,7 @@ gulp.task('build_css_min', function () {
     return buildCss({entry: 'src/main.css', output: 'main.min.css', uglify: true});
 });
 gulp.task('build_min', ['build_js_min', 'build_css_min'], function () {
-    return updatePythonPackage(true);
+    return updatePythonPackage({min: true});
 });
 
 // Run 'gulp build' before 'gulp watch'.
@@ -124,7 +125,7 @@ gulp.task('watch_js', function () {
     watchScript({entry: 'src/main.js', output: 'main.js', updatePython: true});
 });
 gulp.task('build_css_py', ['build_css'], function () {
-    return updatePythonPackage(false);
+    return updatePythonPackage({min: false});
 });
 gulp.task('watch_css', function () {
     gulp.watch('src/**/*.css', ['build_css_py']);
