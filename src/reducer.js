@@ -2,21 +2,22 @@
 // import {newTool} from './tool';
 
 const initialState = {
-  // toolOrder: [],
-  // toolMap: {},
-  // nextToolId: 1,
-  // autoRefresh: true,
-  // rootScope: {},
   tools: [],
   activeTabKey: undefined,
   enabledTabs: {},
   crypto: {}
 };
 
+const seedProps = ['user', 'team', 'round', 'attempt', 'task', 'my_latest_revision_id'];
+
 const seedState = function (seed, oldState) {
   if (!seed)
     seed = {};
-  const state = {...initialState, ...oldState, ...seed};
+  const state = {...initialState, ...oldState};
+  // Overwrite state with seed, even missing seed props.
+  seedProps.forEach(function (key) {
+    state[key] = seed[key];
+  })
   const {crypto} = state;
   // If the crypto tab has not been loaded, set the initial revisionId.
   if (crypto.tools === undefined && state.my_latest_revision_id !== null) {
