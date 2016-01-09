@@ -72,7 +72,7 @@ export const Component = PureComponent(self => {
       }
       const {alphabet, hintsGrid} = self.props.scope;
       const qualifiers = getLetterQualifiersFromGrid(hintsGrid, alphabet);
-      if (qualifiers[rank] === "confirmed") {
+      if (qualifiers[rank] === "hint") {
          hintAlreadyObtained();
       } else {
          prepareQuery({type: 'alphabet', rank: rank});
