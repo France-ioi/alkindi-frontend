@@ -100,7 +100,7 @@ export const getTextBigrams = function (text, alphabet) {
    return infos.bigrams;
 };
 
-export const getMostFrequentBigrams = function (textBigrams) {
+export const getMostFrequentBigrams = function (textBigrams, nBigrams) {
    const bigramMap = {};
    for (var iBigram = 0; iBigram < textBigrams.length; iBigram++) {
       const bigram = textBigrams[iBigram];
@@ -120,7 +120,7 @@ export const getMostFrequentBigrams = function (textBigrams) {
       }
       return 0;
    });
-   bigramList.length = 30;
+   bigramList.length = nBigrams;
    bigramList.map(function (bigram) {
       bigram.r = (bigram.count / textBigrams.length * 100).toFixed(1);
    });

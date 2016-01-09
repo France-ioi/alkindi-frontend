@@ -40,7 +40,8 @@ const initialTools = [
     inputSubstitutionVariable: 'substitutionÉditée',
     outputSubstitutionVariable: 'substitutionFréquences',
     substitutionEdits: [],
-    editable: false
+    editable: false,
+    nBigrams: 10
   },
   // ApplySubstitution
   {

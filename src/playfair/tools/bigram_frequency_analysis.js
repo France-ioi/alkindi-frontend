@@ -211,11 +211,11 @@ export const Component = PureComponent(self => {
    self.render = function () {
       const {editPair} = self.state;
       const {scope, toolState} = self.props;
-      const {editable} = toolState;
+      const {editable, nBigrams} = toolState;
       const {inputSubstitution, outputSubstitution, mostFrequentFrench, mostFrequentBigrams} = scope;
       const nConflicts = countSubstitutionConflicts(mostFrequentBigrams, inputSubstitution, outputSubstitution);
       const textBigrams = renderFreqSubstBigrams(mostFrequentBigrams, inputSubstitution, outputSubstitution);
-      const frenchBigrams = renderFreqBigrams(mostFrequentFrench);
+      const frenchBigrams = renderFreqBigrams(mostFrequentFrench.slice(0, nBigrams || 10));
       return (
          <div className='panel panel-default'>
             <div className='panel-heading'>
@@ -246,15 +246,16 @@ export const Component = PureComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {substitutionEdits} = toolState;
+   const {substitutionEdits, nBigrams} = toolState;
    const {alphabet, inputCipheredText, inputSubstitution} = scope;
    scope.textBigrams = getTextBigrams(inputCipheredText, alphabet);
-   scope.mostFrequentBigrams = getMostFrequentBigrams(scope.textBigrams);
+   scope.mostFrequentBigrams = getMostFrequentBigrams(scope.textBigrams, nBigrams || 10);
    scope.outputSubstitution = applySubstitutionEdits(alphabet, inputSubstitution, substitutionEdits);
 };
 
 export default self => {
    self.state = {
+      nBigrams: 10
    };
    self.Component = Component;
    self.compute = compute;
