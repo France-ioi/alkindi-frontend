@@ -26,7 +26,7 @@ window.onerror = function (message, url, line, column, error) {
     return true;
   // If the scripts bundle is hosted on a CDN, the arguments will be
   // uninteresting.  Reload the page bypassing the CDN.
-  if (Alkindi.config.nocdn) {
+  if (!Alkindi.config.nocdn) {
     window.location.search = '?nocdn';
     return;
   }
