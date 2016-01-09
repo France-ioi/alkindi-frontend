@@ -41,10 +41,10 @@ export const testSubstitutionConflict = function (substitution1, substitution2, 
 };
 
 export const countSubstitutionConflicts = function (bigrams, initialSubstitution, newSubstitution) {
-   var nbConflicts = 0;
-   for (var iBigram = 0; iBigram < bigrams.length; iBigram++) {
-      var bigram = bigrams[iBigram];
-      for (var side = 0; side < 2; side++) {
+   let nbConflicts = 0;
+   for (let iBigram = 0; iBigram < bigrams.length; iBigram++) {
+      const bigram = bigrams[iBigram];
+      for (let side = 0; side < 2; side++) {
          if (testSubstitutionConflict(initialSubstitution, newSubstitution, bigram, side)) {
             nbConflicts++;
          }
