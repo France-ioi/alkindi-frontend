@@ -9,7 +9,7 @@ import * as api from '../api';
 import PlayFair from '../playfair';
 import {makeAlphabet} from '../playfair/utils/cell';
 
-const initialToolStates = [
+const initialTools = [
   // TextInput
   {
     outputVariable: "texteChiffré"
@@ -48,7 +48,9 @@ const initialToolStates = [
     inputSubstitutionVariable: 'substitutionÉditée',
     outputTextVariable: 'texteDéchiffré'
   }
-];
+].map(function (state) {
+  return {state};
+});
 
 const PlayFairTab = PureComponent(self => {
 
@@ -73,59 +75,90 @@ const PlayFairTab = PureComponent(self => {
     });
   };
 
+  const changeCrypto = function (func) {
+    const {crypto, dispatch} = self.props;
+    dispatch({
+      type: 'SET_CRYPTO',
+      crypto: func(crypto)
+    });
+  };
+
   const setToolState = function (id, data) {
-    const {toolStates} = self.state;
-    self.setState({
-      changed: true,
-      toolStates: at(id, put(data))(toolStates)
+    changeCrypto(function (crypto) {
+      return {
+        ...crypto,
+        changed: true,
+        tools: at(id, function (tool) { return {...tool, state: data}; })(crypto.tools)
+      };
     });
   };
 
   const saveState = function () {
     const user_id = self.props.user_id;
-    const {toolStates, parentRevisionId} = self.state;
-    const state = toolStates.map(function (toolState) {
-      return {state: toolState};
+    const {crypto, dispatch} = self.props;
+    const data = {
+      title: "Révision du " + new Date().toLocaleString(),
+      state: crypto.tools,
+      parent_id: crypto.revisionId
+    };
+    changeCrypto(function (crypto) {
+      return {...crypto, changed: false};
     });
     asyncHelper.beginRequest();
-    const title = "Révision du " + new Date().toLocaleString();
-    const data = {title, state, parent_id: parentRevisionId};
-    self.setState({changed: false});
     api.storeRevision(user_id, data, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) {
-        self.setState({changed: true});
+        // Reset the changed flag to true as the state was not changed.
+        changeCrypto(function (crypto) {
+          return {...crypto, changed: true};
+        });
         return;
       }
-      self.setState({
-        parentRevisionId: result.revision_id
+      changeCrypto(function (crypto) {
+        return {...crypto,
+          changed: false,
+          revisionId: result.revision_id
+        };
       });
     });
   };
 
   self.componentWillMount = function () {
-    const {my_latest_revision_id} = self.props;
-    if (my_latest_revision_id === null) {
-      self.setState({toolStates: initialToolStates});
+    const {revisionId, tools} = self.props.crypto;
+    // If the tools are already loaded, do nothing.
+    if (tools !== undefined)
+      return;
+    // Load initial tools if there is no current revision.
+    if (revisionId === undefined) {
+      changeCrypto(function (crypto) {
+        return {...crypto, tools: initialTools};
+      });
       return;
     }
-    self.setState({loading: true});
-    api.loadRevision(my_latest_revision_id, function (err, result) {
+    // Load the revision from the backend.
+    changeCrypto(function (crypto) {
+      return {...crypto, loading: true};
+    });
+    api.loadRevision(revisionId, function (err, result) {
       if (err) {
-        self.setState({loading: false});
-        return alert(err);
+        changeCrypto(function (crypto) {
+          return {...crypto, loading: false};
+        });
+        return alert(err); // XXX
       }
       const revision = result.workspace_revision;
-      const toolStates = revision.state.map(tool => tool.state);
-      self.setState({loading: false, toolStates: toolStates});
+      changeCrypto(function (crypto) {
+        return {...crypto, loading: false, tools: revision.state};
+      });
     });
-  }
+  };
 
   self.render = function () {
-    if (self.state.loading)
+    const {task, crypto} = self.props;
+    const {tools, loading, changed} = crypto;
+    if (loading || tools === undefined)
       return (<div>Chargement en cours, veuillez patienter...</div>);
-    const {task} = self.props;
-    const {toolStates, changed} = self.state;
+    const toolStates = tools.map(tool => tool.state);
     const taskApi = {
       alphabet: alphabet,
       score: task.score,
@@ -145,18 +178,11 @@ const PlayFairTab = PureComponent(self => {
     );
   };
 
-}, _self => {
-  return {
-    loading: false,
-    toolStates: undefined,
-    changed: false,
-    parentRevisionId: undefined
-  }
 });
 
 const selector = function (state) {
-  const {user, task, my_latest_revision_id} = state;
-  return {user_id: user.id, task, my_latest_revision_id};
+  const {user, task, crypto} = state;
+  return {user_id: user.id, task, crypto};
 };
 
 export default connect(selector)(PlayFairTab);

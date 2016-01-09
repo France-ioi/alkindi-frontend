@@ -2,23 +2,26 @@
 // import {newTool} from './tool';
 
 const initialState = {
-  toolOrder: [],
-  toolMap: {},
-  nextToolId: 1,
-  autoRefresh: true,
-  rootScope: {},
+  // toolOrder: [],
+  // toolMap: {},
+  // nextToolId: 1,
+  // autoRefresh: true,
+  // rootScope: {},
+  tools: [],
   activeTabKey: undefined,
   enabledTabs: {},
-  historyTab: {
-    revisions: [],
-    currentRevision: undefined
-  }
+  crypto: {}
 };
 
 const seedState = function (seed, oldState) {
   if (!seed)
     seed = {};
   const state = {...initialState, ...oldState, ...seed};
+  const {crypto} = state;
+  // If the crypto tab has not been loaded, set the initial revisionId.
+  if (crypto.tools === undefined && state.my_latest_revision_id !== null) {
+    state.crypto = {revisionId: state.my_latest_revision_id};
+  }
   return reduceTick(reduceSetActiveTab(state));
 };
 
@@ -69,6 +72,10 @@ const reduceSetAttempt = function (state, attempt) {
 
 const reduceSetTask = function (state, task) {
   return {...state, task};
+};
+
+const reduceSetTools = function (state, tools) {
+  return {...state, tools};
 };
 
 const reduceSetWorkspaces = function (state, workspaces) {
@@ -196,14 +203,16 @@ const actualReduce = function (state, action) {
       return reduceSetWorkspaces(state, action.workspaces);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
-    case 'ADD_TOOL':
-      return reduceAddTool(state, action.toolType, action.toolState);
-    case 'REMOVE_TOOL':
-      return reduceRemoveTool(state, action.toolId);
-    case 'UPDATE_TOOL':
-      return reduceUpdateTool(state, action.toolId, action.toolStateUpdate);
-    case 'STEP':
-      return reduceStep(state);
+    case 'SET_CRYPTO':
+      return {...state, crypto: action.crypto};
+    // case 'ADD_TOOL':
+    //   return reduceAddTool(state, action.toolType, action.toolState);
+    // case 'REMOVE_TOOL':
+    //   return reduceRemoveTool(state, action.toolId);
+    // case 'UPDATE_TOOL':
+    //   return reduceUpdateTool(state, action.toolId, action.toolStateUpdate);
+    // case 'STEP':
+    //   return reduceStep(state);
     default:
       throw action;
   }
