@@ -180,8 +180,8 @@ const PlayFairTab = PureComponent(self => {
     <p style={{maxWidth: '200px', fontSize: '120%'}}>
       Cliquez sur ce bouton pour effacer toutes vos modifications mais conserver
       les indices.<br/>
-      Vous pourrez toujours recharger la page pour conserver votre état actuel,
-      ou restaurer une version depuis l'onglet Historique.
+      Vous pourrez toujours restaurer une version précédente depuis l'onglet
+      Historique.
     </p>
   );
 
