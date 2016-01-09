@@ -24,30 +24,30 @@ window.onerror = function (message, url, line, column, error) {
   // Prevent firing the default handler for errors on log URLs.
   if (url.startsWith(logUrl))
     return true;
-  // If the scripts bundle is hosted on a CDN, the arguments will be
-  // uninteresting.  Reload the page bypassing the CDN.
-  if (!Alkindi.config.nocdn) {
-    window.location.search = '?nocdn';
-    return;
-  }
   try {
     const img = document.createElement('img');
-    let strError, printer;
-    try { strError = JSON.stringify(error); printer = 'json'; } catch (err) {
-    try { strError = error.toString(); printer = 'toString'; } catch (err) {
-      strError = err.toString();
-      printer = 'null';
-    }};
-    img.src = logUrl + '?' + [
+    const qs = [
       'version=' + encodeURIComponent(Alkindi.config.front_version),
-      'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id),
-      'url=' + encodeURIComponent(url),
-      'line=' + encodeURIComponent(line),
-      'column=' + encodeURIComponent(column),
-      'message=' + encodeURIComponent(message),
-      'printer=' + encodeURIComponent(printer),
-      'error=' + encodeURIComponent(strError)
-    ].join('&');
+      'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id)
+    ];
+    if (!Alkindi.config.nocdn) {
+      // If the scripts bundle is hosted on a CDN, the arguments will be
+      // uninteresting.  Reload the page bypassing the CDN.
+      // window.location.search = '?nocdn';
+      qs.push('url=' + encodeURIComponent(url));
+      qs.push('line=' + encodeURIComponent(line));
+      qs.push('column=' + encodeURIComponent(column));
+      qs.push('message=' + encodeURIComponent(message));
+      qs.push('printer=' + encodeURIComponent(printer));
+      let strError, printer;
+      try { strError = JSON.stringify(error); printer = 'json'; } catch (err) {
+      try { strError = error.toString(); printer = 'toString'; } catch (err) {
+        strError = err.toString();
+        printer = 'null';
+      }};
+      qs.push('error=' + encodeURIComponent(strError));
+    }
+    img.src = logUrl + '?' + qs.join('&');
     document.getElementById('reports').appendChild(img);
   } catch (err) {
     console.log('double fault', err);
