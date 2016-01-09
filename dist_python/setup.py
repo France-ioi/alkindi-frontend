@@ -8,6 +8,9 @@ from shutil import copy2, copytree, rmtree
 import json
 
 meta = json.loads(open('../package.json', 'r').read())
+if meta['x-timestamp']:
+    ts = str(int(os.path.getmtime('../dist/main.js')))
+    meta['version'] = '.'.join([meta['version'], ts])
 
 # XXX consider reading package_name from meta['python_package']
 package_name = 'alkindi_r2_front'
@@ -26,7 +29,7 @@ class bdist_egg(_bdist_egg):
 class build_data(setuptools.Command):
     description = 'copy built assets into the resource package'
     user_options = [
-        ('min', None, 'Include minified assets.')
+        ('min', None, 'Include minified assets.'),
     ]
 
     def initialize_options(self):
@@ -41,7 +44,7 @@ class build_data(setuptools.Command):
         rmtree(target, ignore_errors=True)
         os.mkdir(target)
         # XXX consider reading these operations from meta
-        # write version
+        # write version and min_build flag.
         with open(os.path.join(package_name, '__init__.py'), 'w') as f:
             print("version = '{}'".format(meta['version']), file=f)
             print("min_build = {}".format(self.min), file=f)
