@@ -58,6 +58,10 @@ const PlayFairTab = PureComponent(self => {
   const asyncHelper = AsyncHelper(self);
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
+  const refresh = function () {
+    self.props.refresh();
+  };
+
   const getQueryCost = function (query) {
     if (query.type === "grid")
       return 10;
@@ -203,6 +207,11 @@ const PlayFairTab = PureComponent(self => {
     return (
       <div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
+          <div className='pull-right'>
+            <Button onClick={refresh}>
+              <i className="fa fa-refresh"/>
+            </Button>
+          </div>
           <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>
             <i className="fa fa-save"/>
             {' Enregistrer cette version'}
