@@ -8,7 +8,7 @@ from shutil import copy2, copytree, rmtree
 import json
 
 meta = json.loads(open('../package.json', 'r').read())
-if meta['x-timestamp']:
+if meta.get('x-timestamp'):
     ts = str(int(os.path.getmtime('../dist/main.js')))
     meta['version'] = '.'.join([meta['version'], ts])
 
