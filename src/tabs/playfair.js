@@ -209,7 +209,7 @@ const PlayFairTab = PureComponent(self => {
       <div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
           <div className='pull-right'>
-            <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos co-équipiers depuis le chargement de la page.</p>}/>
+            <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos co-équipiers depuis le dernier chargement de la page.</p>}/>
             {' '}
             <Button onClick={refresh}>
               <i className="fa fa-refresh"/>
