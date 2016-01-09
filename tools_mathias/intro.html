@@ -2,38 +2,40 @@
 <meta charset="utf-8">
 <html>
 <head>
-	<title>TEST IMAGE</title>
-	<style type="text/css">
-		.playfairIntro-main-table {
+  <title>TEST IMAGE</title>
+  <style type="text/css">
+    .playfairIntro-main-table {
          margin: 5px;
       }
-		.playfairIntro-main-table, .playfairIntro-table {
-			border-collapse: collapse;
-			text-align:center;
-			font-family:"Lucida Console", Monaco, monospace;
+    .playfairIntro-main-table, .playfairIntro-table {
+      border-collapse: collapse;
+      text-align:center;
+      font-family:"Lucida Console", Monaco, monospace;
          float: right;
-		}
-		.playfairIntro-td {
-			border: 1px solid #000;
-			height: 30px;
-			width: 30px;
-			padding:0;
-		}
-		.playfairIntro-td-redBorder {
-			border:5px solid red;
-			padding:0;
-		}
-		.playfairIntro-td-background { 
-			background-color:#aaa;
-      }
-	</style>
+    }
+    .playfairIntro-td {
+      border: 1px solid #000;
+      height: 30px;
+      width: 30px;
+      padding:0;
+    }
+    .playfairIntro-td-redBorder {
+      border:5px solid red;
+      padding:0;
+    }
+    .playfairIntro-td-background {
+      background-color:#aaa;
+    }
+  </style>
 </head>
 
 <body style="width:800px;">
 <p>
 Votre amie Alice a récupéré une pochette contenant un message chiffré (allez lire la Bande dessinée de son aventure quand vous avez un peu de temps). Voici le texte :
 </p>
-{{ TEXTE CHIFFRÉ }}
+<div class="playfairIntro-cipher-text">
+  ${cipher_text}
+</div>
 <p>
 Votre but est de l’aider à déchiffrer ce texte, et d’y trouver une adresse et deux nombres à calculer pour accéder à un coffre.
 </p>
@@ -41,7 +43,7 @@ Votre but est de l’aider à déchiffrer ce texte, et d’y trouver une adresse
 Vous avez remarqué plusieurs choses qui vont vous aider :
 </p>
 <p>
-<b>Prénom :</b> sur la pochette se trouve le prénom du destinataire du message : {{ PRÉNOM }}. Notez que ce prénom n’est probablement pas présent dans le message.
+<b>Prénom :</b> sur la pochette se trouve le prénom du destinataire du message : ${firstname}. Notez que ce prénom n’est probablement pas présent dans le message.
 </p>
 <p>
 <b>Type de chiffrement :</b> Alice a identifié le type de chiffrement utilisé. Il s’agit du chiffrement appelé Playfair. Une description de son principe en est donnée plus bas.
@@ -80,49 +82,49 @@ Pour éviter des bigrammes consitués de deux fois la même lettre, des X sont i
 a) si le M et le O ne sont ni sur la même ligne, ni sur la même colonne :
 </p>
 <table class="playfairIntro-main-table">
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td colspan='4' rowspan='2' class="playfairIntro-td-redBorder">
-			<table class="playfairIntro-table">
-				<tr>
-					<td class="playfairIntro-td playfairIntro-td-background">O</td>
-					<td class="playfairIntro-td"></td>
-					<td class="playfairIntro-td"></td>
-					<td class="playfairIntro-td">R</td>
-				</tr>
-				<tr>
-					<td class="playfairIntro-td">C</td>
-					<td class="playfairIntro-td"></td>
-					<td class="playfairIntro-td"></td>
-					<td class="playfairIntro-td playfairIntro-td-background">M</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td colspan='4' rowspan='2' class="playfairIntro-td-redBorder">
+      <table class="playfairIntro-table">
+        <tr>
+          <td class="playfairIntro-td playfairIntro-td-background">O</td>
+          <td class="playfairIntro-td"></td>
+          <td class="playfairIntro-td"></td>
+          <td class="playfairIntro-td">R</td>
+        </tr>
+        <tr>
+          <td class="playfairIntro-td">C</td>
+          <td class="playfairIntro-td"></td>
+          <td class="playfairIntro-td"></td>
+          <td class="playfairIntro-td playfairIntro-td-background">M</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
 </table>
 <p>
 Les deux lettres définissent alors les deux coins d’un rectangle, représenté en rouge dans l’exemple de grille (incomplète) ci-contre. Pour chiffrer “MO”, on remplace alors le M et le O par les lettres situées aux 2 autres coins du rectangle, en prenant pour chaque lettre du bigramme d’origine la lettre du coin situé sur la même ligne, donc C pour M et R pour O dans notre exemple. Le bigramme “MO” est donc chiffré en “CR” pour cet exemple de grille. Le bigramme “RC” est chiffré “OM”, etc.
@@ -134,41 +136,41 @@ Pour déchiffrer ún bigramme, on fait exactement la même chose. Déchiffrer �
 b) Si le M et le O sont sur la même ligne.
 </p>
 <table class="playfairIntro-main-table">
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td">S</td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td playfairIntro-td-background">O</td>
-		<td class="playfairIntro-td">T</td>
-		<td class="playfairIntro-td playfairIntro-td-background">M</td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td">S</td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td playfairIntro-td-background">O</td>
+    <td class="playfairIntro-td">T</td>
+    <td class="playfairIntro-td playfairIntro-td-background">M</td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
 </table>
 <p>
 Chaque lettre du bigramme est alors remplacée par la lettre qui se trouve juste à sa droite sur la même ligne, ou bien si l’on est sur la dernière colonne la lettre qui se trouve à la première colonne de la même ligne.
@@ -183,41 +185,41 @@ Pour déchiffrer un bigramme, il faut faire le contraire et prendre la lettre à
 c) Si le M et le O sont sur la même colonne.
 </p>
 <table class="playfairIntro-main-table">
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td">K</td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td playfairIntro-td-background">M</td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td">T</td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
-	<tr>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td playfairIntro-td-background">O</td>
-		<td class="playfairIntro-td"></td>
-		<td class="playfairIntro-td"></td>
-	</tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td">K</td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td playfairIntro-td-background">M</td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td">T</td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
+  <tr>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td playfairIntro-td-background">O</td>
+    <td class="playfairIntro-td"></td>
+    <td class="playfairIntro-td"></td>
+  </tr>
 </table>
 <p>
 Le principe est similaire, sauf que pour chiffrer chaque lettre du bigramme, on prend la lettre juste en dessous (ou sur la première ligne si on est déjà en bas), et pour déchiffrer, on fait l’inverse.
