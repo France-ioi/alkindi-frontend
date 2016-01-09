@@ -57,6 +57,9 @@ export const assignAttemptTask = function (user_id, callback) {
 export const getHint = function (user_id, data, callback) {
   post('users/'+user_id+'/get_hint', data).end(withSuccessCheck(callback));
 };
+export const resetHints = function (user_id, callback) {
+  post('users/'+user_id+'/reset_hints').end(withSuccessCheck(callback));
+};
 export const storeRevision = function (user_id, data, callback) {
   post('users/'+user_id+'/store_revision', data).end(withSuccessCheck(callback));
 };

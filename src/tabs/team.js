@@ -200,6 +200,17 @@ const TeamTab = PureComponent(self => {
       refresh();
     });
   };
+  const onResetHints = function () {
+    const user_id = self.props.user.id;
+    if (window.confirm("Voulez vous vraiment ré-initialiser tous les indices ?")) {
+      asyncHelper.beginRequest();
+      api.resetHints(user_id, function (err, result) {
+        asyncHelper.endRequest(err);
+        if (err) return;
+        refresh();
+      });
+    }
+  };
   const renderRefreshButton = function () {
     return (
       <div className='pull-right'>
@@ -450,6 +461,21 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+  const renderResetHints = function () {
+    return (
+      <div className="section">
+        <p>
+          Pendant la période d'entrainement, vous pouvez ré-initialiser les
+          indices en cliquant le bouton ci-dessous.
+        </p>
+        <p className="text-center">
+          <Button onClick={onResetHints}>
+            réinitialiser les indices <i className="fa fa-history"/>
+          </Button>
+        </p>
+      </div>
+    );
+  };
   const testing = false && TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, task, round_has_not_started} = self.props;
@@ -503,6 +529,7 @@ const TeamTab = PureComponent(self => {
          (attempt.is_training
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
+        {task && renderResetHints()}
         {asyncHelper.render()}
         {testing && testing.render()}
       </div>
