@@ -504,7 +504,7 @@ const TeamTab = PureComponent(self => {
     const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
     const canLeaveTeam = !haveAttempt && !team.is_locked;
     const canCancelAttempt = haveAttempt && !haveTask;
-    const showOwnAccessCode = !team.members.find(function (member) {
+    const showOwnAccessCode = haveAttempt && !team.members.find(function (member) {
       return member.access_code && member.user_id === user.id;
     });
     // Conditions in the decision tree are ordered so leftmost-innermost
