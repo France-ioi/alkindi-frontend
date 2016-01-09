@@ -42,6 +42,22 @@ export const decodeBigram = function (alphabet, bigram) {
    };
 };
 
+export const getAllBigrams = function (alphabet) {
+   const bigrams = [];
+   for (let l1 = 0; l1 < alphabet.size; l1++) {
+      for (let l2 = 0; l2 < alphabet.size; l2++) {
+         if (l1 !== l2) {
+            bigrams.push({
+               v: alphabet.symbols[l1] + alphabet.symbols[l2],
+               l0: l1,
+               l1: l2
+            });
+         }
+      }
+   }
+   return bigrams;
+};
+
 export const getTextAsBigrams = function (text, alphabet) {
    var textBigrams = [];
    var letterInfos = [];
