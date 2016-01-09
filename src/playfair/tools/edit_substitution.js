@@ -1,7 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import {PureComponent} from '../utils/generic';
+import {PureComponent} from '../../misc';
+import Tooltip from '../../ui/tooltip';
+
 import {getCellLetter, getQualifierClass, testConflict} from '../utils/cell';
 import {getStringWrapping} from '../utils/wrapping';
 import {getTextAsBigrams, sideOfStatus} from '../utils/bigram';
@@ -191,7 +193,11 @@ export const Component = PureComponent(self => {
                {editPair && renderEditPair()}
                {renderVariables()}
                <div className='editSubstitution grillesSection'>
-                  <strong>Nombre de conflits entre les substitutions :</strong> {nConflicts}<br/>
+                  <p><strong>Nombre de conflits entre les substitutions :</strong>{' '}{nConflicts}</p>
+                  <p>
+                     {'Édition de la substitution, au fil du message chiffré découpé en bigrammes : '}
+                     <Tooltip content={<p>Cliquez sur un bigramme chiffré pour définir le bigramme déchiffré correspondant.</p>}/>
+                  </p>
                   {renderSubstBigrams()}
                </div>
             </div>
