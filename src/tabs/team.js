@@ -400,13 +400,17 @@ const TeamTab = PureComponent(self => {
   const renderEnterCodes = function (attempt) {
     return (
       <div className="section">
-        <p>
-          Lorsque vous aurez saisi plus de 50% des codes vous pourrez accéder
-          au sujet
-            {attempt.is_training
-             ? <span> d'entrainement</span>
-             : <span>, vous aurez alors {attempt.duration} minutes pour le résoudre</span>}.
-        </p>
+        {attempt.is_training
+          ? <p>Lorsque vous aurez saisi au moins 1 code d'accès vous pourrez
+               accéder au sujet d'entrainement.<br/>
+               <strong>
+               Pour accéder au sujet en temps limité, il faudra saisir plus
+               de 50% des codes.</strong>
+            </p>
+          : <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
+               accéder au sujet, vous aurez alors {attempt.duration} minutes
+               pour le résoudre.
+            </p>}
       </div>
     );
   };
@@ -441,6 +445,19 @@ const TeamTab = PureComponent(self => {
           </Button>
         </p>
         {notice}
+      </div>
+    );
+  };
+  const renderLateEnterCode = function () {
+    return (
+      <div className="section">
+        <p>Au moins l'un des membres de votre équipe a déjà saisi son code de
+           lancement, et a ouvert l'accès au sujet d'entrainement.
+        </p>
+        <p><strong>
+          Pour accéder au sujet en temps limité, il faudra saisir plus
+          de 50% des codes de lancement.</strong></p>
+        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
       </div>
     );
   };
@@ -487,7 +504,9 @@ const TeamTab = PureComponent(self => {
     const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
     const canLeaveTeam = !haveAttempt && !team.is_locked;
     const canCancelAttempt = haveAttempt && !haveTask;
-    const showOwnAccessCode = canCancelAttempt && attempt.needs_codes;
+    const showOwnAccessCode = !team.members.find(function (member) {
+      return member.access_code && member.user_id === user.id;
+    });
     // Conditions in the decision tree are ordered so leftmost-innermost
     // traversal corresponds to chronological order.
     return (
@@ -507,17 +526,19 @@ const TeamTab = PureComponent(self => {
                : renderStartTraining()}
             </div>
           : (attempt.is_training
-             ? (attempt.needs_codes
-                ? (round_has_not_started
+             ? (round_has_not_started
+                ? (attempt.needs_codes
                    ? renderTooEarly(round)
-                   : renderEnterCodes(attempt))
-                : (attempt.is_unsolved
-                   ? (task === undefined
-                      ? (round_has_not_started
-                         ? renderCodesEnteredEarly(round)
-                         : renderUnlockTask(attempt))
-                      : renderTrainingInProgress())
-                   : renderStartTimedAttempt()))
+                   : renderCodesEnteredEarly(round))
+                : (attempt.needs_codes
+                   ? renderEnterCodes(attempt)
+                   : (task === undefined
+                      ? renderUnlockTask(attempt)
+                      : (showOwnAccessCode
+                         ? renderLateEnterCode()
+                         : (attempt.is_unsolved
+                            ? renderTrainingInProgress()
+                            : renderStartTimedAttempt())))))
              : (attempt.needs_codes
                 ? renderEnterCodes(attempt)
                 : (task === undefined
