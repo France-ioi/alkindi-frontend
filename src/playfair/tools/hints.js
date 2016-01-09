@@ -136,6 +136,9 @@ export const Component = PureComponent(self => {
                <div className='dialogLine'>
                   <strong>Score disponible :</strong> {score} points
                </div>
+               <div className='dialogLine'>
+                  L’indice obtenu sera visible par toute l’équipe.
+               </div>
                <OkCancel onOk={validateDialog} onCancel={cancelDialog}/>
             </div>
          );
