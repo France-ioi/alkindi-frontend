@@ -24,6 +24,12 @@ window.onerror = function (message, url, line, column, error) {
   // Prevent firing the default handler for errors on log URLs.
   if (url.startsWith(logUrl))
     return true;
+  // If the scripts bundle is hosted on a CDN, the arguments will be
+  // uninteresting.  Reload the page bypassing the CDN.
+  if (Alkindi.config.nocdn) {
+    window.location.search = '?nocdn';
+    return;
+  }
   try {
     const img = document.createElement('img');
     let strError, printer;
