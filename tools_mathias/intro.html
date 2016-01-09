@@ -36,6 +36,15 @@
 			margin: 20px;
 			padding-left: 20px;
 		}
+		.clearfix {
+			clear: both;
+		}
+		.clearfix::after,
+		.clearfix::before {
+			content: " ";
+			display: table;
+			clear: both;
+		}
 		ol li {
 			clear: both;
 		}
@@ -105,7 +114,7 @@
 	<p>
 	<strong>La méthode de chiffrement de Playfair :</strong> voici quelques explications sur les points importants de la méthode qui a été utilisée pour chiffrer le message.
 	</p>
-	<ol>
+	<ol class="clearfix">
 		<li>
 			<p>
 			Le message a été converti en majuscules et les accents retirés, alors que les espaces et les signes de ponctuation sont laissés tels quels.
