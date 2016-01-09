@@ -73,9 +73,6 @@ let App = connect(appSelector)(PureComponent(self => {
       case 'cryptanalysis':
         content = <PlayFairTab refresh={refresh} />;
         break;
-      case 'answer':
-        // content = <AnswerTab />;
-        break;
       case 'team':
         content = <TeamTab refresh={refresh} />;
         break;
