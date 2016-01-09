@@ -1,5 +1,5 @@
 import {weakenCell} from './cell';
-import {sideOfStatus} from './bigram';
+import {sideOfStatus, getAllBigrams} from './bigram';
 
 export const nullSubstPair = {
    dst: [{q: "unknown"}, {q: "unknown"}]
@@ -54,16 +54,7 @@ export const countSubstitutionConflicts = function (bigrams, initialSubstitution
 };
 
 export const countAllSubstitutionConflicts = function(initialSubstitution, newSubstitution, alphabet) {
-   var bigrams = [];
-   for (var l1 = 0; l1 < alphabet.size; l1++) {
-      for (var l2 = 0; l2 < alphabet.size; l2++) {
-         if (l1 != l2) {
-            bigrams.push({
-               v: alphabet.symbols[l1] + alphabet.symbols[l2]
-            });
-         }
-      }
-   }
+   const bigrams = getAllBigrams(alphabet);
    return countSubstitutionConflicts(bigrams, initialSubstitution, newSubstitution);
 };
 
