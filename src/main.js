@@ -17,6 +17,32 @@ import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
 
+// Install a global error handler.
+let logErrors = true;
+const logUrl = 'https://alkindi.epixode.fr/reports/';
+window.onerror = function (message, url, line, column, error) {
+  // Prevent firing the default handler for errors on log URLs.
+  if (url.startsWith(logUrl))
+    return true;
+  try {
+    const img = document.createElement('img');
+    img.src = logUrl + '?' + [
+      'url=' + encodeURIComponent(url),
+      'line=' + encodeURIComponent(line),
+      'column=' + encodeURIComponent(column),
+      'version=' + encodeURIComponent(Alkindi.config.front_version),
+      'message=' + encodeURIComponent(message)
+    ].join('&');
+    document.getElementById('reports').appendChild(img);
+  } catch (err) {
+    console.log('double fault', err);
+  }
+};
+// Use this function to manually send an error report.
+window.reportError = function (value) {
+  setTimeout(function () { throw value; }, 0);
+};
+
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
 /*global Alkindi*/
 window.Alkindi = (function () {
