@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import Tooltip from 'rc-tooltip';
 
 import {PureComponent, at, put} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
 import * as api from '../api';
+import Tooltip from '../ui/tooltip';
 
 import PlayFair from '../playfair';
 import {makeAlphabet} from '../playfair/utils/cell';
@@ -173,7 +173,7 @@ const PlayFairTab = PureComponent(self => {
   };
 
   const saveStateTooltip = (
-    <p style={{maxWidth: '200px', fontSize: '120%'}}>
+    <p>
       Enregistrez de temps en temps votre travail pour ne pas risquer de le
       perdre.
       Chaque version que vous enregistrez sera disponible pour vous et vos
@@ -182,7 +182,7 @@ const PlayFairTab = PureComponent(self => {
   );
 
   const resetStateTooltip = (
-    <p style={{maxWidth: '200px', fontSize: '120%'}}>
+    <p>
       Cliquez sur ce bouton pour effacer toutes vos modifications mais conserver
       les indices.<br/>
       Vous pourrez toujours restaurer une version précédente depuis l'onglet
@@ -218,18 +218,14 @@ const PlayFairTab = PureComponent(self => {
             {' Enregistrer cette version'}
           </Button>
           <span style={{marginLeft: '10px', marginRight: '40px'}}>
-            <Tooltip animation="zoom" trigger="hover click" overlay={saveStateTooltip}>
-              <i className='fa fa-question-circle'/>
-            </Tooltip>
+            <Tooltip content={saveStateTooltip}/>
           </span>
           <Button onClick={resetState}>
             <i className="fa fa-eraser"/>
             {' Repartir de zéro'}
           </Button>
           <span style={{marginLeft: '10px'}}>
-            <Tooltip animation="zoom" trigger="hover click" overlay={resetStateTooltip}>
-              <i className='fa fa-question-circle'/>
-            </Tooltip>
+            <Tooltip content={resetStateTooltip}/>
           </span>
         </div>
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {PureComponent, put, at} from '../utils/generic';
+import {PureComponent, put, at} from '../../misc';
+import Tooltip from '../../ui/tooltip';
+
 import {getCellLetter} from '../utils/cell';
 import {applyGridEdit} from '../utils/grid';
 import {getSubstitutionFromGridCells} from '../utils/playfair';
@@ -134,11 +136,18 @@ export const Component = PureComponent(self => {
                <Variables inputVars={inputVars} outputVars={outputVars} />
                <div className='grillesSection'>
                   <div className='blocGrille'>
-                     Grille éditée :<br/>
+                     <p>
+                        {'Grille éditée : '}
+                        <Tooltip content={<p>Cliquez sur une case pour proposer ou modifier la lettre qu
+e vous pensez qu’elle contient.</p>}/>
+                     </p>
                      {renderGrid()}
                   </div>
                   <div className='blocGrille'>
-                     Substitution de bigrammes générée :<br/>
+                     <p>
+                        {'Substitution de bigrammes générée : '}
+                        <Tooltip content={<p>Sont affichées ci-dessous toutes les correspondances bigramme chiffré → bigramme déchiffré qui sont déduites de la grille.</p>}/>
+                     </p>
                      {renderSubstitution()}
                   </div>
                </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {PureComponent} from '../utils/generic';
+import {PureComponent} from '../../misc';
+import Tooltip from '../../ui/tooltip';
+
 import {getCellLetter} from '../utils/cell';
 import {getLetterQualifiersFromGrid} from '../utils/grid';
 
@@ -174,16 +176,31 @@ export const Component = PureComponent(self => {
                <div className='grillesSection'>
                   <p className='title'>Deux types d'indices sont disponibles :</p>
                   <div className='blocGrille'>
-                     <p>Révéler une case : {getQueryCost({type: "grid"})} points</p>
+                     <p>
+                        {'Révéler une case : '}
+                        {getQueryCost({type: "grid"})}
+                        {' points '}
+                        <Tooltip content={<p>Cliquez sur une case de la grille pour demander quelle lettre elle contient.</p>}/>
+                     </p>
                      {renderGrid()}
                   </div>
                   <div className='blocGrille'>
-                     <p>Révéler la position d'une lettre : {getQueryCost({type: "alphabet"})} points</p>
+                     <p>
+                        {'Révéler la position d\'une lettre : '}
+                        {getQueryCost({type: "alphabet"})}
+                        {' points '}
+                        <Tooltip content={<p>Cliquer sur une lettre non grisée ci-des
+sous pour demander sa position au sein de la grille.</p>}/>
+                     </p>
                      {renderAlphabet()}
                   </div>
                </div>
                <div className='playfair-score'>
-                  <span><strong>Points disponibles :</strong> {score} points</span>
+                  <span>
+                     <strong>{'Points disponibles :'}</strong>
+                     {' '+score+' points '}
+                     <Tooltip content={<p>Score que votre équipe obtiendra si vous résolvez le sujet sans demander d’autres indices. Il diminue à chaque fois qu’un membre de l’équipe demande un indice.</p>}/>
+                  </span>
                </div>
             </div>
          </div>

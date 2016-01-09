@@ -1,8 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
-import Tooltip from 'rc-tooltip';
 
 import {OkCancel} from './ok_cancel';
+import Tooltip from '../../ui/tooltip';
+
 import {PureComponent} from '../utils/generic';
 import {getCellLetter, getQualifierClass} from '../utils/cell';
 
@@ -92,8 +93,12 @@ export default PureComponent(self => {
          setFocus();
    };
 
-   const lockUnlockTooltip = false;
-   // <p>TODO: documenter le fonctionnement du vérouillage.</p>;
+   const lockUnlockTooltip = (
+      <p>Cliquez sur le curseur sous une lettre pour la marquer comme bloquée
+         si vous êtes à peu près certain de sa valeur. Vous pourrez la débloquer
+         plus tard si vous changez d’avis.
+      </p>
+   );
 
    self.render = function () {
       const {alphabet, bigram, editPair, substPair, onCancel} = self.props;
@@ -141,10 +146,7 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                <span className='dialogLabel'>
                   {'Bloquer / débloquer : '}
-                  {lockUnlockTooltip &&
-                   <Tooltip animation="zoom" trigger="hover click" overlay={lockUnlockTooltip}>
-                      <i className='fa fa-question-circle'/>
-                   </Tooltip>}
+                  <Tooltip content={lockUnlockTooltip}/>
                </span>
                <span>
                   <button type='button' className={classnames(buttonLockedClasses[0])} onClick={toggleLock} data-side='0' >
