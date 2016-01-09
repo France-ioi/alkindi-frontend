@@ -108,8 +108,9 @@ const PlayFairTab = PureComponent(self => {
     api.storeRevision(user_id, data, function (err, result) {
       asyncHelper.endRequest(err);
       if (err) {
+        // Reset the changed flag to true as the state was not changed.
         changeCrypto(function (crypto) {
-          return {...crypto, changed: false};
+          return {...crypto, changed: true};
         });
         return;
       }
