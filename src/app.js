@@ -16,12 +16,13 @@ import * as api from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt, task} = state;
+  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto} = state;
   if (!user)
     return {};
   if (!team)
     return {user, round};
-  return {activeTabKey, enabledTabs, user, team, round, attempt, task};
+  const changed = crypto.changed;
+  return {activeTabKey, enabledTabs, user, team, round, attempt, task, changed};
 };
 
 let App = connect(appSelector)(PureComponent(self => {
@@ -40,6 +41,15 @@ let App = connect(appSelector)(PureComponent(self => {
   };
   const setActiveTab = function (tabKey) {
     self.props.dispatch(actions.setActiveTab(tabKey));
+  };
+  self.componentWillMount = function () {
+    window.addEventListener('beforeunload', function (event) {
+      if (self.props.changed) {
+        const confirmMessage = "Vous avez des changements pas enregistrés qui seront perdus si vous quittez ou rechargez la page.";
+        (event || window.event).returnValue = confirmMessage;
+        return confirmMessage;
+      }
+    });
   };
   self.render = function () {
     // Si on n'a pas d'utilisateur, on affiche l'écran de login.
