@@ -123,6 +123,19 @@ const PlayFairTab = PureComponent(self => {
     });
   };
 
+  const resetState = function () {
+    if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
+      changeCrypto(function (crypto) {
+        return {
+          ...crypto,
+          tools: initialTools,
+          revisionId: undefined,
+          changed: false
+        };
+      });
+    }
+  };
+
   self.componentWillMount = function () {
     const {revisionId, tools} = self.props.crypto;
     // If the tools are already loaded, do nothing.
@@ -172,6 +185,7 @@ const PlayFairTab = PureComponent(self => {
       <div>
         <div className="crypto-tab-header">
           <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>Enregistrer cette version</Button>
+          <Button onClick={resetState}>Repartir de zéro</Button>
         </div>
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
