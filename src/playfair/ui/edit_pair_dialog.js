@@ -92,7 +92,8 @@ export default PureComponent(self => {
          setFocus();
    };
 
-   const lockUnlockTooltip = <p>TODO: documenter le fonctionnement du vérouillage.</p>;
+   const lockUnlockTooltip = false;
+   // <p>TODO: documenter le fonctionnement du vérouillage.</p>;
 
    self.render = function () {
       const {alphabet, bigram, editPair, substPair, onCancel} = self.props;
@@ -140,9 +141,10 @@ export default PureComponent(self => {
             <div className='dialogLine'>
                <span className='dialogLabel'>
                   {'Bloquer / débloquer : '}
-                  <Tooltip animation="zoom" trigger="hover click" overlay={lockUnlockTooltip}>
-                     <i className='fa fa-question-circle'/>
-                  </Tooltip>
+                  {lockUnlockTooltip &&
+                   <Tooltip animation="zoom" trigger="hover click" overlay={lockUnlockTooltip}>
+                      <i className='fa fa-question-circle'/>
+                   </Tooltip>}
                </span>
                <span>
                   <button type='button' className={classnames(buttonLockedClasses[0])} onClick={toggleLock} data-side='0' >
