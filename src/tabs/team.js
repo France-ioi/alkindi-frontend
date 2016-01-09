@@ -257,10 +257,10 @@ const TeamTab = PureComponent(self => {
           <td>{new Date(member.joined_at).toLocaleString()}</td>
           {haveAttempt &&
             (member.access_code === undefined
-             ? <td className="unlock-code">
+             ? <td className="access-code">
                  <input type="text" ref={'access_code_'+user_id} />
                  <Button bsSize="small" onClick={onEnterAccessCode} data-user_id={user_id}>
-                   <i className="fa fa-check"/>
+                   <i className="fa fa-check"/> valider
                  </Button>
                </td>
              : <td className="unlocked-code">{member.access_code}</td>)}

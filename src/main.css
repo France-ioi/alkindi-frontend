@@ -898,13 +898,15 @@ td .bigramLetter {
   font-weight: bold;
   color: #080;
 }
-td.unlock-code input {
+td.access-code input {
   height: 26px;
 }
-td.unlock-code button {
+td.access-code button {
   height: 26px;
   vertical-align: bottom;
   margin-bottom: 3px;
+}
+td.access-code i {
   color: #080;
 }
 /* Task tab */
