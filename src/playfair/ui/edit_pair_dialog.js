@@ -15,7 +15,9 @@ export default PureComponent(self => {
 
    const keyDown = function (event) {
       if (event.keyCode === 13)
-         validateDialog();
+         return validateDialog();
+      if (event.keyCode === 27)
+         return self.props.onCancel();
    };
 
    const changeLetter = function (event) {
