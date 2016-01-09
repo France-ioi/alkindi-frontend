@@ -36,6 +36,15 @@
 			margin: 20px;
 			padding-left: 20px;
 		}
+		.clearfix {
+			clear: both;
+		}
+		.clearfix::after,
+		.clearfix::before {
+			content: " ";
+			display: table;
+			clear: both;
+		}
 		ol li {
 			clear: both;
 		}
@@ -74,11 +83,11 @@
 		<ul>
 			<li>Seul le sujet d’entraînement est disponible pour l’instant, l’accès aux sujets en temps limité sera ouvert à partir de lundi matin</li>
 			<li>La validation des réponses sur le sujet d’entraînement sera disponible dans le courant du week-end</li>
-			<li>La documentation des outils est <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF">disponible en téléchargement</a></li>
+			<li>La documentation des outils est <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF" target="new">disponible en téléchargement</a></li>
 		</ul>
 	</div>
 	<p>
-   Votre amie Alice a récupéré une pochette contenant un message chiffré (allez lire la  <a href="http://concours-alkindi.fr/#/pageBD" title="bande dessinée d'introduction du concours">bande dessinée de son aventure</a> quand vous avez un peu de temps). Voici le texte du message :
+   Votre amie Alice a récupéré une pochette contenant un message chiffré (allez lire la  <a href="http://concours-alkindi.fr/#/pageBD" title="bande dessinée d'introduction du concours" target="new">bande dessinée de son aventure</a> quand vous avez un peu de temps). Voici le texte du message :
 	</p>
 	${cipher_text}
 	<p>
@@ -105,7 +114,7 @@
 	<p>
 	<strong>La méthode de chiffrement de Playfair :</strong> voici quelques explications sur les points importants de la méthode qui a été utilisée pour chiffrer le message.
 	</p>
-	<ol>
+	<ol class="clearfix">
 		<li>
 			<p>
 			Le message a été converti en majuscules et les accents retirés, alors que les espaces et les signes de ponctuation sont laissés tels quels.
