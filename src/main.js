@@ -26,13 +26,21 @@ window.onerror = function (message, url, line, column, error) {
     return true;
   try {
     const img = document.createElement('img');
+    let strError, printer;
+    try { strError = JSON.stringify(error); printer = 'json'; } catch (err) {
+    try { strError = error.toString(); printer = 'toString'; } catch (err) {
+      strError = err.toString();
+      printer = 'null';
+    }};
     img.src = logUrl + '?' + [
       'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id),
       'url=' + encodeURIComponent(url),
       'line=' + encodeURIComponent(line),
       'column=' + encodeURIComponent(column),
       'version=' + encodeURIComponent(Alkindi.config.front_version),
-      'message=' + encodeURIComponent(message)
+      'message=' + encodeURIComponent(message),
+      'printer=' + encodeURIComponent(printer),
+      'error=' + encodeURIComponent(strError)
     ].join('&');
     document.getElementById('reports').appendChild(img);
   } catch (err) {
