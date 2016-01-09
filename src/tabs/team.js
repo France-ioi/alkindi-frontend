@@ -236,8 +236,9 @@ const TeamTab = PureComponent(self => {
   const renderAttemptPrelude = function (_attempt) {
     return (
       <div>
-        <p>La moitié au moins des membres de l'équipe doit fournir son code de
-           lancement pour autoriser l'accès au sujet.</p>
+        <p>Pour autoriser l'accès au sujet, vous devez saisir des codes de
+           lancement.</p>
+        <p>Voici la composition de votre équipe :</p>
       </div>
     );
   };
@@ -399,19 +400,20 @@ const TeamTab = PureComponent(self => {
   };
   const renderEnterCodes = function (attempt) {
     return (
-      <div className="section">
-        {attempt.is_training
-          ? <p>Lorsque vous aurez saisi au moins 1 code d'accès vous pourrez
-               accéder au sujet d'entrainement.<br/>
-               <strong>
-               Pour accéder au sujet en temps limité, il faudra saisir plus
-               de 50% des codes.</strong>
-            </p>
-          : <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-               accéder au sujet, vous aurez alors {attempt.duration} minutes
-               pour le résoudre.
-            </p>}
-      </div>
+      attempt.is_training
+      ? <div className="section">
+          <p>Lorsque vous aurez saisi au moins 1 code d'accès vous pourrez
+             accéder au sujet d'entrainement.</p>
+          <p><strong>
+             Notez que pour accéder au sujet en temps limité, il faudra saisir
+             plus de 50% des codes.</strong></p>
+        </div>
+      : <div className="section">
+          <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
+             accéder au sujet, vous aurez alors {attempt.duration} minutes
+             pour le résoudre.
+          </p>
+        </div>
     );
   };
   const renderCodesEnteredEarly = function (round) {
