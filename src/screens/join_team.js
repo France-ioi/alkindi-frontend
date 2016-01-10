@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
-import AsyncHelper from '../helpers/async_helper';
+import Notifier from '../ui/notifier';
 import Api from '../api';
 import AuthHeader from '../ui/auth_header';
 import Logaut from '../ui/logout';
@@ -18,7 +18,7 @@ JoinTeamScreen interface:
 */
 const JoinTeamScreen = PureComponent(self => {
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api}/>;
+  const notifier = <Notifer api={api}/>;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
   const onShowJoinTeam = function () {
@@ -158,7 +158,7 @@ const JoinTeamScreen = PureComponent(self => {
         {round && renderCreateTeam()}
         {round && joinTeam && renderQualifiedJoinTeam()}
         {!round && renderNotQualifiedJoinTeam()}
-        {asyncHelper}
+        {notifier}
       </div>
     );
   };

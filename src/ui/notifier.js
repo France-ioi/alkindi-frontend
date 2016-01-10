@@ -4,8 +4,6 @@ import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 
-export default AsyncHelper;
-
 const ErrorMessages = {
   'already in a team': "Vous êtes déjà dans une équipe.",
   'not qualified for any round': "Vous n'êtes pas qualifié.",
@@ -20,7 +18,7 @@ const ErrorMessages = {
   'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder."
 };
 
-const AsyncHelper = PureComponent(self => {
+const Notifier = PureComponent(self => {
 
   const begin = function () {
     self.setState({state: 'busy'});
@@ -129,4 +127,4 @@ const selector = function (state, _props) {
   return {refresh, user};
 };
 
-export default connect(selector)(AsyncHelper);
+export default connect(selector)(Notifier);

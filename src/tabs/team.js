@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
 import Api from '../api';
-import AsyncHelper from '../helpers/async_helper';
+import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 
 const TestTeamTab = function (self) {
@@ -173,7 +173,7 @@ const TeamTab = PureComponent(self => {
   const clearAccessCode = function () {
     self.setState({access_code: undefined});
   };
-  const asyncHelper = <AsyncHelper api={api} onRefresh={clearAccessCode}/>;
+  const notifier = <Notifier api={api} onRefresh={clearAccessCode}/>;
 
   const renderRoundPrelude = function (round) {
     return (
@@ -512,7 +512,7 @@ const TeamTab = PureComponent(self => {
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {false && renderResetHints()}
-        {asyncHelper}
+        {notifier}
         {testing && testing.render()}
       </div>
     );

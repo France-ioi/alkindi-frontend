@@ -4,14 +4,14 @@ import {createSelector} from 'reselect';
 
 import {PureComponent} from '../misc';
 import Api from '../api';
-import AsyncHelper from '../helpers/async_helper';
+import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
 import RefreshButton from '../ui/refresh_button';
 
 const HistoryTab = PureComponent(self => {
 
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api}/>;
+  const notifier = <Notifier api={api}/>;
 
   self.componentWillMount = function () {
     const {attempt} = self.props;
@@ -129,7 +129,7 @@ const HistoryTab = PureComponent(self => {
             <RefreshButton/>
           </div>
         </div>
-        {asyncHelper}
+        {notifier}
         {revisions ? JSON.stringify(revisions) : <p>Chargement en cours...</p>}
       </div>
     );

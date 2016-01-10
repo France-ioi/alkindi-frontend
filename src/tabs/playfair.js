@@ -3,8 +3,8 @@ import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent, at, put} from '../misc';
-import AsyncHelper from '../helpers/async_helper';
 import Api from '../api';
+import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
 import RefreshButton from '../ui/refresh_button';
 
@@ -58,7 +58,7 @@ const initialTools = [
 const PlayFairTab = PureComponent(self => {
 
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api}/>;
+  const notifier = <Notifier api={api}/>;
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
@@ -193,7 +193,7 @@ const PlayFairTab = PureComponent(self => {
       return (
         <div>
           Chargement en cours, veuillez patienter...
-          {asyncHelper}
+          {notifier}
         </div>);
     const toolStates = tools.map(tool => tool.state);
     const taskApi = {
@@ -228,7 +228,7 @@ const PlayFairTab = PureComponent(self => {
             <Tooltip content={resetStateTooltip}/>
           </span>
         </div>
-        {asyncHelper}
+        {notifier}
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
     );
