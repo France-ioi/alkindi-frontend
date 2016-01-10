@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import {Promise} from 'es6-promise';
+import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
 import Api from '../api';
@@ -24,7 +25,15 @@ const HistoryTab = PureComponent(self => {
   const addHandlers = function (revisions) {
     revisions.forEach(function (revision) {
       revision.load = function () {
-        console.log('load', revision.id);
+        const {cryptoChanged} = self.props;
+        if (cryptoChanged) {
+          if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
+            return;
+        }
+        self.props.dispatch({
+          type: 'USE_REVISION',
+          revision_id: revision.id
+        });
       };
     });
   };
@@ -126,11 +135,30 @@ const HistoryTab = PureComponent(self => {
 */
   const renderRevisions = function (revisions) {
     const {users, workspaces, attempts} = self.state;
+    const {currentRevisionId, cryptoChanged} = self.props;
     const renderRevisionRow = function (revision) {
       const workspace = workspaces[revision.workspace_id];
       const creator = users[revision.creator_id];
+      const isCurrent = currentRevisionId === revision.id;
+      const isModified = isCurrent && cryptoChanged;
+      console.log(revision.id, isCurrent, isModified);
+      const classes = [
+        isCurrent && 'revision-isCurrent',
+        isModified && 'revision-isModified'
+      ];
       return (
-        <tr key={workspace.id+'.'+revision.id}>
+        <tr key={workspace.id+'.'+revision.id} className={classnames(classes)}>
+          <td>
+            {' '}
+            {isCurrent &&
+              (isModified
+                ? <Tooltip content={<p>Cette version a été chargée dans l'onglet cryptanalyse, puis modifiée.</p>}>
+                    <i className="fa fa-save"/>
+                  </Tooltip>
+                : <Tooltip content={<p>Cette version est chargée dans l'onglet cryptanalyse.</p>}>
+                    <i className="fa fa-asterisk"/>
+                  </Tooltip>)}
+          </td>
           <td>{new Date(revision.created_at).toLocaleString()}</td>
           <td>{creator.username}</td>
           <td>
@@ -140,9 +168,10 @@ const HistoryTab = PureComponent(self => {
       );
     };
     return (
-      <table className="session-list">
+      <table className="revision-list">
         <thead>
           <tr>
+            <th></th>
             <th>Modifié</th>
             <th>Auteur</th>
             <th></th>
@@ -157,6 +186,7 @@ const HistoryTab = PureComponent(self => {
 
   self.render = function () {
     const {revisions, refreshing} = self.state;
+    const {crytoChanged} = self.props;
     return (
       <div>
         <div style={{marginBottom: '10px'}}>
@@ -180,4 +210,12 @@ const HistoryTab = PureComponent(self => {
   };
 });
 
-export default HistoryTab;
+const selector = function (state) {
+  const {crypto} = state;
+  return {
+    cryptoChanged: crypto.changed,
+    currentRevisionId: crypto.revisionId
+  };
+};
+
+export default connect(selector)(HistoryTab);
