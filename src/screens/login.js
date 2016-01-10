@@ -1,7 +1,8 @@
 import React from 'react';
 
 import {PureComponent} from '../misc';
-import AlkindiAuthHeader from './auth_header';
+import AlkindiAuthHeader from '../ui/auth_header';
+import Footer from '../ui/footer';
 
 const LoginScreen = PureComponent(self => {
   let loginWindow;
