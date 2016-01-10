@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 
-import AlkindiLogout from '../ui/logout';
-import AlkindiTabs from '../ui/tabs';
+import Logout from '../ui/logout';
+import Tabs from '../ui/tabs';
 import TaskTab from '../tabs/task';
 import TeamTab from '../tabs/team';
 import PlayFairTab from '../tabs/playfair';
@@ -45,8 +45,8 @@ export const MainScreen = PureComponent(self => {
         <div id="header">
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
-            <AlkindiTabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
-            <AlkindiLogout user={self.props.user} logoutUrl={logoutUrl} onLogout={onLogout} />
+            <Tabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
+            <Logout user={self.props.user} logoutUrl={logoutUrl} onLogout={onLogout} />
           </div>
         </div>
         <div className="wrapper">{content}</div>

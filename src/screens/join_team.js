@@ -6,7 +6,6 @@ import AsyncHelper from '../helpers/async_helper';
 import Api from '../api';
 import AlkindiAuthHeader from '../ui/auth_header';
 import AlkindiLogout from '../ui/logout';
-import Footer from '../ui/footer';
 
 /*
 
