@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
+import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import Api from '../api';
@@ -13,11 +14,31 @@ const HistoryTab = PureComponent(self => {
   const api = Api();
   const notifier = <Notifier api={api}/>;
 
+  const toMap = function (items) {
+    const map = {};
+    items.map(item => { map[item.id] = item; });
+    return map;
+  };
+
+  const addHandlers = function (revisions) {
+    revisions.forEach(function (revision) {
+      revision.load = function () {
+        console.log('load', revision.id);
+      };
+    });
+  };
+
   self.componentWillMount = function () {
     const {attempt} = self.props;
     api.listAttemptRevisions(attempt.id).then(
-      function (revisions) {
-        self.setState({revisions: revisions});
+      function (result) {
+        addHandlers(result.revisions);
+        self.setState({
+          revisions: result.revisions,
+          users: toMap(result.users),
+          workspaces: toMap(result.workspaces),
+          attempts: toMap(result.attempts)
+        });
       });
   };
 
@@ -92,32 +113,38 @@ const HistoryTab = PureComponent(self => {
         </table>
       </div>);
   };
-  const renderAllVersions = function (versions) {
+*/
+  const renderRevisions = function (revisions) {
+    const {users, workspaces, attempts} = self.state;
+    const renderRevisionRow = function (revision) {
+      const workspace = workspaces[revision.workspace_id];
+      const creator = users[revision.creator_id];
+      return (
+        <tr key={workspace.id+'.'+revision.id}>
+          <td>{new Date(revision.created_at).toLocaleString()}</td>
+          <td>{creator.username}</td>
+          <td>
+            <Button onClick={revision.load}>utiliser</Button>
+          </td>
+        </tr>
+      );
+    };
     return (
       <table className="session-list">
         <thead>
           <tr>
             <th>Modifié</th>
             <th>Auteur</th>
-            <th>Espace de travail</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {versions.map(function (version) {
-            return (
-              <tr key={version.workspace.id+'.'+version.id}>
-                <td>{new Date(version.updatedAt).toString()}</td>
-                <td>{version.owner.fullname}</td>
-                <td>{version.workspace.title}</td>
-                <td><button type="button">utiliser</button></td>
-              </tr>);
-          })}
+          {revisions.map(renderRevisionRow)}
         </tbody>
       </table>
     );
   };
-*/
+
   self.render = function () {
     const {revisions} = self.state;
     return (
@@ -130,7 +157,9 @@ const HistoryTab = PureComponent(self => {
           </div>
         </div>
         {notifier}
-        {revisions ? JSON.stringify(revisions) : <p>Chargement en cours...</p>}
+        {revisions === undefined
+          ? <p>Chargement en cours...</p>
+          : renderRevisions(revisions)}
       </div>
     );
   };
