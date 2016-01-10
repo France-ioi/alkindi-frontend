@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
-import * as api from '../api';
+import Api from '../api';
 
 const TestTeamTab = function (self) {
   const setTeam = function (team) {
@@ -111,11 +111,15 @@ const TestTeamTab = function (self) {
 };
 
 const TeamTab = PureComponent(self => {
-  const asyncHelper = AsyncHelper(self);
   const refresh = function () {
     self.setState({access_code: undefined});
     self.props.refresh();
   };
+  const sink = function (helper) {
+    console.log(helper);
+  };
+  const api = Api();
+  const asyncHelper = <AsyncHelper api={api} refresh={refresh}/>;
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -123,48 +127,26 @@ const TeamTab = PureComponent(self => {
   };
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
-    asyncHelper.beginRequest();
-    api.leaveTeam(user_id, function (err, _result) {
-      asyncHelper.endRequest(err);
-      if (err) return;
-      refresh();
-    });
+    api.leaveTeam(user_id);
   };
   const onUpdateTeam = function () {
     const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
-    asyncHelper.beginRequest();
-    api.updateUserTeam(user_id, data, function (err, _result) {
-      asyncHelper.endRequest(err);
-      if (err) return;
-      refresh();
-    });
+    api.updateUserTeam(user_id, data);
   };
   const onStartAttempt = function () {
     const user_id = self.props.user.id;
-    asyncHelper.beginRequest();
-    api.startAttempt(user_id, function (err, _result) {
-      asyncHelper.endRequest(err);
-      if (err) return;
-      refresh();
-    });
+    api.startAttempt(user_id);
   };
   const onCancelAttempt = function () {
     const user_id = self.props.user.id;
-    asyncHelper.beginRequest();
-    api.cancelAttempt(user_id, function (err, _result) {
-      asyncHelper.endRequest(err);
-      if (err) return;
+    api.cancelAttempt(user_id).then(function () {
       self.setState({access_code: undefined});
-      refresh();
     });
   }
   const onRevealAccessCode = function () {
     const user_id = self.props.user.id;
-    asyncHelper.beginRequest();
-    api.getAccessCode(user_id, function (err, result) {
-      asyncHelper.endRequest(err);
-      if (err) return;
+    api.getAccessCode(user_id).then(function (result) {
       self.setState({access_code: result.code});
     });
   };
@@ -174,41 +156,16 @@ const TeamTab = PureComponent(self => {
     const element = self.refs['access_code_' + code_user_id];
     const code = element.value;
     element.value = '';
-    asyncHelper.beginRequest();
-    api.enterAccessCode(user_id, {code: code, user_id: code_user_id}, function (err, _result) {
-      asyncHelper.endRequest(err, function (error) {
-        if (error === 'bad code')
-          return "Le code que vous avez saisi est incorrect.";
-      });
-      if (err) return;
-      refresh();
-    });
+    api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
   };
   const onAccessTask = function () {
     const user_id = self.props.user.id;
-    asyncHelper.beginRequest();
-    api.assignAttemptTask(user_id, function (err, _result) {
-      asyncHelper.endRequest(err, function (error) {
-        if (error === 'already have a task') {
-          refresh();
-          return false;
-        }
-        if (error === 'training is not open')
-          return "L'épreuve n'est pas encore ouverte.";
-      });
-      if (err) return;
-      refresh();
-    });
+    api.assignAttemptTask(user_id);
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
     if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos co-équipiers.")) {
-      asyncHelper.beginRequest();
-      api.resetHints(user_id, function (err, result) {
-        asyncHelper.endRequest(err);
-        if (err) return;
-        refresh();
-      });
+      api.resetHints(user_id);
     }
   };
   const renderRefreshButton = function () {
@@ -554,16 +511,16 @@ const TeamTab = PureComponent(self => {
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {false && renderResetHints()}
-        {asyncHelper.render()}
+        {asyncHelper}
         {testing && testing.render()}
       </div>
     );
   };
 }, self => {
-  return AsyncHelper.initialState({
+  return {
     joinTeam: false,
     isOpen: self.props.team.is_open
-  });
+  };
 });
 
 const selector = function (state, _props) {

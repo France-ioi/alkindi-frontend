@@ -1,3 +1,5 @@
+import {Promise} from 'es6-promise';
+
 var request = require('superagent');
 
 function get (path) {
@@ -15,54 +17,53 @@ function post (path, data) {
   return req;
 }
 
-function withSuccessCheck (callback) {
-  return function (err, res) {
-    if (err) return callback(err);
-    if (!res.body.success)
-      return callback(res.body);
-    return callback(err, res.body);
-  };
-}
+export const BareApi = {
+  readUser: (user_id) => get('users/'+user_id),
+  qualifyUser: (user_id, data) => post('users/'+user_id+'/qualify', data),
+  createTeam: (user_id) => post('users/'+user_id+'/create_team'),
+  joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),
+  leaveTeam: (user_id) => post('users/'+user_id+'/leave_team'),
+  updateUserTeam: (user_id, data) => post('users/'+user_id+'/update_team', data),
+  startAttempt: (user_id) => post('users/'+user_id+'/start_attempt'),
+  cancelAttempt: (user_id) => post('users/'+user_id+'/cancel_attempt'),
+  getAccessCode: (user_id) => get('users/'+user_id+'/access_code'),
+  enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
+  assignAttemptTask: (user_id) => post('users/'+user_id+'/assign_attempt_task'),
+  getHint: (user_id, data) => post('users/'+user_id+'/get_hint', data),
+  resetHints: (user_id) => post('users/'+user_id+'/reset_hints'),
+  storeRevision: (user_id, data) => post('users/'+user_id+'/store_revision', data),
+  loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)
+};
 
-export const readUser = function (user_id, callback) {
-  get('users/'+user_id).end(callback);
+export const Api = function () {
+  const api = {};
+  let helper;
+  api.$setHelper = function (newHelper) {
+    helper = newHelper;
+  };
+  Object.keys(BareApi).map(function (action) {
+    api[action] = function (...args) {
+      return new Promise(function (resolve, reject) {
+        helper && helper.begin();
+        BareApi[action](...args).end(function (err, res) {
+          if (err) {
+            helper && helper.endWithServerError(err, res);
+            reject({success: false, error: 'failed', source: 'server'});
+            return;
+          }
+          if (res.body.success === false) {
+            helper && helper.endWithBackendError(res.body);
+            reject(res.body);
+            return;
+          }
+          const options = {refresh: true};
+          resolve(res.body, options);
+          helper && helper.end(options);
+        });
+      });
+    };
+  });
+  return api;
 };
-export const createTeam = function (user_id, callback) {
-  post('users/'+user_id+'/create_team').end(withSuccessCheck(callback));
-};
-export const joinTeam = function (user_id, data, callback) {
-  post('users/'+user_id+'/join_team', data).end(withSuccessCheck(callback));
-};
-export const leaveTeam = function (user_id, callback) {
-  post('users/'+user_id+'/leave_team').end(withSuccessCheck(callback));
-};
-export const updateUserTeam = function (user_id, data, callback) {
-  post('users/'+user_id+'/update_team', data).end(withSuccessCheck(callback));
-};
-export const startAttempt = function (user_id, callback) {
-  post('users/'+user_id+'/start_attempt').end(withSuccessCheck(callback));
-};
-export const cancelAttempt = function (user_id, callback) {
-  post('users/'+user_id+'/cancel_attempt').end(withSuccessCheck(callback));
-};
-export const getAccessCode = function (user_id, callback) {
-  get('users/'+user_id+'/access_code').end(withSuccessCheck(callback));
-};
-export const enterAccessCode = function (user_id, data, callback) {
-  post('users/'+user_id+'/access_code', data).end(withSuccessCheck(callback));
-};
-export const assignAttemptTask = function (user_id, callback) {
-  post('users/'+user_id+'/assign_attempt_task').end(withSuccessCheck(callback));
-};
-export const getHint = function (user_id, data, callback) {
-  post('users/'+user_id+'/get_hint', data).end(withSuccessCheck(callback));
-};
-export const resetHints = function (user_id, callback) {
-  post('users/'+user_id+'/reset_hints').end(withSuccessCheck(callback));
-};
-export const storeRevision = function (user_id, data, callback) {
-  post('users/'+user_id+'/store_revision', data).end(withSuccessCheck(callback));
-};
-export const loadRevision = function (revision_id, callback) {
-  get('workspace_revisions/'+revision_id).end(withSuccessCheck(callback));
-};
+
+export default Api;

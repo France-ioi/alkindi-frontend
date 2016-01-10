@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import {PureComponent, at, put} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
-import * as api from '../api';
+import Api from '../api';
 import Tooltip from '../ui/tooltip';
 
 import PlayFair from '../playfair';
@@ -56,12 +56,12 @@ const initialTools = [
 
 const PlayFairTab = PureComponent(self => {
 
-  const asyncHelper = AsyncHelper(self);
-  const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
-
   const refresh = function () {
     self.props.refresh();
   };
+  const api = Api();
+  const asyncHelper = <AsyncHelper api={api} refresh={refresh}/>;
+  const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
     if (query.type === "grid")
@@ -73,12 +73,10 @@ const PlayFairTab = PureComponent(self => {
 
   const getHint = function (query, callback) {
     const user_id = self.props.user_id;
-    asyncHelper.beginRequest();
-    api.getHint(user_id, query, function (err, result) {
-      asyncHelper.endRequest(err);
-      callback(err);
-      self.props.refresh();
-    });
+    api.getHint(user_id, query).then(
+      function () { callback(false); },
+      callback
+    );
   };
 
   const changeCrypto = function (func) {
@@ -111,22 +109,22 @@ const PlayFairTab = PureComponent(self => {
       return {...crypto, changed: false};
     });
     asyncHelper.beginRequest();
-    api.storeRevision(user_id, data, function (err, result) {
-      asyncHelper.endRequest(err);
-      if (err) {
+    api.storeRevision(user_id, data).then(
+      function (result) {
+        changeCrypto(function (crypto) {
+          return {...crypto,
+            changed: false,
+            revisionId: result.revision_id
+          };
+        });
+      },
+      function () {
         // Reset the changed flag to true as the state was not changed.
         changeCrypto(function (crypto) {
           return {...crypto, changed: true};
         });
-        return;
       }
-      changeCrypto(function (crypto) {
-        return {...crypto,
-          changed: false,
-          revisionId: result.revision_id
-        };
-      });
-    });
+    );
   };
 
   const resetState = function () {
@@ -158,18 +156,19 @@ const PlayFairTab = PureComponent(self => {
     changeCrypto(function (crypto) {
       return {...crypto, loading: true};
     });
-    api.loadRevision(revisionId, function (err, result) {
-      if (err) {
+    api.loadRevision(revisionId).then(
+      function (result) {
+        const revision = result.workspace_revision;
+        changeCrypto(function (crypto) {
+          return {...crypto, loading: false, tools: revision.state};
+        });
+      },
+      function () {
         changeCrypto(function (crypto) {
           return {...crypto, loading: false};
         });
-        return alert(err); // XXX
       }
-      const revision = result.workspace_revision;
-      changeCrypto(function (crypto) {
-        return {...crypto, loading: false, tools: revision.state};
-      });
-    });
+    );
   };
 
   const saveStateTooltip = (
@@ -230,6 +229,7 @@ const PlayFairTab = PureComponent(self => {
             <Tooltip content={resetStateTooltip}/>
           </span>
         </div>
+        {asyncHelper}
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
     );

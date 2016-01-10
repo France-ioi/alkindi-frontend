@@ -12,7 +12,7 @@ import HistoryTab from './tabs/history';
 import AnswersTab from './tabs/answers';
 import JoinTeamScreen from './ui/join_team_screen';
 import * as actions from './actions';
-import * as api from './api';
+import {BareApi} from './api';
 import {image_url} from './assets';
 
 const appSelector = function (state) {
@@ -29,7 +29,7 @@ let App = connect(appSelector)(PureComponent(self => {
   const refresh = function (user_id) {
     if (user_id === undefined)
       user_id = self.props.user.id;
-    api.readUser(user_id, function (err, res) {
+    BareApi.readUser(user_id).end(function (err, res) {
       if (err) return alert(err);
       self.props.dispatch({type: 'INIT', seed: res.body});
     });
@@ -61,7 +61,7 @@ let App = connect(appSelector)(PureComponent(self => {
     const {team} = self.props;
     if (team === undefined) {
       const {round} = self.props;
-      return <JoinTeamScreen user={user} round={round} onLogout={afterLogout} onJoinTeam={refresh} />;
+      return <JoinTeamScreen user={user} round={round} refresh={refresh} onLogout={afterLogout}/>;
     }
     // Interface principale...
     const {activeTabKey, enabledTabs, round, attempt, task} = self.props;
