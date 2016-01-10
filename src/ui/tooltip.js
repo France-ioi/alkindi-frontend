@@ -16,7 +16,7 @@ export default PureComponent(self => {
       );
       return (
          <Tooltip animation="zoom" trigger="hover click" overlay={overlay}>
-            <i className='fa fa-question-circle'/>
+            {self.props.children || <i className='fa fa-question-circle'/>}
          </Tooltip>
       );
     };
