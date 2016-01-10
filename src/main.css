@@ -89,8 +89,8 @@ table input:focus {
 #pageFooter {
   position: absolute;
   bottom: 0;
-  background-color: #ac1a1d;
-  color: #fff;
+  border-top: 2px solid #ac1a1d;
+  background-color: #f5f5f5;
   width: 100%;
   padding: 10px 0;
   height: 60px;
