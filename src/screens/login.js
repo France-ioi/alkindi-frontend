@@ -56,7 +56,7 @@ const LoginScreen = PureComponent(self => {
             <h3>Vous n'êtes pas qualifié(e) ou n'aviez pas participé</h3>
             <p>Vous pouvez rejoindre une équipe si vous avez un(e) camarade qualifié(e) qui vous y invite (la moitié au moins de l'équipe doit être qualifiée).</p>
             <p>Pour cela, cliquez sur le bouton suivant pour créez un compte.</p>
-            <p><Button onClick={login}>se connecter</Button></p>
+            <p><Button onClick={login}>créer son compte</Button></p>
             <p>Choisissez "Mot de passe" dans la première popup, puis "Créer un compte", et choisissez un login et un mot de passe pour vous authentifier.</p>
             <p>Une fois connecté, vous pourrez rejoindre une équipe en fournissant le code transmis par vos camarades.</p>
           </div>
