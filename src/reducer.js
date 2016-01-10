@@ -68,7 +68,8 @@ const reduceUseRevision = function (state, revision_id) {
     activeTabKey: 'cryptanalysis',
     crypto: {...state.crypto,
       tools: undefined,
-      revisionId: revision_id
+      revisionId: revision_id,
+      changed: false
     }
   };
 };
