@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
-import {Promise} from 'es6-promise';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
@@ -38,10 +37,6 @@ const HistoryTab = PureComponent(self => {
     });
   };
 
-  self.componentWillMount = function () {
-    onRefresh();
-  };
-
   const onRefresh = function () {
     const {attempt} = self.props;
     self.setState({refreshing: true});
@@ -59,7 +54,7 @@ const HistoryTab = PureComponent(self => {
       function () {
         self.setState({refreshing: false});
       });
-  }
+  };
 
   const renderRevisions = function (revisions) {
     const {users, workspaces, attempts} = self.state;
@@ -76,7 +71,6 @@ const HistoryTab = PureComponent(self => {
       return (
         <tr key={workspace.id+'.'+revision.id} className={classnames(classes)}>
           <td>
-            {' '}
             {isCurrent &&
               (isModified
                 ? <Tooltip content={<p>Cette version a été chargée dans l'onglet cryptanalyse, puis modifiée.</p>}>
@@ -112,6 +106,10 @@ const HistoryTab = PureComponent(self => {
         </tbody>
       </table>
     );
+  };
+
+  self.componentWillMount = function () {
+    onRefresh();
   };
 
   self.render = function () {
