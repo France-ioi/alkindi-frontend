@@ -17,7 +17,12 @@ const AnswersTab = PureComponent(self => {
 
   const submitAnswer = function (data) {
     const {attempt} = self.props;
-    api.submitAnswer(attempt.id, data);
+    api.submitAnswer(attempt.id, data).then(function (result) {
+      self.setState({
+        submittedAnswerId: result.attempt_id
+      });
+      onRefresh();
+    });
   };
 
   const onRefresh = function () {
