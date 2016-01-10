@@ -49,6 +49,7 @@ const JoinTeamScreen = PureComponent(self => {
         <p>
           Votre compte n'est pas rattaché à une qualification au deuxième tour du concours Alkindi. Vous avez deux possibilités pour participer :
         </p>
+        <h2>Si vous êtes qualifié(e)</h2>
         <p>
           Si vous vous êtes qualifié(e) lors du premier tour et disposez d'un code de qualification fourni par le coordinateur du concours dans votre établissement,
           saisissez-le pour le rattacher à votre compte.
@@ -110,10 +111,13 @@ const JoinTeamScreen = PureComponent(self => {
   };
   const renderNotQualifiedJoinTeam = function () {
     return renderJoinTeam(
-      <p>
-        Si vous n'êtes pas qualifié(e), vous pouvez rejoindre une équipe créée par un(e) camarade qualifié(e) en saisissant
-        ci-dessous le code de cette équipe.
-      </p>
+      <div>
+        <h2>Si vous n'êtes qualifié(e)</h2>
+        <p>
+          Si vous n'êtes pas qualifié(e), vous pouvez rejoindre une équipe créée par un(e) camarade qualifié(e) en saisissant
+          ci-dessous le code de cette équipe.
+        </p>
+      </div>
     );
   };
   self.render = function () {
