@@ -155,7 +155,7 @@ const JoinTeamScreen = PureComponent(self => {
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <AlkindiLogout user={user} logoutUrl={self.props.logout_url} onLogout={this.props.onLogout}/>
+          <AlkindiLogout user={user} logoutUrl={self.props.logoutUrl} onLogout={this.props.onLogout}/>
         </div>
         <AlkindiAuthHeader/>
         {round ? renderQualified(round) : renderNotQualified()}
