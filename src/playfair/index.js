@@ -117,7 +117,7 @@ export const PlayFair = PureComponent(self => {
 
 });
 
-export const Answer = PureComponent(self => {
+export const AnswerDialog = PureComponent(self => {
 
    let address, number1, number2;
    const refAddress = el => { address = el; };
@@ -132,21 +132,37 @@ export const Answer = PureComponent(self => {
 
    self.render = function () {
       return (
-        <div className='section playfair-answer'>
-          <p className="input">
-            <label htmlFor="answer-a">{'Adresse : '}</label>
-            <input type="text" id="answer-a" ref={refAddress} />
-          </p>
-          <p className="input">
-            <label htmlFor="answer-n1">{'Nombre 1 : '}</label>
-            <input type="text" id="answer-n1" ref={refNumber1} />
-          </p>
-          <p className="input">
-            <label htmlFor="answer-n2">{'Nombre 2 : '}</label>
-            <input type="text" id="answer-n2" ref={refNumber2} />
-          </p>
-          <p><Button onClick={onSubmit}>Soumettre</Button></p>
+        <div className='section playfair-answer-dialog'>
+            <p className="input">
+               <label htmlFor="answer-a">{'Adresse : '}</label>
+               <input type="text" id="answer-a" ref={refAddress} />
+            </p>
+            <p className="input">
+               <label htmlFor="answer-n1">{'Nombre 1 : '}</label>
+               <input type="text" id="answer-n1" ref={refNumber1} />
+            </p>
+            <p className="input">
+               <label htmlFor="answer-n2">{'Nombre 2 : '}</label>
+               <input type="text" id="answer-n2" ref={refNumber2} />
+            </p>
+            <p><Button onClick={onSubmit}>Soumettre</Button></p>
         </div>
+      );
+   };
+
+});
+
+export const Answer = PureComponent(self => {
+
+   self.render = function () {
+      const {answer} = self.props;
+      console.log(answer);
+      return (
+         <div className='playfair-answer'>
+            <span className='playfair-address'>{answer.a}</span>{' • '}
+            <span className='playfair-number1'>{answer.n1}</span>{' • '}
+            <span className='playfair-number2'>{answer.n2}</span>
+         </div>
       );
    };
 
