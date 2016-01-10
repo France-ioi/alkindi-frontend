@@ -5,22 +5,22 @@ import {createSelector} from 'reselect';
 import {PureComponent} from '../misc';
 import Api from '../api';
 import AsyncHelper from '../helpers/async_helper';
-
-/*
-const HistoryTabSelector = createSelector(
-  function (state) {
-    return state.historyTab;
-  },
-  function (historyTab) {
-    return historyTab;
-  }
-);
-*/
+import Tooltip from '../ui/tooltip';
+import RefreshButton from '../ui/refresh_button';
 
 const HistoryTab = PureComponent(self => {
 
   const api = Api();
   const asyncHelper = <AsyncHelper api={api}/>;
+
+  self.componentWillMount = function () {
+    const {attempt} = self.props;
+    api.listAttemptRevisions(attempt.id).then(
+      function (revisions) {
+        self.setState({revisions: revisions});
+      });
+  };
+
 
   // listAttemptRevisions
 
@@ -119,25 +119,25 @@ const HistoryTab = PureComponent(self => {
   };
 */
   self.render = function () {
-    /*
-    const {workspaces, currentWorkspace, allVersions} = self.props;
-    const workspacesSection = renderWorkspacesTable(workspaces, currentWorkspace);
-    const versionsSection =
-      currentWorkspace === undefined ?
-        renderAllVersions(allVersions) :
-        renderWorkspace(currentWorkspace);
-    */
+    const {revisions} = self.state;
     return (
-      <div className="wrapper">
-        <p>
-          Ici vous pourrez très bientôt (dans le courrant du week-end) accéder
-          à toutes vos versions enregistrées et à celles de vos co-équipiers.
-        </p>
+      <div>
+        <div style={{marginBottom: '10px'}}>
+          <div className='pull-right'>
+            <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>
+            {' '}
+            <RefreshButton/>
+          </div>
+        </div>
+        {asyncHelper}
+        {revisions ? JSON.stringify(revisions) : <p>Chargement en cours...</p>}
       </div>
     );
   };
 }, _self => {
-  return {};
+  return {
+    revisions: undefined
+  };
 });
 
 export default HistoryTab;
