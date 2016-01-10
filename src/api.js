@@ -57,6 +57,7 @@ export const Api = function () {
             return;
           }
           const options = {refresh: true};
+          options.method = res.req.method;
           resolve(res.body, options);
           helper && helper.end(options);
         });
