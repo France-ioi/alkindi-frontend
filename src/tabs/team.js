@@ -166,7 +166,8 @@ const TeamTab = PureComponent(self => {
     // If the team is already locked, no confirmation is asked.
     if (team.is_locked)
       return accessTask();
-    window.confirm("Confirmez-vous définitivement la composition de votre équipe ?", accessTask);
+    if (window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
+      return accessTask();
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
