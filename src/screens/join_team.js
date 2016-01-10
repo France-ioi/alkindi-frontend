@@ -5,7 +5,7 @@ import {PureComponent} from '../misc';
 import Notifier from '../ui/notifier';
 import Api from '../api';
 import AuthHeader from '../ui/auth_header';
-import Logaut from '../ui/logout';
+import Logout from '../ui/logout';
 
 /*
 
