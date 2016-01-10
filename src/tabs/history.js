@@ -2,12 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
+import {Promise} from 'es6-promise';
 
 import {PureComponent} from '../misc';
 import Api from '../api';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
-import RefreshButton from '../ui/refresh_button';
+import {RefreshButton} from '../ui/refresh_button';
 
 const HistoryTab = PureComponent(self => {
 
@@ -29,18 +30,27 @@ const HistoryTab = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
+    onRefresh();
+  };
+
+  const onRefresh = function () {
     const {attempt} = self.props;
+    self.setState({refreshing: true});
     api.listAttemptRevisions(attempt.id).then(
       function (result) {
         addHandlers(result.revisions);
         self.setState({
+          refreshing: false,
           revisions: result.revisions,
           users: toMap(result.users),
           workspaces: toMap(result.workspaces),
           attempts: toMap(result.attempts)
         });
+      },
+      function () {
+        self.setState({refreshing: false});
       });
-  };
+  }
 
 
   // listAttemptRevisions
@@ -146,14 +156,14 @@ const HistoryTab = PureComponent(self => {
   };
 
   self.render = function () {
-    const {revisions} = self.state;
+    const {revisions, refreshing} = self.state;
     return (
       <div>
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>
             {' '}
-            <RefreshButton/>
+            <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
           </div>
         </div>
         {notifier}
@@ -165,6 +175,7 @@ const HistoryTab = PureComponent(self => {
   };
 }, _self => {
   return {
+    refreshing: true,
     revisions: undefined
   };
 });
