@@ -61,7 +61,7 @@ const reduceSetActiveTab = function (state, tabKey) {
   if (activeTabKey === undefined || !enabledTabs[activeTabKey])
     activeTabKey = 'team';
   return {...state, activeTabKey, enabledTabs};
-}
+};
 
 const reduceSetUser = function (state, user) {
   return {...state, user};

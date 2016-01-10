@@ -115,7 +115,7 @@ const Notifier = PureComponent(self => {
         {state === 'success' && <Alert bsStyle='success'>Opération effectuée.</Alert>}
         {state === 'busy' && <Alert bsStyle='info'>Veuillez patienter pendant le traitement de votre action...</Alert>}
       </div>
-      )
+      );
   };
 
 }, self => {
