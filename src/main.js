@@ -93,6 +93,7 @@ window.Alkindi = (function () {
   };
 
   Alkindi.install = function (mainElement) {
+    /*
     // Enable auto-step interval.
     // XXX This should be done by an action.
     function autoStepCallback () {
@@ -102,6 +103,7 @@ window.Alkindi = (function () {
       store.dispatch({type: 'STEP'});
     }
     const _autoStepInterval = setInterval(autoStepCallback, 100);
+    */
     // Insert HTML.
     ReactDOM.render(<Provider store={store}><App/></Provider>, mainElement);
   };
