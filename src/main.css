@@ -254,7 +254,11 @@ character substitutions tables
 }
 
 
-/* Authentication header layout */
+/*
+
+ Authentication header layout
+
+*/
 #auth-header {
   margin-bottom: 10px;
 }
@@ -292,7 +296,12 @@ character substitutions tables
   padding: 8px;
 }
 
-/* General header layout */
+
+/*
+
+ General header layout
+
+*/
 #header {
   border-bottom: 1px solid #B47238;
   margin-bottom: 10px;
@@ -357,12 +366,7 @@ character substitutions tables
 #logout > span {
   display: block;
 }
-/* Formulaires de création */
-/*
-.dialog {
-  padding-left: 245px;
-}
-*/
+
 .tabButton {
   display: table-cell;
   width: 250px;
@@ -446,34 +450,7 @@ a.cell-link {
 .selected a.cell-link {
   color: #fff;
 }
-/* Dev elements */
-.dev {
-  color: #4f4;
-}
-.dev-buttons {
-  border-bottom: 1px solid #333;
-  padding: 3px;
-}
-.dev-buttons button {
-  display: table-cell;
-  font-size: 16px;
-  text-decoration: none;
-  color: #000;
-  margin: 3px 0;
-  padding: 3px 10px;
-  border: 1px solid #333;
-  text-align: center;
-  font-weight: normal;
-  background-color: #F0E9D8;
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-       -o-border-radius: 5px;
-          border-radius: 5px;
-}
-.dev-buttons button:hover,
-.dev-buttons button:focus {
-  background-color: #E2D9C8;
-}
+
 
 /*
 
@@ -897,7 +874,11 @@ td .bigramLetter {
 .applySubstitution hr {
   margin: 3px 0;
 }
-/* Team tab -- access codes */
+/*
+
+ Team tab -- access codes
+
+*/
 .access-code-block {
   text-align: center;
   margin: 15px 0;
@@ -923,7 +904,13 @@ td.access-code button {
 td.access-code i {
   color: #080;
 }
-/* Task tab */
+
+
+/*
+
+Task tab
+
+*/
 .task-cipher-text {
   white-space: pre-wrap;
   font-family: "Lucida Console", Monaco, monospace;
@@ -932,6 +919,40 @@ td.access-code i {
 iframe.task {
   width: 100%;
   height: 500px;
+}
+
+
+/*
+
+ Dev elements
+
+*/
+.dev {
+  color: #4f4;
+}
+.dev-buttons {
+  border-bottom: 1px solid #333;
+  padding: 3px;
+}
+.dev-buttons button {
+  display: table-cell;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000;
+  margin: 3px 0;
+  padding: 3px 10px;
+  border: 1px solid #333;
+  text-align: center;
+  font-weight: normal;
+  background-color: #F0E9D8;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+       -o-border-radius: 5px;
+          border-radius: 5px;
+}
+.dev-buttons button:hover,
+.dev-buttons button:focus {
+  background-color: #E2D9C8;
 }
 
 @import "rc-tooltip/assets/bootstrap";
