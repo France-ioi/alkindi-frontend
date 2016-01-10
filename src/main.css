@@ -65,9 +65,6 @@ table th {
   border: 1px solid #777;
   padding: 3px 5px;
 }
-table button[type=button] {
-  padding: 0 10px;
-}
 table input {
   margin: 3px 0;
 }
@@ -899,6 +896,7 @@ td.access-code button {
   height: 26px;
   vertical-align: bottom;
   margin-bottom: 3px;
+  line-height: 1;
 }
 td.access-code i {
   color: #080;
