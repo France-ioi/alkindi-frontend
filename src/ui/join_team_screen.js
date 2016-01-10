@@ -112,7 +112,7 @@ const JoinTeamScreen = PureComponent(self => {
   const renderNotQualifiedJoinTeam = function () {
     return renderJoinTeam(
       <div>
-        <h2>Si vous n'êtes qualifié(e)</h2>
+        <h2>Si vous n'êtes pas qualifié(e)</h2>
         <p>
           Si vous n'êtes pas qualifié(e), vous pouvez rejoindre une équipe créée par un(e) camarade qualifié(e) en saisissant
           ci-dessous le code de cette équipe.
