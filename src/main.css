@@ -12,7 +12,7 @@ html {
 }
 body {
   font-family: Arial, sans-serif;
-  margin: 8px 0 60px;
+  margin: 8px 0 80px;
   padding: 0;
   color: #000;
 }
@@ -93,6 +93,10 @@ table input:focus {
   color: #fff;
   width: 100%;
   padding: 10px 0;
+  height: 60px;
+}
+#pageFooter .wrapper {
+  padding: 0 10px;
 }
 /* radio buttons with hanging labels */
 .radio-label {
