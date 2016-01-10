@@ -156,7 +156,6 @@ export const Answer = PureComponent(self => {
 
    self.render = function () {
       const {answer} = self.props;
-      console.log(answer);
       return (
          <div className='playfair-answer'>
             <span className='playfair-address'>{answer.a}</span>{' • '}
