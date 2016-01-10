@@ -37,7 +37,7 @@ export const MainScreen = PureComponent(self => {
         content = <HistoryTab attempt={self.props.attempt}/>;
         break;
       case 'answers':
-        content = <AnswersTab/>;
+        content = <AnswersTab attempt={self.props.attempt}/>;
         break;
     }
     return (
