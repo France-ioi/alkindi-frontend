@@ -31,13 +31,14 @@ with open(os.path.join(package_name, '__init__.py'), 'w') as f:
 print("copying project assets")
 if min:
     copy2('../dist/main.min.js', target)
-    copy2('../dist/main.min.js.map', target)
+    # copy2('../dist/main.min.js.map', target)
     copy2('../dist/main.min.css', target)
-    copy2('../dist/main.min.css.map', target)
+    # copy2('../dist/main.min.css.map', target)
 else:
     copy2('../dist/main.js', target)
     copy2('../dist/main.js.map', target)
     copy2('../dist/main.css', target)
+    copy2('../dist/main.css.map', target)
 
 # images
 copytree('../images', os.path.join(target, 'images'))
