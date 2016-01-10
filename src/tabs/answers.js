@@ -58,7 +58,7 @@ const AnswersTab = PureComponent(self => {
           <td>{answer.ordinal}</td>
           <td>{new Date(answer.created_at).toLocaleString()}</td>
           <td><Answer answer={answer.answer}/></td>
-          <td>{Math.round(answer.score * 100)} %</td>
+          <td>{answer.score}</td>
           <td>
             {answer.is_solution &&
               <Tooltip content={<p>Cette réponse valide l'épreuve, félicitations !</p>}>
