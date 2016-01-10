@@ -165,7 +165,7 @@ const TeamTab = PureComponent(self => {
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
-    if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos co-équipiers.")) {
+    if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos coéquipiers.")) {
       api.resetHints(user_id);
     }
   };
@@ -441,7 +441,7 @@ const TeamTab = PureComponent(self => {
         <p>
           Pendant le sujet d'entrainement uniquement, vous pouvez effacer tous
           les indices que vous avez demandés en cliquant le bouton ci-dessous.
-          Attention, cela affectera tous vos co-équipiers.
+          Attention, cela affectera tous vos coéquipiers.
         </p>
         <p className="text-center">
           <Button onClick={onResetHints}>

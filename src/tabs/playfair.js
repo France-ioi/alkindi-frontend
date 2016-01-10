@@ -173,7 +173,7 @@ const PlayFairTab = PureComponent(self => {
       Enregistrez de temps en temps votre travail pour ne pas risquer de le
       perdre.
       Chaque version que vous enregistrez sera disponible pour vous et vos
-      co-équipiers dans l'onglet Historique.
+      coéquipiers dans l'onglet Historique.
     </p>
   );
 
@@ -209,7 +209,7 @@ const PlayFairTab = PureComponent(self => {
       <div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
           <div className='pull-right'>
-            <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos co-équipiers depuis le dernier chargement de la page.</p>}/>
+            <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos coéquipiers depuis le dernier chargement de la page.</p>}/>
             {' '}
             <RefreshButton/>
           </div>
