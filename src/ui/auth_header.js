@@ -3,7 +3,7 @@ import React from 'react';
 import {PureComponent} from '../misc';
 import {image_url} from '../assets';
 
-const AlkindiHeader = PureComponent(self => {
+export default PureComponent(self => {
   self.render = function () {
     return (
         <div id="auth-header">
@@ -18,5 +18,3 @@ const AlkindiHeader = PureComponent(self => {
     );
   };
 });
-
-export default AlkindiHeader;

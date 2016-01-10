@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {PureComponent} from '../misc';
-import AlkindiAuthHeader from '../ui/auth_header';
+import AuthHeader from '../ui/auth_header';
 
 const LoginScreen = PureComponent(self => {
   let loginWindow;
@@ -29,7 +29,7 @@ const LoginScreen = PureComponent(self => {
   self.render = function () {
     return (
       <div className="wrapper">
-        <AlkindiAuthHeader/>
+        <AuthHeader/>
         <div>
           <p>Pour continuer, authentifiez-vous auprès de la plateforme France-ioi
           en cliquant sur le bouton ci-dessous.</p>

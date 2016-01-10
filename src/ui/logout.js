@@ -3,7 +3,7 @@ import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 
-let AlkindiLogout = PureComponent(self => {
+export default PureComponent(self => {
   const logout = function () {
     window.open(self.props.logoutUrl, "alkindi:login",
       "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
@@ -30,5 +30,3 @@ let AlkindiLogout = PureComponent(self => {
     );
   };
 });
-
-export default AlkindiLogout;

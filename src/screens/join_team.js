@@ -4,8 +4,8 @@ import {Alert, Button} from 'react-bootstrap';
 import {PureComponent} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
 import Api from '../api';
-import AlkindiAuthHeader from '../ui/auth_header';
-import AlkindiLogout from '../ui/logout';
+import AuthHeader from '../ui/auth_header';
+import Logaut from '../ui/logout';
 
 /*
 
@@ -155,9 +155,9 @@ const JoinTeamScreen = PureComponent(self => {
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <AlkindiLogout user={user} logoutUrl={self.props.logoutUrl} onLogout={this.props.onLogout}/>
+          <Logout user={user} logoutUrl={self.props.logoutUrl} onLogout={this.props.onLogout}/>
         </div>
-        <AlkindiAuthHeader/>
+        <AuthHeader/>
         {round ? renderQualified(round) : renderNotQualified()}
         {round && renderCreateTeam()}
         {round && joinTeam && renderQualifiedJoinTeam()}
