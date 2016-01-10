@@ -31,18 +31,18 @@ const LoginScreen = PureComponent(self => {
     return (
       <div className="wrapper">
         <AuthHeader/>
-        <div class="section">
+        <div className="section">
           <p>Bienvenue sur la plateforme du 2e tour du concours Alkindi.</p>
         </div>
-        <div class="section">
+        <div className="section">
           <h2>Si vous avez déjà créé votre compte</h2>
           <p>Authentifiez-vous auprès de la plateforme France-ioi en cliquant
              sur le bouton ci-dessous.</p>
           <p><Button onClick={login}>se connecter</Button></p>
         </div>
-        <div class="section">
+        <div className="section">
           <h2>Sinon, deux cas sont possibles :</h2>
-          <div class="section">
+          <div className="section">
             <h3>Vous êtes qualifié(e) suite au premier tour et disposez d'un code de qualification</h3>
             <p>
               {'Commencez par valider votre code de qualification et créer un compte France-ioi sur '}
@@ -52,7 +52,7 @@ const LoginScreen = PureComponent(self => {
               {', puis revenez vous connecter sur cette page.'}
             </p>
           </div>
-          <div class="section">
+          <div className="section">
             <h3>Vous n'êtes pas qualifié(e) ou n'aviez pas participé</h3>
             <p>Vous pouvez rejoindre une équipe si vous avez un(e) camarade qualifié(e) qui vous y invite (la moitié au moins de l'équipe doit être qualifiée).</p>
             <p>Pour cela, cliquez sur le bouton suivant pour créez un compte.</p>
