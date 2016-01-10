@@ -6,10 +6,13 @@
        url('../ext/alien.woff') format('woff'),
        url('../ext/alien.ttf') format('truetype');
 }
-
+html {
+  min-height: 100%;
+  position: relative;
+}
 body {
   font-family: Arial, sans-serif;
-  margin: 8px 0 0;
+  margin: 8px 0 60px;
   padding: 0;
   color: #000;
 }
@@ -83,6 +86,14 @@ table input:focus {
   color: #0f33ff;
   cursor: pointer;
 }
+.pageFooter {
+  position: absolute;
+  bottom: 0;
+  background-color: #ac1a1d;
+  color: #fff;
+  width: 100%;
+  padding: 10px 0;
+}
 /* radio buttons with hanging labels */
 .radio-label {
   display: inline-block;
@@ -102,7 +113,6 @@ table input:focus {
   min-width: 650px;
   margin: 0 auto;
 }
-
 
 .textBlock {
   font-family: "Lucida Console", Monaco, monospace;
