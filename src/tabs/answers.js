@@ -101,7 +101,9 @@ const AnswersTab = PureComponent(self => {
         <AnswerDialog submit={submitAnswer}/>
         {answers === undefined
           ? <p>Chargement en cours...</p>
-          : renderAnswers(answers)}
+          : (answers.length == 0
+             ? <p>Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
+             : renderAnswers(answers))}
       </div>
     );
   };
