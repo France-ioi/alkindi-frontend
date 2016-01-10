@@ -141,7 +141,6 @@ const HistoryTab = PureComponent(self => {
       const creator = users[revision.creator_id];
       const isCurrent = currentRevisionId === revision.id;
       const isModified = isCurrent && cryptoChanged;
-      console.log(revision.id, isCurrent, isModified);
       const classes = [
         isCurrent && 'revision-isCurrent',
         isModified && 'revision-isModified'
