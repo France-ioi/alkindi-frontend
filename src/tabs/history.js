@@ -199,6 +199,16 @@ const HistoryTab = PureComponent(self => {
           </div>
         </div>
         {notifier}
+        <p>
+          Ci-dessous, vous pouvez trouver toutes les versions précédemment
+          enregistrées par vous et vos coéquipiers.
+        </p>
+        <p>
+          Vous pouvez à tout moment recharger n'importe-laquelle de ces
+          versions pour en repartir.
+          Elle ne sera pas modifiée, mais sera copiée si vous faites des
+          changements et les enregistrez.
+        </p>
         {revisions === undefined
           ? <p>Chargement en cours...</p>
           : renderRevisions(revisions)}
