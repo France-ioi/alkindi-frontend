@@ -161,7 +161,10 @@ const HistoryTab = PureComponent(self => {
           <td>{new Date(revision.created_at).toLocaleString()}</td>
           <td>{creator.username}</td>
           <td>
-            <Button onClick={revision.load}>utiliser</Button>
+            <Button onClick={revision.load}>
+              <i className="fa fa-code-fork"/>
+              {' recharger'}
+            </Button>
           </td>
         </tr>
       );
@@ -171,7 +174,7 @@ const HistoryTab = PureComponent(self => {
         <thead>
           <tr>
             <th></th>
-            <th>Modifié</th>
+            <th>Date d'enregistrement</th>
             <th>Auteur</th>
             <th></th>
           </tr>
