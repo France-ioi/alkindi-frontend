@@ -159,8 +159,14 @@ const TeamTab = PureComponent(self => {
     api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
   };
   const onAccessTask = function () {
-    const user_id = self.props.user.id;
-    api.assignAttemptTask(user_id);
+    const {user, team} = self.props;
+    const accessTask = function () {
+      api.assignAttemptTask(user.id);
+    };
+    // If the team is already locked, no confirmation is asked.
+    if (team.is_locked)
+      return accessTask();
+    window.confirm("Confirmez-vous définitivement la composition de votre équipe ?", accessTask);
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
@@ -386,24 +392,24 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderUnlockTask = function (attempt) {
-    const notice = attempt.is_training &&
-      (<p>
-        <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
-        plus changer la composition de votre équipe pendant le reste du concours.
-      </p>);
+  const renderUnlockTask = function () {
+    const {team, attempt} = self.props;
     return (
       <div className="section">
         <p>
           Les membres de votre équipe ont donné leur accord pour accéder au sujet,
           vous pouvez maintenant le déverouiller en cliquant.
         </p>
+        {!team.is_locked &&
+          <p>
+            <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
+            plus changer la composition de votre équipe pendant le reste du concours.
+          </p>}
         <p className="text-center">
           <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
             accéder au sujet <i className="fa fa-arrow-right"/>
           </Button>
         </p>
-        {notice}
       </div>
     );
   };
@@ -492,7 +498,7 @@ const TeamTab = PureComponent(self => {
                 : (attempt.needs_codes
                    ? renderEnterCodes(attempt)
                    : (task === undefined
-                      ? renderUnlockTask(attempt)
+                      ? renderUnlockTask()
                       : (showOwnAccessCode
                          ? renderLateEnterCode()
                          : (attempt.is_unsolved
