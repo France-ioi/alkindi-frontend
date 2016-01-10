@@ -32,7 +32,8 @@ export const BareApi = {
   getHint: (user_id, data) => post('users/'+user_id+'/get_hint', data),
   resetHints: (user_id) => post('users/'+user_id+'/reset_hints'),
   storeRevision: (user_id, data) => post('users/'+user_id+'/store_revision', data),
-  loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)
+  loadRevision: (revision_id) => get('workspace_revisions/'+revision_id),
+  listAttemptRevisions: (attempt_id) => get('attempts/'+attempt_id+'/revisions')
 };
 
 export const Api = function () {
