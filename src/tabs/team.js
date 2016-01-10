@@ -7,6 +7,7 @@ import {PureComponent} from '../misc';
 import Api from '../api';
 import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
+import Tooltip from '../ui/tooltip';
 
 const TestTeamTab = function (self) {
   const setTeam = function (team) {
@@ -470,6 +471,8 @@ const TeamTab = PureComponent(self => {
     return (
       <div className="wrapper">
         <div className="pull-right">
+          <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de votre équipe.</p>}/>
+          {' '}
           <RefreshButton/>
         </div>
         <h1>{round.title}</h1>
