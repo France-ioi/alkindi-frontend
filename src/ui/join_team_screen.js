@@ -34,7 +34,6 @@ const JoinTeamScreen = PureComponent(self => {
     self.setState({qualifyError: undefined});
     api.qualifyUser(user_id, data).then(function (result) {
       const {codeStatus, userIDStatus, profileUpdated} = result;
-      console.log('outcome', codeStatus, userIDStatus, profileUpdated);
       if (codeStatus === 'registered' && userIDStatus === 'registered') {
         if (!profileUpdated) {
           self.setState({qualifyError: "Votre session a expirée, rechargez la page pour vous reconnecter."});
