@@ -108,7 +108,6 @@ const PlayFairTab = PureComponent(self => {
     changeCrypto(function (crypto) {
       return {...crypto, changed: false};
     });
-    asyncHelper.beginRequest();
     api.storeRevision(user_id, data).then(
       function (result) {
         changeCrypto(function (crypto) {
