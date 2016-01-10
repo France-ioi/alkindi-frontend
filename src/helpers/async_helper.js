@@ -58,12 +58,13 @@ const AsyncHelper = PureComponent(self => {
   };
 
   const end = function (options) {
-    if (options.refresh)
-      refresh();
     if (options.method === 'GET') {
-      // GET requests do not need a success message.
+      // GET requests do not need a success message, and do not need
+      // to perform a refresh.
       self.setState({state: 'idle'});
     } else {
+      if (options.refresh)
+        refresh();
       self.setState({
         state: 'success',
         message: undefined,
