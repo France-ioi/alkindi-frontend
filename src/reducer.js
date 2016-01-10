@@ -63,6 +63,16 @@ const reduceSetActiveTab = function (state, tabKey) {
   return {...state, activeTabKey, enabledTabs};
 };
 
+const reduceUseRevision = function (state, revision_id) {
+  return {...state,
+    activeTabKey: 'cryptanalysis',
+    crypto: {...state.crypto,
+      tools: undefined,
+      revisionId: revision_id
+    }
+  };
+};
+
 const reduceSetUser = function (state, user) {
   return {...state, user};
 };
@@ -219,6 +229,8 @@ const actualReduce = function (state, action) {
       return reduceSetActiveTab(state, action.tabKey);
     case 'SET_CRYPTO':
       return {...state, crypto: action.crypto};
+    case 'USE_REVISION':
+      return reduceUseRevision(state, action.revision_id);
     // case 'ADD_TOOL':
     //   return reduceAddTool(state, action.toolType, action.toolState);
     // case 'REMOVE_TOOL':
