@@ -1,11 +1,3 @@
-
-@font-face {
-  font-family: 'Alien';
-  src: url('../ext/alien.eot');
-  src: url('../ext/alien.eot?#iefix') format('embedded-opentype'),
-       url('../ext/alien.woff') format('woff'),
-       url('../ext/alien.ttf') format('truetype');
-}
 html {
   min-height: 100%;
   position: relative;
