@@ -18,7 +18,7 @@ JoinTeamScreen interface:
 */
 const JoinTeamScreen = PureComponent(self => {
   const api = Api();
-  const notifier = <Notifer api={api}/>;
+  const notifier = <Notifier api={api}/>;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
   const onShowJoinTeam = function () {
