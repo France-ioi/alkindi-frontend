@@ -1,5 +1,6 @@
 import React from 'react';
 import {Alert} from 'react-bootstrap';
+import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 
@@ -33,20 +34,42 @@ const AsyncHelper = PureComponent(self => {
     setError("Une erreur indéterminée est survenue, merci de ré-essayer un peu plus tard.");
   };
 
+  const callOnRefresh = function (success) {
+    const {onRefresh} = self.props;
+    if (typeof onRefresh === 'function')
+      onRefresh(succes);
+  }
+
+  const refresh = function () {
+    const {user, refresh} = self.props;
+    if (user === undefined)
+      return callOnRefresh(false)
+    return self.props.refresh(user.id).then(function () {
+      callOnRefresh(true);
+    }, function () {
+      callOnRefresh(false);
+    });
+  }
+
   const endWithBackendError = function (result) {
     const code = result.error;
-    self.props.refresh();
+    refresh();
     return setError(ErrorMessages[code] || code);
   };
 
   const end = function (options) {
     if (options.refresh)
-      self.props.refresh();
-    self.setState({
-      state: 'success',
-      message: undefined,
-      timeout: setTimer(setIdle)
-    });
+      refresh();
+    if (options.method === 'GET') {
+      // GET requests do not need a success message.
+      self.setState({state: 'idle'});
+    } else {
+      self.setState({
+        state: 'success',
+        message: undefined,
+        timeout: setTimer(setIdle)
+      });
+    }
   };
 
   const setError = function (message) {
@@ -100,4 +123,9 @@ const AsyncHelper = PureComponent(self => {
   return {state: 'idle'};
 });
 
-export default AsyncHelper;
+const selector = function (state, _props) {
+  const {refresh, user} = state;
+  return {refresh, user};
+};
+
+export default connect(selector)(AsyncHelper);

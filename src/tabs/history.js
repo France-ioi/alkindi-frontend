@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 
 import {PureComponent} from '../misc';
+import Api from '../api';
+import AsyncHelper from '../helpers/async_helper';
 
 /*
 const HistoryTabSelector = createSelector(
@@ -16,6 +18,12 @@ const HistoryTabSelector = createSelector(
 */
 
 const HistoryTab = PureComponent(self => {
+
+  const api = Api();
+  const asyncHelper = <AsyncHelper api={api}/>;
+
+  // listAttemptRevisions
+
 /*
   const workspaceListHead = (
     <thead>

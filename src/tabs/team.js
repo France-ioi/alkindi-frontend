@@ -4,8 +4,9 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
-import AsyncHelper from '../helpers/async_helper';
 import Api from '../api';
+import AsyncHelper from '../helpers/async_helper';
+import RefreshButton from '../ui/refresh_button';
 
 const TestTeamTab = function (self) {
   const setTeam = function (team) {
@@ -111,15 +112,8 @@ const TestTeamTab = function (self) {
 };
 
 const TeamTab = PureComponent(self => {
-  const refresh = function () {
-    self.setState({access_code: undefined});
-    self.props.refresh();
-  };
-  const sink = function (helper) {
-    console.log(helper);
-  };
+
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api} refresh={refresh}/>;
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -175,15 +169,12 @@ const TeamTab = PureComponent(self => {
       api.resetHints(user_id);
     }
   };
-  const renderRefreshButton = function () {
-    return (
-      <div className='pull-right'>
-        <Button bsStyle='primary' onClick={refresh}>
-          <i className="fa fa-refresh"/>
-        </Button>
-      </div>
-    );
+
+  const clearAccessCode = function () {
+    self.setState({access_code: undefined});
   };
+  const asyncHelper = <AsyncHelper api={api} onRefresh={clearAccessCode}/>;
+
   const renderRoundPrelude = function (round) {
     return (
       <div>
@@ -460,6 +451,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+
   const testing = false && TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, task, round_has_not_started} = self.props;
@@ -477,7 +469,9 @@ const TeamTab = PureComponent(self => {
     // traversal corresponds to chronological order.
     return (
       <div className="wrapper">
-        {renderRefreshButton()}
+        <div className="pull-right">
+          <RefreshButton/>
+        </div>
         <h1>{round.title}</h1>
         {attempt === undefined
          ? renderRoundPrelude(round)

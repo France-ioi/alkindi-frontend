@@ -5,15 +5,26 @@ const initialState = {
   tools: [],
   activeTabKey: undefined,
   enabledTabs: {},
-  crypto: {}
+  crypto: {},
+  refreshing: true
 };
 
 const seedProps = ['user', 'team', 'round', 'attempt', 'task', 'my_latest_revision_id'];
 
-const seedState = function (seed, oldState) {
+const reduceInit = function (state, refresh) {
+  return {...state, refresh};
+};
+
+const reduceBeginRefresh = function (state, user_id) {
+  console.log('begin refresh', user_id);
+  return {...state, refreshing: true};
+};
+
+const reduceEndRefresh = function (state, seed) {
+  console.log('end refresh');
   if (!seed)
     seed = {};
-  const state = {...initialState, ...oldState};
+  state = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
   // Overwrite state with seed, even missing seed props.
   seedProps.forEach(function (key) {
     state[key] = seed[key];
@@ -185,11 +196,15 @@ const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return seedState(action.seed, state);
+      return reduceInit(state, action.refresh);
+    case 'BEGIN_REFRESH':
+      return reduceBeginRefresh(state, action.user_id);
+    case 'END_REFRESH':
+      return reduceEndRefresh(state, action.seed);
     case 'AFTER_LOGOUT':
-      return seedState();
-    case 'TICK':
-      return reduceTick(state);
+      return reduceSeed(state, undefined);
+    // case 'TICK':
+    //   return reduceTick(state);
     case 'SET_USER':
       return reduceSetUser(state, action.user);
     case 'SET_TEAM':
@@ -200,8 +215,8 @@ const actualReduce = function (state, action) {
       return reduceSetAttempt(state, action.attempt);
     case 'SET_TASK':
       return reduceSetTask(state, action.task);
-    case 'SET_WORKSPACES':
-      return reduceSetWorkspaces(state, action.workspaces);
+    // case 'SET_WORKSPACES':
+    //   return reduceSetWorkspaces(state, action.workspaces);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
     case 'SET_CRYPTO':

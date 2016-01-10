@@ -21,17 +21,17 @@ export const MainScreen = PureComponent(self => {
 
    self.render = function () {
     // Interface principale...
-    const {activeTabKey, enabledTabs, refresh, logoutUrl, onLogout} = self.props;
+    const {activeTabKey, enabledTabs, logoutUrl, onLogout} = self.props;
     let content = false;
     switch (activeTabKey) {
       case 'team':
-        content = <TeamTab refresh={refresh} />;
+        content = <TeamTab/>;
         break;
       case 'task':
         content = <TaskTab round={self.props.round} attempt={self.props.attempt} task={self.props.task} />;
         break;
       case 'cryptanalysis':
-        content = <PlayFairTab refresh={refresh} />;
+        content = <PlayFairTab/>;
         break;
       case 'history':
         content = <HistoryTab/>;

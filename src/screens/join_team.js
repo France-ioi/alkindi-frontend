@@ -13,16 +13,12 @@ JoinTeamScreen interface:
 
   user: user object (also passed to the logout button)
   round: round object (if the user can create a team)
-  refresh: callback to reload the user and round from the server
   onLogout: called after the user has logged out
 
 */
 const JoinTeamScreen = PureComponent(self => {
-  const refresh = function () {
-    self.props.refresh();
-  };
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api} refresh={refresh}/>;
+  const asyncHelper = <AsyncHelper api={api}/>;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
   const onShowJoinTeam = function () {

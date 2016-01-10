@@ -12,10 +12,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
+import {Promise} from 'es6-promise';
 
 import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
+import {BareApi} from './api';
 
 // Install a global error handler.
 let logErrors = true;
@@ -66,12 +68,28 @@ window.Alkindi = (function () {
   // Create the global state store.
   let store = Alkindi.store = createStore(reducer);
 
+  const refresh = function (user_id) {
+    return new Promise(function (resolve, reject) {
+      store.dispatch({type: 'BEGIN_REFRESH', user_id});
+      BareApi.readUser(user_id).end(function (err, res) {
+        if (err) {
+          alert(err);
+          reject();
+        } else {
+          store.dispatch({type: 'END_REFRESH', seed: res.body});
+          resolve();
+        }
+      });
+    });
+  };
+
   Alkindi.configure = function (config) {
     Alkindi.config = config;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
+    store.dispatch({type: 'INIT', refresh: refresh});
     if ('seed' in config)
-      store.dispatch({type: 'INIT', seed: config.seed});
+      store.dispatch({type: 'END_REFRESH', seed: config.seed});
   };
 
   Alkindi.install = function (mainElement) {

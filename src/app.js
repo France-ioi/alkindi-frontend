@@ -2,31 +2,22 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {PureComponent} from './misc';
-import {BareApi} from './api';
 
 import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 
-const appSelector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto} = state;
+export const selector = function (state) {
+  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto, refresh} = state;
   if (!user)
-    return {};
+    return {refresh};
   if (!team)
     return {user, round};
   const changed = crypto.changed;
   return {activeTabKey, enabledTabs, user, team, round, attempt, task, changed};
 };
 
-let App = connect(appSelector)(PureComponent(self => {
-  const refresh = function (user_id) {
-    if (user_id === undefined)
-      user_id = self.props.user.id;
-    BareApi.readUser(user_id).end(function (err, res) {
-      if (err) return alert(err);
-      self.props.dispatch({type: 'INIT', seed: res.body});
-    });
-  };
+export const App = PureComponent(self => {
   const afterLogout = function () {
     // Reload the page after the user has logged out to obtain a new session
     // and CSRF token.
@@ -42,21 +33,21 @@ let App = connect(appSelector)(PureComponent(self => {
     });
   };
   self.render = function () {
-    const {user, team, round} = self.props;
+    const {user, team, round, refresh} = self.props;
 
     // Si on n'a pas d'utilisateur, on affiche l'écran de login.
     if (user === undefined)
-      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={refresh} />;
+      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={refresh}/>;
 
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
     if (team === undefined)
-      return <JoinTeamScreen user={user} round={round} refresh={refresh} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
+      return <JoinTeamScreen user={user} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
 
     // Sinon, on affiche l'écran principal.
-    return <MainScreen user={user} team={team} round={round} refresh={refresh} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
+    return <MainScreen user={user} team={team} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
 
   };
-}));
+});
 
-export default App;
+export default connect(selector)(App);

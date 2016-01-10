@@ -6,6 +6,7 @@ import {PureComponent, at, put} from '../misc';
 import AsyncHelper from '../helpers/async_helper';
 import Api from '../api';
 import Tooltip from '../ui/tooltip';
+import RefreshButton from '../ui/refresh_button';
 
 import PlayFair from '../playfair';
 import {makeAlphabet} from '../playfair/utils/cell';
@@ -56,11 +57,8 @@ const initialTools = [
 
 const PlayFairTab = PureComponent(self => {
 
-  const refresh = function () {
-    self.props.refresh();
-  };
   const api = Api();
-  const asyncHelper = <AsyncHelper api={api} refresh={refresh}/>;
+  const asyncHelper = <AsyncHelper api={api}/>;
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
@@ -192,7 +190,11 @@ const PlayFairTab = PureComponent(self => {
     const {task, crypto} = self.props;
     const {tools, loading, changed} = crypto;
     if (loading || tools === undefined)
-      return (<div>Chargement en cours, veuillez patienter...</div>);
+      return (
+        <div>
+          Chargement en cours, veuillez patienter...
+          {asyncHelper}
+        </div>);
     const toolStates = tools.map(tool => tool.state);
     const taskApi = {
       alphabet: alphabet,
@@ -209,9 +211,7 @@ const PlayFairTab = PureComponent(self => {
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos co-équipiers depuis le dernier chargement de la page.</p>}/>
             {' '}
-            <Button onClick={refresh}>
-              <i className="fa fa-refresh"/>
-            </Button>
+            <RefreshButton/>
           </div>
           <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>
             <i className="fa fa-save"/>
