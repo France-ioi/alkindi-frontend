@@ -2,15 +2,7 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-<div>
-  <button type="button" onclick="resetState()">état initial</button>
-  <button type="button" onclick="setUser(michel)">Michel</button>
-  <button type="button" onclick="setUser(bruno)">Bruno</button>
-  <button type="button" onclick="setUser(adele)">Adèle</button>
-  <button type="button" onclick="joinTeam()">rejoindre une équipe</button>
-  <button type="button" onclick="setQuestion()">obtenir un sujet</button>
-  <button type="button" onclick="addDemoTools()">démo outils</button>
-</div>
+<link rel="stylesheet" href="dist/main.css">
 <div id="main">
   <div class="container"><p>Chargement en cours, merci de patienter…</p></div>
 </div>
@@ -19,133 +11,10 @@
 // Install in #main.
 Alkindi.configure({});
 Alkindi.install(document.getElementById('main'));
-
-var michel = {
-  id: 3,
-  email: 'michel@example.com',
-  firstname: 'Michel', lastname: 'Dubois', fullname: 'Michel Dubois',
-  isSelected: true
+Alkindi.dispatch({type: 'END_REFRESH', seed: {"user": {"firstname": "S\u00e9bastien", "lastname": "Carlier", "id": 1, "username": "sebc"}, "task": {"hints": [[{"q": "unknown"}, {"q": "hint", "l": 9}, {"q": "hint", "l": 3}, {"q": "unknown"}, {"q": "unknown"}], [{"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}], [{"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}], [{"q": "unknown"}, {"q": "hint", "l": 4}, {"q": "hint", "l": 5}, {"q": "unknown"}, {"q": "unknown"}], [{"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}, {"q": "unknown"}]], "firstname": "MARC", "cipher_text": "NA PUNJXI FLYG JFNT YANZNA TOEUXA, DLR JIFL HYA, ORLG LMNRLK ZHKZKAL H N'AZIXH GLFGELXI JF ORPUA KPUIZISAJF. E ZHUPHU JF ZLEUXILEUX, ORLG YGAUAGHNROG LJN JFB MHMIFZQXIV MAGPCIXAK JF ML VLYHIXH XRLC PLDYLUETOHN. AU A'LIUQ Y'LO ELYHNJ SIOCA JINSRH. JF JHNUEHN KA PURLKF IL JFNT JHUX GFUKZ GET FSNJNI INMRFYF J'LMNKELCOAF. FDLG T GUROGHNAX LO ZIV MF JRDLYNJZG QDUX XN FDLG MLAGKA NA VLEU JF HEHUA NI XUH. QRLU M IJPJHJFU HO SRLV AILZ UN JLYHND QR GNQ IX NA DRJF YO MHJFLEB. MLDJA NA GMGZAJF JH JIAEQHOAJNJZ PNI Y'NGUUAKA J'NGZ ZHV AEAZ TRLU NAK ORCSNHK, MA NAK EA HJUHZG YH-JFKZVLLG, NJ NAB MIAEQHOELQ Y'LOF EYGNH HEDRR. JH JDQN JF JUFX IL ERYLO MHK APUNK HJUHQ UO YFGLNIYF E LO GUHNB. ZRLU NAK NHPURLKFL, CLNGUZRAFS MAK NAZQPUAK JF FDPUH XNHORZ LKFM H HEUG LO, V HEAQ YINK, NPY. YLUZHTUAAX NA NHGLUZIZ ZHU PNHATH XYUV LXIX ZURAG. FDLG KFJNQ MH JLMYRNAO BUQNH MRF. EHAO J'HMJHJFL HR GNQ, BCNJCOA NI KLHOJ ORCSNH YH JFKZVLLG IX M IDNYGHN PUNJXI-JFNT. YFGFKAS MH NAKLNZIZ THL FDPUH JNA. JHML QDJKJN YHOX PRAHHOAK, NAV MINQ TNHYAHNB MRUNHBZROJFUX L M'FYNJGUHAELQ YR GNQ, NAKZ GLFGELZG IL DRJF YO MHJFLEKZ. \n186045307", "score": 500, "url": ""}, "my_latest_revision_id": null, "attempt": {"created_at": "2016-01-10T18:53:26Z", "is_unsolved": true, "is_training": true, "closes_at": null, "id": 1504, "is_current": true, "needs_codes": false}, "team": {"is_locked": true, "is_open": true, "members": [{"user": {"firstname": "S\u00e9bastien", "lastname": "Carlier", "id": 1, "username": "sebc"}, "is_qualified": true, "joined_at": "2016-01-10T18:53:10Z", "access_code": "x2dj4w6d", "user_id": 1, "is_creator": true}], "is_invalid": false, "round_access": {}, "code": "p6rik3gx", "id": 1172, "creator": {"firstname": "S\u00e9bastien", "lastname": "Carlier", "id": 1, "username": "sebc"}}, "round": {"registration_opens_at": "2016-01-04T08:00:00Z", "max_team_size": 4, "min_team_ratio": "0.500", "title": "Concours Alkindi 2015-2016 tour 2", "id": 2, "min_team_size": 1, "training_opens_at": "2016-01-09T00:00:00Z"}}});
+Alkindi.dispatch({type: "SET_CRYPTO", crypto: {"revisionId":642,"loading":false,"tools":[{"state":{"outputVariable":"texteChiffré"}},{"state":{"outputGridVariable":"lettresGrilleIndices"}},{"state":{"outputGridVariable":"lettresGrilleEditée","outputSubstitutionVariable":"substitutionGénérée","editGrid":[[{},{},{},{},{}],[{"letter":"P"},{"letter":"L"},{"letter":"O"},{"letter":"P"},{}],[{},{},{},{"letter":"N"},{"letter":"A"}],[{},{},{},{},{}],[{},{},{},{},{}]],"inputGridVariable":"lettresGrilleIndices"}},{"state":{"nbLettersPerRow":29,"substitutionEdits":[],"outputSubstitutionVariable":"substitutionÉditée","inputSubstitutionVariable":"substitutionGénérée","inputCipheredTextVariable":"texteChiffré"}},{"state":{"substitutionEdits":[],"nBigrams":10,"editable":false,"inputCipheredTextVariable":"texteChiffré","outputSubstitutionVariable":"substitutionFréquences","inputSubstitutionVariable":"substitutionÉditée"}},{"state":{"nbLettersPerRow":29,"inputTextVariable":"texteChiffré","outputTextVariable":"texteDéchiffré","inputSubstitutionVariable":"substitutionÉditée"}}]}});
+Alkindi.api.listAttemptRevisions = function (attempt_id) {
+  return {end: function (callback) { callback(null, {req: {method: 'GET'}, body: {"attempts": [{"created_at": "2016-01-10T18:53:26Z", "is_unsolved": 1, "is_training": 1, "closes_at": null, "id": 1504, "is_current": 1}], "users": [{"firstname": "S\u00e9bastien", "lastname": "Carlier", "id": 1, "username": "sebc"}], "workspaces": [{"title": "None", "created_at": "2016-01-10T18:53:38Z", "id": 315, "updated_at": "2016-01-10T18:53:38Z"}], "revisions": [{"creator_id": 1, "parent_id": 640, "workspace_id": 315, "is_active": false, "title": "R\u00e9vision du 1/10/2016, 8:18:51 PM", "created_at": "2016-01-10T20:18:51Z", "is_precious": true, "id": 642}, {"creator_id": 1, "parent_id": 640, "workspace_id": 315, "is_active": false, "title": "R\u00e9vision du 1/10/2016, 8:18:22 PM", "created_at": "2016-01-10T20:18:22Z", "is_precious": true, "id": 641}, {"creator_id": 1, "parent_id": null, "workspace_id": 315, "is_active": false, "title": "R\u00e9vision du 1/10/2016, 8:17:55 PM", "created_at": "2016-01-10T20:17:55Z", "is_precious": true, "id": 640}], "success": true}})}};
 };
-var bruno = {
-  id: 4,
-  email: 'bruno@example.com',
-  firstname: 'Bruno', lastname: 'Petit', fullname: 'Bruno Petit',
-  isSelected: true
-};
-var adele = {
-  id: 5,
-  email: 'adele@example.com',
-  firstname: 'Adèle', lastname: 'Durand', fullname: 'Adele Durand',
-  isSelected: false
-};
-
-resetState();
-setUser(michel);
-joinTeam();
-setQuestion();
 Alkindi.dispatch({type: 'SET_ACTIVE_TAB', tabKey: 'history'});
-function resetState () {
-  Alkindi.dispatch({type: 'INIT'});
-  Alkindi.dispatch({type: 'SET_USER', user: adele});
-}
-function setUser (user) {
-  Alkindi.dispatch({type: 'SET_USER', user: user});
-}
-function joinTeam () {
-  Alkindi.dispatch({type: 'SET_TEAM', team: {
-    code: 'cfr5ujut',
-    isOpen: true,
-    creator: michel,
-    members: [
-      {user: michel, joinDate: '2015-12-19'},
-      {user: bruno, joinDate: '2015-12-20'},
-      {user: adele, joinDate: '2015-12-20'}
-    ]
-  }});
-}
-function setQuestion () {
-  Alkindi.dispatch({type: 'SET_QUESTION', question: {}});
-  Alkindi.dispatch({type: 'SET_WORKSPACES', workspaces: [
-    {
-      id: 1,
-      title: 'Mon espace de travail 1',
-      versions: [
-        {id: 101, updatedAt: '2015-12-19T21:21:30', owner: michel}
-      ]
-    },
-    {
-      id: 2,
-      title: 'Mon espace de travail 2',
-      versions: [
-        {id: 102, updatedAt: '2015-12-19T08:50:27', owner: bruno}
-      ]
-    },
-    {
-      id: 3,
-      title: 'Mon espace de travail 3',
-      versions: [
-        {id: 103, updatedAt: '2015-12-19T09:04:53', owner: adele}
-      ]
-    },
-    {
-      id: 4,
-      title: 'Mon espace de travail 4',
-      versions: [
-        {id: 104, updatedAt: '2015-12-17T22:49:42', owner: michel}
-      ]
-    },
-    {
-      id: 5,
-      title: 'Mon espace de travail 5',
-      versions: [
-        {id: 105, updatedAt: '2015-12-15T18:31:00', owner: michel}
-      ]
-    }
-  ]});
-}
-function addDemoTools () {
-  Alkindi.dispatch({
-    type: 'ADD_TOOL',
-    toolType: 'TextInput',
-    toolState: {
-      alphabetName: 'letters',
-      input: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies vel massa in aliquam. Integer vel venenatis dui, non rutrum justo.Mauris sed eros fringilla ex fringilla dapibus. Vivamus tincidunt venenatis sapien eget mattis. Integer molestie pretium ante ac finibus. Donec non nisi dignissim, bibendum nisi sed, sodales magna. Sed vel massa non libero interdum convallis vitae eu leo. Phasellus consequat tellus nec arcu blandit, dignissim faucibus orci malesuada. Mauris tempus ligula vel purus pellentesque, ac ultricies urna porttitor. Nulla facilisi. Cras maximus lorem quis ipsum luctus, eu cursus nulla efficitur. Fusce accumsan porta vestibulum.".toUpperCase(),
-      outputVarName: 'long_text',
-      canRemove: false,
-      configuring: false
-    }
-  });
-  Alkindi.dispatch({
-    type: 'ADD_TOOL',
-    toolType: 'TextInput',
-    toolState: {
-      alphabetName: 'letters',
-      input: "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
-      outputVarName: 'short_text',
-      canRemove: false,
-      configuring: false,
-      collapsed: true
-    }
-  });
-  Alkindi.dispatch({
-    type: 'ADD_TOOL',
-    toolType: 'SubstitutionInputApply',
-    toolState: {
-      alphabetName: 'letters',
-      initializer: {type: 'shuffle'},
-      pairs: undefined,
-      inputVarName: 'short_text',
-      outputVarName: 'ciphertext',
-      configuring: false
-    }
-  });
-  Alkindi.dispatch({
-    type: 'ADD_TOOL',
-    toolType: 'TextDisplay',
-    toolState: {
-      inputVarName: 'ciphertext',
-      configuring: false
-    }
-  });
-}
 </script>

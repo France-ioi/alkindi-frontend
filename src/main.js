@@ -84,6 +84,7 @@ window.Alkindi = (function () {
   };
 
   Alkindi.configure = function (config) {
+    Alkindi.api = BareApi;
     Alkindi.config = config;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
