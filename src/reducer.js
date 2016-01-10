@@ -16,12 +16,10 @@ const reduceInit = function (state, refresh) {
 };
 
 const reduceBeginRefresh = function (state, user_id) {
-  console.log('begin refresh', user_id);
   return {...state, refreshing: true};
 };
 
 const reduceEndRefresh = function (state, seed) {
-  console.log('end refresh');
   if (!seed)
     seed = {};
   state = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
