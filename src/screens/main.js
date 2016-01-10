@@ -34,7 +34,7 @@ export const MainScreen = PureComponent(self => {
         content = <PlayFairTab/>;
         break;
       case 'history':
-        content = <HistoryTab/>;
+        content = <HistoryTab attempt={self.props.attempt}/>;
         break;
       case 'answers':
         content = <AnswersTab/>;
