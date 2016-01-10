@@ -101,6 +101,15 @@ const Notifier = PureComponent(self => {
     }, 1000);
   };
 
+  const dismiss = function () {
+    setTimer();
+    self.setState({
+      state: 'idle',
+      message: undefined,
+      timeout: undefined
+    });
+  };
+
   self.props.api.$setHelper({begin, endWithServerError, endWithBackendError, end});
 
   self.componentWillUnmount = function () {
@@ -111,9 +120,9 @@ const Notifier = PureComponent(self => {
     const {state, message} = self.state;
     return (
       <div style={{position: 'absolute'}}>
-        {state === 'failure' && <Alert bsStyle='warning'>{message}</Alert>}
-        {state === 'success' && <Alert bsStyle='success'>Opération effectuée.</Alert>}
-        {state === 'busy' && <Alert bsStyle='info'>Veuillez patienter pendant le traitement de votre action...</Alert>}
+        {state === 'failure' && <Alert bsStyle='warning' onDismiss={dismiss}>{message}</Alert>}
+        {state === 'success' && <Alert bsStyle='success' onDismiss={dismiss}>Opération effectuée.</Alert>}
+        {state === 'busy' && <Alert bsStyle='info' onDismiss={dismiss}>Veuillez patienter pendant le traitement de votre action...</Alert>}
       </div>
       );
   };
