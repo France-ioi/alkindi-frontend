@@ -79,6 +79,10 @@ const AsyncHelper = PureComponent(self => {
 
   self.props.api.$setHelper({begin, endWithServerError, endWithBackendError, end});
 
+  self.componentWillUnmount = function () {
+    setTimer();
+  };
+
   self.render = function () {
     const {state, message} = self.state;
     if (state === 'failure')
