@@ -1,6 +1,7 @@
 import React from 'react';
 import {PureComponent} from './utils/generic';
 import {mostFrequentFrench, decodeBigram} from './utils/bigram';
+import {Button} from 'react-bootstrap';
 
 import TextInput from './tools/text_input';
 import Hints from './tools/hints';
@@ -112,6 +113,41 @@ export const PlayFair = PureComponent(self => {
          return (<Component key={i} toolState={toolState} scope={scope} setToolState={setState} />);
       };
       return <div>{tools.map(renderTool)}</div>;
+   };
+
+});
+
+export const Answer = PureComponent(self => {
+
+   let address, number1, number2;
+   const refAddress = el => { address = el; };
+   const refNumber1 = el => { number1 = el; };
+   const refNumber2 = el => { number2 = el; };
+
+   const onSubmit = function () {
+      self.props.submit({
+         a: address.value, n1: number1.value, n2: number2.value
+      });
+   };
+
+   self.render = function () {
+      return (
+        <div className='section playfair-answer'>
+          <p className="input">
+            <label htmlFor="answer-a">{'Adresse : '}</label>
+            <input type="text" id="answer-a" ref={refAddress} />
+          </p>
+          <p className="input">
+            <label htmlFor="answer-n1">{'Nombre 1 : '}</label>
+            <input type="text" id="answer-n1" ref={refNumber1} />
+          </p>
+          <p className="input">
+            <label htmlFor="answer-n2">{'Nombre 2 : '}</label>
+            <input type="text" id="answer-n2" ref={refNumber2} />
+          </p>
+          <p><Button onClick={onSubmit}>Soumettre</Button></p>
+        </div>
+      );
    };
 
 });
