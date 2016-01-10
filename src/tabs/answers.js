@@ -41,7 +41,7 @@ const AnswersTab = PureComponent(self => {
   };
 
   const renderAnswers = function (answers) {
-    const {submittedAnswerId} = self.props;
+    const {submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
       const isCurrent = submittedAnswerId === answer.id;
       const classes = [
