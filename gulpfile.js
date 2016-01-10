@@ -16,9 +16,9 @@ const source = require('vinyl-source-stream');
 const cp = require('child_process');
 
 function updatePythonPackage (options) {
-    const opt =
-        'build_data' + (options.min ? ' --min' : '') + ' build';
-    cp.exec('cd dist_python; ./setup.py ' + opt, function (err, stdout, stderr) {
+    const env = options.min ? 'MIN_BUILD=1 ' : ''
+    const opt = options.kill ? ' && pkill -HUP gunicorn || true' : '';
+    cp.exec('cd dist_python && ' + env + './setup.py build' + opt, function (err, stdout, stderr) {
         if (err) {
             gutil.log(gutil.colors.red('Failed'), 'to update python package\n', stderr);
             return;
@@ -30,7 +30,7 @@ function updatePythonPackage (options) {
 function watchScript (options) {
     let browserifyOpts = {
         entries: [options.entry],
-        debug: false,
+        debug: true,
         transform: [
             ['babelify', {
                 presets: ["es2015", "react"],
@@ -51,15 +51,13 @@ function watchScript (options) {
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(sourcemaps.write("./"))
-            .pipe(chmod(644))
-            .pipe(eol("\n"))
             .pipe(gulp.dest("dist"));
     };
     bundler.on('log', gutil.log);
     bundler.on('update', rebundle);
     if (options.updatePython) {
         bundler.on('bytes', function (count) {
-            updatePythonPackage({min: false});
+            updatePythonPackage({min: false, kill: true});
         });
     }
     rebundle();
@@ -81,7 +79,7 @@ function buildScript (options) {
         .pipe(sourcemaps.init({loadMaps: true}));
     if (options.uglify)
         stream = stream.pipe(uglify());
-     return stream
+    return stream
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dist'));
 }
@@ -125,7 +123,7 @@ gulp.task('watch_js', function () {
     watchScript({entry: 'src/main.js', output: 'main.js', updatePython: true});
 });
 gulp.task('build_css_py', ['build_css'], function () {
-    return updatePythonPackage({min: false});
+    return updatePythonPackage({min: false, kill: true});
 });
 gulp.task('watch_css', function () {
     gulp.watch('src/**/*.css', ['build_css_py']);
