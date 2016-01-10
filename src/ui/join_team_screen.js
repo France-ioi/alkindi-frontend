@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import AlkindiAuthHeader from './auth_header';
@@ -31,9 +31,36 @@ const JoinTeamScreen = PureComponent(self => {
   const onQualify = function () {
     const user_id = self.props.user.id;
     const data = {code: qualCode.value};
-    api.qualifyUser(user_id, data);
+    self.setState({qualifyError: undefined});
+    api.qualifyUser(user_id, data).then(function (result) {
+      const {codeStatus, userIDStatus, profileUpdated} = result;
+      console.log('outcome', codeStatus, userIDStatus, profileUpdated);
+      if (codeStatus === 'registered' && userIDStatus === 'registered') {
+        if (!profileUpdated) {
+          self.setState({qualifyError: "Votre session a expirée, rechargez la page pour vous reconnecter."});
+          return;
+        }
+        return; // OK
+      }
+      if (codeStatus === 'unknown') {
+        self.setState({qualifyError: "Ce code de qualification est invalide."});
+        return;
+      }
+      if (codeStatus === 'conflict') {
+        self.setState({qualifyError: "Ce code de qualification est rattaché à un autre utilisateur."});
+        return;
+      }
+      if (userIDStatus === 'unknown') {
+        self.setState({qualifyError: "L'identifiant d'utilisateur est invalide."});
+        return;
+      }
+      if (userIDStatus === 'conflict') {
+        self.setState({qualifyError: "Vous êtes déjà qualifié avec un autre code."});
+        return;
+      }
+      self.setState({qualifyError: "Une erreur imprévue s'est produite, n'hésites pas à nous contacter."});
+    });
   };
-
   const onCreateTeam = function () {
     const user_id = self.props.user.id;
     api.createTeam(user_id);
@@ -44,6 +71,7 @@ const JoinTeamScreen = PureComponent(self => {
     api.joinTeam(user_id, data);
   };
   const renderNotQualified = function () {
+    const {qualifyError} = self.state;
     return (
       <div className="section">
         <p>
@@ -60,6 +88,7 @@ const JoinTeamScreen = PureComponent(self => {
             <input type="text" id="qual-code" ref={refQualCode} />
           </p>
           <p><Button onClick={onQualify}>Valider ma qualification</Button></p>
+          {qualifyError && <Alert bsStyle='danger'>{qualifyError}</Alert>}
         </div>
       </div>
     );
