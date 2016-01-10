@@ -86,7 +86,7 @@ table input:focus {
   color: #0f33ff;
   cursor: pointer;
 }
-.pageFooter {
+#pageFooter {
   position: absolute;
   bottom: 0;
   background-color: #ac1a1d;
