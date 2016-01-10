@@ -511,7 +511,7 @@ const TeamTab = PureComponent(self => {
          (attempt.is_training
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
-        {false && renderResetHints()}
+        {renderResetHints()}
         {notifier}
         {testing && testing.render()}
       </div>
