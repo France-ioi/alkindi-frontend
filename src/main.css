@@ -71,7 +71,7 @@ table {
 table td,
 table th {
   border: 1px solid #777;
-  padding: 0 5px;
+  padding: 3px 5px;
 }
 table button[type=button] {
   padding: 0 10px;
@@ -429,26 +429,6 @@ character substitutions tables
   padding: 0;
   color: #000000;
   border-bottom: 1px solid #eeeeee;
-}
-/* Historique */
-.workspace-list,
-.session-list {
-  margin-top: 1em;
-}
-.workspace-list td:first-child {
-  width: 50%;
-}
-tr.selected {
-  background-color: #333;
-  color: #fff;
-}
-a.cell-link {
-  display: block;
-  color: #000;
-  font-weight: inherit;
-}
-.selected a.cell-link {
-  color: #fff;
 }
 
 
@@ -874,6 +854,33 @@ td .bigramLetter {
 .applySubstitution hr {
   margin: 3px 0;
 }
+
+
+/*
+
+ Historique tab
+
+*/
+.revision-list {
+  margin-top: 1em;
+}
+.revision-list td:first-child {
+  width: 1em;
+}
+.revision-list tr.selected {
+  background-color: #333;
+  color: #fff;
+}
+.revision-list a.cell-link {
+  display: block;
+  color: #000;
+  font-weight: inherit;
+}
+.revision-list .selected a.cell-link {
+  color: #fff;
+}
+
+
 /*
 
  Team tab -- access codes
