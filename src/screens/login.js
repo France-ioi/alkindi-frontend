@@ -31,7 +31,7 @@ const LoginScreen = PureComponent(self => {
       <div className="wrapper">
         <AlkindiAuthHeader/>
         <div>
-          <p>Pour continuer, authentifiez-vous auprès de la plateforme France-IOI
+          <p>Pour continuer, authentifiez-vous auprès de la plateforme France-ioi
           en cliquant sur le bouton ci-dessous.</p>
           <p><button className="btn btn-primary" onClick={login}>se connecter</button></p>
         </div>
