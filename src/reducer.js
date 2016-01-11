@@ -22,17 +22,21 @@ const reduceBeginRefresh = function (state, user_id) {
 const reduceEndRefresh = function (state, seed) {
   if (!seed)
     seed = {};
-  state = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
+  const newState = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
+  // Clear the crypto tab when the attempt changes.
+  if ('attempt' in state && 'attempt' in seed && state.attempt.id !== seed.attempt.id) {
+    newState.crypto = {};
+  }
   // Overwrite state with seed, even missing seed props.
   seedProps.forEach(function (key) {
-    state[key] = seed[key];
+    newState[key] = seed[key];
   })
-  const {crypto} = state;
+  const {crypto} = newState;
   // If the crypto tab has not been loaded, set the initial revisionId.
-  if (crypto.tools === undefined && state.my_latest_revision_id !== null) {
-    state.crypto = {revisionId: state.my_latest_revision_id};
+  if (crypto.tools === undefined && newState.my_latest_revision_id !== null) {
+    newState.crypto = {revisionId: newState.my_latest_revision_id};
   }
-  return reduceTick(reduceSetActiveTab(state));
+  return reduceTick(reduceSetActiveTab(newState));
 };
 
 const reduceTick = function (state) {
