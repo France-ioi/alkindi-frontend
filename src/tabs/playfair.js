@@ -209,6 +209,10 @@ const PlayFairTab = PureComponent(self => {
         {notifier}
         <div>
           <p>
+            Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,
+            lisez-le attentivement.
+          </p>
+          <p>
             {'Voici ci-dessous des outils pour vous aider à déchiffrer le message, '}
             {'leur documentation est '}
             <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF" target="new">
