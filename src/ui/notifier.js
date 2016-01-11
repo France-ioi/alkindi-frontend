@@ -3,6 +3,7 @@ import {Alert} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
+import {Button} from 'react-bootstrap';
 
 const ErrorMessages = {
   'already in a team': "Vous êtes déjà dans une équipe.",
@@ -31,8 +32,13 @@ const Notifier = PureComponent(self => {
   const endWithServerError = function (err, res) {
     if ('status' in err && err.status === undefined)
       return setError("Le serveur n'a pas pu être contacté, merci de ré-essayer un peu plus tard.");
-    if ('status' in err)
+    if ('status' in err) {
+      if (err.status == 403) {
+        // Display the login button on 403 errors.
+        return setError("Vous êtes déconnecté, reconnectez-vous avant de répéter votre action.", {showLogin: true});
+      }
       return setError("Une erreur " + err.status + " est survenue, merci de ré-essayer un peu plus tard.");
+    }
     setError("Une erreur indéterminée est survenue, merci de ré-essayer un peu plus tard.");
   };
 
@@ -75,12 +81,13 @@ const Notifier = PureComponent(self => {
     }
   };
 
-  const setError = function (message) {
+  const setError = function (message, options) {
     setTimer();
     self.setState({
       state: 'failure',
       message: message,
-      timeout: undefined
+      timeout: undefined,
+      ...options
     });
   };
 
@@ -105,7 +112,7 @@ const Notifier = PureComponent(self => {
     }, 1000);
   };
 
-  const dismiss = function () {
+  const onDismiss = function () {
     setTimer();
     self.setState({
       state: 'idle',
@@ -114,6 +121,11 @@ const Notifier = PureComponent(self => {
     });
   };
 
+  const onLogin = function () {
+    Alkindi.login().then(onDismiss);
+  };
+
+
   self.props.api.$setHelper({begin, endWithServerError, endWithBackendError, end});
 
   self.componentWillUnmount = function () {
@@ -121,14 +133,21 @@ const Notifier = PureComponent(self => {
   };
 
   self.render = function () {
-    const {state, message} = self.state;
+    const {state, message, showLogin} = self.state;
     return (
       <div style={{position: 'absolute'}}>
-        {state === 'failure' && <Alert bsStyle='warning' onDismiss={dismiss}>{message}</Alert>}
-        {state === 'success' && <Alert bsStyle='success' onDismiss={dismiss}>Opération effectuée.</Alert>}
-        {state === 'busy' && <Alert bsStyle='info' onDismiss={dismiss}>Veuillez patienter pendant le traitement de votre action...</Alert>}
+        {state === 'busy' && <Alert bsStyle='info' onDismiss={onDismiss}>Veuillez patienter pendant le traitement de votre action...</Alert>}
+        {state === 'success' && <Alert bsStyle='success' onDismiss={onDismiss}>Opération effectuée.</Alert>}
+        {state === 'failure' &&
+          <Alert bsStyle='warning' onDismiss={onDismiss}>
+            <p>{message}</p>
+            {showLogin &&
+              <p className="text-right">
+                <Button onClick={onLogin}>me reconnecter</Button>
+              </p>}
+          </Alert>}
       </div>
-      );
+    );
   };
 
 }, self => {
