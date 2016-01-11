@@ -14,15 +14,11 @@ export const RefreshButton = PureComponent(self => {
       seconds <= (5 * 60) ? 'danger' :
       seconds <= (15 * 60) ? 'warning' :
       'success';
-    console.log('seconds = ', seconds);
     const hours = Math.floor(seconds / 3600);
     seconds -= hours * 3600;
-    console.log('seconds = ', seconds, '  hours = ', hours);
     const minutes = Math.floor(seconds / 60);
-    console.log('seconds = ', seconds, '  minutes = ', minutes);
     seconds -= minutes * 60;
     seconds = Math.round(seconds);
-    console.log('seconds = ', seconds);
     return (
       <Alert bsStyle={style}>
         <p className="text-center">
