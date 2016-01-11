@@ -24,7 +24,7 @@ const reduceEndRefresh = function (state, seed) {
     seed = {};
   const newState = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
   // Clear the crypto tab when the attempt changes.
-  if ('attempt' in state && 'attempt' in seed && state.attempt.id !== seed.attempt.id) {
+  if (state.attempt && seed.attempt && state.attempt.id !== seed.attempt.id) {
     newState.crypto = {};
   }
   // Overwrite state with seed, even missing seed props.
