@@ -9,7 +9,9 @@ const twoDigits = function (number) {
 
 export const RefreshButton = PureComponent(self => {
   self.render = function () {
-    let seconds = self.props.seconds;
+    let {visible, seconds} = self.props;
+    if (!visible)
+      return false;
     const style =
       seconds <= (5 * 60) ? 'danger' :
       seconds <= (15 * 60) ? 'warning' :
