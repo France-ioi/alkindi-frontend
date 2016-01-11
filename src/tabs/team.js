@@ -457,9 +457,10 @@ const TeamTab = PureComponent(self => {
             Votre tentative en temps limité s'est terminée le {closes_at.toLocaleString()}.
           </Alert>
           <p>
-            Vous pouvez revenir au sujet d'entrainement et recommencer une
-            tentative en temps limité, dans la limite de {round.max_attempts}
-            autorisées.
+            {'Vous pouvez revenir au sujet d\'entrainement et recommencer une'}
+            {'tentative en temps limité, dans la limite de '}
+            {round.max_attempts}
+            {' autorisées.'}
           </p>
           <p className="text-center">
             <Button onClick={onResetToTraining}>
