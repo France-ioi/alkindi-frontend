@@ -255,7 +255,7 @@ const actualReduce = function (state, action) {
     // case 'STEP':
     //   return reduceStep(state);
     default:
-      throw action;
+      throw 'unhandled action ' + action.type;
   }
 };
 

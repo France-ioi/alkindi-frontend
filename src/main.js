@@ -20,7 +20,6 @@ import App from './app';
 import {BareApi} from './api';
 
 // Install a global error handler.
-let logErrors = true;
 const logUrl = 'https://alkindi.epixode.fr/reports/';
 window.onerror = function (message, url, line, column, error) {
   // Prevent firing the default handler for errors on log URLs.
@@ -66,6 +65,8 @@ window.Alkindi = (function () {
   const Alkindi = {};
 
   // Create the global state store.
+  const store = Alkindi.store = createStore(reducer);
+  let sendTickInterval;
 
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
