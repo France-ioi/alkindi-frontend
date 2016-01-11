@@ -45,8 +45,8 @@ const Notifier = PureComponent(self => {
   const callOnRefresh = function (success) {
     const {onRefresh} = self.props;
     if (typeof onRefresh === 'function')
-      onRefresh(succes);
-  }
+      onRefresh(success);
+  };
 
   const refresh = function () {
     const {user, refresh} = self.props;
