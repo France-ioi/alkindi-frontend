@@ -67,6 +67,7 @@ window.Alkindi = (function () {
   // Create the global state store.
   const store = Alkindi.store = createStore(reducer);
   let sendTickInterval;
+  let alertRefVersion;
 
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
@@ -81,9 +82,10 @@ window.Alkindi = (function () {
           return reject();
         }
         let frontend_version = res.header['x-frontend-version'];
-        if (config.frontend_version !== frontend_version) {
-          console.log('frontend version mismatch', Alkindi.config.frontend_version, frontend_version);
-        }*/
+        if (frontend_version !== alertRefVersion) {
+          alertRefVersion = frontend_version;
+          alert('Une mise à jour est disponible, rechargez la page quand vous pouvez.');
+        }
         store.dispatch({type: 'END_REFRESH', seed: res.body});
         resolve();
       });
@@ -97,6 +99,7 @@ window.Alkindi = (function () {
     Alkindi.config = config;
     Alkindi.Api = ApiFactory;
     Alkindi.api = Api(config);
+    alertRefVersion = config.frontend_version;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
     store.dispatch({type: 'INIT', refresh: refresh});
