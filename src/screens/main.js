@@ -21,7 +21,7 @@ export const MainScreen = PureComponent(self => {
 
    self.render = function () {
     // Interface principale...
-    const {activeTabKey, enabledTabs, logoutUrl, onLogout} = self.props;
+    const {activeTabKey, enabledTabs, logoutUrl, onLogout, user_id} = self.props;
     let content = false;
     switch (activeTabKey) {
       case 'team':
@@ -37,7 +37,7 @@ export const MainScreen = PureComponent(self => {
         content = <HistoryTab attempt={self.props.attempt}/>;
         break;
       case 'answers':
-        content = <AnswersTab attempt={self.props.attempt}/>;
+        content = <AnswersTab user_id={user_id} attempt={self.props.attempt}/>;
         break;
     }
     return (
@@ -56,8 +56,8 @@ export const MainScreen = PureComponent(self => {
 });
 
 export const mainSelector = function (state) {
-  const {activeTabKey, enabledTabs, attempt, task} = state;
-  return {activeTabKey, enabledTabs, attempt, task};
+  const {activeTabKey, enabledTabs, user, attempt, task} = state;
+  return {activeTabKey, enabledTabs, user_id: user.id, attempt, task};
 };
 
 export default connect(mainSelector)(MainScreen);

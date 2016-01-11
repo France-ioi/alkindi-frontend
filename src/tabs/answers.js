@@ -16,8 +16,8 @@ const AnswersTab = PureComponent(self => {
   const notifier = <Notifier api={api}/>;
 
   const submitAnswer = function (data) {
-    const {attempt} = self.props;
-    api.submitAnswer(attempt.id, data).then(function (result) {
+    const {user_id, attempt} = self.props;
+    api.submitAnswer(user_id, attempt.id, data).then(function (result) {
       self.setState({
         submittedAnswerId: result.answer_id
       });
