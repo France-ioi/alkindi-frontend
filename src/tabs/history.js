@@ -132,7 +132,7 @@ const HistoryTab = PureComponent(self => {
         {revisions === undefined
           ? <p>Chargement en cours...</p>
           : (revisions.length == 0
-             ? <p>Vous n'avez pas enregistré de version pour cette épreuve.</p>
+             ? <p className="noRowsMessage">Vous n'avez pas enregistré de version pour cette épreuve.</p>
             : renderRevisions(revisions))}
       </div>
     );

@@ -101,7 +101,7 @@ const AnswersTab = PureComponent(self => {
       (answers === undefined
         ? <p>Chargement en cours...</p>
         : (answers.length == 0
-           ? <p>Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
+           ? <p className="noRowsMessage">Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
            : renderAnswers(answers)));
     return (
       <div className="wrapper">
