@@ -83,7 +83,7 @@ window.Alkindi = (function () {
     });
   };
   Alkindi.refresh = function (user_id) {
-    refresh(user_id || store.getState().user.id);
+    return refresh(user_id || store.getState().user.id);
   };
 
   Alkindi.configure = function (config) {
