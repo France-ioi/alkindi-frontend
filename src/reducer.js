@@ -230,8 +230,9 @@ const reduceStep = function (state) {
 const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
+      break;
     case 'INIT':
-      return reduceInit(state);
+      return initialState;
     case 'BEGIN_REFRESH':
       return reduceBeginRefresh(state, action.user_id);
     case 'END_REFRESH':
@@ -268,6 +269,8 @@ const actualReduce = function (state, action) {
     //   return reduceUpdateTool(state, action.toolId, action.toolStateUpdate);
     // case 'STEP':
     //   return reduceStep(state);
+    case 'FRONTEND_UPDATE':
+      return {...state, frontendUpdate: action.frontend_version};
     default:
       throw 'unhandled action ' + action.type;
   }

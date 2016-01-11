@@ -1,5 +1,6 @@
 import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
+import {connect} from 'react-redux';
 
 import {PureComponent} from '../misc';
 import Notifier from '../ui/notifier';
@@ -17,7 +18,6 @@ JoinTeamScreen interface:
 */
 const JoinTeamScreen = PureComponent(self => {
   const api = Alkindi.api;
-  const notifier = <Notifier api={api}/>;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
   const onShowJoinTeam = function () {
@@ -150,14 +150,14 @@ const JoinTeamScreen = PureComponent(self => {
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout user={user} logoutUrl={self.props.logoutUrl} onLogout={this.props.onLogout}/>
+          <Logout/>
         </div>
         <AuthHeader/>
         {round ? renderQualified(round) : renderNotQualified()}
         {round && renderCreateTeam()}
         {round && joinTeam && renderQualifiedJoinTeam()}
         {!round && renderNotQualifiedJoinTeam()}
-        {notifier}
+        <Notifier emitter={api.emitter}/>
       </div>
     );
   };
@@ -165,4 +165,9 @@ const JoinTeamScreen = PureComponent(self => {
   return {joinTeam: false};
 });
 
-export default JoinTeamScreen;
+export const selector = function (state) {
+  const {user, round} = state;
+  return {user, round};
+};
+
+export default connect(selector)(JoinTeamScreen);

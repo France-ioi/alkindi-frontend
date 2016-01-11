@@ -42,18 +42,8 @@ const Notifier = PureComponent(self => {
     setError("Une erreur indéterminée est survenue, merci de ré-essayer un peu plus tard.");
   };
 
-  const callOnRefresh = function (success) {
-    const {onRefresh} = self.props;
-    if (typeof onRefresh === 'function')
-      onRefresh(success);
-  };
-
   const refresh = function () {
-    return Alkindi.refresh().then(function () {
-      callOnRefresh(true);
-    }, function () {
-      callOnRefresh(false);
-    });
+    Alkindi.refresh();
   }
 
   const endWithBackendError = function (result) {
@@ -123,7 +113,7 @@ const Notifier = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
-    const {emitter} = Alkindi.api;
+    const {emitter} = self.props;
     emitter.on('begin', begin);
     emitter.on('server_error', endWithServerError);
     emitter.on('backend_error', endWithBackendError);
@@ -131,7 +121,7 @@ const Notifier = PureComponent(self => {
   };
 
   self.componentWillUnmount = function () {
-    const {emitter} = Alkindi.api;
+    const {emitter} = self.props;
     emitter.removeListener('begin', begin);
     emitter.removeListener('server_error', endWithServerError);
     emitter.removeListener('backend_error', endWithBackendError);

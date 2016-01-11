@@ -12,7 +12,6 @@ import {RefreshButton} from '../ui/refresh_button';
 const AnswersTab = PureComponent(self => {
 
   const api = Alkindi.api;
-  const notifier = <Notifier api={api}/>;
 
   const submitAnswer = function (data) {
     const {user_id, attempt} = self.props;
@@ -111,7 +110,7 @@ const AnswersTab = PureComponent(self => {
             <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
           </div>
         </div>
-        {notifier}
+        <Notifier emitter={api.emitter}/>
         <AnswerDialog answers={answersBlock} submit={submitAnswer}/>
       </div>
     );

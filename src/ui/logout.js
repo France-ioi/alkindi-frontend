@@ -1,32 +1,24 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 
-export default PureComponent(self => {
-  const logout = function () {
-    window.open(self.props.logoutUrl, "alkindi:login",
-      "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
-  };
-  const messageListener = function (event) {
-    // TODO: understand why event.isTrusted is false on Firefox.
-    const message = JSON.parse(event.data);
-    if (message.action === 'afterLogout')
-      self.props.onLogout(message.user);
-  };
-  self.componentDidMount = function () {
-    window.addEventListener('message', messageListener);
-  };
-  self.componentWillUnmount = function () {
-    window.removeEventListener('message', messageListener);
-  };
+export const LogoutButton = PureComponent(self => {
   self.render = function () {
     const {username} = self.props.user;
     return (
       <div id="logout">
         <span>{username}</span>
-        <Button onClick={logout}>déconnexion</Button>
+        <Button onClick={Alkindi.logout}>déconnexion</Button>
       </div>
     );
   };
 });
+
+export const selector = function (state) {
+  const {user} = state;
+  return {user};
+};
+
+export default connect(selector)(LogoutButton);

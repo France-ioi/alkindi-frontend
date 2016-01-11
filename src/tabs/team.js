@@ -175,7 +175,12 @@ const TeamTab = PureComponent(self => {
   const clearAccessCode = function () {
     self.setState({access_code: undefined});
   };
-  const notifier = <Notifier api={api} onRefresh={clearAccessCode}/>;
+  self.componentWillMount = function () {
+    Alkindi.api.emitter.on('refresh', clearAccessCode);
+  };
+  self.componentWillUnmount = function () {
+    Alkindi.api.emitter.removeListener('refresh', clearAccessCode);
+  };
 
   const renderRoundPrelude = function (round) {
     return (
@@ -544,7 +549,7 @@ const TeamTab = PureComponent(self => {
           ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {task !== undefined && attempt.is_training && renderResetHints()}
-        {notifier}
+        <Notifier emitter={api.emitter}/>
         {testing && testing.render()}
       </div>
     );

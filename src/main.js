@@ -67,7 +67,8 @@ window.Alkindi = (function () {
   // Create the global state store.
   const store = Alkindi.store = createStore(reducer);
   let sendTickInterval;
-  let alertRefVersion;
+  let loginWindow;
+  let loginOutcome;
 
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
@@ -81,11 +82,8 @@ window.Alkindi = (function () {
           store.dispatch({type: 'CANCEL_REFRESH'});
           return reject();
         }
-        let frontend_version = res.header['x-frontend-version'];
-        if (frontend_version !== alertRefVersion) {
-          alertRefVersion = frontend_version;
-          alert('Une mise à jour est disponible, rechargez la page quand vous pouvez.');
-        }
+        const frontend_version = res.header['x-frontend-version'];
+        store.dispatch({type: 'FRONTEND_UPDATE', version: frontend_version});
         store.dispatch({type: 'END_REFRESH', seed: res.body});
         resolve();
       });
@@ -99,10 +97,9 @@ window.Alkindi = (function () {
     Alkindi.config = config;
     Alkindi.Api = ApiFactory;
     Alkindi.api = Api(config);
-    alertRefVersion = config.frontend_version;
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
-    store.dispatch({type: 'INIT', refresh: refresh});
+    store.dispatch({type: 'INIT'});
     if ('seed' in config)
       store.dispatch({type: 'END_REFRESH', seed: config.seed});
   };
@@ -124,8 +121,11 @@ window.Alkindi = (function () {
     }
   };
 
-  let loginWindow;
-  let loginOutcome;
+  const openInLoginWindow = function (url) {
+    loginWindow = window.open(url, "alkindi:login",
+      "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+  };
+
   Alkindi.login = function () {
     return new Promise(function (resolve, reject) {
       if (loginWindow !== undefined) {
@@ -141,9 +141,12 @@ window.Alkindi = (function () {
       // in the afterLogin message handler.
       loginOutcome = {resolve, reject};
       const login_url = Alkindi.config.login_url;
-      loginWindow = window.open(login_url, "alkindi:login",
-        "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+      openInLoginWindow(Alkindi.config.login_url)
     })
+  };
+
+  Alkindi.logout = function () {
+    openInLoginWindow(Alkindi.config.logout_url);
   };
 
   const messageListener = function (event) {
@@ -164,6 +167,11 @@ window.Alkindi = (function () {
         loginOutcome = undefined;
         promise.then(resolve, reject);
       }
+      return;
+    }
+    if (message.action === 'afterLogout') {
+      // Alkindi.dispatch({'type': 'LOGOUT'});
+      window.location.reload()
     }
   };
   window.addEventListener('message', messageListener);

@@ -57,7 +57,6 @@ const initialTools = [
 const PlayFairTab = PureComponent(self => {
 
   const api = Alkindi.api;
-  const notifier = <Notifier api={api}/>;
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
@@ -192,7 +191,7 @@ const PlayFairTab = PureComponent(self => {
       return (
         <div>
           Chargement en cours, veuillez patienter...
-          {notifier}
+          <Notifier emitter={api.emitter}/>
         </div>);
     const toolStates = tools.map(tool => tool.state);
     const taskApi = {
@@ -206,7 +205,7 @@ const PlayFairTab = PureComponent(self => {
     const saveStyle = changed ? 'primary' : 'default';
     return (
       <div>
-        {notifier}
+        <Notifier emitter={api.emitter}/>
         <div>
           <p>
             Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,

@@ -7,25 +7,8 @@ import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 
-export const selector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto} = state;
-  if (!user)
-    return {};
-  if (!team)
-    return {user, round};
-  const changed = crypto.changed;
-  return {activeTabKey, enabledTabs, user, team, round, attempt, task, changed};
-};
-
 export const App = PureComponent(self => {
-  const afterLogout = function () {
-    // Reload the page after the user has logged out to obtain a new session
-    // and CSRF token.
-    // XXX This is no longer required as the login popup sends us a new CSRF
-    // token upon completion.  It would be sufficient to clear the state,
-    // so LOGOUT could become an action.
-    window.location.reload();
-  };
+
   self.componentWillMount = function () {
     window.addEventListener('beforeunload', function (event) {
       if (self.props.changed) {
@@ -35,21 +18,25 @@ export const App = PureComponent(self => {
       }
     });
   };
+
   self.render = function () {
-    const {user, team, round} = self.props;
+    const {have_user, have_team} = self.props;
 
-    // Si on n'a pas d'utilisateur, on affiche l'écran de login.
-    if (user === undefined)
-      return <LoginScreen login={Alkindi.login}/>;
+    if (!have_user)
+      return <LoginScreen/>;
 
-    // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
-    // création d'équipe.
-    if (team === undefined)
-      return <JoinTeamScreen user={user} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
+    if (!have_team)
+      return <JoinTeamScreen/>;
 
-    // Sinon, on affiche l'écran principal.
-    return <MainScreen user={user} team={team} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
+    return <MainScreen/>;
   };
+
 });
+
+export const selector = function (state) {
+  const {user, team, crypto} = state;
+  const changed = crypto && crypto.changed;
+  return {have_user: !!user, have_team: !!team, changed};
+};
 
 export default connect(selector)(App);

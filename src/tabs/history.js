@@ -12,7 +12,6 @@ import {RefreshButton} from '../ui/refresh_button';
 const HistoryTab = PureComponent(self => {
 
   const api = Alkindi.api;
-  const notifier = <Notifier api={api}/>;
 
   const addHandlers = function (revisions) {
     revisions.forEach(function (revision) {
@@ -117,7 +116,7 @@ const HistoryTab = PureComponent(self => {
             <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
           </div>
         </div>
-        {notifier}
+        <Notifier emitter={api.emitter}/>
         <p>
           Ci-dessous, vous pouvez trouver toutes les versions précédemment
           enregistrées par vous et vos coéquipiers.
