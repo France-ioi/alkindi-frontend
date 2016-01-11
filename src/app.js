@@ -8,9 +8,9 @@ import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 
 export const selector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto, refresh} = state;
+  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto} = state;
   if (!user)
-    return {refresh};
+    return {};
   if (!team)
     return {user, round};
   const changed = crypto.changed;
@@ -21,6 +21,9 @@ export const App = PureComponent(self => {
   const afterLogout = function () {
     // Reload the page after the user has logged out to obtain a new session
     // and CSRF token.
+    // XXX This is no longer required as the login popup sends us a new CSRF
+    // token upon completion.  It would be sufficient to clear the state,
+    // so LOGOUT could become an action.
     window.location.reload();
   };
   self.componentWillMount = function () {
@@ -33,11 +36,11 @@ export const App = PureComponent(self => {
     });
   };
   self.render = function () {
-    const {user, team, round, refresh} = self.props;
+    const {user, team, round} = self.props;
 
     // Si on n'a pas d'utilisateur, on affiche l'écran de login.
     if (user === undefined)
-      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={refresh}/>;
+      return <LoginScreen login={Alkindi.login}/>;
 
     // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
     // création d'équipe.
@@ -46,7 +49,6 @@ export const App = PureComponent(self => {
 
     // Sinon, on affiche l'écran principal.
     return <MainScreen user={user} team={team} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
-
   };
 });
 

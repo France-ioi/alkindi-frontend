@@ -73,7 +73,7 @@ window.Alkindi = (function () {
       store.dispatch({type: 'BEGIN_REFRESH', user_id});
       BareApi.readUser(user_id).end(function (err, res) {
         if (err) {
-          alert(err);
+          // TODO: notify the user that refresh failed
           reject();
         } else {
           store.dispatch({type: 'END_REFRESH', seed: res.body});
@@ -112,6 +112,50 @@ window.Alkindi = (function () {
       store.dispatch(action);
     }
   };
+
+  let loginWindow;
+  let loginOutcome;
+  Alkindi.login = function () {
+    return new Promise(function (resolve, reject) {
+      if (loginWindow !== undefined) {
+        loginWindow.close();
+        loginWindow = undefined;
+        if (loginOutcome) {
+          const {reject} = loginOutcome;
+          loginOutcome = undefined;
+          reject();
+        }
+      }
+      // Save the resolve/reject callback for use in the refresh initiated
+      // in the afterLogin message handler.
+      loginOutcome = {resolve, reject};
+      const login_url = Alkindi.config.login_url;
+      loginWindow = window.open(login_url, "alkindi:login",
+        "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+    })
+  };
+
+  const messageListener = function (event) {
+    // TODO: understand why event.isTrusted is false on Firefox.
+    const message = JSON.parse(event.data);
+    if (message.action === 'afterLogin') {
+      // Assume the login window closed itself immediately after posting
+      // the message.
+      loginWindow = undefined;
+      // The CSRF token is cleared when the user logs out, and the server
+      // may need to send us a new one after the user has re-authenticated.
+      Alkindi.config.csrf_token = message.csrf_token;
+      // Perform a refresh, and chain it with the resolve/reject outcomes
+      // of the login promise.
+      const promise = refresh(message.user_id);
+      if (loginOutcome) {
+        const {resolve, reject} = loginOutcome;
+        loginOutcome = undefined;
+        promise.then(resolve, reject);
+      }
+    }
+  };
+  window.addEventListener('message', messageListener);
 
   return Alkindi;
 }());
