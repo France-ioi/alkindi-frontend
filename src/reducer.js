@@ -59,6 +59,12 @@ const reduceTick = function (state) {
         newState.countdown = countdown;
     }
   }
+  // Trigger a refresh when the countdown ends.
+  if (state.countdown !== undefined && newState.countdown === undefined) {
+    setTimeout(function () {
+      state.refresh(state.user.id);
+    }, 0);
+  }
   return newState;
 };
 
