@@ -3,7 +3,6 @@ import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent, at, put} from '../misc';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
 import RefreshButton from '../ui/refresh_button';
@@ -57,7 +56,7 @@ const initialTools = [
 
 const PlayFairTab = PureComponent(self => {
 
-  const api = Api();
+  const api = Alkindi.api;
   const notifier = <Notifier api={api}/>;
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 

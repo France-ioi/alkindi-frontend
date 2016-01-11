@@ -6,13 +6,12 @@ import classnames from 'classnames';
 
 import {PureComponent, toMap} from '../misc';
 import {AnswerDialog, Answer} from '../playfair';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import {RefreshButton} from '../ui/refresh_button';
 
 const AnswersTab = PureComponent(self => {
 
-  const api = Api();
+  const api = Alkindi.api;
   const notifier = <Notifier api={api}/>;
 
   const submitAnswer = function (data) {

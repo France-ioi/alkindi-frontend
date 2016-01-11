@@ -125,10 +125,20 @@ const Notifier = PureComponent(self => {
     Alkindi.login().then(onDismiss);
   };
 
-
-  self.props.api.$setHelper({begin, endWithServerError, endWithBackendError, end});
+  self.componentWillMount = function () {
+    const {emitter} = Alkindi.api;
+    emitter.on('begin', begin);
+    emitter.on('server_error', endWithServerError);
+    emitter.on('backend_error', endWithBackendError);
+    emitter.on('end', end);
+  };
 
   self.componentWillUnmount = function () {
+    const {emitter} = Alkindi.api;
+    emitter.removeListener('begin', begin);
+    emitter.removeListener('server_error', endWithServerError);
+    emitter.removeListener('backend_error', endWithBackendError);
+    emitter.removeListener('end', end);
     setTimer();
   };
 

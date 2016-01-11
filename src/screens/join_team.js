@@ -3,7 +3,6 @@ import {Alert, Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import Notifier from '../ui/notifier';
-import Api from '../api';
 import AuthHeader from '../ui/auth_header';
 import Logout from '../ui/logout';
 
@@ -17,7 +16,7 @@ JoinTeamScreen interface:
 
 */
 const JoinTeamScreen = PureComponent(self => {
-  const api = Api();
+  const api = Alkindi.api;
   const notifier = <Notifier api={api}/>;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };

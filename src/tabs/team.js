@@ -4,7 +4,6 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 import Tooltip from '../ui/tooltip';
@@ -114,7 +113,7 @@ const TestTeamTab = function (self) {
 
 const TeamTab = PureComponent(self => {
 
-  const api = Api();
+  const api = Alkindi.api;
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'

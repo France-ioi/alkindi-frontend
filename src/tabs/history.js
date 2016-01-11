@@ -5,14 +5,13 @@ import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent, toMap} from '../misc';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
 import {RefreshButton} from '../ui/refresh_button';
 
 const HistoryTab = PureComponent(self => {
 
-  const api = Api();
+  const api = Alkindi.api;
   const notifier = <Notifier api={api}/>;
 
   const addHandlers = function (revisions) {

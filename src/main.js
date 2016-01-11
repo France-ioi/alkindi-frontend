@@ -17,7 +17,7 @@ import {Promise} from 'es6-promise';
 import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
-import {BareApi} from './api';
+import {Api, ApiFactory} from './api';
 
 // Install a global error handler.
 const logUrl = 'https://alkindi.epixode.fr/reports/';
@@ -71,15 +71,10 @@ window.Alkindi = (function () {
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
       store.dispatch({type: 'BEGIN_REFRESH', user_id});
-      BareApi.readUser(user_id).end(function (err, res) {
-        if (err) {
-          // TODO: notify the user that refresh failed
-          reject();
-        } else {
-          store.dispatch({type: 'END_REFRESH', seed: res.body});
-          resolve();
-        }
-      });
+      Alkindi.api.readUser(user_id).then(function (result) {
+        store.dispatch({type: 'END_REFRESH', seed: res.body});
+        resolve();
+      }, reject);
     });
   };
   Alkindi.refresh = function (user_id) {
@@ -87,8 +82,9 @@ window.Alkindi = (function () {
   };
 
   Alkindi.configure = function (config) {
-    Alkindi.api = BareApi;
     Alkindi.config = config;
+    Alkindi.Api = ApiFactory;
+    Alkindi.api = Api(config);
     if ('assets_template' in config)
       configureAssets({template: config.assets_template});
     store.dispatch({type: 'INIT', refresh: refresh});
