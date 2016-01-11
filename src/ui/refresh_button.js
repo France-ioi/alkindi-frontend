@@ -6,25 +6,33 @@ import {PureComponent} from '../misc';
 import classnames from 'classnames';
 
 export const selector = function (state, props) {
-  const isPageRefresh = !('refresh' in props);
   return {
     refreshing: props.refreshing || state.refreshing,
-    refresh: props.refresh || state.refresh,
-    user: isPageRefresh && state.user,
-    isPageRefresh
+    refresh: props.refresh
   };
 };
 
 export const RefreshButton = PureComponent(self => {
   const onClick = function () {
-    const {isPageRefresh, refresh, user} = self.props;
-    if (isPageRefresh) {
-      if (user === undefined)
-        return;
-      refresh(user.id);
+    let {refresh} = self.props;
+    if (refresh) {
+      // Local refresh.
+      handleOutcome(refresh())
     } else {
-      refresh();
+      // Global refresh.
+      handleOutcome(Alkindi.refresh())
     }
+  };
+  const handleOutcome = function (promise) {
+    const {onRefresh} = self.props;
+    if (onRefresh) {
+      promise.then(function () {
+        onRefresh({success: true});
+      }, function () {
+        onRefresh({success: false});
+      });
+    }
+    return promise;
   };
   self.render = function () {
     const refreshing = self.props.refreshing;
