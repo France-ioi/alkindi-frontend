@@ -503,7 +503,7 @@ const TeamTab = PureComponent(self => {
         <div className="pull-right">
           <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de votre équipe.</p>}/>
           {' '}
-          <RefreshButton/>
+          <RefreshButton onRefresh={clearAccessCode}/>
         </div>
         <h1>{round.title}</h1>
         {attempt === undefined
