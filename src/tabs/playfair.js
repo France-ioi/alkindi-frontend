@@ -207,6 +207,11 @@ const PlayFairTab = PureComponent(self => {
     const saveStyle = changed ? 'primary' : 'default';
     return (
       <div>
+        {notifier}
+        <div>
+          <p>Voici ci-dessous des outils pour vous aider à déchiffrer le message.</p>
+          <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponse.</p>
+        </div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos coéquipiers depuis le dernier chargement de la page.</p>}/>
@@ -228,7 +233,6 @@ const PlayFairTab = PureComponent(self => {
             <Tooltip content={resetStateTooltip}/>
           </span>
         </div>
-        {notifier}
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
     );
