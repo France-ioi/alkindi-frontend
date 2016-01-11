@@ -72,8 +72,14 @@ window.Alkindi = (function () {
     return new Promise(function (resolve, reject) {
       store.dispatch({type: 'BEGIN_REFRESH', user_id});
       Alkindi.api.bare.readUser(user_id).end(function (err, res) {
-        if (err) return reject();  // XXX
-        /*
+        if (err) {
+          if (err.status == 403) {
+            alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
+            Alkindi.login().then(function () { Alkindi.refresh(); });
+          }
+          store.dispatch({type: 'CANCEL_REFRESH'});
+          return reject();
+        }
         let frontend_version = res.header['x-frontend-version'];
         if (config.frontend_version !== frontend_version) {
           console.log('frontend version mismatch', Alkindi.config.frontend_version, frontend_version);
