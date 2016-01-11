@@ -33,7 +33,7 @@ export const Api = function (config) {
   function get (path) {
     var req = request.get(config.api_url + path);
     req.set('Accept', 'application/json');
-    req.set('X-Frontend-Version', config.front_version);
+    req.set('X-Frontend-Version', config.frontend_version);
     return req;
   }
 
@@ -41,7 +41,7 @@ export const Api = function (config) {
     var req = request.post(config.api_url + path);
     req.set('X-CSRF-Token', config.csrf_token);
     req.set('Accept', 'application/json');
-    req.set('X-Frontend-Version', config.front_version);
+    req.set('X-Frontend-Version', config.frontend_version);
     if (data !== undefined)
       req.send(data);
     return req;
