@@ -35,7 +35,8 @@ export const BareApi = {
   loadRevision: (revision_id) => get('workspace_revisions/'+revision_id),
   listAttemptRevisions: (attempt_id) => get('attempts/'+attempt_id+'/revisions'),
   submitAnswer: (user_id, attempt_id, data) => post('users/'+user_id+'/attempts/'+attempt_id+'/answers', data),
-  listAttemptAnswers: (attempt_id) => get('attempts/'+attempt_id+'/answers')
+  listAttemptAnswers: (attempt_id) => get('attempts/'+attempt_id+'/answers'),
+  resetTeamToTraining: (team_id) => post('teams/'+team_id+'/reset_to_training')
 };
 
 export const Api = function () {

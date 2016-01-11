@@ -168,6 +168,10 @@ const TeamTab = PureComponent(self => {
       api.resetHints(user_id);
     }
   };
+  const onResetToTraining = function () {
+    const team_id = self.props.team.id;
+    api.resetTeamToTraining(team_id);
+  };
 
   const clearAccessCode = function () {
     self.setState({access_code: undefined});
@@ -443,8 +447,13 @@ const TeamTab = PureComponent(self => {
             Votre tentative en temps limité s'est terminée le {closes_at.toLocaleString()}.
           </Alert>
           <p>
-            Vous pourrez bientôt revenir au sujet d'entrainement et
-            recommencer une tentative en temps limité.
+            Vous pouvez revenir au sujet d'entrainement et recommencer une
+            tentative en temps limité, dans la limite du nombre autorisé.
+          </p>
+          <p className="text-center">
+            <Button onClick={onResetToTraining}>
+               <i className="fa fa-arrow-left"/> retour à l'entrainement
+            </Button>
           </p>
         </div>
       );
