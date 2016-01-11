@@ -4,7 +4,7 @@ import {createSelector} from 'reselect';
 import Tooltip from '../ui/tooltip';
 import classnames from 'classnames';
 
-import {PureComponent} from '../misc';
+import {PureComponent, toMap} from '../misc';
 import {AnswerDialog, Answer} from '../playfair';
 import Api from '../api';
 import Notifier from '../ui/notifier';
@@ -32,7 +32,8 @@ const AnswersTab = PureComponent(self => {
       function (result) {
         self.setState({
           refreshing: false,
-          answers: result.answers
+          answers: result.answers,
+          users: toMap(result.users)
         });
       },
       function () {
@@ -41,8 +42,9 @@ const AnswersTab = PureComponent(self => {
   };
 
   const renderAnswers = function (answers) {
-    const {submittedAnswerId} = self.state;
+    const {users, submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
+      const submitter = users[answer.submitter_id];
       const isCurrent = submittedAnswerId === answer.id;
       const classes = [
         isCurrent && 'answer-isSubmitted'
@@ -57,6 +59,7 @@ const AnswersTab = PureComponent(self => {
           </td>
           <td>{answer.ordinal}</td>
           <td>{new Date(answer.created_at).toLocaleString()}</td>
+          <td>{submitter.username}</td>
           <td><Answer answer={answer.answer}/></td>
           <td>{answer.score}</td>
           <td>
@@ -75,6 +78,7 @@ const AnswersTab = PureComponent(self => {
             <th></th>
             <th>#</th>
             <th>Date de soumssion</th>
+            <th>Auteur</th>
             <th>Réponse</th>
             <th>Score</th>
             <th></th>
