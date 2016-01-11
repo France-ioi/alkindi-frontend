@@ -77,7 +77,7 @@ const AnswersTab = PureComponent(self => {
           <tr>
             <th></th>
             <th>#</th>
-            <th>Date de soumssion</th>
+            <th>Date de soumission</th>
             <th>Auteur</th>
             <th>Réponse</th>
             <th>Score</th>
