@@ -4,7 +4,7 @@ import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
-import {PureComponent} from '../misc';
+import {PureComponent, toMap} from '../misc';
 import Api from '../api';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
@@ -14,12 +14,6 @@ const HistoryTab = PureComponent(self => {
 
   const api = Api();
   const notifier = <Notifier api={api}/>;
-
-  const toMap = function (items) {
-    const map = {};
-    items.map(item => { map[item.id] = item; });
-    return map;
-  };
 
   const addHandlers = function (revisions) {
     revisions.forEach(function (revision) {
