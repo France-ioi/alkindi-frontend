@@ -54,7 +54,9 @@ const reduceTick = function (state) {
   if (attempt !== undefined && task !== undefined) {
     if (attempt['closes_at']) {
       const attempt_close_time = new Date(attempt['closes_at']).getTime();
-      newState.countdown = attempt_close_time - now;
+      const countdown = attempt_close_time - now;
+      if (countdown >= 0)
+        newState.countdown = countdown;
     }
   }
   return newState;
