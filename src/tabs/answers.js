@@ -97,6 +97,12 @@ const AnswersTab = PureComponent(self => {
 
   self.render = function () {
     const {answers, refreshing} = self.state;
+    const answersBlock =
+      (answers === undefined
+        ? <p>Chargement en cours...</p>
+        : (answers.length == 0
+           ? <p>Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
+           : renderAnswers(answers)));
     return (
       <div className="wrapper">
         <div style={{marginBottom: '10px'}}>
@@ -107,12 +113,7 @@ const AnswersTab = PureComponent(self => {
           </div>
         </div>
         {notifier}
-        <AnswerDialog submit={submitAnswer}/>
-        {answers === undefined
-          ? <p>Chargement en cours...</p>
-          : (answers.length == 0
-             ? <p>Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
-             : renderAnswers(answers))}
+        <AnswerDialog answers={answersBlock} submit={submitAnswer}/>
       </div>
     );
   };
