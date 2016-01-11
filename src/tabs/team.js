@@ -426,13 +426,29 @@ const TeamTab = PureComponent(self => {
   };
   const renderTimedAttemptInProgress = function (attempt) {
     // TODO: changer bsStyle en fonction du temps qui reste.
-    return (
-      <div className="section">
-        <Alert bsStyle='success'>
-          Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
-        </Alert>
-      </div>
-    );
+    const now = Date.now();
+    const closes_at = new Date(attempt.closes_at);
+    if (now <= closes_at) {
+      return (
+        <div className="section">
+          <Alert bsStyle='success'>
+            Votre tentative en temps limité se termine le {closes_at.toLocaleString()}.
+          </Alert>
+        </div>
+      );
+    } else {
+      return (
+        <div className="section">
+          <Alert bsStyle='danger'>
+            Votre tentative en temps limité s'est terminée le {closes_at.toLocaleString()}.
+          </Alert>
+          <p>
+            Vous pourrez bientôt revenir au sujet d'entrainement et
+            recommencer une tentative en temps limité.
+          </p>
+        </div>
+      );
+    }
   };
   const renderResetHints = function () {
     return (
