@@ -23,6 +23,13 @@ export const put = function (value) {
    };
 };
 
+export const toMap = function (items) {
+  const map = {};
+  items.map(item => { map[item.id] = item; });
+  return map;
+};
+
+
 /* A pure component must always render the same for given props and state.
 */
 
