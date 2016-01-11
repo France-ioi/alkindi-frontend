@@ -47,20 +47,15 @@ export const Api = function (config) {
     return req;
   }
 
-  const bare_api = ApiFactory({get, post});
+  const bare = ApiFactory({get, post});
 
   const emitter = new EventEmitter();
-  const api = {emitter};
-  Object.keys(bare_api).map(function (action) {
+  const api = {emitter, bare};
+  Object.keys(bare).map(function (action) {
     api[action] = function (...args) {
       return new Promise(function (resolve, reject) {
         emitter.emit('begin');
-        bare_api[action](...args).end(function (err, res) {
-          /*
-          let frontend_version = res.header['x-frontend-version'];
-          if (config.frontend_version !== frontend_version) {
-            console.log('frontend version mismatch', Alkindi.config.frontend_version, frontend_version);
-          }*/
+        bare[action](...args).end(function (err, res) {
           if (err) {
             emitter.emit('server_error', res, err);
             reject({success: false, error: 'failed', source: 'server'});
@@ -71,7 +66,7 @@ export const Api = function (config) {
             reject(res.body);
             return;
           }
-          emitter.emit('end', res, res.body);
+          emitter.emit('end', res);
           resolve(res.body);
         });
       });

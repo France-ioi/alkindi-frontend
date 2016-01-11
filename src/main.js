@@ -71,10 +71,16 @@ window.Alkindi = (function () {
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
       store.dispatch({type: 'BEGIN_REFRESH', user_id});
-      Alkindi.api.readUser(user_id).then(function (result) {
+      Alkindi.api.bare.readUser(user_id).end(function (err, res) {
+        if (err) return reject();  // XXX
+        /*
+        let frontend_version = res.header['x-frontend-version'];
+        if (config.frontend_version !== frontend_version) {
+          console.log('frontend version mismatch', Alkindi.config.frontend_version, frontend_version);
+        }*/
         store.dispatch({type: 'END_REFRESH', seed: res.body});
         resolve();
-      }, reject);
+      });
     });
   };
   Alkindi.refresh = function (user_id) {
