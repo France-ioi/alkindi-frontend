@@ -28,7 +28,7 @@ window.onerror = function (message, url, line, column, error) {
   try {
     const img = document.createElement('img');
     const qs = [
-      'version=' + encodeURIComponent(Alkindi.config.front_version),
+      'version=' + encodeURIComponent(Alkindi.config.frontend_version),
       'user_id=' + encodeURIComponent(Alkindi.config.seed.user.id)
     ];
     if (!Alkindi.config.nocdn) {
