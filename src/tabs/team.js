@@ -431,7 +431,7 @@ const TeamTab = PureComponent(self => {
     return (
       <div className="section">
         <Alert bsStyle='success'>
-          Votre tentative en temps limité se termine le {new Date(attempt.ends_at).toLocaleString()}.
+          Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
         </Alert>
       </div>
     );
