@@ -15,7 +15,8 @@ const ErrorMessages = {
   'already have a task': "Votre équipe a déjà accès au sujet.",
   'training is not open': "L'épreuve n'est pas encore ouverte.",
   'unknown qualification code': "Le code de qualification que vous avez entré est incorrect.",
-  'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder."
+  'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder.",
+  'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute"
 };
 
 const Notifier = PureComponent(self => {
