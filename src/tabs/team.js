@@ -531,11 +531,12 @@ const TeamTab = PureComponent(self => {
                    ? renderEnterCodes(attempt)
                    : (task === undefined
                       ? renderUnlockTask()
-                      : (showOwnAccessCode
-                         ? renderLateEnterCode()
-                         : (attempt.is_unsolved
+                      : (<div>
+                          {showOwnAccessCode && renderLateEnterCode()}
+                          {(attempt.is_unsolved
                             ? renderTrainingInProgress()
-                            : renderStartTimedAttempt())))))
+                            : renderStartTimedAttempt())}
+                         </div>))))
              : (attempt.needs_codes
                 ? renderEnterCodes(attempt)
                 : (task === undefined
