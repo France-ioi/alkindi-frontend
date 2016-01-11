@@ -49,10 +49,7 @@ const Notifier = PureComponent(self => {
   };
 
   const refresh = function () {
-    const {user, refresh} = self.props;
-    if (user === undefined)
-      return callOnRefresh(false)
-    return self.props.refresh(user.id).then(function () {
+    return Alkindi.refresh().then(function () {
       callOnRefresh(true);
     }, function () {
       callOnRefresh(false);
@@ -65,14 +62,14 @@ const Notifier = PureComponent(self => {
     return setError(ErrorMessages[code] || code);
   };
 
-  const end = function (options) {
-    if (options.method === 'GET') {
+  const end = function (res) {
+    if (res.req.method === 'GET') {
       // GET requests do not need a success message, and do not need
       // to perform a refresh.
       self.setState({state: 'idle'});
     } else {
-      if (options.refresh)
-        refresh();
+      // Automatically refresh after actions.
+      refresh();
       self.setState({
         state: 'success',
         message: undefined,
@@ -165,8 +162,8 @@ const Notifier = PureComponent(self => {
 });
 
 const selector = function (state, _props) {
-  const {refresh, user} = state;
-  return {refresh, user};
+  const {user} = state;
+  return {user};
 };
 
 export default connect(selector)(Notifier);
