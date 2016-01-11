@@ -47,6 +47,9 @@ const reduceTick = function (state) {
   // Periodic process, this executes every second and
   // at the end of every refresh.
   const now = Date.now();
+  // TODO: correct time using a time delta from server.
+  // TODO: check if (now - previous now) > 30 seconds,
+  //       if so refresh time delta from server.
   const newState = {...state, now};
   const {round, attempt, task} = state;
   if (round !== undefined) {
@@ -66,6 +69,7 @@ const reduceTick = function (state) {
   // Trigger a refresh when the countdown ends.
   if (state.countdown !== undefined && newState.countdown === undefined) {
     setTimeout(function () {
+      // TODO: Also set the current tab to 'team'.
       Alkindi.refresh();
     }, 0);
   }
