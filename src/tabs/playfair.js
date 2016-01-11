@@ -210,6 +210,11 @@ const PlayFairTab = PureComponent(self => {
         {notifier}
         <div>
           <p>Voici ci-dessous des outils pour vous aider à déchiffrer le message.</p>
+          <p>
+            {'La documentation des outils est '}
+            <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF" target="new">
+              <i className="fa fa-download"/>{' disponible en téléchargement'}
+            </a>.</p>
           <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponse.</p>
         </div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
