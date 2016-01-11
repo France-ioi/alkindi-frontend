@@ -18,7 +18,8 @@ const ErrorMessages = {
   'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder.",
   'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute.",
   'invalid input': "Le format de votre réponse est invalide.",
-  'attempt is closed': "L'épreuve en temps limité est terminée, vous ne pouvez plus soumettre."
+  'attempt is closed': "L'épreuve en temps limité est terminée, vous ne pouvez plus soumettre.",
+  'too many attempts': "Vous avez atteint le nombre maximum de tentatives en temps limité."
 };
 
 const Notifier = PureComponent(self => {
