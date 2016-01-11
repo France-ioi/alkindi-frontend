@@ -11,8 +11,8 @@ const initialState = {
 
 const seedProps = ['user', 'team', 'round', 'attempt', 'task', 'my_latest_revision_id'];
 
-const reduceInit = function (state, refresh) {
-  return {...state, refresh};
+const reduceInit = function (state) {
+  return {...state};
 };
 
 const reduceBeginRefresh = function (state, user_id) {
@@ -62,7 +62,7 @@ const reduceTick = function (state) {
   // Trigger a refresh when the countdown ends.
   if (state.countdown !== undefined && newState.countdown === undefined) {
     setTimeout(function () {
-      state.refresh(state.user.id);
+      Alkindi.refresh();
     }, 0);
   }
   return newState;
@@ -227,7 +227,7 @@ const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
     case 'INIT':
-      return reduceInit(state, action.refresh);
+      return reduceInit(state);
     case 'BEGIN_REFRESH':
       return reduceBeginRefresh(state, action.user_id);
     case 'END_REFRESH':
