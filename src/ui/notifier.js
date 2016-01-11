@@ -16,7 +16,7 @@ const ErrorMessages = {
   'already have a task': "Votre équipe a déjà accès au sujet.",
   'training is not open': "L'épreuve n'est pas encore ouverte.",
   'unknown qualification code': "Le code de qualification que vous avez entré est incorrect.",
-  'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder.",
+  'must pass training': "Votre équipe a déjà commencé une tentative.",
   'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute.",
   'invalid input': "Le format de votre réponse est invalide.",
   'attempt is closed': "L'épreuve en temps limité est terminée, vous ne pouvez plus soumettre.",
