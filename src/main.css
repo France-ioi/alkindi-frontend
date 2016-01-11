@@ -924,6 +924,15 @@ iframe.task {
   font-style: italic;
 }
 
+.answer-list .rowIsSubmitted {
+  background-color: #ffc;
+}
+.answer-list .colScore {
+  text-align: right;
+}
+.answer-list .rowIsSubmitted .colScore {
+  font-size: 120%;
+}
 
 /*
 

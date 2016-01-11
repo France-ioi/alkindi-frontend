@@ -47,22 +47,22 @@ const AnswersTab = PureComponent(self => {
       const submitter = users[answer.submitter_id];
       const isCurrent = submittedAnswerId === answer.id;
       const classes = [
-        isCurrent && 'answer-isSubmitted'
+        isCurrent && 'rowIsSubmitted'
       ];
       return (
         <tr key={answer.id} className={classnames(classes)}>
-          <td>
+          <td className="colIsCurrent">
             {isCurrent &&
               <Tooltip content={<p>Vous venez de soumettre cette réponse.</p>}>
                 <i className="fa fa-asterisk"/>
               </Tooltip>}
           </td>
-          <td>{answer.ordinal}</td>
-          <td>{new Date(answer.created_at).toLocaleString()}</td>
-          <td>{submitter.username}</td>
-          <td><Answer answer={answer.answer}/></td>
-          <td>{answer.score}</td>
-          <td>
+          <td className="colOrdinal">{answer.ordinal}</td>
+          <td className="colSubmittedAt">{new Date(answer.created_at).toLocaleString()}</td>
+          <td className="colSubmitter">{submitter.username}</td>
+          <td className="colAnswer"><Answer answer={answer.answer}/></td>
+          <td className="colScore">{answer.score}</td>
+          <td className="colIsSolution">
             {answer.is_solution &&
               <Tooltip content={<p>Cette réponse valide l'épreuve, félicitations !</p>}>
                 <i className="fa fa-thumbs-o-up"/>
