@@ -19,6 +19,10 @@ const reduceBeginRefresh = function (state, user_id) {
   return {...state, refreshing: true};
 };
 
+const reduceCancelRefresh = function (state, user_id) {
+  return {...state, refreshing: false};
+};
+
 const reduceEndRefresh = function (state, seed) {
   if (!seed)
     seed = {};
@@ -232,6 +236,8 @@ const actualReduce = function (state, action) {
       return reduceBeginRefresh(state, action.user_id);
     case 'END_REFRESH':
       return reduceEndRefresh(state, action.seed);
+    case 'CANCEL_REFRESH':
+      return reduceCancelRefresh(state);
     case 'AFTER_LOGOUT':
       return reduceSeed(state, undefined);
     case 'TICK':
