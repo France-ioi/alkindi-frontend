@@ -57,7 +57,7 @@ export const Api = function (config) {
         emitter.emit('begin');
         bare[action](...args).end(function (err, res) {
           if (err) {
-            emitter.emit('server_error', res, err);
+            emitter.emit('server_error', err, res);
             reject({success: false, error: 'failed', source: 'server'});
             return;
           }
