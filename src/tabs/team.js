@@ -351,8 +351,13 @@ const TeamTab = PureComponent(self => {
     return renderStartAttempt(message);
   };
   const renderStartTimedAttempt = function () {
+    const {round} = self.props;
     const message = (
-      <p>Vous avez résolu le sujet d'entrainement et pouvez faire une tentative en temps limité.</p>
+      <p>
+        {'Vous avez résolu le sujet d\'entrainement et pouvez faire jusqu\'à '}
+        {round.max_attempts}
+        {' tentatives en temps limité.'}
+      </p>
     );
     return renderStartAttempt(message);
   };
@@ -441,6 +446,7 @@ const TeamTab = PureComponent(self => {
         </div>
       );
     } else {
+      const {round} = self.props;
       return (
         <div className="section">
           <Alert bsStyle='danger'>
@@ -448,7 +454,8 @@ const TeamTab = PureComponent(self => {
           </Alert>
           <p>
             Vous pouvez revenir au sujet d'entrainement et recommencer une
-            tentative en temps limité, dans la limite du nombre autorisé.
+            tentative en temps limité, dans la limite de {round.max_attempts}
+            autorisées.
           </p>
           <p className="text-center">
             <Button onClick={onResetToTraining}>
