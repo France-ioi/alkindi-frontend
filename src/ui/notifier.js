@@ -16,7 +16,8 @@ const ErrorMessages = {
   'training is not open': "L'épreuve n'est pas encore ouverte.",
   'unknown qualification code': "Le code de qualification que vous avez entré est incorrect.",
   'must pass training': "Votre équipe a déjà débloqué le sujet, vous pouvez y accéder.",
-  'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute"
+  'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute",
+  'invalid input': "Le format de votre réponse est invalide"
 };
 
 const Notifier = PureComponent(self => {
