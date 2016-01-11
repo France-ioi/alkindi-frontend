@@ -66,7 +66,6 @@ window.Alkindi = (function () {
   const Alkindi = {};
 
   // Create the global state store.
-  let store = Alkindi.store = createStore(reducer);
 
   const refresh = function (user_id) {
     return new Promise(function (resolve, reject) {
@@ -94,17 +93,10 @@ window.Alkindi = (function () {
   };
 
   Alkindi.install = function (mainElement) {
-    /*
-    // Enable auto-step interval.
-    // XXX This should be done by an action.
-    function autoStepCallback () {
-      const state = store.getState();
-      if (!state.autoRefresh || state.toolPointer === undefined)
-        return;
-      store.dispatch({type: 'STEP'});
+    function sendTick () {
+      store.dispatch({type: 'TICK'});
     }
-    const _autoStepInterval = setInterval(autoStepCallback, 100);
-    */
+    sendTickInterval = setInterval(sendTick, 1000);
     // Insert HTML.
     ReactDOM.render(<Provider store={store}><App/></Provider>, mainElement);
   };
