@@ -40,14 +40,24 @@ const reduceEndRefresh = function (state, seed) {
 };
 
 const reduceTick = function (state) {
+  // Periodic process, this executes every second and
+  // at the end of every refresh.
   const now = Date.now();
-  const {round} = state;
+  const newState = {...state, now};
+  const {round, attempt, task} = state;
   if (round !== undefined) {
-    const has_not_started = now < new Date(round.training_opens_at).getTime();
-    if (has_not_started !== state.has_not_started)
-      state = {...state, round_has_not_started: has_not_started};
+    newState.round_has_not_started =
+      now < new Date(round.training_opens_at).getTime();
   }
-  return state;
+  // Update the countdown.
+  newState.countdown = undefined;
+  if (attempt !== undefined && task !== undefined) {
+    if (attempt['closes_at']) {
+      const attempt_close_time = new Date(attempt['closes_at']).getTime();
+      newState.countdown = attempt_close_time - now;
+    }
+  }
+  return newState;
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
@@ -216,8 +226,8 @@ const actualReduce = function (state, action) {
       return reduceEndRefresh(state, action.seed);
     case 'AFTER_LOGOUT':
       return reduceSeed(state, undefined);
-    // case 'TICK':
-    //   return reduceTick(state);
+    case 'TICK':
+      return reduceTick(state);
     case 'SET_USER':
       return reduceSetUser(state, action.user);
     case 'SET_TEAM':
