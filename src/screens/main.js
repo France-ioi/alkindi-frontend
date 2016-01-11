@@ -5,6 +5,7 @@ import {PureComponent} from '../misc';
 
 import Logout from '../ui/logout';
 import Tabs from '../ui/tabs';
+import CountdownTimer from '../ui/countdown_timer';
 import TaskTab from '../tabs/task';
 import TeamTab from '../tabs/team';
 import PlayFairTab from '../tabs/playfair';
@@ -21,7 +22,7 @@ export const MainScreen = PureComponent(self => {
 
    self.render = function () {
     // Interface principale...
-    const {activeTabKey, enabledTabs, logoutUrl, onLogout, user_id} = self.props;
+    const {activeTabKey, enabledTabs, logoutUrl, onLogout, user_id, countdown} = self.props;
     let content = false;
     switch (activeTabKey) {
       case 'team':
@@ -46,6 +47,7 @@ export const MainScreen = PureComponent(self => {
           <div className="wrapper">
             <img id="header-logo" src={image_url('alkindi-logo.png')} />
             <Tabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
+            <CountdownTimer visible={countdown !== undefined} seconds={Math.round(countdown/1000)}/>
             <Logout user={self.props.user} logoutUrl={logoutUrl} onLogout={onLogout} />
           </div>
         </div>
@@ -56,8 +58,8 @@ export const MainScreen = PureComponent(self => {
 });
 
 export const mainSelector = function (state) {
-  const {activeTabKey, enabledTabs, user, attempt, task} = state;
-  return {activeTabKey, enabledTabs, user_id: user.id, attempt, task};
+  const {activeTabKey, enabledTabs, user, attempt, task, countdown} = state;
+  return {activeTabKey, enabledTabs, user_id: user.id, attempt, task, countdown};
 };
 
 export default connect(mainSelector)(MainScreen);
