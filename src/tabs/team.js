@@ -154,15 +154,13 @@ const TeamTab = PureComponent(self => {
     api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
   };
   const onAccessTask = function () {
-    const {user, team} = self.props;
-    const accessTask = function () {
-      api.assignAttemptTask(user.id);
-    };
+    const {user, team, attempt} = self.props;
     // If the team is already locked, no confirmation is asked.
-    if (team.is_locked)
-      return accessTask();
-    if (window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
-      return accessTask();
+    if (!team.is_locked && !window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
+      return;
+    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez 60 minutes pour le resoudre."))
+      return;
+    api.assignAttemptTask(user.id);
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
