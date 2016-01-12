@@ -51,7 +51,6 @@ export default PureComponent(self => {
   const onRevealAccessCode = function () {
     const {attempt} = self.props;
     const user_id = self.props.user.id;
-    console.log('onRevealAccessCode', user_id);
     Alkindi.refresh({access_code: attempt.id});
   };
   const onAccessTask = function () {
@@ -72,6 +71,12 @@ export default PureComponent(self => {
   const onResetToTraining = function () {
     const team_id = self.props.team.id;
     Alkindi.api.resetTeamToTraining(team_id);
+  };
+  const onGoToTask = function () {
+    self.props.onSwitchTab('task');
+  };
+  const onGoToAnswers = function () {
+    self.props.onSwitchTab('answers');
   };
 
   const renderCancelAttempt = function (attempt) {
@@ -229,7 +234,7 @@ export default PureComponent(self => {
                   Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
                 </Alert>}
             <p className="text-center">
-              <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
+              <Button bsStyle="primary" bsSize="large" onClick={onGoToTask}>
                 lire le sujet <i className="fa fa-arrow-right"/>
               </Button>
             </p>
@@ -238,7 +243,7 @@ export default PureComponent(self => {
               réponse dans l'onglet Réponses.
             </p>
             <p className="text-center">
-              <Button bsStyle="default" bsSize="large" onClick={onAccessTask}>
+              <Button bsStyle="default" bsSize="large" onClick={onGoToAnswers}>
                 j'ai résolu l'énigme <i className="fa fa-arrow-right"/>
               </Button>
             </p>

@@ -8,8 +8,13 @@ import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 import Tooltip from '../ui/tooltip';
 import AttemptTimeline from '../ui/attempt_timeline';
+import {setActiveTab} from '../actions';
 
 const TeamTab = PureComponent(self => {
+
+  const onSwitchTab = function (tabKey) {
+    self.props.dispatch(setActiveTab(tabKey));
+  };
 
   const onIsOpenChanged = function (event) {
     self.setState({
@@ -183,7 +188,7 @@ const TeamTab = PureComponent(self => {
         <Notifier emitter={Alkindi.api.emitter}/>
         {attempts &&
           <div className="attempts">
-            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt} round={round} team={team} user={user}/>)}
+            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt} round={round} team={team} user={user} onSwitchTab={onSwitchTab}/>)}
           </div>}
       </div>
     );
