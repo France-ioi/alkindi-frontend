@@ -21,7 +21,7 @@ const TeamTab = PureComponent(self => {
   const refAccessCode = function (element) {
     if (element) {
       const user_id = element.getAttribute('data-user_id');
-      accessCodes[user_id] = accessCodes;
+      accessCodes[user_id] = element;
     }
   };
   const clearAccessCode = function () {
@@ -30,10 +30,10 @@ const TeamTab = PureComponent(self => {
   const onEnterAccessCode = function (event) {
     const user_id = self.props.user.id;
     const code_user_id = event.currentTarget.getAttribute('data-user_id');
-    const element = self.accessCodes[code_user_id];
+    const element = accessCodes[code_user_id];
     const code = element.value.trim();
     element.value = '';
-    api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
+    Alkindi.api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
   };
 
   const renderRoundPrelude = function (round) {
