@@ -284,7 +284,6 @@ export default PureComponent(self => {
                 <p>
                   Votre tentative en temps limité s'est terminée le {new Date(attempt.closes_at).toLocaleString()}.
                 </p>
-                <p>{round.max_attempts} / {attempt.ordinal}</p>
                 <p>
                   {'Vous pouvez revenir au sujet d\'entrainement ou démarrer une nouvelle '}
                   {'tentative en temps limité.'}
