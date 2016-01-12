@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
-import memoize from 'memoize';
+import memoize from 'memoizejs';
 
 import {PureComponent, toMap} from '../misc';
 import Notifier from '../ui/notifier';
