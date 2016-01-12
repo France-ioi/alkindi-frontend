@@ -181,21 +181,27 @@ export default PureComponent(self => {
   };
 
   const renderAttemptNotStarted = function (attempt) {
-    const {round, team} = self.props;
+    const {round, team, user_id} = self.props;
     const isOpen = !attempt.is_training || round.is_training_open;
+    const showOwnAccessCode = !team.members.find(function (member) {
+      return member.access_code && member.user_id === user_id;
+    });
     return (
       <div>
         {renderTimeline('unlock')}
         <div className="timelineInfo">
           <div className="timelineInfoContent">
-            {isOpen
-              ? <p>
-                  Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-                  vous pouvez maintenant le déverouiller en cliquant.
-                </p>
+            {attempt.is_training
+              ? (showOwnAccessCode
+                 ? renderLateCodeEntry()
+                 : (round.is_training_open
+                      ? <p>Votre équipe a confirmé l'accès au sujet, vous pouvez
+                           maintenant le dévérouiller en cliquant.</p>
+                      : <p>Votre équipe a confirmé l'accès au sujet, vous êtes
+                           prêts à commencer dès l'ouverture de l'épreuve.</p>))
               : <p>
                   Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-                  vous êtes prêts à commencer dès l'ouverture de l'épreuve.
+                  vous pouvez maintenant le déverouiller en cliquant.
                 </p>}
             {!team.is_locked &&
               <p>
@@ -214,6 +220,20 @@ export default PureComponent(self => {
             {renderCancelAttempt(attempt)}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const renderLateCodeEntry = function () {
+    return (
+      <div className="section">
+        <p>Au moins l'un des membres de votre équipe a déjà saisi son code de
+           lancement, et a ouvert l'accès au sujet d'entrainement.
+        </p>
+        <p><strong>
+          Pour accéder au sujet en temps limité, il faudra saisir plus
+          de 50% des codes de lancement.</strong></p>
+        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
       </div>
     );
   };
