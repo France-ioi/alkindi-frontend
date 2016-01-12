@@ -107,7 +107,6 @@ window.Alkindi = (function () {
 
   Alkindi.refresh = function (user_id, request) {
     const state = store.getState();
-    console.log('< refresh', user_id, request);
     // Support omitting the user_id and the request, reading the value from state.
     if (typeof user_id === 'object') {
       request = user_id;
@@ -120,7 +119,6 @@ window.Alkindi = (function () {
     }
     if (request === undefined)
       request = {};
-    console.log('> refresh', user_id, request);
     return new Promise(function (resolve, reject) {
       store.dispatch({type: 'BEGIN_REFRESH', user_id, request});
       Alkindi.api.bare.refresh(user_id, request).end(function (err, res) {
