@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
+import memoize from 'memoize';
 
 import {PureComponent, toMap} from '../misc';
 import Notifier from '../ui/notifier';
@@ -13,44 +14,26 @@ const HistoryTab = PureComponent(self => {
 
   const api = Alkindi.api;
 
-  const addHandlers = function (revisions) {
-    revisions.forEach(function (revision) {
-      revision.load = function () {
-        const {cryptoChanged} = self.props;
-        if (cryptoChanged) {
-          if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
-            return;
-        }
-        self.props.dispatch({
-          type: 'USE_REVISION',
-          revision_id: revision.id
-        });
-      };
-    });
-  };
+  const onLoadRevision = memoize(function (revision_id) {
+    return function () {
+      const {cryptoChanged} = self.props;
+      if (cryptoChanged) {
+        if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
+          return;
+      }
+      self.props.dispatch({type: 'USE_REVISION', revision_id});
+    };
+  });
 
   const onRefresh = function () {
-    const {attempt} = self.props;
-    self.setState({refreshing: true});
-    api.listAttemptRevisions(attempt.id).then(
-      function (result) {
-        addHandlers(result.revisions);
-        self.setState({
-          refreshing: false,
-          revisions: result.revisions,
-          users: toMap(result.users),
-          workspaces: toMap(result.workspaces),
-          attempts: toMap(result.attempts)
-        });
-      },
-      function () {
-        self.setState({refreshing: false});
-      });
+    const {attempt_id} = self.props;
+    Alkindi.refresh({history: attempt_id});
   };
 
   const renderRevisions = function (revisions) {
-    const {users, workspaces, attempts} = self.state;
     const {currentRevisionId, cryptoChanged} = self.props;
+    const users = toMap(self.props.users);
+    const workspaces = toMap(self.props.workspaces);
     const renderRevisionRow = function (revision) {
       const workspace = workspaces[revision.workspace_id];
       const creator = users[revision.creator_id];
@@ -75,7 +58,7 @@ const HistoryTab = PureComponent(self => {
           <td>{new Date(revision.created_at).toLocaleString()}</td>
           <td>{creator.username}</td>
           <td>
-            <Button onClick={revision.load}>
+            <Button onClick={onLoadRevision(revision.id)}>
               <i className="fa fa-code-fork"/>
               {' recharger'}
             </Button>
@@ -105,15 +88,14 @@ const HistoryTab = PureComponent(self => {
   };
 
   self.render = function () {
-    const {revisions, refreshing} = self.state;
-    const {crytoChanged} = self.props;
+    const {revisions} = self.props;
     return (
       <div>
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>
             {' '}
-            <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
+            <RefreshButton refresh={onRefresh}/>
           </div>
         </div>
         <Notifier emitter={api.emitter}/>
@@ -135,18 +117,16 @@ const HistoryTab = PureComponent(self => {
       </div>
     );
   };
-}, _self => {
-  return {
-    refreshing: true,
-    revisions: undefined
-  };
 });
 
 const selector = function (state) {
-  const {crypto} = state;
+  const {crypto, attempt} = state;
+  const {revisions, users, workspaces} = state.response;
   return {
+    attempt_id: attempt.id,
     cryptoChanged: crypto.changed,
-    currentRevisionId: crypto.revisionId
+    currentRevisionId: crypto.revisionId,
+    revisions, users, workspaces
   };
 };
 

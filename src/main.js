@@ -70,28 +70,78 @@ window.Alkindi = (function () {
   let loginWindow;
   let loginOutcome;
 
-  const refresh = function (user_id) {
+  const sendTick = function () {
+    store.dispatch({type: 'TICK'});
+  };
+
+  const openInLoginWindow = function (url) {
+    loginWindow = window.open(url, "alkindi:login",
+      "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+  };
+
+  const messageListener = function (event) {
+    // TODO: understand why event.isTrusted is false on Firefox.
+    const message = JSON.parse(event.data);
+    if (message.action === 'afterLogin') {
+      // Assume the login window closed itself immediately after posting
+      // the message.
+      loginWindow = undefined;
+      // The CSRF token is cleared when the user logs out, and the server
+      // may need to send us a new one after the user has re-authenticated.
+      Alkindi.config.csrf_token = message.csrf_token;
+      // Perform a refresh, and chain it with the resolve/reject outcomes
+      // of the login promise.
+      const promise = Alkindi.refresh(message.user_id);
+      if (loginOutcome) {
+        const {resolve, reject} = loginOutcome;
+        loginOutcome = undefined;
+        promise.then(resolve, reject);
+      }
+      return;
+    }
+    if (message.action === 'afterLogout') {
+      Alkindi.dispatch({'type': 'AFTER_LOGOUT'});
+      window.location.reload()
+    }
+  };
+
+  Alkindi.refresh = function (user_id, request) {
+    const state = store.getState();
+    console.log('< refresh', user_id, request);
+    // Support omitting the user_id and the request, reading the value from state.
+    if (typeof user_id === 'object') {
+      request = user_id;
+      user_id = undefined;
+    }
+    if (user_id === undefined)
+      user_id = state.user_id;
+    if (typeof request !== 'object') {
+      request = state.request;
+    }
+    if (request === undefined)
+      request = {};
+    console.log('> refresh', user_id, request);
     return new Promise(function (resolve, reject) {
-      store.dispatch({type: 'BEGIN_REFRESH', user_id});
-      Alkindi.api.bare.readUser(user_id).end(function (err, res) {
+      store.dispatch({type: 'BEGIN_REFRESH', user_id, request});
+      Alkindi.api.bare.refresh(user_id, request).end(function (err, res) {
         if (err) {
           if (err.status == 403) {
             alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
-            Alkindi.login().then(function () { Alkindi.refresh(); });
+            Alkindi.login().then(function () {
+              Alkindi.refresh(request);
+            });
           }
           store.dispatch({type: 'CANCEL_REFRESH'});
-          return reject();
+          return reject(err, request);
         }
+        const response = res.body;
         const frontend_version = res.header['x-frontend-version'];
-        store.dispatch({type: 'FRONTEND_UPDATE', version: frontend_version});
-        store.dispatch({type: 'END_REFRESH', seed: res.body});
-        Alkindi.api.emitter.emit('refresh');
-        resolve();
+        store.dispatch({type: 'END_REFRESH', response, user_id, request, frontend_version});
+        const event = {response, user_id, request, frontend_version};
+        Alkindi.api.emitter.emit('refresh', event);
+        resolve(event);
       });
     });
-  };
-  Alkindi.refresh = function (user_id) {
-    return refresh(user_id || store.getState().user.id);
   };
 
   Alkindi.configure = function (config) {
@@ -102,13 +152,11 @@ window.Alkindi = (function () {
       configureAssets({template: config.assets_template});
     store.dispatch({type: 'INIT'});
     if ('seed' in config)
-      store.dispatch({type: 'END_REFRESH', seed: config.seed});
+      store.dispatch({type: 'END_REFRESH', response: config.seed});
   };
 
   Alkindi.install = function (mainElement) {
-    function sendTick () {
-      store.dispatch({type: 'TICK'});
-    }
+    window.addEventListener('message', messageListener);
     sendTickInterval = setInterval(sendTick, 1000);
     // Insert HTML.
     ReactDOM.render(<Provider store={store}><App/></Provider>, mainElement);
@@ -120,11 +168,6 @@ window.Alkindi = (function () {
     } else {
       store.dispatch(action);
     }
-  };
-
-  const openInLoginWindow = function (url) {
-    loginWindow = window.open(url, "alkindi:login",
-      "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
   };
 
   Alkindi.login = function () {
@@ -149,33 +192,6 @@ window.Alkindi = (function () {
   Alkindi.logout = function () {
     openInLoginWindow(Alkindi.config.logout_url);
   };
-
-  const messageListener = function (event) {
-    // TODO: understand why event.isTrusted is false on Firefox.
-    const message = JSON.parse(event.data);
-    if (message.action === 'afterLogin') {
-      // Assume the login window closed itself immediately after posting
-      // the message.
-      loginWindow = undefined;
-      // The CSRF token is cleared when the user logs out, and the server
-      // may need to send us a new one after the user has re-authenticated.
-      Alkindi.config.csrf_token = message.csrf_token;
-      // Perform a refresh, and chain it with the resolve/reject outcomes
-      // of the login promise.
-      const promise = refresh(message.user_id);
-      if (loginOutcome) {
-        const {resolve, reject} = loginOutcome;
-        loginOutcome = undefined;
-        promise.then(resolve, reject);
-      }
-      return;
-    }
-    if (message.action === 'afterLogout') {
-      // Alkindi.dispatch({'type': 'LOGOUT'});
-      window.location.reload()
-    }
-  };
-  window.addEventListener('message', messageListener);
 
   return Alkindi;
 }());

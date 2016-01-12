@@ -40,12 +40,39 @@ export default PureComponent(self => {
     );
   }
 
-  const onStartAttempt = function () {};
-  const onCancelAttempt = function () {};
-  const onRevealAccessCode = function () {};
-  const onAccessTask = function () {};
-  const onResetHints = function () {};
-  const onResetToTraining = function () {};
+  const onStartAttempt = function () {
+    const user_id = self.props.user.id;
+    Alkindi.api.startAttempt(user_id);
+  };
+  const onCancelAttempt = function () {
+    const user_id = self.props.user.id;
+    Alkindi.api.cancelAttempt(user_id);
+  };
+  const onRevealAccessCode = function () {
+    const {attempt} = self.props;
+    const user_id = self.props.user.id;
+    console.log('onRevealAccessCode', user_id);
+    Alkindi.refresh({access_code: attempt.id});
+  };
+  const onAccessTask = function () {
+    const {user, team, attempt} = self.props;
+    // If the team is already locked, no confirmation is asked.
+    if (!team.is_locked && !window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
+      return;
+    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez 60 minutes pour le resoudre."))
+      return;
+    Alkindi.api.assignAttemptTask(user.id);
+  };
+  const onResetHints = function () {
+    const user_id = self.props.user.id;
+    if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos coéquipiers.")) {
+      Alkindi.api.resetHints(user_id);
+    }
+  };
+  const onResetToTraining = function () {
+    const team_id = self.props.team.id;
+    Alkindi.api.resetTeamToTraining(team_id);
+  };
 
   const renderCancelAttempt = function (attempt) {
     return (attempt.is_training ?
@@ -110,7 +137,6 @@ export default PureComponent(self => {
   };
 
   const renderAttemptNotConfirmed = function (attempt) {
-    let access_code; //self.state;
     return (
       <div>
         {renderTimeline('confirm')}
@@ -121,11 +147,11 @@ export default PureComponent(self => {
             </p>
             <p className="access-code-block">
               <span className="access-code">
-                {access_code === undefined
+                {attempt.access_code === undefined
                  ? <Button bsSize="large" onClick={onRevealAccessCode}>
                      <i className="fa fa-unlock-alt"/> révéler
                    </Button>
-                 : <span className="code">{access_code}</span>}
+                 : <span className="code">{attempt.access_code}</span>}
               </span>
             </p>
             {attempt.is_training
@@ -252,6 +278,7 @@ export default PureComponent(self => {
                 <p>
                   Votre tentative en temps limité s'est terminée le {new Date(attempt.closes_at).toLocaleString()}.
                 </p>
+                <p>{round.max_attempts} / {attempt.ordinal}</p>
                 <p>
                   {'Vous pouvez revenir au sujet d\'entrainement ou démarrer une nouvelle '}
                   {'tentative en temps limité.'}
@@ -273,7 +300,12 @@ export default PureComponent(self => {
       <div className="timelinePast">
         {renderTimeline('past')}
         <div className="timelineInfo">
-          <p className="timelineInfoContent">Cette tentative est terminée.</p>
+          <div className="timelineInfoContent">
+            {attempt.is_training
+             ? <p>Vous pourrez revenir à l'entrainement après être
+                  sorti de l'épreuve en temps limité.</p>
+             : <p>Cette tentative est terminée.</p>}
+          </div>
         </div>
       </div>
     );

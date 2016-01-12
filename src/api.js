@@ -6,12 +6,7 @@ var request = require('superagent');
 export const ApiFactory = function (methods) {
   const {get, post} = methods;
   return {
-    readUser: (user_id) => get('users/'+user_id),
-    getAccessCode: (user_id) => get('users/'+user_id+'/access_code'),
-    loadRevision: (revision_id) => get('workspace_revisions/'+revision_id),
-    listAttemptRevisions: (attempt_id) => get('attempts/'+attempt_id+'/revisions'),
-    listAttemptAnswers: (attempt_id) => get('attempts/'+attempt_id+'/answers'),
-    listTeamAttempts: (team_id) => get('teams/'+team_id+'/attempts'),
+    refresh: (user_id, request) => post('users/'+user_id, request),
     qualifyUser: (user_id, data) => post('users/'+user_id+'/qualify', data),
     createTeam: (user_id) => post('users/'+user_id+'/create_team'),
     joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),

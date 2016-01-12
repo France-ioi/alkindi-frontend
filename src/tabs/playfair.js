@@ -249,7 +249,8 @@ const PlayFairTab = PureComponent(self => {
 });
 
 const selector = function (state) {
-  const {user, task, crypto} = state;
+  const {crypto, response} = state;
+  const {user, task} = response;
   return {user_id: user.id, task, crypto};
 };
 

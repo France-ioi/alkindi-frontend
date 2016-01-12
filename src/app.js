@@ -34,7 +34,8 @@ export const App = PureComponent(self => {
 });
 
 export const selector = function (state) {
-  const {user, team, crypto} = state;
+  const {crypto} = state;
+  const {user, team} = state.response;
   const changed = crypto && crypto.changed;
   return {have_user: !!user, have_team: !!team, changed};
 };

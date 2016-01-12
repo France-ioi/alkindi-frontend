@@ -58,9 +58,10 @@ export const MainScreen = PureComponent(self => {
 
 });
 
-export const mainSelector = function (state) {
-  const {activeTabKey, enabledTabs, user, round, attempt, task, countdown, frontendUpdate} = state;
+export const selector = function (state) {
+  const {activeTabKey, enabledTabs, response, countdown, frontendUpdate} = state;
+  const {user, round, attempt, task} = state.response;
   return {activeTabKey, enabledTabs, user_id: user.id, round, attempt, task, countdown, frontendUpdate};
 };
 
-export default connect(mainSelector)(MainScreen);
+export default connect(selector)(MainScreen);

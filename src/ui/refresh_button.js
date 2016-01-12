@@ -5,34 +5,13 @@ import {Button} from 'react-bootstrap';
 import {PureComponent} from '../misc';
 import classnames from 'classnames';
 
-export const selector = function (state, props) {
-  return {
-    refreshing: props.refreshing || state.refreshing,
-    refresh: props.refresh
-  };
-};
-
 export const RefreshButton = PureComponent(self => {
   const onClick = function () {
-    let {refresh} = self.props;
-    if (refresh) {
-      // Local refresh.
-      handleOutcome(refresh())
-    } else {
-      // Global refresh.
-      handleOutcome(Alkindi.refresh())
-    }
-  };
-  const handleOutcome = function (promise) {
-    const {onRefresh} = self.props;
-    if (onRefresh) {
-      promise.then(function () {
-        onRefresh({success: true});
-      }, function () {
-        onRefresh({success: false});
-      });
-    }
-    return promise;
+    Alkindi.refresh().then(function () {
+      onRefresh({success: true});
+    }, function () {
+      onRefresh({success: false});
+    });
   };
   self.render = function () {
     const refreshing = self.props.refreshing;
@@ -44,5 +23,12 @@ export const RefreshButton = PureComponent(self => {
     );
   };
 });
+
+export const selector = function (state, _props) {
+  return {
+    request: state.request,
+    refreshing: state.refreshing
+  };
+};
 
 export default connect(selector)(RefreshButton);

@@ -166,7 +166,7 @@ const JoinTeamScreen = PureComponent(self => {
 });
 
 export const selector = function (state) {
-  const {user, round} = state;
+  const {user, round} = state.response;
   return {user, round};
 };
 

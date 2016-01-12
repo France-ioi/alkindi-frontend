@@ -17,7 +17,7 @@ export const LogoutButton = PureComponent(self => {
 });
 
 export const selector = function (state) {
-  const {user} = state;
+  const {user} = state.response;
   return {user};
 };
 
