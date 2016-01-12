@@ -170,9 +170,9 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-}, self => {
+}, function (self) {
   return {
-    isOpen: undefined
+    isOpen: self.props.team.is_open
   };
 });
 
