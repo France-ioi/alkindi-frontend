@@ -11,6 +11,30 @@ import Tooltip from '../ui/tooltip';
 const TeamTab = PureComponent(self => {
 
   const api = Alkindi.api;
+
+  const onRefresh = function () {
+    const {team} = self.props;
+    Alkindi.refresh();
+    self.setState({refreshing: true});
+    api.listTeamAttempts(team.id).then(
+      function (result) {
+        const attempts = result.attempts;
+        if (attempts.length == 0) {
+          attempts.push({ordinal: 0, is_training: true, is_unsolved: true, is_current: true});
+        }
+        while (attempts.length < 4) {
+          attempts.push({ordinal: attempts.length, is_unsolved: true});
+        }
+        self.setState({
+          refreshing: false,
+          attempts: attempts
+        });
+      },
+      function () {
+        self.setState({refreshing: false});
+      });
+  };
+
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
@@ -404,7 +428,7 @@ const TeamTab = PureComponent(self => {
         <div className="pull-right">
           <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de votre équipe.</p>}/>
           {' '}
-          <RefreshButton onRefresh={clearAccessCode}/>
+          <RefreshButton refresh={onRefresh}/>
         </div>
         <h1>{round.title}</h1>
         {attempt === undefined
