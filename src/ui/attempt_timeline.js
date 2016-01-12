@@ -150,6 +150,7 @@ export default PureComponent(self => {
   };
 
   const renderAttemptNotStarted = function (attempt) {
+    const {round, team} = self.props;
     return (
       <div>
         {renderTimeline('unlock')}
@@ -159,7 +160,7 @@ export default PureComponent(self => {
               Les membres de votre équipe ont donné leur accord pour accéder au sujet,
               vous pouvez maintenant le déverouiller en cliquant.
             </p>
-            {!attempt.team.is_locked &&
+            {!team.is_locked &&
               <p>
                 <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
                 plus changer la composition de votre équipe pendant le reste du concours.
@@ -175,7 +176,7 @@ export default PureComponent(self => {
               vous êtes prêts à commencer dès l'ouverture de l'épreuve.
             </p>
             <Alert bsStyle='success'>
-              L'accès au sujet sera ouvert le {new Date(attempt.round.training_opens_at).toLocaleString()}.
+              L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
             </Alert>
             <hr/>
             {renderCancelAttempt(attempt)}
@@ -198,7 +199,7 @@ export default PureComponent(self => {
                   importantes !
                 </p>
               : <Alert bsStyle='success'>
-                  Votre tentative en temps limité se termine le {closes_at.toLocaleString()}.
+                  Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
                 </Alert>}
             <p className="text-center">
               <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
@@ -221,6 +222,7 @@ export default PureComponent(self => {
   };
 
   const renderAttemptFinished = function (attempt) {
+    const {round} = self.props;
     return (
       <div>
         {renderTimeline('done')}
@@ -229,7 +231,7 @@ export default PureComponent(self => {
             {attempt.is_training
             ? <div>
                 <p>
-                  Vous avez résolu le sujet d\'entrainement, bravo !
+                  Vous avez résolu le sujet d'entrainement, bravo !
                 </p>
                 <p>
                   Vous pouvez maintenant démarrer une épreuve en temps limité
@@ -251,10 +253,8 @@ export default PureComponent(self => {
                   Votre tentative en temps limité s'est terminée le {new Date(attempt.closes_at).toLocaleString()}.
                 </p>
                 <p>
-                  {'Vous pouvez revenir au sujet d\'entrainement et recommencer une'}
-                  {'tentative en temps limité, dans la limite de '}
-                  {round.max_attempts}
-                  {' autorisées.'}
+                  {'Vous pouvez revenir au sujet d\'entrainement ou démarrer une nouvelle '}
+                  {'tentative en temps limité.'}
                 </p>
                 <p className="text-center">
                   <Button onClick={onResetToTraining}>
@@ -286,7 +286,7 @@ export default PureComponent(self => {
       return renderAttemptNotConfirmed(attempt);
     if (!attempt.task_id)
       return renderAttemptNotStarted(attempt);
-    if (attempt.is_unsolved)
+    if (!attempt.is_completed)
       return renderAttemptInProgress(attempt);
     return renderAttemptFinished(attempt);
   };

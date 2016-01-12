@@ -243,6 +243,7 @@ const TeamTab = PureComponent(self => {
     );
   };
   const renderBadTeam = function () {
+    // KEEP
     return (
       <div className="section">
         <Alert bsStyle='warning'>
@@ -475,7 +476,7 @@ const TeamTab = PureComponent(self => {
         <Notifier emitter={api.emitter}/>
         {attempts &&
           <div className="attempts">
-            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt}/>)}
+            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt} round={round} team={team}/>)}
           </div>}
       </div>
     );
