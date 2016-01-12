@@ -79,9 +79,9 @@ const reduceTick = function (state) {
     }
   }
 
-  // Switch to team tab when the countdown elapses.
+  // Switch to 'attempts' tab when the countdown elapses.
   if (state.countdown !== undefined && newState.countdown === undefined) {
-    newState = reduceSetActiveTab(newState, 'team');
+    newState = reduceSetActiveTab(newState, 'attempts');
     setTimeout(function () {
       Alkindi.refresh();
     }, 0);
