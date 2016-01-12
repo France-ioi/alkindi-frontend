@@ -130,6 +130,12 @@ export const AnswerDialog = PureComponent(self => {
       });
    };
 
+   self.componentDidMount = function () {
+      // When the component mounts, select the first input box.
+      address && address.focus();
+   };
+
+
    self.render = function () {
       const {answers} = self.props;
       return (
