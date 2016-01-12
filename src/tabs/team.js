@@ -7,6 +7,7 @@ import {PureComponent} from '../misc';
 import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 import Tooltip from '../ui/tooltip';
+import AttemptTimeline from '../ui/attempt_timeline';
 
 const TeamTab = PureComponent(self => {
 
@@ -412,6 +413,7 @@ const TeamTab = PureComponent(self => {
   };
   self.render = function () {
     const {user, team, round, attempt, task, round_has_not_started} = self.props;
+    const {attempts} = self.state;
     const haveAttempt = attempt !== undefined;
     const haveTask = task !== undefined;
     const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
@@ -471,6 +473,10 @@ const TeamTab = PureComponent(self => {
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {task !== undefined && attempt.is_training && renderResetHints()}
         <Notifier emitter={api.emitter}/>
+        {attempts &&
+          <div className="attempts">
+            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt}/>)}
+          </div>}
       </div>
     );
   };
