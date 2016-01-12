@@ -8,12 +8,6 @@ const initialState = {
   crypto: {}
 };
 
-const seedProps = ['user', 'team', 'round', 'attempt', 'task', 'my_latest_revision_id'];
-
-const reduceInit = function (state) {
-  return {...state};
-};
-
 const reduceBeginRefresh = function (state, action) {
   const {user_id, request} = action;
   return {...state, refreshing: true, user_id, request};
