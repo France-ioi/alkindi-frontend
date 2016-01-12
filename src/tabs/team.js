@@ -163,7 +163,7 @@ const TeamTab = PureComponent(self => {
   };
   self.render = function () {
     const {user, round, team, attempt, attempts} = self.props;
-    const codeInput = attempts && attempts[0].needs_codes;
+    const codeInput = attempt && attempt.needs_codes;
     const teamUnlocked = !team.is_locked;
     const teamAdmin = teamUnlocked && team.creator.id === user.id;
     return (
@@ -197,7 +197,7 @@ const TeamTab = PureComponent(self => {
 
 const selector = function (state, _props) {
   const {user, round, team, attempts} = state.response;
-  const {attempt} = state.attempt;
+  const {attempt} = state;
   return {user, round, team, attempt, attempts};
 };
 

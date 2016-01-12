@@ -316,9 +316,9 @@ export default PureComponent(self => {
       return renderAttemptNotCreated(attempt);
     if (!attempt.started_at && attempt.needs_codes)
       return renderAttemptNotConfirmed(attempt);
-    if (!attempt.task_id)
+    if (!attempt.has_task)
       return renderAttemptNotStarted(attempt);
-    if (!attempt.is_completed)
+    if (!attempt.is_closed && !attempt.is_completed)
       return renderAttemptInProgress(attempt);
     return renderAttemptFinished(attempt);
   };
