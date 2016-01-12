@@ -934,6 +934,75 @@ iframe.task {
   font-size: 120%;
 }
 
+/* Timeline */
+
+.timeline {
+  border: 1px solid #777;
+  padding: 10px;
+  margin: 10px 0;
+  position: relative;
+}
+.timelineCurrent {
+  background-color: #FEFFC9;
+}
+.timelineCurrent .timelineTitle {
+  font-weight: bold;
+}
+.timelineSteps > div {
+  display: inline-block;
+  background-color: #F4D5D5;
+  padding: 0 20px 0 60px;
+  position: relative;
+  line-height: 76px;
+  font-weight: bold;
+}
+.timelineSteps > div::before,
+.timelineSteps > div::after {
+  content: "\f0da";
+  font-family: FontAwesome;
+  font-size: 133px;
+  font-weight: normal;
+  position: absolute;
+  color: #F4D5D5;
+  right: -42px;
+  z-index: 1;
+  top: 1px;
+}
+.timelineSteps > div::before {
+  color: #fff;
+  right: -47px;
+  top: 1px;
+}
+.timelineSteps > div:first-child {
+  padding-left: 25px;
+}
+.timelineSteps > div:last-child::before {
+  content: "";
+}
+.timelineSteps .active {
+  background-color: #eee;
+}
+.timelineSteps > div.active::after {
+  color: #eee;
+}
+.timelineInfo {
+  background-color: #eee;
+}
+.timelinePast .timelineInfo {
+  background-color: transparent;
+}
+.timelineInfoContent {
+  padding: 10px;
+  display: block;
+}
+.timeline-unavailable .timelineSteps > div {
+  color: #e7e7e7;
+  background-color: #888;
+}
+.timeline-unavailable .timelineSteps > div::after {
+  color: #888;
+}
+
 /*
 
  Dev elements
