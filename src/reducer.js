@@ -136,7 +136,7 @@ const actualReduce = function (state, action) {
     case 'CANCEL_REFRESH':
       return reduceCancelRefresh(state);
     case 'AFTER_LOGOUT':
-      return reduceSeed(state, undefined);
+      return initialState;
     case 'TICK':
       return reduceTick(state);
     case 'SET_ACTIVE_TAB':
