@@ -19,28 +19,13 @@ const AnswersTab = PureComponent(self => {
       self.setState({
         submittedAnswerId: result.answer_id
       });
-      onRefresh();
+      Alkindi.refresh();
     });
   };
 
-  const onRefresh = function () {
-    const {attempt} = self.props;
-    self.setState({refreshing: true});
-    api.listAttemptAnswers(attempt.id).then(
-      function (result) {
-        self.setState({
-          refreshing: false,
-          answers: result.answers,
-          users: toMap(result.users)
-        });
-      },
-      function () {
-        self.setState({refreshing: false});
-      });
-  };
-
   const renderAnswers = function (answers) {
-    const {users, submittedAnswerId} = self.state;
+    const users = toMap(self.props.users)
+    const {submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
       const submitter = users[answer.submitter_id];
       const isCurrent = submittedAnswerId === answer.id;
@@ -90,11 +75,11 @@ const AnswersTab = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
-    onRefresh();
+    Alkindi.refresh({'answers': true});
   };
 
   self.render = function () {
-    const {answers, refreshing} = self.state;
+    const {answers} = self.props;
     const answersBlock =
       (answers === undefined
         ? <p>Chargement en cours...</p>
@@ -107,7 +92,7 @@ const AnswersTab = PureComponent(self => {
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des réponses soumises par votre équipe.</p>}/>
             {' '}
-            <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
+            <RefreshButton/>
           </div>
         </div>
         <Notifier emitter={api.emitter}/>
@@ -117,10 +102,14 @@ const AnswersTab = PureComponent(self => {
   };
 }, _self => {
   return {
-    refreshing: true,
-    answers: undefined,
     submittedAnswerId: undefined
   };
 });
 
-export default AnswersTab;
+const selector = function (state) {
+  const {user_id, attempt, response} = state;
+  const {answers} = response;
+  return {user_id, attempt, answers};
+};
+
+export default connect(selector)(AnswersTab);
