@@ -8,109 +8,6 @@ import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 import Tooltip from '../ui/tooltip';
 
-const TestTeamTab = function (self) {
-  const setTeam = function (team) {
-    self.props.dispatch({type: 'SET_TEAM', team});
-  };
-  const setRound = function (round) {
-    self.props.dispatch({type: 'SET_ROUND', round});
-  };
-  const setAttempt = function (attempt) {
-    self.props.dispatch({type: 'SET_ATTEMPT', attempt});
-  };
-  const setTask = function (task) {
-    self.props.dispatch({type: 'SET_TASK', task});
-  };
-  const toggleBeforeRoundStart = function () {
-    const round = self.props.round;
-    const training_opens_at =
-      (self.props.round_has_not_started ? new Date() : new Date(Date.now() + 600000)).toISOString();
-    setRound({...round, training_opens_at});
-  };
-  const toggleInvalidTeam = function () {
-    const team = self.props.team;
-    setTeam({...team, is_invalid: !team.is_invalid});
-  };
-  const setTrainingAttempt = function () {
-    const team = self.props.team;
-    setTeam({...team, is_locked: true});
-    setTask(undefined);
-    setAttempt({needs_codes: true, is_training: true, is_unsolved: true});
-  };
-  const toggleCodesEntered = function () {
-    const attempt = self.props.attempt;
-    if (attempt)
-      setAttempt({...attempt, needs_codes: !attempt.needs_codes});
-  };
-  const toggleAttemptResolved = function () {
-    const attempt = self.props.attempt;
-    if (attempt)
-      setAttempt({...attempt, is_unsolved: !attempt.is_unsolved});
-  };
-  const setTimedAttempt = function () {
-    const team = self.props.team;
-    setTeam({...team, is_locked: true}); // normalement déjà fait
-    setTask(undefined);
-    setAttempt({
-      needs_codes: true, is_training: false, is_unsolved: true,
-      duration: 60, ends_at: new Date(Date.now() + 3600000).toISOString()
-    });
-  };
-  const toggleTaskAvailable = function () {
-    const task = self.props.task;
-    setTask(task ? undefined : {});
-  };
-  const redGreen = function (cond, ifTrue, ifFalse) {
-    return (
-      <label>
-        {cond
-        ? <span style={{color: 'red'}}>{ifTrue}</span>
-        : <span style={{color: 'green'}}>{ifFalse}</span>}
-      </label>
-    );
-  };
-  const render = function () {
-    const {team, round, attempt, task, round_has_not_started} = self.props;
-    return (
-      <div>
-        <hr/>
-        <ul>
-          <li>
-            {redGreen(team.is_invalid, 'team is invalid', 'team is valid')}
-            <Button onClick={toggleInvalidTeam}>toggle</Button>
-          </li>
-          <li>
-            {redGreen(!attempt, 'no attempt', 'attempt exists')}
-            <Button onClick={setTrainingAttempt}>training</Button>
-            <Button onClick={setTimedAttempt}>timed</Button>
-          </li>
-          <li>
-            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
-            <Button onClick={toggleBeforeRoundStart}>toggle</Button>
-          </li>
-          {attempt && <li>{attempt.is_training ? 'attempt is training' : 'attempt is timed'}</li>}
-          {attempt && <li>
-            {redGreen(attempt.needs_codes, 'attempt needs codes', 'attempt is confirmed')}
-            <Button onClick={toggleCodesEntered}>toggle</Button>
-          </li>}
-          {attempt && <li>
-            {redGreen(!task, 'task not accessed', 'task accessed')}
-            <Button onClick={toggleTaskAvailable}>toggle</Button>
-          </li>}
-          {attempt && <li>
-            {redGreen(attempt.is_unsolved, 'attempt is unresolved', 'attempt was solved')}
-            <Button onClick={toggleAttemptResolved}>toggle</Button>
-          </li>}
-        </ul>
-        <p>Team: {JSON.stringify(team)}</p>
-        <p>Round: {JSON.stringify(round)}</p>
-        <p>Attempt: {JSON.stringify(attempt)}</p>
-      </div>
-    );
-  };
-  return {render};
-};
-
 const TeamTab = PureComponent(self => {
 
   const api = Alkindi.api;
@@ -488,7 +385,6 @@ const TeamTab = PureComponent(self => {
     );
   };
 
-  const testing = false && TestTeamTab(self);
   self.render = function () {
     const {user, team, round, attempt, task, round_has_not_started} = self.props;
     if (!user || !team || !round)
@@ -552,7 +448,6 @@ const TeamTab = PureComponent(self => {
           : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
         {task !== undefined && attempt.is_training && renderResetHints()}
         <Notifier emitter={api.emitter}/>
-        {testing && testing.render()}
       </div>
     );
   };
