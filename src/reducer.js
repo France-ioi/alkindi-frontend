@@ -29,6 +29,10 @@ const reduceEndRefresh = function (state, action) {
   if (state.request && !(state.user_id == user_id && state.request === request))
     return state;
   const newState = {...state, refreshing: false, response: response};
+  if (response.now) {
+    // Save a relative time offset (local - remote) in milliseconds.
+    newState.timeDelta = Date.now() - (new Date(response.now)).getTime();
+  }
   // TODO: check action.frontend_version.
   // Seed with the user id from the response.
   if (state.request === undefined && response.user !== undefined)
@@ -56,16 +60,20 @@ const reduceEndRefresh = function (state, action) {
 const reduceTick = function (state) {
   // Periodic process, this executes every second and
   // at the end of every refresh.
-  const now = Date.now();
-  // TODO: check if (now - previous now) > 30 seconds,
-  //       if so refresh time delta from server.
-  let newState = {...state, now};
-  const {round, attempt, task} = state.response;
-  if (round !== undefined) {
-    // TODO: correct time using a time delta from server.
-    newState.round_has_not_started =
-      now < new Date(round.training_opens_at).getTime();
+  let newState = {...state};
+  const {attempt, response, timeDelta} = state;
+  const {round, task} = response;
+  // Correct local time by subtracting the (local - remote) delta.
+  const now = Date.now() - (timeDelta || 0);
+  newState.now = now;
+
+  // Trigger a refresh if the clock jumped by over 30 seconds.
+  const lastTick = state.now;
+  if (lastTick && Math.abs(now - lastTick) > 30000) {
+    Alkindi.refresh();
+    return newSate;
   }
+
   // Update the countdown.
   newState.countdown = undefined;
   if (attempt !== undefined && task !== undefined) {
@@ -76,6 +84,7 @@ const reduceTick = function (state) {
         newState.countdown = countdown;
     }
   }
+
   // Switch to team tab when the countdown elapses.
   if (state.countdown !== undefined && newState.countdown === undefined) {
     newState = reduceSetActiveTab(newState, 'team');
@@ -83,6 +92,10 @@ const reduceTick = function (state) {
       Alkindi.refresh();
     }, 0);
   }
+
+  // TODO: consider also updating the various flags that depend on the
+  // current time.
+
   return newState;
 };
 
