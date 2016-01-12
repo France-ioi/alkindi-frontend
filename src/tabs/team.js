@@ -96,12 +96,6 @@ const TeamTab = PureComponent(self => {
   const clearAccessCode = function () {
     self.setState({access_code: undefined});
   };
-  self.componentWillMount = function () {
-    Alkindi.api.emitter.on('refresh', clearAccessCode);
-  };
-  self.componentWillUnmount = function () {
-    Alkindi.api.emitter.removeListener('refresh', clearAccessCode);
-  };
 
   const renderRoundPrelude = function (round) {
     return (
@@ -188,7 +182,7 @@ const TeamTab = PureComponent(self => {
           <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
           <div className={classnames(['radio-label', isOpen && 'radio-checked'])}>
             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
-            {isOpen && <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>}
+            {isOpen && <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>}
           </div>
         </div>
         <div>
@@ -409,10 +403,15 @@ const TeamTab = PureComponent(self => {
     );
   };
 
+  self.componentWillMount = function () {
+    onRefresh();
+    Alkindi.api.emitter.on('refresh', clearAccessCode);
+  };
+  self.componentWillUnmount = function () {
+    Alkindi.api.emitter.removeListener('refresh', clearAccessCode);
+  };
   self.render = function () {
     const {user, team, round, attempt, task, round_has_not_started} = self.props;
-    if (!user || !team || !round)
-      return false;
     const haveAttempt = attempt !== undefined;
     const haveTask = task !== undefined;
     const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
