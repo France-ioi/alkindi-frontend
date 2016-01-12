@@ -177,34 +177,35 @@ export default PureComponent(self => {
 
   const renderAttemptNotStarted = function (attempt) {
     const {round, team} = self.props;
+    const isOpen = !attempt.is_training || round.is_training_open;
     return (
       <div>
         {renderTimeline('unlock')}
         <div className="timelineInfo">
           <div className="timelineInfoContent">
-            <p>
-              Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-              vous pouvez maintenant le déverouiller en cliquant.
-            </p>
+            {isOpen
+              ? <p>
+                  Les membres de votre équipe ont donné leur accord pour accéder au sujet,
+                  vous pouvez maintenant le déverouiller en cliquant.
+                </p>
+              : <p>
+                  Les membres de votre équipe ont donné leur accord pour accéder au sujet,
+                  vous êtes prêts à commencer dès l'ouverture de l'épreuve.
+                </p>}
             {!team.is_locked &&
               <p>
                 <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
                 plus changer la composition de votre équipe pendant le reste du concours.
               </p>}
-            <p className="text-center">
-              <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
-                accéder au sujet <i className="fa fa-arrow-right"/>
-              </Button>
-            </p>
-            <hr/>
-            <p>
-              Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-              vous êtes prêts à commencer dès l'ouverture de l'épreuve.
-            </p>
-            <Alert bsStyle='success'>
-              L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
-            </Alert>
-            <hr/>
+            {isOpen
+              ? <p className="text-center">
+                  <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
+                    accéder au sujet <i className="fa fa-arrow-right"/>
+                  </Button>
+                </p>
+              : <Alert bsStyle='success'>
+                  L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
+                </Alert>}
             {renderCancelAttempt(attempt)}
           </div>
         </div>
