@@ -16,9 +16,9 @@ import {image_url} from '../assets';
 
 export const MainScreen = PureComponent(self => {
 
-  const setActiveTab = function (tabKey) {
-    self.props.dispatch(actions.setActiveTab(tabKey));
-  };
+   const setActiveTab = function (tabKey) {
+     self.props.dispatch(actions.setActiveTab(tabKey));
+   };
 
    self.render = function () {
     // Interface principale...
