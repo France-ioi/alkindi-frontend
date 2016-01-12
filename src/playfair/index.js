@@ -221,6 +221,9 @@ export const Answer = PureComponent(self => {
 
 export const Feedback = PureComponent(self => {
 
+  const fullScore = <p>Votre score est la totalité de vos points disponibles.</p>;
+  const halfScore = <p>Votre score est égal à la moitié de vos points disponibles.</p>;
+
   self.render = function () {
     const {feedback, onSuccess} = self.props;
     return (
@@ -229,21 +232,32 @@ export const Feedback = PureComponent(self => {
          ? (feedback.numbers
             ? <div>
                 <Alert bsStyle='success'>
-                  Félicitations, vos réponses sont correctes !
+                  <p>Félicitations, vos réponses sont correctes !</p>
+                  {fullScore}
                 </Alert>
-                <p>
+                <p><strong>
                   Vous avez atteint le score maximum que vous pouvez obtenir à
                   cette épreuve, compte tenu des indices que vous avez obtenus.
-                </p>
+                </strong></p>
                 <p className="text-center">
                   <Button bsStyle="primary" bsSize="large" onClick={onSuccess}>
                     <i className="fa fa-left-arrow"/> retour aux épreuves
                   </Button>
                 </p>
               </div>
-            : <Alert bsStyle='warning'>L'adresse est la bonne, mais au moins un des deux nombres est faux.</Alert>)
+            : <div>
+                <Alert bsStyle='warning'>
+                  <p>L'adresse est la bonne, mais au moins un des deux nombres est faux.</p>
+                  {halfScore}
+                </Alert>
+              </div>)
          : (feedback.numbers
-            ? <Alert bsStyle='warning'>Les deux nombres sont les bons, mais l'adresse est fausse.</Alert>
+            ? <div>
+                <Alert bsStyle='warning'>
+                  <p>Les deux nombres sont les bons, mais l'adresse est fausse.</p>
+                  {halfScore}
+                </Alert>
+              </div>
             : <Alert bsStyle='danger'>Ni l'adresse ni les nombres ne sont les bons.</Alert>)}
       </div>
     );
