@@ -12,21 +12,8 @@ import {setActiveTab} from '../actions';
 
 const TeamTab = PureComponent(self => {
 
-  const accessCodes = {};
-
-  const refAccessCode = function (element) {
-    if (element) {
-      const user_id = element.getAttribute('data-user_id');
-      accessCodes[user_id] = element;
-    }
-  };
-
-  const clearAccessCode = function () {
-    self.setState({access_code: undefined});
-  };
-
-  const onSwitchTab = function (tabKey) {
-    self.props.dispatch(setActiveTab(tabKey));
+  const onGoToAttempts = function () {
+    self.props.dispatch(setActiveTab('attempts'));
   };
 
   const onLeaveTeam = function () {
@@ -46,15 +33,6 @@ const TeamTab = PureComponent(self => {
     });
   };
 
-  const onEnterAccessCode = function (event) {
-    const user_id = self.props.user.id;
-    const code_user_id = event.currentTarget.getAttribute('data-user_id');
-    const element = accessCodes[code_user_id];
-    const code = element.value.trim();
-    element.value = '';
-    Alkindi.api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
-  };
-
   const renderRoundPrelude = function (round) {
     return (
       <div>
@@ -69,17 +47,7 @@ const TeamTab = PureComponent(self => {
     );
   };
 
-  const renderAttemptPrelude = function (_attempt) {
-    return (
-      <div>
-        <p>Pour autoriser l'accès au sujet, vous devez saisir des codes de
-           lancement.</p>
-        <p>Voici la composition de votre équipe :</p>
-      </div>
-    );
-  };
-
-  const renderTeamMembers = function (team, codeInput) {
+  const renderTeamMembers = function (team) {
     const renderMember = function (member) {
       const user_id = member.user_id;
       const flags = [];
@@ -93,15 +61,6 @@ const TeamTab = PureComponent(self => {
           <td>{member.user.lastname}, {member.user.firstname}</td>
           <td>{flags.join(', ')}</td>
           <td>{new Date(member.joined_at).toLocaleString()}</td>
-          {codeInput &&
-            (member.access_code === undefined
-             ? <td className="access-code">
-                 <input type="text" data-user_id={user_id} ref={refAccessCode} />
-                 <Button bsSize="small" onClick={onEnterAccessCode} data-user_id={user_id}>
-                   <i className="fa fa-check"/> valider
-                 </Button>
-               </td>
-             : <td className="unlocked-code">{member.access_code}</td>)}
         </tr>);
     };
     return (
@@ -113,7 +72,6 @@ const TeamTab = PureComponent(self => {
               <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
-              {codeInput && <th>Code de lancement du sujet</th>}
             </tr>
             {team.members.map(renderMember)}
           </tbody>
@@ -162,8 +120,23 @@ const TeamTab = PureComponent(self => {
     );
   };
 
-  const renderBadTeam = function () {
-    // KEEP
+  const renderValidTeam = function () {
+    return (
+      <div className="section">
+        <p>
+          La composition de votre équipe respecte les règles du tour
+          vous pouvez commencer l'entrainement dans l'onglet Épreuves.
+        </p>
+        <p className="text-center">
+          <Button bsStyle="primary" bsSize="large" onClick={onGoToAttempts}>
+            accéder aux épreuves <i className="fa fa-arrow-right"/>
+          </Button>
+        </p>
+      </div>
+    );
+  };
+
+  const renderInvalidTeam = function (causes) {
     return (
       <div className="section">
         <Alert bsStyle='warning'>
@@ -174,17 +147,11 @@ const TeamTab = PureComponent(self => {
     );
   };
 
-  self.componentWillMount = function () {
-    Alkindi.api.emitter.on('refresh', clearAccessCode);
-  };
-  self.componentWillUnmount = function () {
-    Alkindi.api.emitter.removeListener('refresh', clearAccessCode);
-  };
   self.render = function () {
-    const {user, round, team, attempt, attempts} = self.props;
-    const codeInput = attempt && attempt.needs_codes;
+    const {user, round, team} = self.props;
     const teamUnlocked = !team.is_locked;
     const teamAdmin = teamUnlocked && team.creator.id === user.id;
+    const teamInvalid = team.is_invalid.length > 0;
     return (
       <div className="wrapper">
         <div className="pull-right">
@@ -192,32 +159,26 @@ const TeamTab = PureComponent(self => {
           {' '}
           <RefreshButton/>
         </div>
+        <Notifier emitter={Alkindi.api.emitter}/>
         <h1>{round.title}</h1>
-        {codeInput
-          ? renderAttemptPrelude(attempt)
-          : (teamUnlocked && renderRoundPrelude(round))}
-        {renderTeamMembers(team, codeInput)}
+        {renderTeamMembers(team)}
+        {team.is_invalid
+          ? renderInvalidTeam(team.round_access)
+          : renderValidTeam()}
         {teamAdmin && renderAdminControls(team)}
         {teamUnlocked && renderLeaveTeam()}
-        <Notifier emitter={Alkindi.api.emitter}/>
-        {attempts &&
-          <div className="attempts">
-            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt} round={round} team={team} user={user} onSwitchTab={onSwitchTab}/>)}
-          </div>}
       </div>
     );
   };
 }, self => {
   return {
-    joinTeam: false,
     isOpen: undefined
   };
 });
 
 const selector = function (state, _props) {
-  const {user, round, team, attempts} = state.response;
-  const {attempt} = state;
-  return {user, round, team, attempt, attempts};
+  const {user, round, team} = state.response;
+  return {user, round, team};
 };
 
 export default connect(selector)(TeamTab);
