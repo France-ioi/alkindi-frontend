@@ -19,16 +19,9 @@ const TeamTab = PureComponent(self => {
     self.setState({refreshing: true});
     api.listTeamAttempts(team.id).then(
       function (result) {
-        const attempts = result.attempts;
-        if (attempts.length == 0) {
-          attempts.push({ordinal: 0, is_training: true, is_unsolved: true, is_current: true});
-        }
-        while (attempts.length < 4) {
-          attempts.push({ordinal: attempts.length, is_unsolved: true});
-        }
         self.setState({
           refreshing: false,
-          attempts: attempts
+          attempts: result.attempts
         });
       },
       function () {
