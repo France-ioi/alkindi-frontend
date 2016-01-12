@@ -65,7 +65,7 @@ const reduceTick = function (state) {
   const lastTick = state.now;
   if (lastTick && Math.abs(now - lastTick) > 30000) {
     Alkindi.refresh();
-    return newSate;
+    return newState;
   }
 
   // Update the countdown.
