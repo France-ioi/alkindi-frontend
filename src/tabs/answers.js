@@ -17,7 +17,8 @@ const AnswersTab = PureComponent(self => {
     const {user_id, attempt} = self.props;
     api.submitAnswer(user_id, attempt.id, data).then(function (result) {
       self.setState({
-        submittedAnswerId: result.answer_id
+        submittedAnswerId: result.answer_id,
+        feedback: result.feedback
       });
       Alkindi.refresh();
     });
@@ -80,6 +81,7 @@ const AnswersTab = PureComponent(self => {
 
   self.render = function () {
     const {answers} = self.props;
+    const {feedback} = self.state;
     const answersBlock =
       (answers === undefined
         ? <p>Chargement en cours...</p>
@@ -96,13 +98,15 @@ const AnswersTab = PureComponent(self => {
           </div>
         </div>
         <Notifier emitter={api.emitter}/>
-        <AnswerDialog answers={answersBlock} submit={submitAnswer}/>
+        <AnswerDialog answers={answersBlock} submit={submitAnswer} feedback={feedback}/>
       </div>
     );
+    // TODO: bouton vers onglet épreuve
   };
 }, _self => {
   return {
-    submittedAnswerId: undefined
+    submittedAnswerId: undefined,
+    feedback: undefined
   };
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {PureComponent} from './utils/generic';
 import {mostFrequentFrench, decodeBigram} from './utils/bigram';
-import {Button} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 
 import TextInput from './tools/text_input';
 import Hints from './tools/hints';
@@ -167,6 +167,7 @@ export const AnswerDialog = PureComponent(self => {
           </p>
           <p><Button onClick={onSubmit}>Soumettre</Button></p>
         </div>
+        {feedback && <Feedback feedback={feedback}/>}
         <div className='section'>
           {answers}
         </div>
@@ -217,6 +218,40 @@ export const Answer = PureComponent(self => {
   };
 
 });
+
+export const Feedback = PureComponent(self => {
+
+  const onGoToAttempts = function () {
+    self.props.dispatch(setActiveTab('attempts'));
+  };
+
+  self.render = function () {
+    const {feedback} = self.props;
+    return (
+      <div className='playfair-feedback'>
+        {feedback.address
+         ? (feedback.numbers
+            ? <div>
+                <Alert bsStyle='success'>
+                  Félicitations, vos réponses sont correctes !
+                </Alert>
+                <p>
+                  Vous avez atteint le score maximum que vous pouvez obtenir à
+                  cette épreuve, compte tenu des indices que vous avez obtenus.
+                </p>
+                <p className="text-center">
+                  <Button bsStyle="primary" bsSize="large" onClick={onGoToAttempts}>
+                    <i className="fa fa-left-arrow"/> retour aux épreuves
+                  </Button>
+                </p>
+              </div>
+            : <Alert bsStyle='warning'>L'adresse est la bonne, mais au moins un des deux nombres est faux.</Alert>)
+         : (feedback.numbers
+            ? <Alert bsStyle='warning'>Les deux nombres sont les bons, mais l'adresse est fausse.</Alert>
+            : <Alert bsStyle='danger'>Ni l'adresse ni les nombres ne sont les bons.</Alert>)}
+      </div>
+    );
+  };
 
 });
 
