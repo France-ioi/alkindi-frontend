@@ -233,7 +233,6 @@ export default PureComponent(self => {
         <p><strong>
           Pour accéder au sujet en temps limité, il faudra saisir plus
           de 50% des codes de lancement.</strong></p>
-        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
       </div>
     );
   };
@@ -260,7 +259,7 @@ export default PureComponent(self => {
             </p>
             <p>
               Lorsque vous aurez résolu l'enigme, vous pourrez entrer vos
-              réponse dans l'onglet Réponses.
+              réponses dans l'onglet Réponses.
             </p>
             <p className="text-center">
               <Button bsStyle="default" bsSize="large" onClick={onGoToAnswers}>
