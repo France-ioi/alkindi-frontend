@@ -85,6 +85,7 @@ window.Alkindi = (function () {
         const frontend_version = res.header['x-frontend-version'];
         store.dispatch({type: 'FRONTEND_UPDATE', version: frontend_version});
         store.dispatch({type: 'END_REFRESH', seed: res.body});
+        Alkindi.api.emitter.emit('refresh');
         resolve();
       });
     });
