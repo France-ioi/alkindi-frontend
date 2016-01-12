@@ -31,13 +31,13 @@ const TeamTab = PureComponent(self => {
 
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
-    api.leaveTeam(user_id);
+    Alkindi.api.leaveTeam(user_id);
   };
 
   const onUpdateTeam = function () {
     const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
-    api.updateUserTeam(user_id, data);
+    Alkindi.api.updateUserTeam(user_id, data);
   };
 
   const onIsOpenChanged = function (event) {
