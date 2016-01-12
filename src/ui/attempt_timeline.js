@@ -67,7 +67,7 @@ export default PureComponent(self => {
     :
       <div>
         <p>
-          Si vous n'êtes pas prêt à commencer l'épreuve en temps limitée,
+          Si vous n'êtes pas prêt à commencer l'épreuve en temps limité,
           vous avez la possibilité de revenir au sujet d'entrainement.
         </p>
         <p>
@@ -138,7 +138,7 @@ export default PureComponent(self => {
               </div>
             : <div className="section">
                 <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-                   accéder au sujet, vous aurez alors {attempt.duration} minutes
+                   accéder au sujet, vous aurez alors {'60'} minutes
                    pour le résoudre.
                 </p>
               </div>}
