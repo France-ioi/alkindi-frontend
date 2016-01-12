@@ -108,8 +108,8 @@ const AnswersTab = PureComponent(self => {
 
 const selector = function (state) {
   const {user_id, attempt, response} = state;
-  const {answers} = response;
-  return {user_id, attempt, answers};
+  const {answers, users} = response;
+  return {user_id, attempt, answers, users};
 };
 
 export default connect(selector)(AnswersTab);
