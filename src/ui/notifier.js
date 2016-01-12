@@ -132,7 +132,7 @@ const Notifier = PureComponent(self => {
   self.render = function () {
     const {state, message, showLogin} = self.state;
     return (
-      <div style={{position: 'absolute'}}>
+      <div style={{position: 'absolute', zIndex: 2}}>
         {state === 'busy' && <Alert bsStyle='info' onDismiss={onDismiss}>Veuillez patienter pendant le traitement de votre action...</Alert>}
         {state === 'success' && <Alert bsStyle='success' onDismiss={onDismiss}>Opération effectuée.</Alert>}
         {state === 'failure' &&
