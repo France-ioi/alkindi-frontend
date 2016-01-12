@@ -6,8 +6,9 @@ import {PureComponent} from '../misc';
 import Logout from '../ui/logout';
 import Tabs from '../ui/tabs';
 import CountdownTimer from '../ui/countdown_timer';
-import TaskTab from '../tabs/task';
 import TeamTab from '../tabs/team';
+import AttemptsTab from '../tabs/attempts';
+import TaskTab from '../tabs/task';
 import PlayFairTab from '../tabs/playfair';
 import HistoryTab from '../tabs/history';
 import AnswersTab from '../tabs/answers';
@@ -27,6 +28,9 @@ export const MainScreen = PureComponent(self => {
     switch (activeTabKey) {
       case 'team':
         content = <TeamTab/>;
+        break;
+      case 'attempts':
+        content = <AttemptsTab/>;
         break;
       case 'task':
         content = <TaskTab round={self.props.round} attempt={self.props.attempt} task={self.props.task} />;

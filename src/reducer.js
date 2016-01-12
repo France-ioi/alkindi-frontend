@@ -95,8 +95,10 @@ const reduceTick = function (state) {
 
 const reduceSetActiveTab = function (state, tabKey) {
   const haveTask = !!state.response.task;
+  const haveAttempts = !!state.response.attempts;
   const enabledTabs = {
     team: true,
+    attempts: haveAttempts,
     task: haveTask,
     cryptanalysis: haveTask,
     history: haveTask,
