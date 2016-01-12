@@ -351,7 +351,11 @@ export default PureComponent(self => {
             <span className="">
               {attempt.is_training
                 ? "Épreuve d'entrainement"
-                : "Épreuve en temps limité"}
+                : <span>
+                    {"Épreuve en temps limité ("}
+                    {attempt.duration}
+                    {" minutes)"}
+                  </span>}
             </span>
           </div>
         </div>
