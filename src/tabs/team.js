@@ -12,8 +12,32 @@ import {setActiveTab} from '../actions';
 
 const TeamTab = PureComponent(self => {
 
+  const accessCodes = {};
+
+  const refAccessCode = function (element) {
+    if (element) {
+      const user_id = element.getAttribute('data-user_id');
+      accessCodes[user_id] = element;
+    }
+  };
+
+  const clearAccessCode = function () {
+    self.setState({access_code: undefined});
+  };
+
   const onSwitchTab = function (tabKey) {
     self.props.dispatch(setActiveTab(tabKey));
+  };
+
+  const onLeaveTeam = function () {
+    const user_id = self.props.user.id;
+    api.leaveTeam(user_id);
+  };
+
+  const onUpdateTeam = function () {
+    const user_id = self.props.user.id;
+    const data = {is_open: self.state.isOpen};
+    api.updateUserTeam(user_id, data);
   };
 
   const onIsOpenChanged = function (event) {
@@ -22,16 +46,6 @@ const TeamTab = PureComponent(self => {
     });
   };
 
-  const accessCodes = {};
-  const refAccessCode = function (element) {
-    if (element) {
-      const user_id = element.getAttribute('data-user_id');
-      accessCodes[user_id] = element;
-    }
-  };
-  const clearAccessCode = function () {
-    self.setState({access_code: undefined});
-  };
   const onEnterAccessCode = function (event) {
     const user_id = self.props.user.id;
     const code_user_id = event.currentTarget.getAttribute('data-user_id');
