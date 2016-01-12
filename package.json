@@ -19,6 +19,7 @@
     "font-awesome": "^4.4.0",
     "html5shiv": "^3.7.3",
     "intersperse": "^1.0.0",
+    "memoize": "^0.1.1",
     "node-range": "^0.1.0",
     "object.assign": "^4.0.3",
     "rc-tooltip": "^3.3.0",
