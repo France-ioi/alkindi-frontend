@@ -8,6 +8,7 @@ import {PureComponent, toMap} from '../misc';
 import {AnswerDialog, Answer} from '../playfair';
 import Notifier from '../ui/notifier';
 import {RefreshButton} from '../ui/refresh_button';
+import {setActiveTab} from '../actions';
 
 const AnswersTab = PureComponent(self => {
 
@@ -22,6 +23,10 @@ const AnswersTab = PureComponent(self => {
       });
       Alkindi.refresh();
     });
+  };
+
+  const onSuccess = function () {
+    self.props.dispatch(setActiveTab('attempts'));
   };
 
   const renderAnswers = function (answers) {
@@ -98,7 +103,7 @@ const AnswersTab = PureComponent(self => {
           </div>
         </div>
         <Notifier emitter={api.emitter}/>
-        <AnswerDialog answers={answersBlock} submit={submitAnswer} feedback={feedback}/>
+        <AnswerDialog answers={answersBlock} submit={submitAnswer} feedback={feedback} onSuccess={onSuccess}/>
       </div>
     );
     // TODO: bouton vers onglet épreuve

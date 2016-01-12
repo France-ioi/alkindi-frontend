@@ -137,7 +137,7 @@ export const AnswerDialog = PureComponent(self => {
 
 
   self.render = function () {
-    const {answers, feedback} = self.props;
+    const {answers, feedback, onSuccess} = self.props;
     return (
       <div className='playfair-answer-dialog'>
         <div className='section'>
@@ -167,7 +167,7 @@ export const AnswerDialog = PureComponent(self => {
           </p>
           <p><Button onClick={onSubmit}>Soumettre</Button></p>
         </div>
-        {feedback && <Feedback feedback={feedback}/>}
+        {feedback && <Feedback feedback={feedback} onSuccess={onSuccess}/>}
         <div className='section'>
           {answers}
         </div>
@@ -221,12 +221,8 @@ export const Answer = PureComponent(self => {
 
 export const Feedback = PureComponent(self => {
 
-  const onGoToAttempts = function () {
-    self.props.dispatch(setActiveTab('attempts'));
-  };
-
   self.render = function () {
-    const {feedback} = self.props;
+    const {feedback, onSuccess} = self.props;
     return (
       <div className='playfair-feedback'>
         {feedback.address
@@ -240,7 +236,7 @@ export const Feedback = PureComponent(self => {
                   cette épreuve, compte tenu des indices que vous avez obtenus.
                 </p>
                 <p className="text-center">
-                  <Button bsStyle="primary" bsSize="large" onClick={onGoToAttempts}>
+                  <Button bsStyle="primary" bsSize="large" onClick={onSuccess}>
                     <i className="fa fa-left-arrow"/> retour aux épreuves
                   </Button>
                 </p>
