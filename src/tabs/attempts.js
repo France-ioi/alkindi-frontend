@@ -74,6 +74,17 @@ const AttemptsTab = PureComponent(self => {
     );
   };
 
+  const getMaxScore = function (attempts) {
+    let max_score;
+    attempts.forEach(function (attempt) {
+      if (!attempt.is_training && attempt.max_score !== undefined) {
+        if (max_score === undefined || attempt.max_score > max_score)
+          max_score = attempt.max_score;
+      }
+    });
+    return max_score;
+  };
+
   self.componentWillMount = function () {
     Alkindi.api.emitter.on('refresh', clearAccessCode);
   };
@@ -85,6 +96,7 @@ const AttemptsTab = PureComponent(self => {
   self.render = function () {
     const {user, round, team, attempt, attempts} = self.props;
     const codeEntry = attempt && attempt.needs_codes;
+    const score = getMaxScore(attempts);
     return (
       <div className="wrapper">
         <div className="pull-right">
@@ -94,6 +106,10 @@ const AttemptsTab = PureComponent(self => {
         </div>
         <Notifier emitter={Alkindi.api.emitter}/>
         <h1>{round.title}</h1>
+        {score !== undefined && <p className="team-score">
+          Score actuel de l'équipe (meilleur score parmi les épreuves
+          en temps limité) : <span className="team-score">{score}</span>.
+        </p>}
         {codeEntry && renderCodeEntry()}
         {attempts &&
           <div className="attempts">
