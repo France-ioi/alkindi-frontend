@@ -6,6 +6,8 @@ require('es5-shim');
 require('es5-sham-ie8');
 // IE9+ compatibility:
 require('object.assign').shim();
+// Array.prototype.find not available on Chrome
+require('es6-shim');
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
 import React from 'react';
