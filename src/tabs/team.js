@@ -148,8 +148,8 @@ const TeamTab = PureComponent(self => {
     return (
       <div className="section">
         <p>
-          La composition de votre équipe respecte les règles du tour
-          vous pouvez commencer l'entrainement dans l'onglet Épreuves.
+          La composition de votre équipe respecte les règles du tour.
+          Vous pouvez commencer l'entrainement dans l'onglet Épreuves.
         </p>
         <p className="text-center">
           <Button bsStyle="primary" bsSize="large" onClick={onGoToAttempts}>
