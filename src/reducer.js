@@ -64,7 +64,9 @@ const reduceTick = function (state) {
   // Trigger a refresh if the clock jumped by over 30 seconds.
   const lastTick = state.now;
   if (lastTick && Math.abs(now - lastTick) > 30000) {
-    Alkindi.refresh();
+    // We cannot call Alkindi.refresh from within the reducer because
+    // it calls store.dispatch, so call it at the next tick.
+    setTimeout(Alkindi.refresh, 0);
     return newState;
   }
 
@@ -82,9 +84,7 @@ const reduceTick = function (state) {
   // Switch to 'attempts' tab when the countdown elapses.
   if (state.countdown !== undefined && newState.countdown === undefined) {
     newState = reduceSetActiveTab(newState, 'attempts');
-    setTimeout(function () {
-      Alkindi.refresh();
-    }, 0);
+    setTimeout(Alkindi.refresh, 0);
   }
 
   // TODO: consider also updating the various flags that depend on the
