@@ -93,6 +93,31 @@ const TeamTab = PureComponent(self => {
     );
   };
 
+  const renderTeamCode = function (team) {
+    return (
+      <div className="section">
+        <p>
+          Voici le code à transmettre aux autres personnes que vous
+          souhaitez inviter dans l'équipe :
+        </p>
+        <p className="text-centet">
+            <strong>{team.code}</strong>
+        </p>
+      </div>
+    );
+  };
+
+  const renderTeamCode = function (team) {
+    return (
+      <div className="section">
+        <p>
+          Le créateur de l'équipe a fermé l'accès à l'équipe et aucune
+          nouvelle personne ne peut la rejoindre.
+        </p>
+      </div>
+    );
+  };
+
   const renderAdminControls = function (team) {
     const {isOpen} = self.state;
     return (
@@ -102,7 +127,6 @@ const TeamTab = PureComponent(self => {
           <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
           <div className={classnames(['radio-label', isOpen && 'radio-checked'])}>
             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
-            {isOpen && <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>}
           </div>
         </div>
         <div>
@@ -149,8 +173,11 @@ const TeamTab = PureComponent(self => {
 
   self.render = function () {
     const {user, round, team} = self.props;
+    // The tab gets rendered when the user leaves a team?
+    if (team === undefined)
+      return false;
     const teamUnlocked = !team.is_locked;
-    const teamAdmin = teamUnlocked && team.creator.id === user.id;
+    const teamAdmin = team.creator.id === user.id;
     const teamInvalid = team.is_invalid.length > 0;
     return (
       <div className="wrapper">
@@ -165,6 +192,7 @@ const TeamTab = PureComponent(self => {
         {team.is_invalid
           ? renderInvalidTeam(team.round_access)
           : renderValidTeam()}
+        {team.is_open ? renderTeamCode() : renderTeamClosed()}
         {teamAdmin && renderAdminControls(team)}
         {teamUnlocked && renderLeaveTeam()}
       </div>
