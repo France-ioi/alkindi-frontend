@@ -869,6 +869,11 @@ td .bigramLetter {
   color: #fff;
 }
 
+.team-code {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 20px;
+  font-weight: bold;
+}
 
 /*
 

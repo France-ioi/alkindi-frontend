@@ -100,14 +100,14 @@ const TeamTab = PureComponent(self => {
           Voici le code à transmettre aux autres personnes que vous
           souhaitez inviter dans l'équipe :
         </p>
-        <p className="text-centet">
-            <strong>{team.code}</strong>
+        <p className="text-center">
+            <span className="team-code">{team.code}</span>
         </p>
       </div>
     );
   };
 
-  const renderTeamCode = function (team) {
+  const renderTeamClosed = function () {
     return (
       <div className="section">
         <p>
@@ -192,7 +192,7 @@ const TeamTab = PureComponent(self => {
         {team.is_invalid
           ? renderInvalidTeam(team.round_access)
           : renderValidTeam()}
-        {team.is_open ? renderTeamCode() : renderTeamClosed()}
+        {team.is_open ? renderTeamCode(team) : renderTeamClosed()}
         {teamAdmin && renderAdminControls(team)}
         {teamUnlocked && renderLeaveTeam()}
       </div>
