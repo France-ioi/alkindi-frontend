@@ -91,7 +91,7 @@ export default PureComponent(self => {
       <div>
         <p>
           Si vous n'êtes pas prêt à commencer l'épreuve en temps limité,
-          vous avez la possibilité de revenir au sujet d'entrainement.
+          vous avez la possibilité de revenir au sujet d'entraînement.
         </p>
         <p>
           Vous pourrez toujours redémarrer l'épreuve en temps limité plus
@@ -121,7 +121,7 @@ export default PureComponent(self => {
         <div className="timelineInfo">
           <p className="timelineInfoContent">
             {attempt.is_training
-              ? "Commencez l'entrainement en cliquant : "
+              ? "Commencez l'entraînement en cliquant : "
               : "Commencez l'épreuve en temps limité en cliquant : "}
             <Button bsStyle="primary" bsSize="large" onClick={onStartAttempt}>
               {'démarrer '}<i className="fa fa-arrow-right"/>
@@ -153,7 +153,7 @@ export default PureComponent(self => {
             {attempt.is_training
             ? <div className="section">
                 <p>Lorsque vous aurez saisi au moins 1 code d'accès vous pourrez
-                   accéder au sujet d'entrainement.</p>
+                   accéder au sujet d'entraînement.</p>
                 <p><strong>
                    Notez que pour accéder au sujet en temps limité, il faudra saisir
                    plus de 50% des codes.</strong></p>
@@ -219,7 +219,7 @@ export default PureComponent(self => {
     return (
       <div className="section">
         <p>Au moins l'un des membres de votre équipe a déjà saisi son code de
-           lancement, et a ouvert l'accès au sujet d'entrainement.
+           lancement, et a ouvert l'accès au sujet d'entraînement.
         </p>
         <p><strong>
           Pour accéder au sujet en temps limité, il faudra saisir plus
@@ -236,7 +236,7 @@ export default PureComponent(self => {
           <div className="timelineInfoContent">
             {attempt.is_training
               ? <p>
-                  Le sujet d'entrainement est visible dans l'onglet Sujet.
+                  Le sujet d'entraînement est visible dans l'onglet Sujet.
                   Lisez le attentivement, il contient des informations
                   importantes !
                 </p>
@@ -273,14 +273,14 @@ export default PureComponent(self => {
             {attempt.is_training
             ? <div>
                 <p>
-                  Vous avez résolu le sujet d'entrainement, bravo !
+                  Vous avez résolu le sujet d'entraînement, bravo !
                 </p>
                 <p>
                   Vous pouvez maintenant démarrer une épreuve en temps limité
                   dès que vous êtes prêts.
                 </p>
                 <p>
-                  Pour approfondir l'entrainement, vous pouvez effacer tous les
+                  Pour approfondir l'entraînement, vous pouvez effacer tous les
                   indices que vous avez demandés en cliquant le bouton ci-dessous.
                   Attention, cela affectera tous vos coéquipiers.
                 </p>
@@ -295,12 +295,12 @@ export default PureComponent(self => {
                   Votre tentative en temps limité s'est terminée le {new Date(attempt.closes_at).toLocaleString()}.
                 </p>
                 <p>
-                  {'Vous pouvez revenir au sujet d\'entrainement ou démarrer une nouvelle '}
+                  {'Vous pouvez revenir au sujet d\'entraînement ou démarrer une nouvelle '}
                   {'tentative en temps limité.'}
                 </p>
                 <p className="text-center">
                   <Button onClick={onResetToTraining}>
-                     <i className="fa fa-arrow-left"/> retour à l'entrainement
+                     <i className="fa fa-arrow-left"/> retour à l'entraînement
                   </Button>
                 </p>
               </div>}
@@ -317,7 +317,7 @@ export default PureComponent(self => {
         <div className="timelineInfo">
           <div className="timelineInfoContent">
             {attempt.is_training
-             ? <p>Vous pourrez revenir à l'entrainement après être
+             ? <p>Vous pourrez revenir à l'entraînement après être
                   sorti de l'épreuve en temps limité.</p>
              : <p>Cette tentative est terminée.</p>}
           </div>
@@ -364,7 +364,7 @@ export default PureComponent(self => {
             {'. '}
             <span className="">
               {attempt.is_training
-                ? "Épreuve d'entrainement"
+                ? "Épreuve d'entraînement"
                 : <span>
                     {"Épreuve en temps limité ("}
                     {attempt.duration}
