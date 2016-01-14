@@ -20,7 +20,9 @@ const ErrorMessages = {
   'too soon': "Soumission rejetée : trop de soumissions en moins d'une minute.",
   'invalid input': "Le format de votre réponse est invalide.",
   'attempt is closed': "L'épreuve en temps limité est terminée, vous ne pouvez plus soumettre.",
-  'too many attempts': "Vous avez atteint le nombre maximum de tentatives en temps limité."
+  'too many attempts': "Vous avez atteint le nombre maximum de tentatives en temps limité.",
+  'team too large': "L'équipe a déjà le nombre maximum de membres et ne peut plus en accepter.",
+  'not enough qualified members': "Vous ne pouvez pas rejoindre l'équipe car elle n'aurait plus assez de membres qualifiés."
 };
 
 const Notifier = PureComponent(self => {
