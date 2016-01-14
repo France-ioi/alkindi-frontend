@@ -6,7 +6,10 @@ import {PureComponent} from '../misc';
 
 export const LogoutButton = PureComponent(self => {
   self.render = function () {
-    const {username} = self.props.user;
+    const {user} = self.props;
+    if (user === undefined)
+      return false;
+    const {username} = user;
     return (
       <div id="logout">
         <span>{username}</span>
