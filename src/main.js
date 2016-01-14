@@ -22,6 +22,7 @@ import App from './app';
 import {Api, ApiFactory} from './api';
 
 // Install a global error handler.
+/*
 const logUrl = 'https://alkindi.epixode.fr/reports/';
 window.onerror = function (message, url, line, column, error) {
   // Prevent firing the default handler for errors on log URLs.
@@ -60,6 +61,7 @@ window.onerror = function (message, url, line, column, error) {
 window.reportError = function (value) {
   setTimeout(function () { throw value; }, 0);
 };
+*/
 
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
 /*global Alkindi*/
