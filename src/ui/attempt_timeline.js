@@ -83,18 +83,9 @@ export default PureComponent(self => {
     return (attempt.is_training ?
       <div>
         {attempt.is_training && <p>
-          Si vous avez besoin de changer la composition de votre équipe,
-          c'est votre dernière opportunité !
+          Attention, une fois passé cette étape, aucun membre de l'équipe
+          ne pourra la quitter.
         </p>}
-        {attempt.is_training && <p>
-          Annuler l'accès au sujet d'entrainement ne vous pénalisera pas,
-          vous pourrez le commencer une fois votre équipe finalisée.
-        </p>}
-        <p className="text-center">
-          <Button onClick={onCancelAttempt}>
-            <i className="fa fa-arrow-left"/> je veux modifier mon équipe
-          </Button>
-        </p>
       </div>
     :
       <div>
