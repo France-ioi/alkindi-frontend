@@ -188,5 +188,104 @@ var common = {
          var line = text.substring(startCol, endCol);
          console.log(line);
       }
+   },
+
+   stringAsCells: function(string, alphabet) {
+      var cells = [];
+      var letterRanks = common.getLetterRanks(alphabet);
+      for (var iLetter = 0; iLetter < string.length; iLetter++) {
+         cells.push({ l: letterRanks[string.charAt(iLetter)] });
+      }
+      return cells;
+   },
+   
+   cellsAsString: function(cells, alphabet) {
+      var text = "";
+      for (var iLetter = 0; iLetter < cells.length; iLetter++) {
+         var letter = " ";
+         if (cells[iLetter].q != "unknown") {
+            letter = alphabet[cells[iLetter].l];
+         }
+         text += letter;
+      }
+      return text;
+   },
+
+   coincidenceIndex: function(text, alphabet) {
+      var nbLetters = text.length;
+      var occurrences = [];
+      for (var letter = 0; letter < alphabet.length; letter++) {
+         occurrences[letter] = 0;
+      }
+      for (var iLetter = 0; iLetter < text.length; iLetter++) {
+         var letter = text[iLetter].l;
+         occurrences[letter]++;
+      }
+      var coincidence = 0;
+      for (var letter = 0; letter < alphabet.length; letter++) {
+           var proba = occurrences[letter] * (occurrences[letter] - 1) / (nbLetters * (nbLetters - 1));
+      coincidence += proba;
+      }
+      return coincidence;
+   },
+
+   genPermutations: function(partialPermutation) {
+      var permutations = [];
+      var curPermutation = [];
+      var valuesAvailable = [];
+      for (var iPos = 0; iPos < partialPermutation.length; iPos++) {
+         valuesAvailable[iPos] = 1;
+      }
+      for (var iPos = 0; iPos < partialPermutation.length; iPos++) {
+         if (partialPermutation[iPos].q != "unknown") {
+            valuesAvailable[partialPermutation[iPos].dstPos] = 0;
+         }
+      }
+      common.recFillPermutations(partialPermutation, permutations, valuesAvailable, curPermutation, 0);
+      return permutations;
+   },
+   
+   recFillPermutations: function(partialPermutation, permutations, valuesAvailable, curPermutation, curPos) {
+      if (curPos >= partialPermutation.length) {
+         var copyPermutation = [];
+         for (var iPos = 0; iPos < curPermutation.length; iPos++) {
+            copyPermutation.push(curPermutation[iPos]);
+         }
+         permutations.push(copyPermutation);
+         return;
+      }
+      if (partialPermutation[curPos].q != "unknown") {
+         curPermutation[curPos] = partialPermutation[curPos].dstPos;
+         common.recFillPermutations(partialPermutation, permutations, valuesAvailable, curPermutation, curPos + 1);
+         return;
+      }
+      for (var value = 0; value < valuesAvailable.length; value++) {
+         if (valuesAvailable[value]) {
+            curPermutation[curPos] = value;
+            valuesAvailable[value] = 0;
+            common.recFillPermutations(partialPermutation, permutations, valuesAvailable, curPermutation, curPos + 1);
+            valuesAvailable[value] = 1;
+         }
+      }
+   },
+
+   applyPermutation: function(cells, permutation) {
+      var dstCells = [];
+      var length = cells.length;
+      if (length % permutation.length != 0) {
+         length = length - (length % permutation.length) + permutation.length;
+      }
+      for (var srcPos = 0; srcPos < length; srcPos++) {
+         var srcCell;
+         if (cells.length > srcPos) {
+            srcCell = cells[srcPos];
+         } else {
+            srcCell = {q: "unknown" };
+         }
+         var modulo = srcPos % permutation.length;
+         var dstPos = srcPos - modulo + permutation[modulo];
+         dstCells[dstPos] = srcCell;
+      }
+      return dstCells;
    }
 }
