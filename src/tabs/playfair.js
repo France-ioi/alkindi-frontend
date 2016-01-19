@@ -3,7 +3,6 @@ import {Button} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
 import {PureComponent, at, put} from '../misc';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
 import RefreshButton from '../ui/refresh_button';
@@ -57,8 +56,7 @@ const initialTools = [
 
 const PlayFairTab = PureComponent(self => {
 
-  const api = Api();
-  const notifier = <Notifier api={api}/>;
+  const api = Alkindi.api;
   const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 
   const getQueryCost = function (query) {
@@ -98,6 +96,11 @@ const PlayFairTab = PureComponent(self => {
   const saveState = function () {
     const user_id = self.props.user_id;
     const {crypto, dispatch} = self.props;
+    const {changed} = crypto;
+    if (!changed) {
+      alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
+      return;
+    }
     const data = {
       title: "Révision du " + new Date().toLocaleString(),
       state: crypto.tools,
@@ -193,7 +196,7 @@ const PlayFairTab = PureComponent(self => {
       return (
         <div>
           Chargement en cours, veuillez patienter...
-          {notifier}
+          <Notifier emitter={api.emitter}/>
         </div>);
     const toolStates = tools.map(tool => tool.state);
     const taskApi = {
@@ -207,13 +210,28 @@ const PlayFairTab = PureComponent(self => {
     const saveStyle = changed ? 'primary' : 'default';
     return (
       <div>
+        <Notifier emitter={api.emitter}/>
+        <div>
+          <p>
+            Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,
+            lisez-le attentivement.
+          </p>
+          <p>
+            {'Voici ci-dessous des outils pour vous aider à déchiffrer le message, '}
+            {'leur documentation est '}
+            <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF" target="new">
+              {'disponible en téléchargement '}
+              <i className="fa fa-download"/>
+            </a>.</p>
+          <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponses.</p>
+        </div>
         <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos coéquipiers depuis le dernier chargement de la page.</p>}/>
             {' '}
             <RefreshButton/>
           </div>
-          <Button bsStyle={saveStyle} disabled={!changed} onClick={saveState}>
+          <Button bsStyle={saveStyle} onClick={saveState}>
             <i className="fa fa-save"/>
             {' Enregistrer cette version'}
           </Button>
@@ -228,7 +246,6 @@ const PlayFairTab = PureComponent(self => {
             <Tooltip content={resetStateTooltip}/>
           </span>
         </div>
-        {notifier}
         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
       </div>
     );
@@ -237,7 +254,8 @@ const PlayFairTab = PureComponent(self => {
 });
 
 const selector = function (state) {
-  const {user, task, crypto} = state;
+  const {crypto, response} = state;
+  const {user, task} = response;
   return {user_id: user.id, task, crypto};
 };
 

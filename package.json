@@ -1,6 +1,6 @@
 {
   "name": "alkindi-r2-front",
-  "version": "1.0.4",
+  "version": "1.4.1",
   "description": "Alkindi competition round 2 front-end",
   "authors": [
     "Epixode"
@@ -16,9 +16,11 @@
     "es5-sham-ie8": "^1.0.1",
     "es5-shim": "^4.4.1",
     "es6-promise": "^3.0.2",
+    "es6-shim": "^0.34.1",
     "font-awesome": "^4.4.0",
     "html5shiv": "^3.7.3",
     "intersperse": "^1.0.0",
+    "memoizejs": "^0.1.1",
     "node-range": "^0.1.0",
     "object.assign": "^4.0.3",
     "rc-tooltip": "^3.3.0",

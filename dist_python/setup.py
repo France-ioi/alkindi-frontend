@@ -14,22 +14,16 @@ if meta.get('x-timestamp'):
     ts = str(int(os.path.getmtime('../dist/main.js')))
     meta['version'] = '.'.join([meta['version'], ts])
 
-print("building {} {}".format(meta['version'], 'min' if min else ''))
+min_build = os.environ.get('MIN_BUILD') == '1'
+print("building {} {}".format(meta['version'], 'min' if min_build else ''))
 
 target = os.path.join(package_name, 'assets')
 rmtree(target, ignore_errors=True)
 os.mkdir(target)
 
-# XXX consider reading these operations from meta
-# write version and min_build flag.
-min = os.environ.get('MIN_BUILD') == '1'
-with open(os.path.join(package_name, '__init__.py'), 'w') as f:
-    print("version = '{}'".format(meta['version']), file=f)
-    print("min_build = {}".format(min), file=f)
-
 # main
 print("copying project assets")
-if min:
+if min_build:
     copy2('../dist/main.min.js', target)
     # copy2('../dist/main.min.js.map', target)
     copy2('../dist/main.min.css', target)
@@ -66,6 +60,12 @@ for (path, dirs, files) in os.walk(target):
     data_files.extend([os.path.join(path, file) for file in files])
 for file in data_files:
     print(file)
+
+# XXX consider reading these operations from meta
+# write version and min_build flag.
+with open(os.path.join(package_name, '__init__.py'), 'w') as f:
+    print("version = '{}'".format(meta['version']), file=f)
+    print("min_build = {}".format(min_build), file=f)
 
 setuptools.setup(
     name=meta['name'],

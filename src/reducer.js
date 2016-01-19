@@ -1,40 +1,52 @@
 
-// import {newTool} from './tool';
-
 const initialState = {
-  tools: [],
+  refreshing: true,
+  request: undefined,
+  response: {},
   activeTabKey: undefined,
   enabledTabs: {},
-  crypto: {},
-  refreshing: true
+  crypto: {}
 };
 
-const seedProps = ['user', 'team', 'round', 'attempt', 'task', 'my_latest_revision_id'];
-
-const reduceInit = function (state, refresh) {
-  return {...state, refresh};
+const reduceBeginRefresh = function (state, action) {
+  const {user_id, request} = action;
+  return {...state, refreshing: true, user_id, request};
 };
 
-const reduceBeginRefresh = function (state, user_id) {
-  return {...state, refreshing: true};
+const reduceCancelRefresh = function (state) {
+  return {...state, refreshing: false};
 };
 
-const reduceEndRefresh = function (state, seed) {
-  if (!seed)
-    seed = {};
-  const newState = {...initialState, ...state, refreshing: false}; // XXX need refresh semaphore
-  // Clear the crypto tab when the attempt changes.
-  if ('attempt' in state && 'attempt' in seed && state.attempt.id !== seed.attempt.id) {
+const reduceEndRefresh = function (state, action) {
+  const {user_id, request, response} = action;
+  // Discart a response to a stale request, but not the initial seeding.
+  if (state.request && !(state.user_id == user_id && state.request === request))
+    return state;
+  const newState = {...state, refreshing: false, response: response};
+  if (response.now) {
+    // Save a relative time offset (local - remote) in milliseconds.
+    newState.timeDelta = Date.now() - (new Date(response.now)).getTime();
+  }
+  // TODO: check action.frontend_version.
+  // Seed with the user id from the response.
+  if (state.request === undefined && response.user !== undefined)
+    newState.user_id = response.user.id;
+  // Set an attempt based on attempts, current_attempt_id.
+  const {attempts, current_attempt_id} = response;
+  if (attempts && current_attempt_id)  {
+    newState.attempt = attempts.find(attempt => attempt.id == current_attempt_id);
+  } else {
+    newState.attempt = undefined;
+  }
+  // Clear the crypto tab when the current attempt changes.
+  const attempt = newState.attempt;
+  if (state.attempt && state.attempt.id !== current_attempt_id) {
     newState.crypto = {};
   }
-  // Overwrite state with seed, even missing seed props.
-  seedProps.forEach(function (key) {
-    newState[key] = seed[key];
-  })
-  const {crypto} = newState;
   // If the crypto tab has not been loaded, set the initial revisionId.
-  if (crypto.tools === undefined && newState.my_latest_revision_id !== null) {
-    newState.crypto = {revisionId: newState.my_latest_revision_id};
+  const {crypto} = newState;
+  if (crypto.tools === undefined && response.my_latest_revision_id !== null) {
+    newState.crypto = {revisionId: response.my_latest_revision_id};
   }
   return reduceTick(reduceSetActiveTab(newState));
 };
@@ -42,13 +54,22 @@ const reduceEndRefresh = function (state, seed) {
 const reduceTick = function (state) {
   // Periodic process, this executes every second and
   // at the end of every refresh.
-  const now = Date.now();
-  const newState = {...state, now};
-  const {round, attempt, task} = state;
-  if (round !== undefined) {
-    newState.round_has_not_started =
-      now < new Date(round.training_opens_at).getTime();
+  let newState = {...state};
+  const {attempt, response, timeDelta} = state;
+  const {round, task} = response;
+  // Correct local time by subtracting the (local - remote) delta.
+  const now = Date.now() - (timeDelta || 0);
+  newState.now = now;
+
+  // Trigger a refresh if the clock jumped by over 30 seconds.
+  const lastTick = state.now;
+  if (lastTick && Math.abs(now - lastTick) > 30000) {
+    // We cannot call Alkindi.refresh from within the reducer because
+    // it calls store.dispatch, so call it at the next tick.
+    setTimeout(Alkindi.refresh, 0);
+    return newState;
   }
+
   // Update the countdown.
   newState.countdown = undefined;
   if (attempt !== undefined && task !== undefined) {
@@ -59,19 +80,25 @@ const reduceTick = function (state) {
         newState.countdown = countdown;
     }
   }
-  // Trigger a refresh when the countdown ends.
+
+  // Switch to 'attempts' tab when the countdown elapses.
   if (state.countdown !== undefined && newState.countdown === undefined) {
-    setTimeout(function () {
-      state.refresh(state.user.id);
-    }, 0);
+    newState = reduceSetActiveTab(newState, 'attempts');
+    setTimeout(Alkindi.refresh, 0);
   }
+
+  // TODO: consider also updating the various flags that depend on the
+  // current time.
+
   return newState;
 };
 
 const reduceSetActiveTab = function (state, tabKey) {
-  const haveTask = !!state.task;
+  const haveTask = !!state.response.task;
+  const haveAttempts = !!state.response.attempts;
   const enabledTabs = {
     team: true,
+    attempts: haveAttempts,
     task: haveTask,
     cryptanalysis: haveTask,
     history: haveTask,
@@ -96,172 +123,28 @@ const reduceUseRevision = function (state, revision_id) {
   };
 };
 
-const reduceSetUser = function (state, user) {
-  return {...state, user};
-};
-
-const reduceSetTeam = function (state, team) {
-  return {...state, team};
-};
-
-const reduceSetRound = function (state, round) {
-  // Force a tick to update round_has_not_started.
-  return reduceTick({...state, round: round});
-};
-
-const reduceSetAttempt = function (state, attempt) {
-  return {...state, attempt};
-};
-
-const reduceSetTask = function (state, task) {
-  return {...state, task};
-};
-
-const reduceSetTools = function (state, tools) {
-  return {...state, tools};
-};
-
-const reduceSetWorkspaces = function (state, workspaces) {
-  const currentWorkspace = undefined;
-  // TODO: retain currentWorkspace based on historyTab.currentWorkspace.id
-  // being present in workspaces
-  // const {historyTab} = state;
-  const newHistoryTab = {
-    workspaces,
-    currentWorkspace
-  };
-  if (currentWorkspace === undefined) {
-    let groups = workspaces.map(w => w.versions.map(v => { return {...v, workspace: w}; }));
-    groups = groups.sort((v1, v2) => new Date(v1.updatedAt) < new Date(v2.updatedAt));
-    newHistoryTab.allVersions = Array.prototype.concat.apply([], groups);
-  }
-  return {...state, historyTab: newHistoryTab};
-};
-
-const reduceAddTool = function (state, toolType, toolState) {
-  return state; // XXX disabled
-  const tool = newTool(toolType, toolState);
-  const {nextToolId, toolPointer, toolMap, toolOrder} = state;
-  const toolId = 't' + nextToolId;
-  const toolIndex = toolOrder.length;
-  // Set the tool pointer to the new tool unless already computing.
-  const newToolPointer = toolPointer === undefined ? toolIndex : toolPointer;
-  return {
-    ...state,
-    nextToolId: nextToolId + 1,
-    toolPointer: newToolPointer,
-    toolMap: {...toolMap, [toolId]: {...tool, id: toolId}},
-    toolOrder: [...toolOrder, toolId]
-  };
-};
-
-const reduceRemoveTool = function (state, toolId) {
-  const {toolMap, toolOrder, toolPointer} = state;
-  // Find the tool's index in toolOrder.
-  const i = toolOrder.indexOf(toolId);
-  if (i === -1)
-    return state;
-  // Remove from toolOrder.
-  const newToolOrder = [...toolOrder.slice(0, i), ...toolOrder.slice(i + 1)];
-  // Update the toolPointer.
-  let newToolPointer = (toolPointer >= i) ? toolPointer - 1 : toolPointer;
-  if (newToolPointer >= newToolOrder.length)
-    newToolPointer = undefined;
-  // Make a copy of toolMap without the tool being removed.
-  const newToolMap = {...toolMap};
-  delete toolMap[toolId];
-  return {
-    ...state,
-    toolPointer: newToolPointer,
-    toolOrder: newToolOrder,
-    toolMap: newToolMap
-  };
-};
-
-const reduceUpdateTool = function (state, toolId, toolStateUpdate) {
-  const {toolPointer, toolOrder, toolMap} = state;
-  const toolIndex = toolOrder.indexOf(toolId);
-  const newToolPointer = (toolPointer === undefined || toolIndex < toolPointer) ? toolIndex : toolPointer;
-  const tool = toolMap[toolId];
-  const newToolState = tool.mergeState(tool.state, toolStateUpdate);
-  return {
-    ...state,
-    toolPointer: newToolPointer,
-    toolMap: {
-      ...toolMap,
-      [toolId]: {...tool, state: newToolState}
-    }
-  };
-};
-
-const reduceStep = function (state) {
-  const {toolOrder, toolPointer, toolMap, rootScope} = state;
-  // Do nothing if the tool pointer is out of range.
-  if (toolPointer === undefined)
-    return state;
-  // Get the input scope (rootScope or previous instructions' outputScope).
-  const inputScope = toolPointer === 0 ? rootScope : toolMap[toolOrder[toolPointer - 1]].outputScope;
-  // Build a fresh output scope.
-  const outputScope = Object.create(inputScope);
-  // Get the tool.
-  const toolId = toolOrder[toolPointer];
-  const tool = toolMap[toolId];
-  // Let the computation write to the new output scope.
-  tool.compute(tool.state, outputScope);
-  // Increment the tool pointer.
-  let newToolPointer = toolPointer + 1;
-  if (newToolPointer === toolOrder.length)
-    newToolPointer = undefined;
-  // Return the updated state.
-  return {
-    ...state,
-    toolPointer: newToolPointer,
-    toolMap: {
-      ...toolMap,
-      [toolId]: {...tool, outputScope}
-    }
-  };
-};
-
 const actualReduce = function (state, action) {
   switch (action.type) {
     case '@@redux/INIT':
+      break;
     case 'INIT':
-      return reduceInit(state, action.refresh);
+      return initialState;
     case 'BEGIN_REFRESH':
-      return reduceBeginRefresh(state, action.user_id);
+      return reduceBeginRefresh(state, action);
     case 'END_REFRESH':
-      return reduceEndRefresh(state, action.seed);
+      return reduceEndRefresh(state, action);
+    case 'CANCEL_REFRESH':
+      return reduceCancelRefresh(state);
     case 'AFTER_LOGOUT':
-      return reduceSeed(state, undefined);
+      return initialState;
     case 'TICK':
       return reduceTick(state);
-    case 'SET_USER':
-      return reduceSetUser(state, action.user);
-    case 'SET_TEAM':
-      return reduceSetTeam(state, action.team);
-    case 'SET_ROUND':
-      return reduceSetRound(state, action.round);
-    case 'SET_ATTEMPT':
-      return reduceSetAttempt(state, action.attempt);
-    case 'SET_TASK':
-      return reduceSetTask(state, action.task);
-    // case 'SET_WORKSPACES':
-    //   return reduceSetWorkspaces(state, action.workspaces);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
     case 'SET_CRYPTO':
       return {...state, crypto: action.crypto};
     case 'USE_REVISION':
       return reduceUseRevision(state, action.revision_id);
-    // case 'ADD_TOOL':
-    //   return reduceAddTool(state, action.toolType, action.toolState);
-    // case 'REMOVE_TOOL':
-    //   return reduceRemoveTool(state, action.toolId);
-    // case 'UPDATE_TOOL':
-    //   return reduceUpdateTool(state, action.toolId, action.toolStateUpdate);
-    // case 'STEP':
-    //   return reduceStep(state);
     default:
       throw 'unhandled action ' + action.type;
   }

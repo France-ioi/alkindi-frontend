@@ -7,22 +7,8 @@ import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 
-export const selector = function (state) {
-  const {activeTabKey, enabledTabs, user, team, round, attempt, task, crypto, refresh} = state;
-  if (!user)
-    return {refresh};
-  if (!team)
-    return {user, round};
-  const changed = crypto.changed;
-  return {activeTabKey, enabledTabs, user, team, round, attempt, task, changed};
-};
-
 export const App = PureComponent(self => {
-  const afterLogout = function () {
-    // Reload the page after the user has logged out to obtain a new session
-    // and CSRF token.
-    window.location.reload();
-  };
+
   self.componentWillMount = function () {
     window.addEventListener('beforeunload', function (event) {
       if (self.props.changed) {
@@ -32,22 +18,26 @@ export const App = PureComponent(self => {
       }
     });
   };
+
   self.render = function () {
-    const {user, team, round, refresh} = self.props;
+    const {have_user, have_team} = self.props;
 
-    // Si on n'a pas d'utilisateur, on affiche l'écran de login.
-    if (user === undefined)
-      return <LoginScreen loginUrl={Alkindi.config.login_url} onLogin={refresh}/>;
+    if (!have_user)
+      return <LoginScreen/>;
 
-    // Si l'utilisateur n'a pas d'équipe, on lui affiche l'écran de sélection /
-    // création d'équipe.
-    if (team === undefined)
-      return <JoinTeamScreen user={user} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
+    if (!have_team)
+      return <JoinTeamScreen/>;
 
-    // Sinon, on affiche l'écran principal.
-    return <MainScreen user={user} team={team} round={round} logoutUrl={Alkindi.config.logout_url} onLogout={afterLogout}/>;
-
+    return <MainScreen/>;
   };
+
 });
+
+export const selector = function (state) {
+  const {crypto} = state;
+  const {user, team} = state.response;
+  const changed = crypto && crypto.changed;
+  return {have_user: !!user, have_team: !!team, changed};
+};
 
 export default connect(selector)(App);

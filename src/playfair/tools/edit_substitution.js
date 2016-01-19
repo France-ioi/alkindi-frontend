@@ -34,6 +34,8 @@ export const Component = PureComponent(self => {
       const {letterInfos} = self.props.scope;
       const iLetter = parseInt(event.currentTarget.getAttribute('data-i'));
       const bigram = letterInfos[iLetter].bigram;
+      if (bigram === undefined)
+         return;
       const editPair = substitutionEdits[bigram.v] || [{locked: false}, {locked: false}];
       self.setState({
          editPair: editPair,

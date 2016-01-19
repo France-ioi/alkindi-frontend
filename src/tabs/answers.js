@@ -6,63 +6,52 @@ import classnames from 'classnames';
 
 import {PureComponent, toMap} from '../misc';
 import {AnswerDialog, Answer} from '../playfair';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import {RefreshButton} from '../ui/refresh_button';
+import {setActiveTab} from '../actions';
 
 const AnswersTab = PureComponent(self => {
 
-  const api = Api();
-  const notifier = <Notifier api={api}/>;
+  const api = Alkindi.api;
 
   const submitAnswer = function (data) {
     const {user_id, attempt} = self.props;
     api.submitAnswer(user_id, attempt.id, data).then(function (result) {
       self.setState({
-        submittedAnswerId: result.answer_id
+        submittedAnswerId: result.answer_id,
+        feedback: result.feedback
       });
-      onRefresh();
+      Alkindi.refresh();
     });
   };
 
-  const onRefresh = function () {
-    const {attempt} = self.props;
-    self.setState({refreshing: true});
-    api.listAttemptAnswers(attempt.id).then(
-      function (result) {
-        self.setState({
-          refreshing: false,
-          answers: result.answers,
-          users: toMap(result.users)
-        });
-      },
-      function () {
-        self.setState({refreshing: false});
-      });
+  const onSuccess = function () {
+    self.props.dispatch(setActiveTab('attempts'));
   };
 
   const renderAnswers = function (answers) {
-    const {users, submittedAnswerId} = self.state;
+    const users = toMap(self.props.users)
+    const {submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
       const submitter = users[answer.submitter_id];
       const isCurrent = submittedAnswerId === answer.id;
       const classes = [
-        isCurrent && 'answer-isSubmitted'
+        isCurrent && 'rowIsSubmitted'
       ];
       return (
         <tr key={answer.id} className={classnames(classes)}>
-          <td>
+          <td className="colIsCurrent">
             {isCurrent &&
               <Tooltip content={<p>Vous venez de soumettre cette réponse.</p>}>
                 <i className="fa fa-asterisk"/>
               </Tooltip>}
           </td>
-          <td>{answer.ordinal}</td>
-          <td>{new Date(answer.created_at).toLocaleString()}</td>
-          <td>{submitter.username}</td>
-          <td><Answer answer={answer.answer}/></td>
-          <td>{answer.score}</td>
-          <td>
+          <td className="colOrdinal">{answer.ordinal}</td>
+          <td className="colSubmittedAt">{new Date(answer.created_at).toLocaleString()}</td>
+          <td className="colSubmitter">{submitter.username}</td>
+          <td className="colAnswer"><Answer answer={answer.answer}/></td>
+          <td className="colScore">{answer.score}</td>
+          <td className="colIsSolution">
             {answer.is_solution &&
               <Tooltip content={<p>Cette réponse valide l'épreuve, félicitations !</p>}>
                 <i className="fa fa-thumbs-o-up"/>
@@ -92,11 +81,12 @@ const AnswersTab = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
-    onRefresh();
+    Alkindi.refresh({'answers': true});
   };
 
   self.render = function () {
-    const {answers, refreshing} = self.state;
+    const {answers} = self.props;
+    const {feedback} = self.state;
     const answersBlock =
       (answers === undefined
         ? <p>Chargement en cours...</p>
@@ -109,20 +99,26 @@ const AnswersTab = PureComponent(self => {
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des réponses soumises par votre équipe.</p>}/>
             {' '}
-            <RefreshButton refresh={onRefresh} refreshing={refreshing}/>
+            <RefreshButton/>
           </div>
         </div>
-        {notifier}
-        <AnswerDialog answers={answersBlock} submit={submitAnswer}/>
+        <Notifier emitter={api.emitter}/>
+        <AnswerDialog answers={answersBlock} submit={submitAnswer} feedback={feedback} onSuccess={onSuccess}/>
       </div>
     );
+    // TODO: bouton vers onglet épreuve
   };
 }, _self => {
   return {
-    refreshing: true,
-    answers: undefined,
-    submittedAnswerId: undefined
+    submittedAnswerId: undefined,
+    feedback: undefined
   };
 });
 
-export default AnswersTab;
+const selector = function (state) {
+  const {user_id, attempt, response} = state;
+  const {answers, users} = response;
+  return {user_id, attempt, answers, users};
+};
+
+export default connect(selector)(AnswersTab);

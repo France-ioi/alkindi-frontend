@@ -4,179 +4,34 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 
 import {PureComponent} from '../misc';
-import Api from '../api';
 import Notifier from '../ui/notifier';
 import RefreshButton from '../ui/refresh_button';
 import Tooltip from '../ui/tooltip';
-
-const TestTeamTab = function (self) {
-  const setTeam = function (team) {
-    self.props.dispatch({type: 'SET_TEAM', team});
-  };
-  const setRound = function (round) {
-    self.props.dispatch({type: 'SET_ROUND', round});
-  };
-  const setAttempt = function (attempt) {
-    self.props.dispatch({type: 'SET_ATTEMPT', attempt});
-  };
-  const setTask = function (task) {
-    self.props.dispatch({type: 'SET_TASK', task});
-  };
-  const toggleBeforeRoundStart = function () {
-    const round = self.props.round;
-    const training_opens_at =
-      (self.props.round_has_not_started ? new Date() : new Date(Date.now() + 600000)).toISOString();
-    setRound({...round, training_opens_at});
-  };
-  const toggleInvalidTeam = function () {
-    const team = self.props.team;
-    setTeam({...team, is_invalid: !team.is_invalid});
-  };
-  const setTrainingAttempt = function () {
-    const team = self.props.team;
-    setTeam({...team, is_locked: true});
-    setTask(undefined);
-    setAttempt({needs_codes: true, is_training: true, is_unsolved: true});
-  };
-  const toggleCodesEntered = function () {
-    const attempt = self.props.attempt;
-    if (attempt)
-      setAttempt({...attempt, needs_codes: !attempt.needs_codes});
-  };
-  const toggleAttemptResolved = function () {
-    const attempt = self.props.attempt;
-    if (attempt)
-      setAttempt({...attempt, is_unsolved: !attempt.is_unsolved});
-  };
-  const setTimedAttempt = function () {
-    const team = self.props.team;
-    setTeam({...team, is_locked: true}); // normalement déjà fait
-    setTask(undefined);
-    setAttempt({
-      needs_codes: true, is_training: false, is_unsolved: true,
-      duration: 60, ends_at: new Date(Date.now() + 3600000).toISOString()
-    });
-  };
-  const toggleTaskAvailable = function () {
-    const task = self.props.task;
-    setTask(task ? undefined : {});
-  };
-  const redGreen = function (cond, ifTrue, ifFalse) {
-    return (
-      <label>
-        {cond
-        ? <span style={{color: 'red'}}>{ifTrue}</span>
-        : <span style={{color: 'green'}}>{ifFalse}</span>}
-      </label>
-    );
-  };
-  const render = function () {
-    const {team, round, attempt, task, round_has_not_started} = self.props;
-    return (
-      <div>
-        <hr/>
-        <ul>
-          <li>
-            {redGreen(team.is_invalid, 'team is invalid', 'team is valid')}
-            <Button onClick={toggleInvalidTeam}>toggle</Button>
-          </li>
-          <li>
-            {redGreen(!attempt, 'no attempt', 'attempt exists')}
-            <Button onClick={setTrainingAttempt}>training</Button>
-            <Button onClick={setTimedAttempt}>timed</Button>
-          </li>
-          <li>
-            {redGreen(round_has_not_started, 'round has not started', 'round has started')}
-            <Button onClick={toggleBeforeRoundStart}>toggle</Button>
-          </li>
-          {attempt && <li>{attempt.is_training ? 'attempt is training' : 'attempt is timed'}</li>}
-          {attempt && <li>
-            {redGreen(attempt.needs_codes, 'attempt needs codes', 'attempt is confirmed')}
-            <Button onClick={toggleCodesEntered}>toggle</Button>
-          </li>}
-          {attempt && <li>
-            {redGreen(!task, 'task not accessed', 'task accessed')}
-            <Button onClick={toggleTaskAvailable}>toggle</Button>
-          </li>}
-          {attempt && <li>
-            {redGreen(attempt.is_unsolved, 'attempt is unresolved', 'attempt was solved')}
-            <Button onClick={toggleAttemptResolved}>toggle</Button>
-          </li>}
-        </ul>
-        <p>Team: {JSON.stringify(team)}</p>
-        <p>Round: {JSON.stringify(round)}</p>
-        <p>Attempt: {JSON.stringify(attempt)}</p>
-      </div>
-    );
-  };
-  return {render};
-};
+import AttemptTimeline from '../ui/attempt_timeline';
+import {setActiveTab} from '../actions';
 
 const TeamTab = PureComponent(self => {
 
-  const api = Api();
+  const onGoToAttempts = function () {
+    self.props.dispatch(setActiveTab('attempts'));
+  };
+
+  const onLeaveTeam = function () {
+    const user_id = self.props.user.id;
+    Alkindi.api.leaveTeam(user_id);
+  };
+
+  const onUpdateTeam = function () {
+    const user_id = self.props.user.id;
+    const data = {is_open: self.state.isOpen};
+    Alkindi.api.updateUserTeam(user_id, data);
+  };
+
   const onIsOpenChanged = function (event) {
     self.setState({
       isOpen: event.currentTarget.value === 'true'
     });
   };
-  const onLeaveTeam = function () {
-    const user_id = self.props.user.id;
-    api.leaveTeam(user_id);
-  };
-  const onUpdateTeam = function () {
-    const user_id = self.props.user.id;
-    const data = {is_open: self.state.isOpen};
-    api.updateUserTeam(user_id, data);
-  };
-  const onStartAttempt = function () {
-    const user_id = self.props.user.id;
-    api.startAttempt(user_id);
-  };
-  const onCancelAttempt = function () {
-    const user_id = self.props.user.id;
-    api.cancelAttempt(user_id).then(function () {
-      self.setState({access_code: undefined});
-    });
-  }
-  const onRevealAccessCode = function () {
-    const user_id = self.props.user.id;
-    api.getAccessCode(user_id).then(function (result) {
-      self.setState({access_code: result.code});
-    });
-  };
-  const onEnterAccessCode = function (event) {
-    const user_id = self.props.user.id;
-    const code_user_id = event.currentTarget.getAttribute('data-user_id');
-    const element = self.refs['access_code_' + code_user_id];
-    const code = element.value;
-    element.value = '';
-    api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
-  };
-  const onAccessTask = function () {
-    const {user, team, attempt} = self.props;
-    // If the team is already locked, no confirmation is asked.
-    if (!team.is_locked && !window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
-      return;
-    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez 60 minutes pour le resoudre."))
-      return;
-    api.assignAttemptTask(user.id);
-  };
-  const onResetHints = function () {
-    const user_id = self.props.user.id;
-    if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos coéquipiers.")) {
-      api.resetHints(user_id);
-    }
-  };
-  const onResetToTraining = function () {
-    const team_id = self.props.team.id;
-    api.resetTeamToTraining(team_id);
-  };
-
-  const clearAccessCode = function () {
-    self.setState({access_code: undefined});
-  };
-  const notifier = <Notifier api={api} onRefresh={clearAccessCode}/>;
 
   const renderRoundPrelude = function (round) {
     return (
@@ -191,16 +46,8 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderAttemptPrelude = function (_attempt) {
-    return (
-      <div>
-        <p>Pour autoriser l'accès au sujet, vous devez saisir des codes de
-           lancement.</p>
-        <p>Voici la composition de votre équipe :</p>
-      </div>
-    );
-  };
-  const renderTeamMembers = function (team, haveAttempt) {
+
+  const renderTeamMembers = function (team) {
     const renderMember = function (member) {
       const user_id = member.user_id;
       const flags = [];
@@ -209,20 +56,11 @@ const TeamTab = PureComponent(self => {
       if (member.is_qualified)
         flags.push('qualifié');
       return (
-        <tr key={member.user.id}>
+        <tr key={user_id}>
           <td>{member.user.username}</td>
           <td>{member.user.lastname}, {member.user.firstname}</td>
           <td>{flags.join(', ')}</td>
           <td>{new Date(member.joined_at).toLocaleString()}</td>
-          {haveAttempt &&
-            (member.access_code === undefined
-             ? <td className="access-code">
-                 <input type="text" ref={'access_code_'+user_id} />
-                 <Button bsSize="small" onClick={onEnterAccessCode} data-user_id={user_id}>
-                   <i className="fa fa-check"/> valider
-                 </Button>
-               </td>
-             : <td className="unlocked-code">{member.access_code}</td>)}
         </tr>);
     };
     return (
@@ -234,7 +72,6 @@ const TeamTab = PureComponent(self => {
               <th>Nom, prénom</th>
               <th>Statut</th>
               <th>Membre depuis</th>
-              {haveAttempt && <th>Code de lancement du sujet</th>}
             </tr>
             {team.members.map(renderMember)}
           </tbody>
@@ -242,6 +79,7 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+
   const renderLeaveTeam = function () {
     return (
       <div className="section">
@@ -254,6 +92,32 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
+
+  const renderTeamCode = function (team) {
+    return (
+      <div className="section">
+        <p>
+          Voici le code à transmettre aux autres personnes que vous
+          souhaitez inviter dans l'équipe :
+        </p>
+        <p className="text-center">
+            <span className="team-code">{team.code}</span>
+        </p>
+      </div>
+    );
+  };
+
+  const renderTeamClosed = function () {
+    return (
+      <div className="section">
+        <p>
+          Le créateur de l'équipe a fermé l'accès à l'équipe et aucune
+          nouvelle personne ne peut la rejoindre.
+        </p>
+      </div>
+    );
+  };
+
   const renderAdminControls = function (team) {
     const {isOpen} = self.state;
     return (
@@ -263,7 +127,6 @@ const TeamTab = PureComponent(self => {
           <input type="radio" name="team-open" value="true"  id="team-open" checked={self.state.isOpen} onChange={onIsOpenChanged} />
           <div className={classnames(['radio-label', isOpen && 'radio-checked'])}>
             <label htmlFor="team-open">Permettre à d'autres personnes de rejoindre l'équipe</label>
-            {isOpen && <p>Code d'accès de l'équipe à leur communiquer : <strong>{team.code}</strong></p>}
           </div>
         </div>
         <div>
@@ -280,217 +143,42 @@ const TeamTab = PureComponent(self => {
       </div>
     );
   };
-  const renderOwnAccessCode = function () {
-    const {access_code} = self.state;
-    return (
-      <div>
-        <p>
-          Votre code de lancement personnel pour ce sujet est :
-        </p>
-        <p className="access-code-block">
-          <span className="access-code">
-            {access_code === undefined
-             ? <Button bsSize="large" onClick={onRevealAccessCode}>
-                 <i className="fa fa-unlock-alt"/> révéler
-               </Button>
-             : <span className="code">{access_code}</span>}
-          </span>
-        </p>
-      </div>
-    );
-  };
-  const renderCancelAttempt = function (cancelThis, goBackToThat) {
-    return (
-      <div>
-        <p>Vous pouvez annuler la procédure d'accès à {cancelThis} et
-           revenir à {goBackToThat}.</p>
-        <p className="text-center">
-          <Button onClick={onCancelAttempt}>
-            <i className="fa fa-arrow-left"/> annuler
-          </Button>
-        </p>
-      </div>
-    );
-  };
-  const renderTooEarly = function (round) {
-    return (
-      <div className="section">
-        <Alert bsStyle='success'>
-          L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
-          Vous pouvez dès maintenant valider la composition de votre équipe.
-        </Alert>
-      </div>
-    );
-  };
-  const renderBadTeam = function () {
-    return (
-      <div className="section">
-        <Alert bsStyle='warning'>
-          La composition de votre équipe ne respecte pas les règles du tour
-          et vous ne pouvez donc pas accéder à l'entrainement.
-        </Alert>
-      </div>
-    );
-  };
-  const renderStartAttempt = function (message) {
-    return (
-      <div className="section">
-        {message}
-        <p className="text-center">
-          <Button bsStyle="primary" bsSize="large" onClick={onStartAttempt}>
-            démarrer <i className="fa fa-arrow-right"/>
-          </Button>
-        </p>
-      </div>
-    );
-  };
-  const renderStartTraining = function () {
-    const message = (
-      <p>La composition de votre équipe vous permet d'accéder à l'entrainement.</p>
-    );
-    return renderStartAttempt(message);
-  };
-  const renderStartTimedAttempt = function () {
-    const message = (
-      <p>Vous avez résolu le sujet d'entrainement et pouvez faire une tentative en temps limité.</p>
-    );
-    return renderStartAttempt(message);
-  };
-  const renderEnterCodes = function (attempt) {
-    return (
-      attempt.is_training
-      ? <div className="section">
-          <p>Lorsque vous aurez saisi au moins 1 code d'accès vous pourrez
-             accéder au sujet d'entrainement.</p>
-          <p><strong>
-             Notez que pour accéder au sujet en temps limité, il faudra saisir
-             plus de 50% des codes.</strong></p>
-        </div>
-      : <div className="section">
-          <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-             accéder au sujet, vous aurez alors {attempt.duration} minutes
-             pour le résoudre.
-          </p>
-        </div>
-    );
-  };
-  const renderCodesEnteredEarly = function (round) {
+
+  const renderValidTeam = function () {
     return (
       <div className="section">
         <p>
-          Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-          vous êtes prêts à commencer dès l'ouverture de l'épreuve.
-        </p>
-        <Alert bsStyle='success'>
-          L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
-        </Alert>
-      </div>
-    );
-  };
-  const renderUnlockTask = function () {
-    const {team, attempt} = self.props;
-    return (
-      <div className="section">
-        <p>
-          Les membres de votre équipe ont donné leur accord pour accéder au sujet,
-          vous pouvez maintenant le déverouiller en cliquant.
-        </p>
-        {!team.is_locked &&
-          <p>
-            <strong>Attention</strong>, après avoir accédé au sujet vous ne pourrez
-            plus changer la composition de votre équipe pendant le reste du concours.
-          </p>}
-        <p className="text-center">
-          <Button bsStyle="primary" bsSize="large" onClick={onAccessTask}>
-            accéder au sujet <i className="fa fa-arrow-right"/>
-          </Button>
-        </p>
-      </div>
-    );
-  };
-  const renderLateEnterCode = function () {
-    return (
-      <div className="section">
-        <p>Au moins l'un des membres de votre équipe a déjà saisi son code de
-           lancement, et a ouvert l'accès au sujet d'entrainement.
-        </p>
-        <p><strong>
-          Pour accéder au sujet en temps limité, il faudra saisir plus
-          de 50% des codes de lancement.</strong></p>
-        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
-      </div>
-    );
-  };
-  const renderTrainingInProgress = function () {
-    return (
-      <div className="section">
-        <p>Le sujet d'entrainement est visible dans l'onglet Sujet.</p>
-      </div>
-    );
-  };
-  const renderTimedAttemptInProgress = function (attempt) {
-    // TODO: changer bsStyle en fonction du temps qui reste.
-    const now = Date.now();
-    const closes_at = new Date(attempt.closes_at);
-    if (now <= closes_at) {
-      return (
-        <div className="section">
-          <Alert bsStyle='success'>
-            Votre tentative en temps limité se termine le {closes_at.toLocaleString()}.
-          </Alert>
-        </div>
-      );
-    } else {
-      return (
-        <div className="section">
-          <Alert bsStyle='danger'>
-            Votre tentative en temps limité s'est terminée le {closes_at.toLocaleString()}.
-          </Alert>
-          <p>
-            Vous pouvez revenir au sujet d'entrainement et recommencer une
-            tentative en temps limité, dans la limite du nombre autorisé.
-          </p>
-          <p className="text-center">
-            <Button onClick={onResetToTraining}>
-               <i className="fa fa-arrow-left"/> retour à l'entrainement
-            </Button>
-          </p>
-        </div>
-      );
-    }
-  };
-  const renderResetHints = function () {
-    return (
-      <div className="section">
-        <p>
-          Pendant le sujet d'entrainement uniquement, vous pouvez effacer tous
-          les indices que vous avez demandés en cliquant le bouton ci-dessous.
-          Attention, cela affectera tous vos coéquipiers.
+          La composition de votre équipe respecte les règles du tour,
+          vous pouvez accéder aux épreuves.
         </p>
         <p className="text-center">
-          <Button onClick={onResetHints}>
-            réinitialiser les indices <i className="fa fa-history"/>
+          <Button bsStyle="primary" bsSize="large" onClick={onGoToAttempts}>
+            accéder aux épreuves <i className="fa fa-arrow-right"/>
           </Button>
         </p>
       </div>
     );
   };
 
-  const testing = false && TestTeamTab(self);
+  const renderInvalidTeam = function (causes) {
+    return (
+      <div className="section">
+        <Alert bsStyle='warning'>
+          La composition de votre équipe ne respecte pas les règles du tour
+          et vous ne pouvez donc pas accéder aux épreuves.
+        </Alert>
+      </div>
+    );
+  };
+
   self.render = function () {
-    const {user, team, round, attempt, task, round_has_not_started} = self.props;
-    if (!user || !team || !round)
+    const {user, round, team} = self.props;
+    // The tab gets rendered when the user leaves a team?
+    if (team === undefined)
       return false;
-    const haveAttempt = attempt !== undefined;
-    const haveTask = task !== undefined;
-    const showAdminControls = !haveAttempt && !team.is_locked && team.creator.id === user.id;
-    const canLeaveTeam = !haveAttempt && !team.is_locked;
-    const canCancelAttempt = haveAttempt && !haveTask;
-    const showOwnAccessCode = haveAttempt && !team.members.find(function (member) {
-      return member.access_code && member.user_id === user.id;
-    });
-    // Conditions in the decision tree are ordered so leftmost-innermost
-    // traversal corresponds to chronological order.
+    const teamUnlocked = !team.is_locked;
+    const teamAdmin = team.creator.id === user.id;
+    const teamInvalid = team.is_invalid.length > 0;
     return (
       <div className="wrapper">
         <div className="pull-right">
@@ -498,61 +186,27 @@ const TeamTab = PureComponent(self => {
           {' '}
           <RefreshButton/>
         </div>
+        <Notifier emitter={Alkindi.api.emitter}/>
         <h1>{round.title}</h1>
-        {attempt === undefined
-         ? renderRoundPrelude(round)
-         : (attempt.needs_codes && renderAttemptPrelude(attempt))}
-        {renderTeamMembers(team, haveAttempt)}
-        {showOwnAccessCode && renderOwnAccessCode()}
-        {attempt === undefined
-          ? <div>
-              {round_has_not_started && renderTooEarly(round)}
-              {team.is_invalid
-               ? renderBadTeam()
-               : renderStartTraining()}
-            </div>
-          : (attempt.is_training
-             ? (round_has_not_started
-                ? (attempt.needs_codes
-                   ? renderTooEarly(round)
-                   : renderCodesEnteredEarly(round))
-                : (attempt.needs_codes
-                   ? renderEnterCodes(attempt)
-                   : (task === undefined
-                      ? renderUnlockTask()
-                      : (showOwnAccessCode
-                         ? renderLateEnterCode()
-                         : (attempt.is_unsolved
-                            ? renderTrainingInProgress()
-                            : renderStartTimedAttempt())))))
-             : (attempt.needs_codes
-                ? renderEnterCodes(attempt)
-                : (task === undefined
-                   ? renderUnlockTask(attempt)
-                   : renderTimedAttemptInProgress(attempt))))
-        }
-        {showAdminControls && renderAdminControls(team)}
-        {canLeaveTeam && renderLeaveTeam()}
-        {canCancelAttempt &&
-         (attempt.is_training
-          ? renderCancelAttempt("l'entrainement", "l'étape de constitution de l'équipe")
-          : renderCancelAttempt("l'épreuve en temps limité", "l'entrainement"))}
-        {task !== undefined && attempt.is_training && renderResetHints()}
-        {notifier}
-        {testing && testing.render()}
+        {renderTeamMembers(team)}
+        {team.is_invalid
+          ? renderInvalidTeam(team.round_access)
+          : renderValidTeam()}
+        {team.is_open ? renderTeamCode(team) : renderTeamClosed()}
+        {teamAdmin && renderAdminControls(team)}
+        {teamUnlocked && renderLeaveTeam()}
       </div>
     );
   };
-}, self => {
+}, function (self) {
   return {
-    joinTeam: false,
     isOpen: self.props.team.is_open
   };
 });
 
 const selector = function (state, _props) {
-  const {user, team, round, attempt, task, round_has_not_started} = state;
-  return {user, team, round, attempt, task, round_has_not_started};
+  const {user, round, team} = state.response;
+  return {user, round, team};
 };
 
 export default connect(selector)(TeamTab);

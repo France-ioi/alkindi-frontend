@@ -1,32 +1,15 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 
 import {PureComponent} from '../misc';
 import AuthHeader from '../ui/auth_header';
-import {Button} from 'react-bootstrap';
 
 const LoginScreen = PureComponent(self => {
-  let loginWindow;
-  const login = function () {
-    if (loginWindow !== undefined) {
-      loginWindow.close();
-      loginWindow = undefined;
-    }
-    const {loginUrl} = self.props;
-    loginWindow = window.open(loginUrl, "alkindi:login",
-      "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
+
+  const onLogin = function () {
+    Alkindi.login();
   };
-  const messageListener = function (event) {
-    // TODO: understand why event.isTrusted is false on Firefox.
-    const message = JSON.parse(event.data);
-    if (message.action === 'afterLogin')
-      self.props.onLogin(message.user_id);
-  };
-  self.componentDidMount = function () {
-    window.addEventListener('message', messageListener);
-  };
-  self.componentWillUnmount = function () {
-    window.removeEventListener('message', messageListener);
-  };
+
   self.render = function () {
     return (
       <div className="wrapper">
@@ -38,7 +21,7 @@ const LoginScreen = PureComponent(self => {
           <h2>Si vous avez déjà créé votre compte</h2>
           <p>Authentifiez-vous auprès de la plateforme France-ioi en cliquant
              sur le bouton ci-dessous.</p>
-          <p><Button onClick={login}>se connecter</Button></p>
+          <p><Button onClick={onLogin}>se connecter</Button></p>
         </div>
         <div className="section">
           <h2>Sinon, deux cas sont possibles :</h2>
@@ -56,7 +39,7 @@ const LoginScreen = PureComponent(self => {
             <h3>Vous n'êtes pas qualifié(e) ou n'aviez pas participé</h3>
             <p>Vous pouvez rejoindre une équipe si vous avez un(e) camarade qualifié(e) qui vous y invite (la moitié au moins de l'équipe doit être qualifiée).</p>
             <p>Pour cela, cliquez sur le bouton suivant pour créez un compte.</p>
-            <p><Button onClick={login}>créer son compte</Button></p>
+            <p><Button onClick={onLogin}>créer son compte</Button></p>
             <p>Choisissez "Mot de passe" dans la première popup, puis "Créer un compte", et choisissez un login et un mot de passe pour vous authentifier.</p>
             <p>Une fois connecté, vous pourrez rejoindre une équipe en fournissant le code transmis par vos camarades.</p>
           </div>

@@ -19,7 +19,8 @@ const TaskTab = PureComponent(self => {
 });
 
 const selector = function (state, _props) {
-  const {user, round, attempt, task} = state;
+  const {user, round, task} = state.response;
+  const {attempt} = state;
   return {user_id: user.id, round, attempt, task};
 };
 
