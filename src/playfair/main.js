@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 
-import {PureComponent, at, put} from './utils/generic';
-import {makeAlphabet} from './utils/cell';
+import {PureComponent, at, put} from '../misc';
+import {makeAlphabet} from '../utils/cell';
 
 import Workspace from '../workspace';
 import * as PlayFair from '.';
@@ -22,49 +22,9 @@ const initialHintsGrid = [
 const initialTask = {
    score: 500,
    alphabet: alphabet,
-   cipheredText: cipheredText,
-   hintsGrid: initialHintsGrid
+   cipher_text: cipheredText,
+   hints: initialHintsGrid
 };
-const initialToolStates = [
-   // TextInput
-   {
-      outputVariable: "texteChiffré"
-   },
-   // Hints
-   {
-      outputGridVariable: "lettresGrilleIndices"
-   },
-   // SubstitutionFromGrid
-   {
-      editGrid: [[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}]],
-      inputGridVariable: 'lettresGrilleIndices',
-      outputGridVariable: 'lettresGrilleEditée',
-      outputSubstitutionVariable: 'substitutionGénérée'
-   },
-   // EditSubstitution
-   {
-      nbLettersPerRow: 29,
-      inputCipheredTextVariable: 'texteChiffré',
-      inputSubstitutionVariable: 'substitutionGénérée',
-      outputSubstitutionVariable: 'substitutionÉditée',
-      substitutionEdits: []
-   },
-   // BigramFrequencyAnalysis
-   {
-      inputCipheredTextVariable: 'texteChiffré',
-      inputSubstitutionVariable: 'substitutionÉditée',
-      outputSubstitutionVariable: 'substitutionFréquences',
-      substitutionEdits: [],
-      editable: false
-   },
-   // ApplySubstitution
-   {
-      nbLettersPerRow: 29,
-      inputTextVariable: 'texteChiffré',
-      inputSubstitutionVariable: 'substitutionÉditée',
-      outputTextVariable: 'texteDéchiffré'
-   }
-];
 
 // Server-side state.
 const sampleHints = [
@@ -93,21 +53,14 @@ const getHintAlphabet = function (alphabet, hints, rank) {
    }
 };
 
-const reduceSetToolState = function (state, id, data) {
-   return {
-      ...state,
-      toolStates: at(id, put(data))(state.toolStates)
-   };
-};
-
 const reduceRevealHint = function (state, row, col, hint, cost) {
-   let {score, task} = state;
+   let {task} = state;
    return {
       ...state,
-      score: score - cost,
       task: {
          ...task,
-         hintsGrid: at(row, at(col, put(hint)))(task.hintsGrid)
+         score: task.score - cost,
+         hints: at(row, at(col, put(hint)))(task.hints)
       }
    };
 };
@@ -117,12 +70,10 @@ const reducer = function (state, action) {
    switch (action.type) {
       case '@@redux/INIT':
          return {
-            task: initialTask,
-            toolStates: initialToolStates
+            task: initialTask
          };
-      case 'SET_TOOL_STATE':
-         newState = reduceSetToolState(state, action.id, action.data);
-         break;
+      case 'SET_WORKSPACE':
+         return {...state, workspace: action.workspace};
       case 'REVEAL_HINT':
          newState = reduceRevealHint(state, action.row, action.col, action.hint, action.cost);
          break;
@@ -133,8 +84,8 @@ const reducer = function (state, action) {
 };
 
 const selectApp = function (state) {
-   const {task, score, toolStates} = state;
-   return {task, score, toolStates};
+   const {task, score, workspace} = state;
+   return {task, score, workspace};
 };
 
 const App = connect(selectApp)(PureComponent(self => {
@@ -165,24 +116,25 @@ const App = connect(selectApp)(PureComponent(self => {
       }, 1000);
    };
 
-   const getToolState = function (id) {
-      return self.props.toolStates[id];
-   };
-
-   const setToolState = function (id, data) {
-      self.props.dispatch({type: 'SET_TOOL_STATE', id: id, data: data});
-   };
-
-   const workspace = Workspace({getToolState, setToolState});
-   PlayFair.setupTools(workspace.addTool);
-
    self.render = function () {
-      const {task, toolStates} = self.props;
-      const taskApi = {...task, getQueryCost, getHint};
+      const {task} = self.props;
+      const taskApi = {...initialTask, getQueryCost, getHint};
       return (<PlayFair.TabContent task={taskApi} workspace={workspace}/>);
    };
 }));
 
 const store = createStore(reducer);
+
+// Add the workspace to the store.
+const getWorkspace = function () {
+   return store.getState().workspace;
+}
+const setWorkspace = function (workspace) {
+   store.dispatch({type: 'SET_WORKSPACE', workspace});
+};
+const workspace = Workspace(getWorkspace, setWorkspace);
+setWorkspace(workspace);
+PlayFair.setupTools(workspace);
+
 const container = document.getElementById('react-container');
 ReactDOM.render(<Provider store={store}><App/></Provider>, container);

@@ -21,7 +21,7 @@ export const setupTools = function (workspace) {
     outputVariable: "texteChiffré"
   });
 
-  const iHints = addTool(Hints, function (scopes, scope) {
+  const iHints = workspace.addTool(Hints, function (scopes, scope) {
   }, {
     outputGridVariable: "lettresGrilleIndices"
   });
@@ -72,27 +72,14 @@ export const setupTools = function (workspace) {
 };
 
 
-const TabContent = PureComponent(self => {
-
-  const getQueryCost = function (query) {
-    if (query.type === "grid")
-      return 10;
-    if (query.type === "alphabet")
-      return 10;
-    return 0;
-  };
-
-  const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
+export const TabContent = PureComponent(self => {
 
   self.render = function () {
-    const {header, workspace, task} = header;
+    const {header, workspace, task} = self.props;
     const rootScope = {
-      alphabet: alphabet,
-      score: task.score,
+      ...task,
       cipheredText: task.cipher_text,
-      hintsGrid: task.hints,
-      getQueryCost: getQueryCost,
-      getHint: task.getHint
+      hintsGrid: task.hints
     };
     return (
       <div>
