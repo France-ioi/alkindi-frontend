@@ -6,7 +6,7 @@ import {Provider, connect} from 'react-redux';
 import {PureComponent, at, put} from '../misc';
 import {makeAlphabet} from '../utils/cell';
 
-import Workspace from '../workspace';
+import {Workspace} from '../workspace';
 import * as PlayFair from '.';
 
 // Client state provided by the server.
@@ -73,7 +73,7 @@ const reducer = function (state, action) {
             task: initialTask
          };
       case 'SET_WORKSPACE':
-         return {...state, workspace: action.workspace};
+         return {...state, workspace: {...state.workspace, ...action.workspace}};
       case 'REVEAL_HINT':
          newState = reduceRevealHint(state, action.row, action.col, action.hint, action.cost);
          break;
@@ -117,7 +117,7 @@ const App = connect(selectApp)(PureComponent(self => {
    };
 
    self.render = function () {
-      const {task} = self.props;
+      const {task, workspace} = self.props;
       const taskApi = {...initialTask, getQueryCost, getHint};
       return (<PlayFair.TabContent task={taskApi} workspace={workspace}/>);
    };
@@ -128,12 +128,12 @@ const store = createStore(reducer);
 // Add the workspace to the store.
 const getWorkspace = function () {
    return store.getState().workspace;
-}
+};
 const setWorkspace = function (workspace) {
    store.dispatch({type: 'SET_WORKSPACE', workspace});
 };
 const workspace = Workspace(getWorkspace, setWorkspace);
-setWorkspace(workspace);
+workspace.clear();
 PlayFair.setupTools(workspace);
 
 const container = document.getElementById('react-container');

@@ -72,15 +72,8 @@ export const setupTools = function (workspace) {
 };
 
 
-export const TabContent = PureComponent(self => {
-
-  self.render = function () {
-    const {header, workspace, task} = self.props;
-    const rootScope = {
-      ...task,
-      cipheredText: task.cipher_text,
-      hintsGrid: task.hints
-    };
+export const TabHeader = PureComponent(self => {
+  self.render =  function () {
     return (
       <div>
         <p>
@@ -95,10 +88,21 @@ export const TabContent = PureComponent(self => {
             <i className="fa fa-download"/>
           </a>.</p>
         <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponses.</p>
-        {header}
-        {workspace.render(rootScope)}
-      </div>
-    );
+      </div>);
+  };
+});
+
+export const TabContent = PureComponent(self => {
+
+  self.render = function () {
+    // Maybe not useful anymore?
+    const {workspace, task} = self.props;
+    const rootScope = {
+      ...task,
+      cipheredText: task.cipher_text,
+      hintsGrid: task.hints
+    };
+    return workspace.render(rootScope);
   };
 
 });
