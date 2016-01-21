@@ -37,3 +37,5 @@ export const Variables = PureComponent(self => {
       );
    };
 });
+
+export default Variables;

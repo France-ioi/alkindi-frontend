@@ -57,18 +57,22 @@ export const Grid = PureComponent(self => {
    */
    self.render = function () {
       const {grid, renderCell} = self.props;
-      const nbRows = grid.length;
-      const nbCols = grid[0].length;
+      if (!grid) {
+         return <span className="code-error">(bad grid)</span>;
+      }
+      console.log('grid', '<', grid, '>');
       let strPython = "[";
-      for (let row = 0; row < nbRows; row++) {
-         if (row !== 0)
+      for (let i = 0; i < grid.length; i++) {
+         if (i !== 0)
             strPython += ", "
+         const row = grid[i];
          strPython += "[";
-         for (let col = 0; col < nbCols; col++) {
-            if (col != 0) {
+         for (let j = 0; j < row.length; j++) {
+            const cell = row[j];
+            if (j != 0) {
                strPython += ", ";
             }
-            strPython += renderCell(grid[row][col]);
+            strPython += renderCell(cell);
          }
          strPython += "]";
       }
@@ -76,3 +80,5 @@ export const Grid = PureComponent(self => {
       return <span>{strPython}</span>;
    };
 });
+
+export default {StrLit, Var, Assign, Call, Grid};

@@ -182,4 +182,8 @@ gulp.task('playfair', function () {
     watchScript({entry: 'src/playfair/main.js', output: 'playfair.js'});
 });
 
+gulp.task('adfgx', function () {
+    watchScript({entry: 'src/adfgx/main.js', output: 'adfgx.js'});
+});
+
 gulp.task('default', ['build_min']);

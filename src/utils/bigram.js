@@ -34,6 +34,19 @@ export const mostFrequentFrench = [
 
 export const sideOfStatus = {'left': 0, 'right': 1};
 
+export const makeAlphabet = function (chars) {
+   const indivSymbols = chars.split('');
+   const symbols = Array.prototype.concat.call(
+      indivSymbols.map(c1 =>
+         indivSymbols.map(c2 => c1 + c2)));
+   const size = symbols.length;
+   var ranks = {};
+   for (var iSymbol = 0; iSymbol < size; iSymbol++) {
+      ranks[symbols[iSymbol]] = iSymbol;
+   }
+   return {symbols, size, ranks};
+};
+
 export const decodeBigram = function (alphabet, bigram) {
    const {v} = bigram;
    return {...bigram,
