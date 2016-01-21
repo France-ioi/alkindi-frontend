@@ -1,17 +1,17 @@
 import React from 'react';
 
-import {PureComponent, put, at} from '../../misc';
-import Tooltip from '../../ui/tooltip';
+import {PureComponent, put, at} from '../misc';
+import Tooltip from '../ui/tooltip';
 
 import {getCellLetter} from '../utils/cell';
 import {applyGridEdit} from '../utils/grid';
 import {getSubstitutionFromGridCells} from '../utils/playfair';
 
-import {Variables} from '../ui/variables';
-import {Grid} from '../ui/grid';
-import {Substitution} from '../ui/substitution';
-import * as Python from '../ui/python';
-import EditCellDialog from '../ui/edit_cell_dialog';
+import {Variables} from '../tool-ui/variables';
+import {Grid} from '../tool-ui/grid';
+import {Substitution} from '../tool-ui/substitution';
+import * as Python from '../tool-ui/python';
+import EditCellDialog from '../tool-ui/edit_cell_dialog';
 
 export const Component = PureComponent(self => {
 

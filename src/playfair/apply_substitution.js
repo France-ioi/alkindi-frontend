@@ -7,8 +7,8 @@ import {getCellsWrapping} from '../utils/wrapping';
 import {getTextAsBigrams} from '../utils/bigram';
 import {applySubstitution} from '../utils/bigram_subst';
 
-import {Variables} from '../ui/variables';
-import * as Python from '../ui/python';
+import {Variables} from '../tool-ui/variables';
+import * as Python from '../tool-ui/python';
 
 export const Component = PureComponent(self => {
 

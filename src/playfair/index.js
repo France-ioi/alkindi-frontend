@@ -1,121 +1,297 @@
 import React from 'react';
-import {PureComponent} from './utils/generic';
-import {mostFrequentFrench, decodeBigram} from './utils/bigram';
+import {connect} from 'react-redux';
 import {Alert, Button} from 'react-bootstrap';
 
-import TextInput from './tools/text_input';
-import Hints from './tools/hints';
-import SubstitutionFromGrid from './tools/substitution_from_grid';
-import BigramFrequencyAnalysis from './tools/bigram_frequency_analysis';
-import EditSubstitution from './tools/edit_substitution';
-import ApplySubstitution from './tools/apply_substitution';
+import {PureComponent, at, put} from '../misc';
+import {makeAlphabet} from '../utils/cell';
+import {mostFrequentFrench, decodeBigram} from '../utils/bigram';
 
-const getTools = function () {
+import Notifier from '../ui/notifier';
+import Tooltip from '../ui/tooltip';
+import RefreshButton from '../ui/refresh_button';
+import Workspace from '../workspace';
 
-  const tools = [];
-  const defaultMergeState = function (state, update) {
-    return {...state, ...update};
-  };
-  const addTool = function (tools, spec) {
-    const {factory, initialState, getScope} = spec;
-    const tool = {};
-    tool.mergeState = defaultMergeState;
-    factory(tool);
-    tool.getScope = getScope;
-    tools.push(tool)
-  };
-  addTool(tools, {
-    factory: TextInput,
-    getScope: function (task, _toolState, scopes) {
-      let {alphabet, cipheredText} = task;
-      return {alphabet, text: cipheredText};
-    }
-  });
-  addTool(tools, {
-    factory: Hints,
-    getScope: function (task, _toolState, scopes) {
-      const {alphabet, hintsGrid, score, getQueryCost, getHint} = task;
-      return {alphabet, hintsGrid, score, getQueryCost, getHint};
-    }
-  });
-  addTool(tools, {
-    factory: SubstitutionFromGrid,
-    getScope: function (task, _toolState, scopes) {
-      const {alphabet} = task;
-      return {
-        alphabet: alphabet,
-        inputGrid: scopes[1].outputGrid
-      };
-    }
-  });
-  addTool(tools, {
-    factory: EditSubstitution,
-    getScope: function (task, _toolState, scopes) {
-      const {alphabet} = task;
-      return {
-        alphabet: alphabet,
-        inputCipheredText: scopes[0].output,
-        inputSubstitution: scopes[2].outputSubstitution
-      };
-    }
-  });
-  addTool(tools, {
-    factory: BigramFrequencyAnalysis,
-    getScope: function (task, _toolState, scopes) {
-      const {alphabet} = task;
-      const decodedMostFrequentFrench = mostFrequentFrench.map(decodeBigram.bind(null, alphabet));
-      return {
-        alphabet: alphabet,
-        inputCipheredText: scopes[0].output,
-        mostFrequentFrench: decodedMostFrequentFrench,
-        inputSubstitution: scopes[3].outputSubstitution
-      };
-    }
-  });
-  addTool(tools, {
-    factory: ApplySubstitution,
-    getScope: function (task, _toolState, scopes) {
-      const {alphabet} = task;
-      return {
-        alphabet: alphabet,
-        inputText: scopes[0].output,
-        inputSubstitution: scopes[3].outputSubstitution
-      };
-    }
+import TextInput from './text_input';
+import Hints from './hints';
+import SubstitutionFromGrid from './substitution_from_grid';
+import BigramFrequencyAnalysis from './bigram_frequency_analysis';
+import EditSubstitution from './edit_substitution';
+import ApplySubstitution from './apply_substitution';
+
+// PlayFair default wiring.
+const setupTools = function (workspace) {
+
+  const iTextInput = workspace.addTool(TextInput, function (scopes, scope) {
+    scope.text = scope.cipheredText;
+  }, {
+    outputVariable: "texteChiffré"
   });
 
-  return tools;
+  const iHints = addTool(Hints, function (scopes, scope) {
+  }, {
+    outputGridVariable: "lettresGrilleIndices"
+  });
+
+  const iSubstitutionFromGrid = workspace.addTool(SubstitutionFromGrid, function (scopes, scope) {
+    scope.inputGrid = scopes[iHints].outputGrid;
+  }, {
+    editGrid: [[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}],[{},{},{},{},{}]],
+    inputGridVariable: 'lettresGrilleIndices',
+    outputGridVariable: 'lettresGrilleEditée',
+    outputSubstitutionVariable: 'substitutionGénérée'
+  });
+
+  const iEditSubstitution = workspace.addTool(EditSubstitution, function (scopes, scope) {
+    scope.inputCipheredText = scopes[iTextInput].output;
+    scope.inputSubstitution = scopes[iSubstitutionFromGrid].outputSubstitution;
+  }, {
+    nbLettersPerRow: 29,
+    inputCipheredTextVariable: 'texteChiffré',
+    inputSubstitutionVariable: 'substitutionGénérée',
+    outputSubstitutionVariable: 'substitutionÉditée',
+    substitutionEdits: []
+  });
+
+  workspace.addTool(BigramFrequencyAnalysis, function (scopes, scope) {
+    scope.inputCipheredText = scopes[iTextInput].output;
+    scope.mostFrequentFrench = mostFrequentFrench.map(decodeBigram.bind(null, scope.alphabet));
+    scope.inputSubstitution = scopes[iEditSubstitution].outputSubstitution;
+  }, {
+    inputCipheredTextVariable: 'texteChiffré',
+    inputSubstitutionVariable: 'substitutionÉditée',
+    outputSubstitutionVariable: 'substitutionFréquences',
+    substitutionEdits: [],
+    editable: false,
+    nBigrams: 10
+  });
+
+  workspace.addTool(ApplySubstitution, function (scopes, scope) {
+    scope.inputText = scopes[iTextInput].output;
+    scope.inputSubstitution = scopes[iEditSubstitution].outputSubstitution;
+  }, {
+    nbLettersPerRow: 29,
+    inputTextVariable: 'texteChiffré',
+    inputSubstitutionVariable: 'substitutionÉditée',
+    outputTextVariable: 'texteDéchiffré'
+  });
+
 };
 
-export const PlayFair = PureComponent(self => {
 
-  const tools = getTools();
+const BareTab = PureComponent(self => {
 
-  const setToolState = function (id, update) {
-    const tool = tools[id];
-    const toolState = self.props.toolStates[id];
-    const newState = tool.mergeState(toolState, update);
-    self.props.setToolState(id, newState);
+  const api = Alkindi.api;
+
+  const getQueryCost = function (query) {
+    if (query.type === "grid")
+      return 10;
+    if (query.type === "alphabet")
+      return 10;
+    return 0;
   };
-  for (var i = 0; i < tools.length; i++) {
-    tools[i].setState = setToolState.bind(null, i);
-  }
+
+  const getHint = function (query, callback) {
+    const user_id = self.props.user_id;
+    api.getHint(user_id, query).then(
+      function () { callback(false); },
+      callback
+    );
+  };
+
+  const changeCrypto = function (func) {
+    const {crypto, dispatch} = self.props;
+    dispatch({
+      type: 'SET_CRYPTO',
+      crypto: func(crypto)
+    });
+  };
+
+  const getToolState = function (i) {
+    return self.props.crypto.tools[i].state
+  };
+
+  const setToolState = function (i, data) {
+    changeCrypto(function (crypto) {
+      return {
+        ...crypto,
+        changed: true,
+        tools: at(i, function (tool) { return {...tool, state: data}; })(crypto.tools)
+      };
+    });
+  };
+
+  const saveState = function () {
+    const user_id = self.props.user_id;
+    const {crypto, dispatch} = self.props;
+    const {changed} = crypto;
+    if (!changed) {
+      alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
+      return;
+    }
+    const data = {
+      title: "Révision du " + new Date().toLocaleString(),
+      state: crypto.tools,
+      parent_id: crypto.revisionId
+    };
+    changeCrypto(function (crypto) {
+      return {...crypto, changed: false};
+    });
+    api.storeRevision(user_id, data).then(
+      function (result) {
+        changeCrypto(function (crypto) {
+          return {...crypto,
+            changed: false,
+            revisionId: result.revision_id
+          };
+        });
+      },
+      function () {
+        // Reset the changed flag to true as the state was not changed.
+        changeCrypto(function (crypto) {
+          return {...crypto, changed: true};
+        });
+      }
+    );
+  };
+
+  const resetState = function () {
+    if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
+      changeCrypto(function (crypto) {
+        return {
+          ...crypto,
+          tools: initialTools,
+          revisionId: undefined,
+          changed: false
+        };
+      });
+    }
+  };
+
+  self.componentWillMount = function () {
+    const {revisionId, tools} = self.props.crypto;
+    // If the tools are already loaded, do nothing.
+    if (tools !== undefined)
+      return;
+    // Load initial tools if there is no current revision.
+    if (revisionId === undefined) {
+      changeCrypto(function (crypto) {
+        return {...crypto, tools: initialTools};
+      });
+      return;
+    }
+    // Load the revision from the backend.
+    changeCrypto(function (crypto) {
+      return {...crypto, loading: true};
+    });
+    api.loadRevision(revisionId).then(
+      function (result) {
+        const revision = result.workspace_revision;
+        changeCrypto(function (crypto) {
+          return {...crypto, loading: false, tools: revision.state};
+        });
+      },
+      function () {
+        changeCrypto(function (crypto) {
+          return {...crypto, loading: false};
+        });
+      }
+    );
+  };
+
+  const saveStateTooltip = (
+    <p>
+      Enregistrez de temps en temps votre travail pour ne pas risquer de le
+      perdre.
+      Chaque version que vous enregistrez sera disponible pour vous et vos
+      coéquipiers dans l'onglet Historique.
+    </p>
+  );
+
+  const resetStateTooltip = (
+    <p>
+      Cliquez sur ce bouton pour effacer toutes vos modifications mais conserver
+      les indices.<br/>
+      Vous pourrez toujours restaurer une version précédente depuis l'onglet
+      Historique.
+    </p>
+  );
+
+  // Set up the tools.
+  const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
+  const workspace = Workspace({getToolState, setToolState});
+  setupTools(workspace.addTool);
 
   self.render = function () {
-    const {task, toolStates} = self.props;
-    const scopes = [];
-    const renderTool = function (tool, i) {
-      const toolState = toolStates[i];
-      const scope = tool.getScope(task, toolState, scopes);
-      tool.compute(toolState, scope);
-      scopes.push(scope);
-      const {Component, setState} = tool;
-      return (<Component key={i} toolState={toolState} scope={scope} setToolState={setState} />);
+    const {task, crypto} = self.props;
+    const {tools, loading, changed} = crypto;
+    if (loading || tools === undefined)
+      return (
+        <div>
+          Chargement en cours, veuillez patienter...
+          <Notifier emitter={api.emitter}/>
+        </div>);
+    const saveStyle = changed ? 'primary' : 'default';
+    const rootScope = {
+      alphabet: alphabet,
+      score: task.score,
+      cipheredText: task.cipher_text,
+      hintsGrid: task.hints,
+      getQueryCost,
+      getHint
     };
-    return <div>{tools.map(renderTool)}</div>;
+    return (
+      <div>
+        <Notifier emitter={api.emitter}/>
+        <div>
+          <p>
+            Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,
+            lisez-le attentivement.
+          </p>
+          <p>
+            {'Voici ci-dessous des outils pour vous aider à déchiffrer le message, '}
+            {'leur documentation est '}
+            <a href="http://concours-alkindi.fr/docs/tour2-outils.pdf" title="documentation des outils au format .PDF" target="new">
+              {'disponible en téléchargement '}
+              <i className="fa fa-download"/>
+            </a>.</p>
+          <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponses.</p>
+        </div>
+        <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
+          <div className='pull-right'>
+            <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos coéquipiers depuis le dernier chargement de la page.</p>}/>
+            {' '}
+            <RefreshButton/>
+          </div>
+          <Button bsStyle={saveStyle} onClick={saveState}>
+            <i className="fa fa-save"/>
+            {' Enregistrer cette version'}
+          </Button>
+          <span style={{marginLeft: '10px', marginRight: '40px'}}>
+            <Tooltip content={saveStateTooltip}/>
+          </span>
+          <Button onClick={resetState}>
+            <i className="fa fa-eraser"/>
+            {' Repartir de zéro'}
+          </Button>
+          <span style={{marginLeft: '10px'}}>
+            <Tooltip content={resetStateTooltip}/>
+          </span>
+        </div>
+        {workspace.render(rootScope)}
+      </div>
+    );
   };
 
 });
+
+const tabSelector = function (state) {
+  const {crypto, response} = state;
+  const {user, task} = response;
+  return {user_id: user.id, task, crypto};
+};
+
+export const Tab = connect(tabSelector)(BareTab);
+
 
 export const AnswerDialog = PureComponent(self => {
 
@@ -204,6 +380,7 @@ export const AnswerDialog = PureComponent(self => {
 
 });
 
+
 export const Answer = PureComponent(self => {
 
   self.render = function () {
@@ -218,6 +395,7 @@ export const Answer = PureComponent(self => {
   };
 
 });
+
 
 export const Feedback = PureComponent(self => {
 
@@ -264,5 +442,3 @@ export const Feedback = PureComponent(self => {
   };
 
 });
-
-export default PlayFair;

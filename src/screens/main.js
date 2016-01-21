@@ -9,7 +9,7 @@ import CountdownTimer from '../ui/countdown_timer';
 import TeamTab from '../tabs/team';
 import AttemptsTab from '../tabs/attempts';
 import TaskTab from '../tabs/task';
-import PlayFairTab from '../tabs/playfair';
+import {Tab as PlayFairTab} from '../playfair';
 import HistoryTab from '../tabs/history';
 import AnswersTab from '../tabs/answers';
 import * as actions from '../actions';

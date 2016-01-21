@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {PureComponent} from '../utils/generic';
+import {PureComponent} from '../misc';
 
-import {Variables} from '../ui/variables';
-import * as Python from '../ui/python';
+import {Variables} from '../tool-ui/variables';
+import * as Python from '../tool-ui/python';
 
 export const Component = PureComponent(self => {
 

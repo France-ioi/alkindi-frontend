@@ -1,16 +1,16 @@
 import React from 'react';
 
-import {PureComponent} from '../../misc';
-import Tooltip from '../../ui/tooltip';
+import {PureComponent} from '../misc';
+import Tooltip from '../ui/tooltip';
 
 import {getCellLetter} from '../utils/cell';
 import {getLetterQualifiersFromGrid} from '../utils/grid';
 
-import {Variables} from '../ui/variables';
-import {Alphabet} from '../ui/alphabet';
-import {Grid} from '../ui/grid';
-import {OkCancel} from '../ui/ok_cancel';
-import * as Python from '../ui/python';
+import {Variables} from '../tool-ui/variables';
+import {Alphabet} from '../tool-ui/alphabet';
+import {Grid} from '../tool-ui/grid';
+import {OkCancel} from '../tool-ui/ok_cancel';
+import * as Python from '../tool-ui/python';
 
 export const Component = PureComponent(self => {
 

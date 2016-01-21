@@ -1,17 +1,17 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import {PureComponent} from '../../misc';
-import Tooltip from '../../ui/tooltip';
+import {PureComponent} from '../misc';
+import Tooltip from '../ui/tooltip';
 
 import {getCellLetter, getQualifierClass, testConflict} from '../utils/cell';
 import {getStringWrapping} from '../utils/wrapping';
 import {getTextAsBigrams, sideOfStatus} from '../utils/bigram';
 import {getBigramSubstPair, nullSubstPair, countAllSubstitutionConflicts, applySubstitutionEdits} from '../utils/bigram_subst';
 
-import {Variables} from '../ui/variables';
-import * as Python from '../ui/python';
-import EditPairDialog from '../ui/edit_pair_dialog';
+import {Variables} from '../tool-ui/variables';
+import * as Python from '../tool-ui/python';
+import EditPairDialog from '../tool-ui/edit_pair_dialog';
 
 export const Component = PureComponent(self => {
 

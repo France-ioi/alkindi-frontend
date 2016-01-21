@@ -6,9 +6,9 @@ import {getCellLetter, getQualifierClass, testConflict} from '../utils/cell';
 import {getTextBigrams, getMostFrequentBigrams} from '../utils/bigram';
 import {getBigramSubstPair, nullSubstPair, countSubstitutionConflicts, applySubstitutionEdits} from '../utils/bigram_subst';
 
-import {Variables} from '../ui/variables';
-import EditPairDialog from '../ui/edit_pair_dialog';
-import * as Python from '../ui/python';
+import {Variables} from '../tool-ui/variables';
+import EditPairDialog from '../tool-ui/edit_pair_dialog';
+import * as Python from '../tool-ui/python';
 
 export const Component = PureComponent(self => {
 
