@@ -6,7 +6,8 @@ import {Provider, connect} from 'react-redux';
 import {PureComponent, at, put} from './utils/generic';
 import {makeAlphabet} from './utils/cell';
 
-import PlayFair from '.';
+import Workspace from '../workspace';
+import * as PlayFair from '.';
 
 // Client state provided by the server.
 const alphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ')
@@ -164,16 +165,21 @@ const App = connect(selectApp)(PureComponent(self => {
       }, 1000);
    };
 
+   const getToolState = function (id) {
+      return self.props.toolStates[id];
+   };
+
    const setToolState = function (id, data) {
       self.props.dispatch({type: 'SET_TOOL_STATE', id: id, data: data});
    };
 
+   const workspace = Workspace({getToolState, setToolState});
+   PlayFair.setupTools(workspace.addTool);
+
    self.render = function () {
       const {task, toolStates} = self.props;
       const taskApi = {...task, getQueryCost, getHint};
-      return (
-         <PlayFair task={taskApi} toolStates={toolStates} setToolState={setToolState}/>
-      );
+      return (<PlayFair.TabContent task={taskApi} workspace={workspace}/>);
    };
 }));
 
