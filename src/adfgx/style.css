@@ -29,6 +29,10 @@
 
 .adfgx-table {
   width: auto;
+  float: left;
+}
+.adfgx-table th,
+.adfgx-table td {
   border: none;
   text-align: center;
 }
@@ -37,8 +41,6 @@
 }
 .adfgx-table td {
   cursor: pointer;
-  text-align: center;
-  border: none;
 }
 .adfgx-table-scroll-body thead,
 .adfgx-table-scroll-body tbody {
@@ -47,6 +49,9 @@
 .adfgx-table-scroll-body tbody {
   overflow-y: auto;
   height: 100px;
+}
+.adfgx-table-scroll-body thead {
+  border-bottom: 1px solid #000;
 }
 .adfgx-table-scroll-body td:first-child,
 .adfgx-table-scroll-body th:first-child {
