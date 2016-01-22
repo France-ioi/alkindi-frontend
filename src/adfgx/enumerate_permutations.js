@@ -15,17 +15,32 @@ export const Component = EpicComponent(self => {
       self.props.setToolState({selectedPermutationKey: key})
    };
 
+   const onToggleFavorited = function (event) {
+      const key = event.currentTarget.getAttribute('data-key');
+      const infos = self.props.toolState.permutationInfos;
+      const value = {...infos[key], favorited: key in infos ? !infos[key].favorited : true};
+      self.props.setToolState({
+         permutationInfos: {...infos, [key]: value}});
+      event.stopPropagation();
+   };
+
+   const onToggleShowOnlyFavorited = function (event) {
+      const {showOnlyFavorited} = self.props.toolState;
+      self.props.setToolState({showOnlyFavorited: !showOnlyFavorited});
+   };
+
    self.render = function() {
       const {selectedPermutationKey, permutationData, showOnlyFavorited,
          inputPermutationVariable, inputCipheredTextVariable, outputPermutationVariable} = self.props.toolState;
       const {selectedPermutation, permutations} = self.props.scope;
       const renderPermutationItem = function (permutation, i) {
          const classes = ['adfgx-perm', selectedPermutation === permutation && 'adfgx-perm-selected'];
+         const favoritedClasses = ['fa', permutation.favorited ? 'fa-toggle-on' : 'fa-toggle-off'];
          return (
             <tr key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
                <td>{permutation.key}</td>
                <td>{permutation.ci.toFixed(3)}</td>
-               <td>{permutation.favorited ? '*' : ' '}</td>
+               <td onClick={onToggleFavorited} data-key={permutation.key}><i className={classnames(favoritedClasses)}/></td>
             </tr>
          );
       };
@@ -63,6 +78,10 @@ export const Component = EpicComponent(self => {
                      {permutations.map(renderPermutationItem)}
                   </tbody>
                </table>
+               <div onClick={onToggleShowOnlyFavorited}>
+                  <i className={classnames(['fa', 'fa-toggle-' + (showOnlyFavorited ? 'on' : 'off')])}/>
+                  {' retenues uniquement'}
+               </div>
             </div>
          </div>
       );
