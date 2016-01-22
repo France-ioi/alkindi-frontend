@@ -14,20 +14,23 @@
   padding: 10px;
 }
 .adfgx-columns {
-  max-height: 200px;
   white-space: nowrap;
   overflow-x: auto;
+  padding-bottom: 10px;
 }
 .adfgx-column {
   display: inline-block;
+  margin-right: 8px;
 }
 .adfgx-bigram {
-  margin: 4px 2px;
+  margin-bottom: 3px;
   border: 1px solid #ccc;
 }
-.adfgx-bigram > .adfgx-cell:first-child {
-  margin-right: 2px;
+.adfgx-columns .adfgx-cell {
+  padding: 0 2px;
+  display: block;
 }
+
 .adfgx-table {
   width: auto;
   border: none;
