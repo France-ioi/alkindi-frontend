@@ -150,7 +150,8 @@ export const getMostFrequentBigrams = function (textBigrams, nBigrams) {
    });
    bigramList.length = nBigrams;
    bigramList.map(function (bigram) {
-      bigram.r = (bigram.count / textBigrams.length * 100).toFixed(1);
+      bigram.p = bigram.count / textBigrams.length;
+      bigram.r = (bigram.p * 100).toFixed(1);
    });
    return bigramList;
 };
