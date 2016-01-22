@@ -156,7 +156,6 @@ export const getMostFrequentBigrams = function (textBigrams, nBigrams) {
    return bigramList;
 };
 
-
 export const bigramsFromCells = function (cells, cellAlphabet) {
    const bigrams = [];
    let first = true;

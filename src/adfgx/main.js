@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import {PureComponent, at, put} from '../misc';
 
@@ -51,7 +53,7 @@ const selector = function (state) {
    return {task, score, workspace};
 };
 
-const Demo = connect(selector)(BareDemo);
+const Demo = DragDropContext(HTML5Backend)(connect(selector)(BareDemo));
 
 const reducer = function (state, action) {
    let newState = state;

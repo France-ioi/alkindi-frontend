@@ -12,7 +12,7 @@ export const Component = EpicComponent(self => {
 
    const renderBigram = function (bigram, key, alphabet) {
       const c0 = getCellLetter(alphabet, bigram.c0, true);
-      const c1 = getCellLetter(alphabet, bigram.c0, true);
+      const c1 = getCellLetter(alphabet, bigram.c1, true);
       const q0 = classnames(['adfgx-cell', getQualifierClass(bigram.c0.q)]);
       const q1 = classnames(['adfgx-cell', getQualifierClass(bigram.c1.q)]);
       return (

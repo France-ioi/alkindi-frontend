@@ -79,16 +79,16 @@ export const applyPermutation = function (cells, permutation) {
    const nbRows = dstLength / stride;
    const dstCells = new Array(dstLength);
    for (let srcPos = 0; srcPos < dstLength; srcPos++) {
-      let srcCell;
-      if (srcPos < srcLength) {
-         srcCell = cells[srcPos];
-      } else {
-         srcCell = {q: "unknown"};
-      }
       const row = srcPos % nbRows;
       const col = (srcPos - row) / nbRows;
+      let dstCell;
+      if (srcPos < srcLength) {
+         dstCell = {l: cells[srcPos].l, q: permutation[col].q};
+      } else {
+         dstCell = {};
+      }
       const dstPos = row * stride + permutation[col].dstPos;
-      dstCells[dstPos] = {l: srcCell.l, q: permutation[col].q};
+      dstCells[dstPos] = dstCell;
    }
    return dstCells;
 };

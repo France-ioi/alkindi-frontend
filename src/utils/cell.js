@@ -72,13 +72,13 @@ export const weakenCell = function (cell) {
    return cell;
 };
 
-export const getCellLetter = function (alphabet, cell, useNbsp) {
+export const getCellLetter = function (alphabet, cell, padding) {
    if (cell.q === 'unknown') {
-      if (useNbsp) {
-         return '\u00a0';
-      } else {
+      if (padding === undefined)
          return '';
-      }
+      if (padding === true)
+         return '\u00a0';
+      return padding;
    } else {
       return alphabet.symbols[cell.l];
    }
@@ -134,4 +134,38 @@ export const coincidenceIndex = function(cells, alphabet) {
       coincidence += proba;
    }
    return coincidence;
+};
+
+export const getFrequencies = function (text) {
+   const {alphabet, cells} = text;
+   const symbolMap = Array(alphabet.size);
+   for (let iSymbol = 0; iSymbol < alphabet.size; iSymbol++) {
+      symbolMap[iSymbol] = {l: iSymbol, count: 0};
+   }
+   for (let iCell = 0; iCell < cells.length; iCell++) {
+      const cell = cells[iCell];
+      if (cell.l !== undefined)
+         symbolMap[cell.l].count += 1
+   }
+   symbolMap.forEach(function (s, i) {
+      s.p = s.count / cells.length;
+      s.r = (s.p * 100).toFixed(1);
+   });
+   symbolMap.sort(function(s1, s2) {
+      const c1 = s1.count, c2 = s2.count;
+      return c1 > c2 ? -1 : (c1 < c2 ? 1 : 0);
+   });
+   return symbolMap;
+};
+
+export const applySubstitutionToText = function (substitution, text) {
+   const {cells} = text;
+   const {mapping, targetAlphabet} = substitution;
+   const outputCells = [];
+   for (let iCell = 0; iCell < cells.length; iCell++) {
+      const inputCell = cells[iCell];
+      const outputCell = weakenCell(mapping[inputCell.l]);
+      outputCells.push(outputCell);
+   }
+   return {alphabet: targetAlphabet, cells: outputCells};
 };
