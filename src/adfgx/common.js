@@ -8,11 +8,11 @@ import flatten from 'flatten';
 //
 
 const qualifierClasses = {
-    'hint': 'qualifier-hint',
-    'confirmed': 'qualifier-confirmed',
-    'locked': 'qualifier-confirmed',
-    'guess': 'qualifier-confirmed',
-    'unknown': 'qualifier-unconfirmed'
+    'hint':      'adfgx-q-hint',
+    'confirmed': 'adfgx-q-confirmed',
+    'locked':    'adfgx-q-locked',
+    'guess':     'adfgx-q-guess',
+    'unknown':   'adfgx-q-unconfirmed'
 };
 
 export const getQualifierClass = function(qualifier) {
