@@ -4,15 +4,30 @@ import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {bigramsFromCells, applyPermutation, renderBigram} from './common';
+import {bigramsFromCells, applyPermutation, renderCell} from './common';
 
 export const Component = EpicComponent(self => {
 
+   const renderBigram = function (key, bigram, alphabet) {
+      return (
+         <div key={key} className="adfgx-bigram">
+            {renderCell(0, bigram.c0, alphabet)}
+            {renderCell(1, bigram.c1, alphabet)}
+         </div>
+      );
+   };
+
    const renderText = function (text, alphabet) {
-      const elements = text.map(function (bigram, iBigram) {
-         return renderBigram(iBigram, text[iBigram], alphabet);
+      const columns = [];
+      let column = [];
+      text.forEach(function (bigram, iBigram) {
+         column.push(renderBigram(column.length, bigram, alphabet));
+         if (column.length === 3) {
+            columns.push(<div key={columns.length} className="adfgx-column">{column}</div>);
+            column = [];
+         }
       });
-      return <div className='adfgx-text'>{elements}</div>;
+      return <div className='adfgx-columns'>{columns}</div>;
    };
 
    self.render = function() {

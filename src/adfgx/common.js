@@ -25,15 +25,6 @@ export const renderCell = function (key, cell, alphabet) {
    return <span key={key} className={q0}>{c0}</span>;
 };
 
-export const renderBigram = function (key, bigram, alphabet) {
-   return (
-      <span key={key} className="adfgx-bigram">
-         {renderCell(0, bigram.c0, alphabet)}
-         {renderCell(1, bigram.c1, alphabet)}
-      </span>
-   );
-};
-
 export const cellsFromString = function (text, alphabet) {
     const cells = [];
     for (let iLetter = 0; iLetter < text.length; iLetter++) {

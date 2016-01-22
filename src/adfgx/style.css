@@ -2,15 +2,24 @@
   font-weight: bold;
 }
 
-.adfgx-text {
+.adfgx-text, .adfgx-columns {
   font-family: monospace;
   font-size: 18px;
+}
+.adfgx-text {
   max-height: 200px;
   overflow-y: auto;
 }
+.adfgx-columns {
+  max-height: 200px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.adfgx-column {
+  display: inline-block;
+}
 .adfgx-bigram {
   margin: 4px 2px;
-  float: left;
   border: 1px solid #ccc;
 }
 .adfgx-bigram > .adfgx-cell:first-child {
