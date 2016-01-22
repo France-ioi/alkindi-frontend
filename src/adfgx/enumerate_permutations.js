@@ -7,12 +7,7 @@ import Python from '../tool-ui/python';
 import {generatePermutations, comparePermutations, permutationFromString,
    applyPermutation, numbersAlphabet} from '../utils/permutation';
 import {bigramsFromCells} from '../utils/bigram';
-import {makeAlphabet, coincidenceIndex} from '../utils/cell';
-import {makeAlphabet as makeBigramAlphabet} from '../utils/bigram';
-
-const adfgxAlphabet = makeAlphabet('ADFGX');
-const bigramAlphabet = makeBigramAlphabet('ADFGX');
-      console.log(bigramAlphabet);
+import {coincidenceIndex} from '../utils/cell';
 
 export const Component = EpicComponent(self => {
 
@@ -71,7 +66,7 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {selectedPermutationKey, permutationInfos, showOnlyFavorited, sortBy} = toolState;
-   const {inputPermutation, cipheredText} = scope;
+   const {inputPermutation, cipheredText, adfgxAlphabet, bigramAlphabet} = scope;
    const permutationMap = {};
    // showOnlyFavorited disabled the generation of permutations.
    let permutations = [];

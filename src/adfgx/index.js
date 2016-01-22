@@ -11,7 +11,7 @@ import FrequencyAnalysis from './frequency_analysis';
 import ApplySubstitution from './apply_substitution';
 
 import * as cell from '../utils/cell';
-import * as bigram from '../utils/cell';
+import * as bigram from '../utils/bigram';
 
 const clearAlphabet = cell.makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
 const adfgxAlphabet = cell.makeAlphabet('ADFGX');
@@ -64,12 +64,13 @@ export const setupTools = function (workspace) {
    });
 
    const iFrequencyAnalysis = workspace.addTool(FrequencyAnalysis, function (scopes, scope) {
+      scope.bigramAlphabet = bigramAlphabet;
+      console.log('bigramAlphabet', bigramAlphabet);
       scope.cipheredText = scopes[iApplyPermutation].outputText;
       scope.permutation = scopes[iEnumeratePermutations].outputPermutation;
    }, {
       substitution: {}, // ex. {'AD': 'E'}
       inputTextVariable: 'texteAprèsPermutation',
-      inputPermutationVariable: 'permutationCourante',
       outputSubstitutionVariable: 'substitutionÉditée'
    });
 
