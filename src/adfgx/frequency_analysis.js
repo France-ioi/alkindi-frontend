@@ -5,15 +5,8 @@ import {DragSource, DropTarget} from 'react-dnd';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {getFrequencies, applySubstitutionToText, getQualifierClass} from '../utils/cell';
-
-const qualifierClasses = {
-   'hint': 'qualifier-hint',
-   'confirmed': 'qualifier-confirmed',
-   'locked': 'qualifier-confirmed',
-   'guess': 'qualifier-confirmed',
-   'unknown': 'qualifier-unconfirmed'
-};
+import {getFrequencies, applySubstitutionToText} from '../utils/cell';
+import {getQualifierClass} from './common';
 
 const BareSubstTarget = EpicComponent(self => {
    self.render = function () {
@@ -22,7 +15,7 @@ const BareSubstTarget = EpicComponent(self => {
       const targetSymbol = targetAlphabet.symbols[target.l];
       return connectDropTarget(connectDragSource(
          <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
-            <span className={qualifierClasses[target.q]}>{targetSymbol}</span>
+            <span className={getQualifierClass(target.q)}>{targetSymbol}</span>
             {' '}
             <span>{(targetFrequency * 100).toFixed(1)}{'%'}</span>
          </div>
@@ -78,7 +71,8 @@ export const Component = EpicComponent(self => {
 
    self.render = function() {
       const {inputTextVariable, outputSubstitutionVariable} = self.props.toolState;
-      const {bigramFreqs, bigramAlphabet, targetAlphabet, substitution, targetFrequencies} = self.props.scope;
+      const {bigramFreqs, bigramAlphabet, targetAlphabet, outputSubstitution, targetFrequencies} = self.props.scope;
+      const substitution = outputSubstitution.mapping;
       const renderBigramHisto = function (bigram) {
          const targetCell = substitution[bigram.l];
          return (
@@ -160,7 +154,11 @@ export const compute = function (toolState, scope) {
       }
       substitution[bigram.l] = {l: targetRank, q: qualifier};
    });
-   scope.substitution = substitution;
+   scope.outputSubstitution = {
+      sourceAlphabet: bigramAlphabet,
+      targetAlphabet: targetAlphabet,
+      mapping: substitution
+   };
 };
 
 export default self => {

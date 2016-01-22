@@ -22,7 +22,7 @@ export const Component = EpicComponent(self => {
          </span>);
    };
 
-   const renderText = function (text, alphabet, stride) {
+   const renderText = function (text, alphabet) {
       const elements = text.map(function (bigram, iBigram) {
          return renderBigram(text[iBigram], iBigram, alphabet);
       });
