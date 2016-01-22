@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {bigramsFromCells, applyPermutation, renderCell} from './common';
+import {bigramsFromText, applyPermutation, renderCell} from './common';
 
 export const Component = EpicComponent(self => {
 
@@ -17,10 +17,11 @@ export const Component = EpicComponent(self => {
       );
    };
 
-   const renderText = function (text, alphabet) {
+   const renderText = function (text) {
+      const {cells, alphabet} = text;
       const columns = [];
       let column = [];
-      text.forEach(function (bigram, iBigram) {
+      cells.forEach(function (bigram, iBigram) {
          column.push(renderBigram(column.length, bigram, alphabet));
          if (column.length === 3) {
             columns.push(<div key={columns.length} className="adfgx-column">{column}</div>);
@@ -57,8 +58,8 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {permutation, cipheredText, adfgxAlphabet} = scope;
-   const permText = applyPermutation(cipheredText, permutation);
-   scope.outputText = bigramsFromCells(permText, adfgxAlphabet);
+   const permText = permutation ? applyPermutation(cipheredText, permutation) : cipheredText;
+   scope.outputText = bigramsFromText(permText);
 };
 
 export default self => {

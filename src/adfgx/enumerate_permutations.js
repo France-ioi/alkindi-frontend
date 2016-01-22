@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {bigramsFromCells, coincidenceIndex, generatePermutations,
+import {bigramsFromText, coincidenceIndex, generatePermutations,
         comparePermutations, permutationFromString, applyPermutation,
         numbersAlphabet} from './common';
 
@@ -72,44 +72,47 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {selectedPermutationKey, permutationInfos, showOnlyFavorited, sortBy} = toolState;
-   const {inputPermutation, cipheredText, adfgxAlphabet, bigramAlphabet} = scope;
-   const permutationMap = {};
+   const {inputPermutation, cipheredText, bigramAlphabet} = scope;
    // showOnlyFavorited disabled the generation of permutations.
-   let permutations = [];
+   let permutations = [];  // {key,qualified,favorited}
+   const permutationMap = {};  // key → {key,qualified,favorited}
    if (!showOnlyFavorited) {
       permutations = generatePermutations(inputPermutation, numbersAlphabet);
       permutations.forEach(function (permutation) {
          permutationMap[permutation.key] = permutation;
       });
    }
-   // Add all permutations on which data is explicitly set.
+   // Add all favorited permutations.
    Object.keys(permutationInfos).forEach(function (key) {
       const infos = permutationInfos[key];
-      if (!(key in permutationMap)) {
-         // Optionally filter out non-favorited.
-         if (showOnlyFavorited && !infos.favorited)
+      if (key in permutationMap) {
+         // Permutation was generated above, just fill in favorited flag.
+         permutationMap[key].favorited = infos.favorited;
+      } else {
+         // Filter out non-favorited (avoids having de-favorited permutations
+         // stick around after the user has obtained hints).
+         if (!infos.favorited)
             return;
+         // Add the permutation to the output.
          permutations.push({
             key: key,
-            unqualified: permutationFromString(key),
+            qualified: permutationFromString(key),
             favorited: infos.favorited
          });
-      } else {
-         permutationMap[key].favorited = infos.favorited;
       }
    });
    // Compute stats on each permutation.
    permutations.forEach(function (permutation) {
       const permText = applyPermutation(cipheredText, permutation.qualified);
-      const bigrams = bigramsFromCells(permText, adfgxAlphabet);
-      const bigramText = {cells: bigrams, alphabet: bigramAlphabet};
+      const bigramText = bigramsFromText(permText);
       permutation.ci = coincidenceIndex(bigramText);
    });
    // Sort the permutations.
    if (sortBy === 'ci') {
       permutations.sort(function (p1, p2) {
-         return p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
+         const result = p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
             comparePermutations(p1.qualified, p2.qualified));
+         return result;
       });
    } else {
       permutations.sort(function (p1, p2) {
@@ -125,7 +128,8 @@ export const compute = function (toolState, scope) {
       selectedPermutation = permutations[0];
    scope.selectedPermutation = selectedPermutation;
    // Output a qualified permutation.
-   scope.outputPermutation = selectedPermutation.qualified;
+   if (selectedPermutation)
+      scope.outputPermutation = selectedPermutation.qualified;
 };
 
 export default self => {
