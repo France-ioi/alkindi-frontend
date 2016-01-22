@@ -36,7 +36,7 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {cipheredText, substitution} = scope;
-   const targetCells = cipheredText.map(function (cell) {
+   const targetCells = cipheredText.cells.map(function (cell) {
       return substitution.mapping[cell.l];
    });
    scope.outputText = {alphabet: substitution.targetAlphabet, cells: targetCells};

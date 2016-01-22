@@ -4,24 +4,25 @@ import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {bigramsFromCells, applyPermutation, renderCell} from './common';
+import {bigramsFromText, applyPermutation, renderCell} from './common';
 
 export const Component = EpicComponent(self => {
 
-   const renderBigram = function (key, bigram, alphabet) {
+   const renderBigram = function (key, bigram, halfabet) {
       return (
          <div key={key} className="adfgx-bigram">
-            {renderCell(0, bigram.c0, alphabet)}
-            {renderCell(1, bigram.c1, alphabet)}
+            {renderCell(0, bigram.c0, halfabet)}
+            {renderCell(1, bigram.c1, halfabet)}
          </div>
       );
    };
 
-   const renderText = function (text, alphabet) {
+   const renderText = function (text) {
+      const {cells, halfabet} = text;
       const columns = [];
       let column = [];
-      text.forEach(function (bigram, iBigram) {
-         column.push(renderBigram(column.length, bigram, alphabet));
+      cells.forEach(function (bigram, iBigram) {
+         column.push(renderBigram(column.length, bigram, halfabet));
          if (column.length === 3) {
             columns.push(<div key={columns.length} className="adfgx-column">{column}</div>);
             column = [];
@@ -57,8 +58,8 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    const {permutation, cipheredText, adfgxAlphabet} = scope;
-   const permText = applyPermutation(cipheredText, permutation);
-   scope.outputText = bigramsFromCells(permText, adfgxAlphabet);
+   const permText = permutation ? applyPermutation(cipheredText, permutation) : cipheredText;
+   scope.outputText = bigramsFromText(permText);
 };
 
 export default self => {

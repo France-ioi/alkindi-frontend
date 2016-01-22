@@ -31,7 +31,7 @@ export const cellsFromString = function (text, alphabet) {
          const letter = text.charAt(iLetter);
          const rank = alphabet.ranks[letter];
          if (rank !== undefined)
-             cells.push({l: rank})
+             cells.push({l: rank, q: 'unknown'});
     }
     return cells;
 };
@@ -79,21 +79,23 @@ export const bigramAlphabet = makeBigramAlphabet('ADFGX'.split(''));
 // Conversion
 //
 
-export const bigramsFromCells = function (cells, cellAlphabet) {
-    const bigrams = [];
-    let first = true;
-    let c0;
-    cells.forEach(function (c1) {
-         if (first) {
-             c0 = c1;
-         } else {
-             const l = c0.l * cellAlphabet.size + c1.l;
-             const v = cellAlphabet.symbols[c0.l] + cellAlphabet.symbols[c1.l];
-             bigrams.push({l, v, c0, c1});
-         }
-         first = !first;
-    });
-    return bigrams;
+export const bigramsFromText = function (text) {
+  const {cells, alphabet} = text;
+  const bigrams = [];
+  let first = true;
+  let c0;
+  cells.forEach(function (c1) {
+       if (first) {
+           c0 = c1;
+       } else {
+           const l = c0.l * alphabet.size + c1.l;
+           const v = alphabet.symbols[c0.l] + alphabet.symbols[c1.l];
+           bigrams.push({l, v, c0, c1});
+       }
+       first = !first;
+  });
+  // XXX compute/memoize the result's alphabet
+  return {cells: bigrams, alphabet: bigramAlphabet, halfabet: alphabet};
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -176,10 +178,10 @@ export const applyPermutation = function (text, permutation) {
       } else {
          dstCell = {};
       }
-      const dstPos = row * stride + permutation[col].dstPos;
+      const dstPos = row * stride + permutation[col].l;
       dstCells[dstPos] = dstCell;
    }
-   return dstCells;
+   return {cells: dstCells, alphabet: text.alphabet};
 };
 
 /**
@@ -210,13 +212,13 @@ export const generatePermutations = function (partialPermutation, alphabet) {
       }
       if (partialPermutation[iPos].q !== "unknown") {
          // Case where the current position is fixed, simply recurse.
-         recFillPermutations(iPos + 1, key + alphabet.symbols[curPermutation[iPos].dstPos]);
+         recFillPermutations(iPos + 1, key + alphabet.symbols[curPermutation[iPos].l]);
          return;
       }
       // Enumerate available values for the current position, and recurse.
       for (let value = 0; value < valuesAvailable.length; value++) {
          if (valuesAvailable[value]) {
-            curPermutation[iPos] = {dstPos: value, q: 'guess'};
+            curPermutation[iPos] = {l: value, q: 'guess'};
             valuesAvailable[value] = false;
             recFillPermutations(iPos + 1, key + alphabet.symbols[value]);
             valuesAvailable[value] = true;
@@ -230,9 +232,9 @@ export const generatePermutations = function (partialPermutation, alphabet) {
 // Compare two permutations-without-qualifiers.
 export const comparePermutations = function (p1, p2) {
    for (let iPos = 0; iPos < p1.length; iPos++) {
-      if (p1[iPos] < p2[iPos])
+      if (p1[iPos].l < p2[iPos].l)
          return -1;
-      if (p1[iPos] > p2[iPos])
+      if (p1[iPos].l > p2[iPos].l)
          return 1;
    }
    return p1.length < p2.length ? -1 : 0;

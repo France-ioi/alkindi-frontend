@@ -113,8 +113,7 @@ export const compute = function (toolState, scope) {
    const {targetAlphabet, bigramAlphabet, cipheredText, targetFrequencies} = scope;
    const {editedPairs} = toolState;
    // Compute bigram frequencies.
-   const text = {cells: cipheredText, alphabet: bigramAlphabet};
-   scope.bigramFreqs = getFrequencies(text);
+   scope.bigramFreqs = getFrequencies(cipheredText);
    // Mark symbols in editedPairs as used, other target symbols as unused.
    const symbolUsed = Array(bigramAlphabet.size).fill(false);
    Object.keys(editedPairs).forEach(function (bigram) {
