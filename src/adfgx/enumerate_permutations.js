@@ -23,7 +23,7 @@ export const Component = EpicComponent(self => {
 
    self.render = function() {
       const {selectedPermutationKey, permutationData, showOnlyFavorited,
-         inputPermutationVariable, inputCipheredText, outputPermutationVariable} = self.props.toolState;
+         inputPermutationVariable, inputCipheredTextVariable, outputPermutationVariable} = self.props.toolState;
       const {selectedPermutation, permutations} = self.props.scope;
       const renderPermutationItem = function (permutation, i) {
          const classes = ['adfgx-perm', selectedPermutation === permutation && 'adfgx-perm-selected'];
@@ -39,7 +39,7 @@ export const Component = EpicComponent(self => {
       };
       const inputVars = [
          {label: "Permutation", name: inputPermutationVariable},
-         {label: "Texte chiffré", name: inputCipheredText}
+         {label: "Texte chiffré", name: inputCipheredTextVariable}
       ];
       const outputVars = [
          {label: "Nouvelle permutation", name: outputPermutationVariable}
@@ -52,7 +52,8 @@ export const Component = EpicComponent(self => {
                      <Python.Var name={outputPermutationVariable}/>
                      <Python.Call name="énumèrePermutations">
                         <Python.Var name={inputPermutationVariable}/>
-                        <Python.Var name={inputCipheredText}/>
+                        <Python.Var name={inputCipheredTextVariable}/>
+                        <span>…</span>
                      </Python.Call>
                   </Python.Assign>
                </span>
@@ -98,7 +99,7 @@ export const compute = function (toolState, scope) {
    });
    // Compute stats on each permutation.
    permutations.forEach(function (permutation) {
-      const permText = applyPermutation(cipheredText, permutation.unqualified);
+      const permText = applyPermutation(cipheredText, permutation.qualified);
       const bigrams = bigramsFromCells(permText, adfgxAlphabet);
       permutation.ci = coincidenceIndex(bigrams, bigramAlphabet);
    });
@@ -106,11 +107,11 @@ export const compute = function (toolState, scope) {
    if (sortBy === 'ci') {
       permutations.sort(function (p1, p2) {
          return p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
-            comparePermutations(p1.unqualified, p2.unqualified));
+            comparePermutations(p1.qualified, p2.qualified));
       });
    } else {
       permutations.sort(function (p1, p2) {
-         return comparePermutations(p1.unqualified, p2.unqualified);
+         return comparePermutations(p1.qualified, p2.qualified);
       });
    }
    scope.permutations = permutations;
@@ -122,9 +123,7 @@ export const compute = function (toolState, scope) {
       selectedPermutation = permutations[0];
    scope.selectedPermutation = selectedPermutation;
    // Output a qualified permutation.
-   scope.outputPermutation = selectedPermutation.unqualified.map(function (dstPos, iPos) {
-      return {dstPos, q: inputPermutation[iPos].q};
-   });
+   scope.outputPermutation = selectedPermutation.qualified;
 };
 
 export default self => {

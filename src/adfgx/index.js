@@ -14,6 +14,7 @@ import * as cell from '../utils/cell';
 import * as bigram from '../utils/cell';
 
 const clearAlphabet = cell.makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
+const adfgxAlphabet = cell.makeAlphabet('ADFGX');
 const bigramAlphabet = bigram.makeAlphabet('ADFGX');
 
 export const setupTools = function (workspace) {
@@ -48,14 +49,18 @@ export const setupTools = function (workspace) {
       // showOnlyFavorited, when true, limits the display to favorited permutations.
       showOnlyFavorited: false,
       inputPermutationVariable: 'permutationIndices',
-      inputCipheredText: 'texteChiffré',
+      inputCipheredTextVariable: 'texteChiffré',
       outputPermutationVariable: 'permutationCourante'
    });
 
    const iApplyPermutation = workspace.addTool(ApplyPermutation, function (scopes, scope) {
+      scope.alphabet = adfgxAlphabet;
       scope.cipheredText = scopes[iTextInput].outputText;
       scope.permutation = scopes[iEnumeratePermutations].outputPermutation;
    }, {
+      stride: 6,
+      inputPermutationVariable: 'permutationCourante',
+      inputCipheredTextVariable: 'texteChiffré',
       outputTextVariable: 'texteAprèsPermutation'
    });
 
@@ -65,7 +70,7 @@ export const setupTools = function (workspace) {
    }, {
       substitution: {}, // ex. {'AD': 'E'}
       inputTextVariable: 'texteAprèsPermutation',
-      inputPermutation: 'permutationCourante',
+      inputPermutationVariable: 'permutationCourante',
       outputSubstitutionVariable: 'substitutionÉditée'
    });
 

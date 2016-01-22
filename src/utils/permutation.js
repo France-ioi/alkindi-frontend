@@ -23,7 +23,7 @@ export const comparePermutations = function (p1, p2) {
 
 /**
  * Take as input a permutation-with-qualifiers, and output an array of
- * permutations-without-qualifiers.
+ * permutations-with-qualifiers.
  */
 export const generatePermutations = function (partialPermutation, alphabet) {
    const stride = partialPermutation.length;
@@ -32,9 +32,8 @@ export const generatePermutations = function (partialPermutation, alphabet) {
    const curPermutation = Array(stride);
    for (let iPos = 0; iPos < stride; iPos++) {
       if (partialPermutation[iPos].q !== "unknown") {
-         const dstPos = partialPermutation[iPos].dstPos;
          valuesAvailable[iPos] = false;
-         curPermutation[iPos] = dstPos;
+         curPermutation[iPos] = partialPermutation[iPos];
       }
    }
    const permutations = [];
@@ -44,7 +43,7 @@ export const generatePermutations = function (partialPermutation, alphabet) {
          // The copy is necessary as curPermutation is mutated throughout the recursion.
          permutations.push({
             key: key,
-            unqualified: curPermutation.slice()
+            qualified: curPermutation.slice()
          });
          return;
       }
@@ -56,7 +55,7 @@ export const generatePermutations = function (partialPermutation, alphabet) {
       // Enumerate available values for the current position, and recurse.
       for (let value = 0; value < valuesAvailable.length; value++) {
          if (valuesAvailable[value]) {
-            curPermutation[iPos] = value;
+            curPermutation[iPos] = {dstPos: value, q: 'guess'};
             valuesAvailable[value] = false;
             recFillPermutations(iPos + 1, key + alphabet.symbols[value]);
             valuesAvailable[value] = true;
@@ -68,7 +67,7 @@ export const generatePermutations = function (partialPermutation, alphabet) {
 };
 
 /**
- * Apply a permutation-without-qualifiers to an array of cells.
+ * Apply a permutation-with-qualifiers to an array of cells.
  */
 export const applyPermutation = function (cells, permutation) {
    const stride = permutation.length;
@@ -88,8 +87,8 @@ export const applyPermutation = function (cells, permutation) {
       }
       const row = srcPos % nbRows;
       const col = (srcPos - row) / nbRows;
-      const dstPos = row * stride + permutation[col];
-      dstCells[dstPos] = srcCell;
+      const dstPos = row * stride + permutation[col].dstPos;
+      dstCells[dstPos] = {l: srcCell.l, q: permutation[col].q};
    }
    return dstCells;
 };

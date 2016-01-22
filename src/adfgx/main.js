@@ -15,11 +15,15 @@ const initialTask = {
 
 /*
 RZETKY
-M A H P E
-T X Y R J
-Q S G I N
-C B K U V
-O L F D Z
+
+  a d f g x
+a M A H P E
+d T X Y R J
+f Q S G I N
+g C B K U V
+x O L F D Z
+
+"Mes félicitations pour ce que vous avez realisé sans accroc dans cette partie initiale du plan. Voici la marche à suivre afin que le plan aboutisse et envisager la suite avec sérénité. L'étape suivante consiste à augmenter de façon artificielle le coût financier de certains métaux de terre rare aussi vite que possible et sans délais ou nuisances. Nous avons entériné la liste suivante de métaux de terre rare : le terbium, le  neodyme et le  gadolinium. Le meilleur endroit pour agir se situe à la bourse de Barcelone. Hâtez-vous aussitôt pour aller acheter plein de ces actions en prévision de la hausse de l'indice du marché."
 */
 
 const BareDemo = PureComponent(self => {
