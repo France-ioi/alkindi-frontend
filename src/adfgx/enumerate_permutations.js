@@ -1,5 +1,6 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
+import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
@@ -15,22 +16,27 @@ const bigramAlphabet = makeBigramAlphabet('ADFGX');
 
 export const Component = EpicComponent(self => {
 
-   const renderPermutationItem = function (permutation, i) {
-      return (
-         <li key={i}>
-            <span>{permutation.key}</span>
-            {' '}
-            <span>{permutation.ci.toFixed(3)}</span>
-            {' '}
-            <span>{permutation.favorited ? '*' : ' '}</span>
-         </li>
-      );
+   const onSelectPermutation = function (event) {
+      const key = event.currentTarget.getAttribute('data-key');
+      self.props.setToolState({selectedPermutationKey: key})
    };
 
    self.render = function() {
-      const {selected, permutationData, showOnlyFavorited,
+      const {selectedPermutationKey, permutationData, showOnlyFavorited,
          inputPermutationVariable, inputCipheredText, outputPermutationVariable} = self.props.toolState;
       const {selectedPermutation, permutations} = self.props.scope;
+      const renderPermutationItem = function (permutation, i) {
+         const classes = ['adfgx-perm', selectedPermutation === permutation && 'adfgx-perm-selected'];
+         return (
+            <li key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
+               <span>{permutation.key}</span>
+               {' '}
+               <span>{permutation.ci.toFixed(3)}</span>
+               {' '}
+               <span>{permutation.favorited ? '*' : ' '}</span>
+            </li>
+         );
+      };
       const inputVars = [
          {label: "Permutation", name: inputPermutationVariable},
          {label: "Texte chiffré", name: inputCipheredText}
@@ -52,7 +58,9 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               <ul>{permutations.map(renderPermutationItem)}</ul>
+               <div style={{maxHeight: '200px', overflowY: 'auto'}}>
+                  <ul>{permutations.map(renderPermutationItem)}</ul>
+               </div>
             </div>
          </div>
       );
@@ -61,7 +69,7 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {selected, permutationInfos, showOnlyFavorited, sortBy} = toolState;
+   const {selectedPermutationKey, permutationInfos, showOnlyFavorited, sortBy} = toolState;
    const {inputPermutation, cipheredText} = scope;
    const permutationMap = {};
    // showOnlyFavorited disabled the generation of permutations.
@@ -97,7 +105,8 @@ export const compute = function (toolState, scope) {
    // Sort the permutations.
    if (sortBy === 'ci') {
       permutations.sort(function (p1, p2) {
-         return p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 : 0);
+         return p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
+            comparePermutations(p1.unqualified, p2.unqualified));
       });
    } else {
       permutations.sort(function (p1, p2) {
@@ -107,7 +116,7 @@ export const compute = function (toolState, scope) {
    scope.permutations = permutations;
    // Find the selected permutation (use the first one if not found).
    let selectedPermutation = permutations.find(function (p) {
-      return p.key == selected
+      return p.key == selectedPermutationKey
    });
    if (!selectedPermutation)
       selectedPermutation = permutations[0];
@@ -116,7 +125,6 @@ export const compute = function (toolState, scope) {
    scope.outputPermutation = selectedPermutation.unqualified.map(function (dstPos, iPos) {
       return {dstPos, q: inputPermutation[iPos].q};
    });
-   // TODO: compute stats on inputCipheredText
 };
 
 export default self => {

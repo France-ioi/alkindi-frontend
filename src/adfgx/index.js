@@ -39,9 +39,10 @@ export const setupTools = function (workspace) {
    }, {
       // sortBy may be 'ci' (coincidence index) or 'key' (permutation-as-string)
       sortBy: 'ci',
-      // selected is a permutation-as-string, e.g. '012345'; if undefined,
-      // the first permutation displayed is selected.
-      selected: undefined,
+      // selectedPermutationKey is a permutation-as-string, e.g. '012345';
+      // if undefined (or if the selected permutation is filtered out), the
+      // first permutation displayed is selected.
+      selectedPermutationKey: undefined,
       // permutationInfos maps a permutation-as-string to a {favorited: bool} object.
       permutationInfos: {},
       // showOnlyFavorited, when true, limits the display to favorited permutations.
