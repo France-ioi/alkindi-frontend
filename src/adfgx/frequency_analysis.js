@@ -10,13 +10,13 @@ import {getQualifierClass, getFrequencies, applySubstitutionToText} from './comm
 
 const BareSubstTarget = EpicComponent(self => {
    self.render = function () {
-      const {source, target, targetAlphabet, targetFrequency} = self.props;
+      const {source, target, targetAlphabet, targetFrequency, barScale} = self.props;
       const {isDragging, connectDropTarget, connectDragSource} = self.props;
       const targetSymbol = targetAlphabet.symbols[target.l];
       return connectDropTarget(connectDragSource(
          <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
             <span className='adfgx-subst-char'>{targetSymbol}</span>
-            <span className='adfgx-subst-freq' style={{height: (targetFrequency * 300).toFixed(1)+'px'}} title={(targetFrequency * 100).toFixed(1)+'%'}></span>
+            <span className='adfgx-subst-freq' style={{height: (targetFrequency * barScale).toFixed(1)+'px'}} title={(targetFrequency * 100).toFixed(1)+'%'}></span>
          </div>
       ));
    };
@@ -76,15 +76,16 @@ export const Component = EpicComponent(self => {
       const {inputTextVariable, outputSubstitutionVariable} = self.props.toolState;
       const {bigramFreqs, bigramAlphabet, targetAlphabet, outputSubstitution, targetFrequencies} = self.props.scope;
       const substitution = outputSubstitution.mapping;
+      const barScale = 42 / Math.max.apply(null, targetFrequencies);
       const renderBigramHisto = function (bigram) {
          const targetCell = substitution[bigram.l];
          return (
             <div key={bigram.l} className='adfgx-subst-pair'>
                <div className='adfgx-subst-src'>
-                  <span className='adfgx-subst-freq' style={{height: (bigram.p * 300).toFixed(1)+'px'}} title={(bigram.p * 100).toFixed(1)+'%'}></span>
+                  <span className='adfgx-subst-freq' style={{height: (bigram.p * barScale).toFixed(1)+'px'}} title={(bigram.p * 100).toFixed(1)+'%'}></span>
                   <span>{bigramAlphabet.symbols[bigram.l]}</span>
                </div>
-               <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} onDrop={onDrop} />
+               <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} barScale={barScale} onDrop={onDrop} />
             </div>
          );
       };
