@@ -158,20 +158,17 @@ export const getMostFrequentBigrams = function (textBigrams, nBigrams) {
 
 export const bigramsFromCells = function (cells, cellAlphabet) {
    const bigrams = [];
-   let nth = 0;
-   let lastCell;
-   cells.forEach(function (cell) {
-      if (nth === 0) {
-         lastCell = cell;
-         nth = 1;
+   let first = true;
+   let c0;
+   cells.forEach(function (c1) {
+      if (first) {
+         c0 = c1;
       } else {
-         const l0 = lastCell.l;
-         const l1 = cell.l;
-         const l = l0 * cellAlphabet.size + l1;
-         const v = cellAlphabet.symbols[l0] + cellAlphabet.symbols[l1];
-         bigrams.push({l, l0, l1, v});
-         nth = 0;
+         const l = c0.l * cellAlphabet.size + c1.l;
+         const v = cellAlphabet.symbols[c0.l] + cellAlphabet.symbols[c1.l];
+         bigrams.push({l, v, c0, c1});
       }
+      first = !first;
    });
    return bigrams;
 };

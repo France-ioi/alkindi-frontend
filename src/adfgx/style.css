@@ -2,7 +2,19 @@
   font-weight: bold;
 }
 
-.adfgx-text-block {
-  margin: 4px;
+.adfgx-text {
+  font-family: monospace;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.adfgx-bigram {
+  margin: 4px 2px;
   float: left;
+  border: 1px solid #ccc;
+}
+.adfgx-bigram > .adfgx-cell:first-child {
+  margin-right: 2px;
+}
+.adfgx-cell {
+  padding: 2px
 }

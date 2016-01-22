@@ -6,33 +6,32 @@ import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
 import {getCellLetter, getQualifierClass} from '../utils/cell';
 import {applyPermutation} from '../utils/permutation';
+import {bigramsFromCells} from '../utils/bigram';
 
 export const Component = EpicComponent(self => {
 
-   const renderCell = function (alphabet, cell, key) {
-      const classes = ['adfgx-letter', getQualifierClass(cell.q)];
-      const letter = 'l' in cell ? getCellLetter(alphabet, cell, true) : cell.c;
-      return <span key={key} className={classnames(classes)}>{letter}</span>;
+   const renderBigram = function (bigram, key, alphabet) {
+      const c0 = getCellLetter(alphabet, bigram.c0, true);
+      const c1 = getCellLetter(alphabet, bigram.c0, true);
+      const q0 = classnames(['adfgx-cell', getQualifierClass(bigram.c0.q)]);
+      const q1 = classnames(['adfgx-cell', getQualifierClass(bigram.c1.q)]);
+      return (
+         <span key={key} className="adfgx-bigram">
+            <span className={q0}>{c0}</span>
+            <span className={q1}>{c1}</span>
+         </span>);
    };
 
    const renderText = function (text, alphabet, stride) {
-      const elements = [];
-      for (let iCell = 0; iCell < text.length; iCell += stride) {
-         const nCellsGroup = iCell + stride < text.length ? stride : text.length - iCell;
-         const groupElements = [];
-         for (let j = 0; j < nCellsGroup; j++) {
-            const cell = text[iCell + j];
-            groupElements.push(renderCell(alphabet, cell, j));
-         }
-         elements.push(<div key={iCell} className='adfgx-text-block'>{groupElements}</div>);
-      }
+      const elements = text.map(function (bigram, iBigram) {
+         return renderBigram(text[iBigram], iBigram, alphabet);
+      });
       return <div className='adfgx-text'>{elements}</div>;
    };
 
    self.render = function() {
       const {inputPermutationVariable, inputCipheredTextVariable, outputTextVariable} = self.props.toolState;
       const {alphabet, outputText} = self.props.scope;
-      const {stride} = self.props.toolState;
       return (
          <div className='panel panel-default'>
             <div className='panel-heading'>
@@ -47,7 +46,7 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               {renderText(outputText, alphabet, stride)}
+               {renderText(outputText, alphabet)}
             </div>
          </div>
       );
@@ -56,8 +55,9 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {permutation, cipheredText} = scope;
-   scope.outputText = applyPermutation(cipheredText, permutation);
+   const {permutation, cipheredText, adfgxAlphabet} = scope;
+   const permText = applyPermutation(cipheredText, permutation);
+   scope.outputText = bigramsFromCells(permText, adfgxAlphabet);
 };
 
 export default self => {

@@ -58,7 +58,6 @@ export const setupTools = function (workspace) {
       scope.cipheredText = scopes[iTextInput].outputText;
       scope.permutation = scopes[iEnumeratePermutations].outputPermutation;
    }, {
-      stride: 6,
       inputPermutationVariable: 'permutationCourante',
       inputCipheredTextVariable: 'texteChiffré',
       outputTextVariable: 'texteAprèsPermutation'
@@ -92,6 +91,7 @@ export const TabContent = PureComponent(self => {
       const rootScope = {
          ...task,
          clearAlphabet,
+         adfgxAlphabet,
          bigramAlphabet,
          cipheredText: task.cipher_text,
          hintsGrid: task.hints
