@@ -4,10 +4,9 @@ import classnames from 'classnames';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {generatePermutations, comparePermutations, permutationFromString,
-   applyPermutation, numbersAlphabet} from '../utils/permutation';
-import {bigramsFromCells} from '../utils/bigram';
-import {coincidenceIndex} from '../utils/cell';
+import {bigramsFromCells, coincidenceIndex, generatePermutations,
+        comparePermutations, permutationFromString, applyPermutation,
+        numbersAlphabet} from './common';
 
 export const Component = EpicComponent(self => {
 
@@ -96,7 +95,8 @@ export const compute = function (toolState, scope) {
    permutations.forEach(function (permutation) {
       const permText = applyPermutation(cipheredText, permutation.qualified);
       const bigrams = bigramsFromCells(permText, adfgxAlphabet);
-      permutation.ci = coincidenceIndex(bigrams, bigramAlphabet);
+      const bigramText = {cells: bigrams, alphabet: bigramAlphabet};
+      permutation.ci = coincidenceIndex(bigramText);
    });
    // Sort the permutations.
    if (sortBy === 'ci') {

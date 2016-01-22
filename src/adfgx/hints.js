@@ -3,7 +3,6 @@ import EpicComponent from 'epic-component';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {getCellLetter} from '../utils/cell';
 
 export const Component = EpicComponent(self => {
 

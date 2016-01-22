@@ -4,6 +4,7 @@
 
 .adfgx-text {
   font-family: monospace;
+  font-size: 18px;
   max-height: 200px;
   overflow-y: auto;
 }

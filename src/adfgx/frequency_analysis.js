@@ -5,8 +5,7 @@ import {DragSource, DropTarget} from 'react-dnd';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {getFrequencies, applySubstitutionToText} from '../utils/cell';
-import {getQualifierClass} from './common';
+import {getQualifierClass, getFrequencies, applySubstitutionToText} from './common';
 
 const BareSubstTarget = EpicComponent(self => {
    self.render = function () {

@@ -3,9 +3,7 @@ import EpicComponent from 'epic-component';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
-import {makeAlphabet, cellsFromString} from '../utils/cell';
-
-const adfgxAlphabet = makeAlphabet('ADFGX');
+import {cellsFromString, renderText} from './common';
 
 export const Component = EpicComponent(self => {
 
@@ -20,7 +18,7 @@ export const Component = EpicComponent(self => {
 
    self.render = function() {
       const {outputTextVariable} = self.props.toolState;
-      const {text} = self.props.scope;
+      const {text, outputText} = self.props.scope;
       const inputVars = [];
       const outputVars = [{label: "Texte chiffré", name: outputTextVariable}];
       return (
@@ -35,7 +33,7 @@ export const Component = EpicComponent(self => {
             </div>
             <div className='panel-body'>
                <Variables inputVars={inputVars} outputVars={outputVars} />
-               <div className='adfgx-text-input'>{text}</div>
+               <div className='adfgx-text-input'>{renderText(outputText)}</div>
             </div>
          </div>
       );
@@ -44,7 +42,9 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   scope.outputText = cellsFromString(scope.text, adfgxAlphabet);
+   const {alphabet, text} = scope;
+   const cells = cellsFromString(text, alphabet);
+   scope.outputText = {alphabet, cells};
 };
 
 export default self => {

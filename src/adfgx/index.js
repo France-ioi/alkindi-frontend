@@ -10,12 +10,8 @@ import ApplyPermutation from './apply_permutation';
 import FrequencyAnalysis from './frequency_analysis';
 import ApplySubstitution from './apply_substitution';
 
-import * as cell from '../utils/cell';
-import * as bigram from '../utils/bigram';
+import {clearAlphabet, adfgxAlphabet, bigramAlphabet} from './common';
 
-const clearAlphabet = cell.makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ');
-const adfgxAlphabet = cell.makeAlphabet('ADFGX');
-const bigramAlphabet = bigram.makeAlphabet('ADFGX');
 const referenceLetterFrequencies = [
    0.0812034849,
    0.0090109472,
@@ -49,6 +45,7 @@ export const setupTools = function (workspace) {
    const iTextInput = workspace.addTool(TextInput, function (scopes, scope) {
       // Set up the input scope for the tool's compute function.
       // Each scope inherits prototypically from the root scope.
+      scope.alphabet = adfgxAlphabet;
       scope.text = scope.cipheredText;
    }, {
       outputTextVariable: "texteChiffré"
