@@ -22,13 +22,11 @@ export const Component = EpicComponent(self => {
       const renderPermutationItem = function (permutation, i) {
          const classes = ['adfgx-perm', selectedPermutation === permutation && 'adfgx-perm-selected'];
          return (
-            <li key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
-               <span>{permutation.key}</span>
-               {' '}
-               <span>{permutation.ci.toFixed(3)}</span>
-               {' '}
-               <span>{permutation.favorited ? '*' : ' '}</span>
-            </li>
+            <tr key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
+               <td>{permutation.key}</td>
+               <td>{permutation.ci.toFixed(3)}</td>
+               <td>{permutation.favorited ? '*' : ' '}</td>
+            </tr>
          );
       };
       const inputVars = [
@@ -53,9 +51,18 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               <div style={{maxHeight: '200px', overflowY: 'auto'}}>
-                  <ul>{permutations.map(renderPermutationItem)}</ul>
-               </div>
+               <table className='adfgx-table adfgx-table-scroll-body'>
+                  <thead>
+                     <tr>
+                        <th>permutation</th>
+                        <th>coïncidence (i)</th>
+                        <th>retenue</th>
+                     </tr>
+                  </thead>
+                  <tbody style={{maxHeight: '200px', overflowY: 'auto'}}>
+                     {permutations.map(renderPermutationItem)}
+                  </tbody>
+               </table>
             </div>
          </div>
       );

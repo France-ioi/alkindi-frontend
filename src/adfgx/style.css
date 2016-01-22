@@ -25,6 +25,43 @@
 .adfgx-bigram > .adfgx-cell:first-child {
   margin-right: 2px;
 }
+.adfgx-table {
+  width: auto;
+  border: none;
+  text-align: center;
+}
+.adfgx-table th {
+  font-weight: normal;
+  text-align: center;
+  border: none;
+}
+.adfgx-table-scroll-body thead,
+.adfgx-table-scroll-body tbody {
+  display: block;
+}
+.adfgx-table-scroll-body td:first-child,
+.adfgx-table-scroll-body th:first-child {
+  width: 200px;
+}
+.adfgx-table-scroll-body td:nth-child(2),
+.adfgx-table-scroll-body th:nth-child(2) {
+  width: 150px;
+}
+.adfgx-table-scroll-body td:last-child,
+.adfgx-table-scroll-body th:last-child {
+  width: 100px;
+}
+.adfgx-table td {
+  cursor: pointer;
+}
+.adfgx-table tbody tr:hover {
+  background-color: #ccc;
+  color: #000;
+}
+.adfgx-perm-selected {
+  background-color: #000;
+  color: #fff;
+}
 .adfgx-cell {
   padding: 2px
 }
