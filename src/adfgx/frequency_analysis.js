@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
 import {DragSource, DropTarget} from 'react-dnd';
@@ -68,6 +69,10 @@ export const Component = EpicComponent(self => {
       }});
    };
 
+   const onReset = function () {
+      self.props.setToolState({editedPairs: {}});
+   };
+
    self.render = function() {
       const {inputTextVariable, outputSubstitutionVariable} = self.props.toolState;
       const {bigramFreqs, bigramAlphabet, targetAlphabet, outputSubstitution, targetFrequencies} = self.props.scope;
@@ -105,6 +110,7 @@ export const Component = EpicComponent(self => {
                   {bigramFreqs.map(renderBigramHisto)}
                </div>
             </div>
+            <Button onClick={onReset}>réinitialiser</Button>
          </div>
       );
    };
