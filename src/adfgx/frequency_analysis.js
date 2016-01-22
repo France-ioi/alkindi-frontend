@@ -20,38 +20,40 @@ const BareSubstTarget = EpicComponent(self => {
       const {source, target, targetAlphabet, targetFrequency} = self.props;
       const {isDragging, connectDropTarget, connectDragSource} = self.props;
       const targetSymbol = targetAlphabet.symbols[target.l];
-      const classes = ['adfgx-subst-target', isDragging && 'dragging', qualifierClasses[target.q]];
       return connectDropTarget(connectDragSource(
-         <span className={classnames(classes)}>
-            <span>{targetSymbol}</span>
+         <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
+            <span className={qualifierClasses[target.q]}>{targetSymbol}</span>
             {' '}
             <span>{(targetFrequency * 100).toFixed(1)}{'%'}</span>
-         </span>
+         </div>
       ));
    };
 });
 
 function sourceCollect (connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  };
+   return {
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging()
+   };
 };
 const targetCollect = function (connect, monitor) {
-  return {
-    connectDropTarget: connect.dropTarget()
-  };
+   return {
+      connectDropTarget: connect.dropTarget()
+   };
 };
 const sourceSpec = {
-  beginDrag: function (props) {
-    return {source: props.source};
-  }
+   beginDrag: function (props) {
+      const {source, target} = props;
+      return {source, target};
+   }
 };
 const targetSpec = {
-  drop: function (props, monitor, component) {
-    const item = monitor.getItem();
-    props.onDrop(item.source, props.target);
-  }
+   drop: function (props, monitor, component) {
+      const dragSource = monitor.getItem();
+      const {source, target} = props;
+      const dragTarget = {source, target};
+      props.onDrop(dragSource, dragTarget);
+   }
 };
 const SubstTarget =
    DragSource('adfgx-subst-target', sourceSpec, sourceCollect)(
@@ -60,24 +62,34 @@ const SubstTarget =
 
 export const Component = EpicComponent(self => {
 
-   const onDrop = function (source, target) {
-      console.log('drog', source, target);
+   const onDrop = function (dragSource, dragTarget) {
+      const {bigramAlphabet, targetAlphabet} = self.props.scope;
+      const {toolState} = self.props;
+      const key1 = bigramAlphabet.symbols[dragTarget.source.l];
+      const value1 = targetAlphabet.symbols[dragSource.target.l];
+      const key2 = bigramAlphabet.symbols[dragSource.source.l];
+      const value2 = targetAlphabet.symbols[dragTarget.target.l];
+      self.props.setToolState({editedPairs: {
+         ...toolState.editedPairs,
+         [key1]: value1,
+         [key2]: value2
+      }});
    };
 
    self.render = function() {
       const {inputTextVariable, outputSubstitutionVariable} = self.props.toolState;
       const {bigramFreqs, bigramAlphabet, targetAlphabet, substitution, targetFrequencies} = self.props.scope;
-      const renderBigramHisto = function (bigram, iBigram) {
-         const targetCell = substitution[iBigram];
+      const renderBigramHisto = function (bigram) {
+         const targetCell = substitution[bigram.l];
          return (
-            <li key={bigram.l}>
-               <div>
-                  {bigramAlphabet.symbols[bigram.l]}
+            <div key={bigram.l} className='adfgx-subst-pair'>
+               <div className='adfgx-subst-src'>
+                  <span>{bigramAlphabet.symbols[bigram.l]}</span>
                   {' '}
                   <span>{(bigram.p * 100).toFixed(1)}{'%'}</span>
                </div>
                <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} onDrop={onDrop} />
-            </li>
+            </div>
          );
       };
       // Button to reset substitution to match order of bigrams frequencies
@@ -96,8 +108,8 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               <div>
-                  <ul>{bigramFreqs.map(renderBigramHisto)}</ul>
+               <div className='adfgx-subst'>
+                  {bigramFreqs.map(renderBigramHisto)}
                </div>
             </div>
          </div>
@@ -134,8 +146,9 @@ export const compute = function (toolState, scope) {
    });
    // Generate a substitution using editedPairs and filling with the stats.
    let nextUnusedRankPos = 0;
-   const substitution = [];
-   bigramAlphabet.symbols.forEach(function (symbol) {
+   const substitution = Array(bigramAlphabet.size);
+   scope.bigramFreqs.forEach(function (bigram) {
+      const symbol = bigramAlphabet.symbols[bigram.l];
       let targetRank, qualifier;
       if (symbol in editedPairs) {
          targetRank = targetAlphabet.ranks[editedPairs[symbol]];
@@ -145,7 +158,7 @@ export const compute = function (toolState, scope) {
          nextUnusedRankPos += 1;
          qualifier = 'unknown';
       }
-      substitution.push({l: targetRank, q: qualifier});
+      substitution[bigram.l] = {l: targetRank, q: qualifier};
    });
    scope.substitution = substitution;
 };

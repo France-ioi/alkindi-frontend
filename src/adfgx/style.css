@@ -18,3 +18,16 @@
 .adfgx-cell {
   padding: 2px
 }
+
+.adfgx-subst-pair {
+  float: left;
+}
+.adfgx-subst-src, .adfgx-subst-tgt {
+  width: 32px;
+}
+.adfgx-subst-tgt:hover {
+  background: #eee;
+}
+.adfgx-subst-tgt {
+  cursor: move;
+}
