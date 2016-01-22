@@ -538,6 +538,7 @@ character substitutions tables
   padding: 0 10px;
 }
 /* variables */
+.tool-variables,
 .playfair-variables {
   border: 1px solid #000;
   border-radius: 3px;

@@ -18,7 +18,7 @@ export const Variables = PureComponent(self => {
    self.render = function () {
       const {inputVars, outputVars} = self.props;
       return (
-         <div className='playfair-variables'>
+         <div className='tool-variables'>
             {inputVars && inputVars.length > 0 &&
              <div className='variable-entree variable-informations'>
                <span>Variables d'entrée :</span>
