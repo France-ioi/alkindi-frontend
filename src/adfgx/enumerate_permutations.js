@@ -59,7 +59,7 @@ export const Component = EpicComponent(self => {
                         <th>retenue</th>
                      </tr>
                   </thead>
-                  <tbody style={{maxHeight: '200px', overflowY: 'auto'}}>
+                  <tbody>
                      {permutations.map(renderPermutationItem)}
                   </tbody>
                </table>
