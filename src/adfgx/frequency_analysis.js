@@ -15,9 +15,8 @@ const BareSubstTarget = EpicComponent(self => {
       const targetSymbol = targetAlphabet.symbols[target.l];
       return connectDropTarget(connectDragSource(
          <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
-            <span className={getQualifierClass(target.q)}>{targetSymbol}</span>
-            {' '}
-            <span>{(targetFrequency * 100).toFixed(1)}{'%'}</span>
+            <span className='adfgx-subst-char'>{targetSymbol}</span>
+            <span className='adfgx-subst-freq' style={{height: (targetFrequency * 300).toFixed(1)+'px'}} title={(targetFrequency * 100).toFixed(1)+'%'}></span>
          </div>
       ));
    };
@@ -82,9 +81,8 @@ export const Component = EpicComponent(self => {
          return (
             <div key={bigram.l} className='adfgx-subst-pair'>
                <div className='adfgx-subst-src'>
+                  <span className='adfgx-subst-freq' style={{height: (bigram.p * 300).toFixed(1)+'px'}} title={(bigram.p * 100).toFixed(1)+'%'}></span>
                   <span>{bigramAlphabet.symbols[bigram.l]}</span>
-                  {' '}
-                  <span>{(bigram.p * 100).toFixed(1)}{'%'}</span>
                </div>
                <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} onDrop={onDrop} />
             </div>

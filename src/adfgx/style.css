@@ -79,14 +79,31 @@
 }
 
 .adfgx-subst-pair {
-  float: left;
+  display: inline-block;
+  width: 22px;
+  margin-right: 8px;
 }
 .adfgx-subst-src, .adfgx-subst-tgt {
-  width: 32px;
+}
+.adfgx-subst-freq {
+  display: block;
+  background-color: pink;
+  width: 12px;
+  margin: 0 auto;
+}
+.adfgx-subst-char {
+  border: 1px solid #000;
+  display: block;
+  text-align: center;
+  padding: 3px;
 }
 .adfgx-subst-tgt:hover {
   background: #eee;
 }
 .adfgx-subst-tgt {
   cursor: move;
+  min-height: 60px;
+}
+.adfgx-subst-tgt-frequency {
+  display: block;
 }
