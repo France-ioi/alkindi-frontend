@@ -133,5 +133,5 @@ export const coincidenceIndex = function(cells, alphabet) {
       const proba = occurrences[iLetter] * (occurrences[iLetter] - 1) / (nbLetters * (nbLetters - 1));
       coincidence += proba;
    }
-   return coincidence * alphabet.size;
+   return coincidence;
 };
