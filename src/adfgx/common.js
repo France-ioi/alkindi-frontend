@@ -95,7 +95,7 @@ export const bigramsFromText = function (text) {
        first = !first;
   });
   // XXX compute/memoize the result's alphabet
-  return {cells: bigrams, alphabet: bigramAlphabet};
+  return {cells: bigrams, alphabet: bigramAlphabet, halfabet: alphabet};
 };
 
 ///////////////////////////////////////////////////////////////////////

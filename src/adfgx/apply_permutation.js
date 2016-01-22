@@ -8,21 +8,21 @@ import {bigramsFromText, applyPermutation, renderCell} from './common';
 
 export const Component = EpicComponent(self => {
 
-   const renderBigram = function (key, bigram, alphabet) {
+   const renderBigram = function (key, bigram, halfabet) {
       return (
          <div key={key} className="adfgx-bigram">
-            {renderCell(0, bigram.c0, alphabet)}
-            {renderCell(1, bigram.c1, alphabet)}
+            {renderCell(0, bigram.c0, halfabet)}
+            {renderCell(1, bigram.c1, halfabet)}
          </div>
       );
    };
 
    const renderText = function (text) {
-      const {cells, alphabet} = text;
+      const {cells, halfabet} = text;
       const columns = [];
       let column = [];
       cells.forEach(function (bigram, iBigram) {
-         column.push(renderBigram(column.length, bigram, alphabet));
+         column.push(renderBigram(column.length, bigram, halfabet));
          if (column.length === 3) {
             columns.push(<div key={columns.length} className="adfgx-column">{column}</div>);
             column = [];
