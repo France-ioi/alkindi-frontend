@@ -51,6 +51,7 @@ export const Component = EpicComponent(self => {
 
 export const compute = function (toolState, scope) {
    scope.outputText = scope.text;
+   scope.outputPermutation = [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}];
 };
 
 export default self => {

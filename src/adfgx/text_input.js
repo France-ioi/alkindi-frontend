@@ -3,6 +3,9 @@ import EpicComponent from 'epic-component';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
+import {makeAlphabet, cellsFromString} from '../utils/cell';
+
+const adfgxAlphabet = makeAlphabet('ADFGX');
 
 export const Component = EpicComponent(self => {
 
@@ -41,7 +44,7 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   scope.output = scope.text;
+   scope.outputText = cellsFromString(scope.text, adfgxAlphabet);
 };
 
 export default self => {

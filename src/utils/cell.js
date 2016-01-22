@@ -97,3 +97,41 @@ export const getQualifierClass = function (q) {
       return 'character'; // literal
    return qualifierClasses[q];
 };
+
+export const cellsFromString = function (text, alphabet) {
+   const cells = [];
+   for (let iLetter = 0; iLetter < text.length; iLetter++) {
+      const letter = text.charAt(iLetter);
+      const rank = alphabet.ranks[letter];
+      if (rank !== undefined)
+         cells.push({l: rank})
+   }
+   return cells;
+};
+
+export const cellsToString = function (cells, alphabet) {
+   const symbols = Array(cells.length);
+   for (let iCell = 0; iCell < cells.length; iCell++) {
+      const cell = cells[iCell];
+      if (c in cell)
+         symbols.push(cell.c);
+      else
+         symbols.push(getCellLetter(alphabet, cell, true));
+   }
+   return symbols.join('');
+};
+
+export const coincidenceIndex = function(cells, alphabet) {
+   const occurrences = Array(alphabet.size).fill(0);
+   cells.forEach(function (cell) {
+      if ('l' in cell)
+         occurrences[cell.l] += 1;
+   });
+   let coincidence = 0;
+   const nbLetters = cells.length;
+   for (let iLetter = 0; iLetter < alphabet.size; iLetter++) {
+      const proba = occurrences[iLetter] * (occurrences[iLetter] - 1) / (nbLetters * (nbLetters - 1));
+      coincidence += proba;
+   }
+   return coincidence * alphabet.size;
+};

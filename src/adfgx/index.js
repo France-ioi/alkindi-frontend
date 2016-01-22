@@ -35,12 +35,16 @@ export const setupTools = function (workspace) {
 
    const iEnumeratePermutations = workspace.addTool(EnumeratePermutations, function (scopes, scope) {
       scope.cipheredText = scopes[iTextInput].outputText;
-      scope.permutation = scopes[iHints].outputPermutation;
+      scope.inputPermutation = scopes[iHints].outputPermutation;
    }, {
-      selected: '136245',
-      permutationData: {
-         '316245': {comment: 'à tester', favorited: true}
-      },
+      // sortBy may be 'ci' (coincidence index) or 'key' (permutation-as-string)
+      sortBy: 'ci',
+      // selected is a permutation-as-string, e.g. '012345'; if undefined,
+      // the first permutation displayed is selected.
+      selected: undefined,
+      // permutationInfos maps a permutation-as-string to a {favorited: bool} object.
+      permutationInfos: {},
+      // showOnlyFavorited, when true, limits the display to favorited permutations.
       showOnlyFavorited: false,
       inputPermutationVariable: 'permutationIndices',
       inputCipheredText: 'texteChiffré',
@@ -79,7 +83,6 @@ export const TabContent = PureComponent(self => {
 
    self.render = function () {
       const {workspace, task} = self.props;
-      console.log('task', task);
       const rootScope = {
          ...task,
          clearAlphabet,

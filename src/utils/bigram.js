@@ -1,3 +1,4 @@
+import flatten from 'flatten';
 
 export const mostFrequentFrench = [
    { v: "ES", r: 3.1 },
@@ -36,9 +37,7 @@ export const sideOfStatus = {'left': 0, 'right': 1};
 
 export const makeAlphabet = function (chars) {
    const indivSymbols = chars.split('');
-   const symbols = Array.prototype.concat.call(
-      indivSymbols.map(c1 =>
-         indivSymbols.map(c2 => c1 + c2)));
+   const symbols = flatten(indivSymbols.map(c1 => indivSymbols.map(c2 => c1 + c2)));
    const size = symbols.length;
    var ranks = {};
    for (var iSymbol = 0; iSymbol < size; iSymbol++) {
@@ -154,4 +153,25 @@ export const getMostFrequentBigrams = function (textBigrams, nBigrams) {
       bigram.r = (bigram.count / textBigrams.length * 100).toFixed(1);
    });
    return bigramList;
+};
+
+
+export const bigramsFromCells = function (cells, cellAlphabet) {
+   const bigrams = [];
+   let nth = 0;
+   let lastCell;
+   cells.forEach(function (cell) {
+      if (nth === 0) {
+         lastCell = cell;
+         nth = 1;
+      } else {
+         const l0 = lastCell.l;
+         const l1 = cell.l;
+         const l = l0 * cellAlphabet.size + l1;
+         const v = cellAlphabet.symbols[l0] + cellAlphabet.symbols[l1];
+         bigrams.push({l, l0, l1, v});
+         nth = 0;
+      }
+   });
+   return bigrams;
 };

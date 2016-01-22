@@ -7,6 +7,8 @@ import Python from '../tool-ui/python';
 export const Component = EpicComponent(self => {
 
    self.render = function() {
+      // Button to reset substitution to match order of bigrams frequencies
+      // with order of letter frequencies in french.
       return (
          <div className='panel panel-default'>
             <div className='panel-heading'>
