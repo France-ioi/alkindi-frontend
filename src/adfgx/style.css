@@ -12,6 +12,30 @@
 .adfgx-cell {
   padding: 2px
 }
+
+/*
+
+  Tool hints
+
+*/
+.hints-title {
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+}
+.hints-section-title {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.adfgx-hints-grid,
+.adfgx-hints-alphabet {
+  display: inline-block;
+  vertical-align: top;
+}
+.adfgx-hints-grid {
+  margin-right: 45px;
+}
+
 /*
 
   Tool apply permutations
