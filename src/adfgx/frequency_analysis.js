@@ -16,7 +16,7 @@ const BareSubstTarget = EpicComponent(self => {
       return connectDropTarget(connectDragSource(
          <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
             <span className='adfgx-subst-char'>{targetSymbol}</span>
-            <span className='adfgx-subst-freq' style={{height: (targetFrequency * barScale).toFixed(1)+'px'}} title={(targetFrequency * 100).toFixed(1)+'%'}></span>
+            <span className='adfgx-subst-freq' title={(targetFrequency * 100).toFixed(1)+'%'}><span style={{height: (targetFrequency * barScale).toFixed(1)+'px'}}></span></span>
          </div>
       ));
    };
@@ -90,7 +90,7 @@ export const Component = EpicComponent(self => {
          return (
             <div key={bigram.l} className='adfgx-subst-pair'>
                <div className='adfgx-subst-src'>
-                  <span className='adfgx-subst-freq' style={{height: (bigram.p * barScale).toFixed(1)+'px'}} title={(bigram.p * 100).toFixed(1)+'%'}></span>
+                  <span className='adfgx-subst-freq' title={(bigram.p * 100).toFixed(1)+'%'}><span style={{height: (bigram.p * barScale).toFixed(1)+'px'}}></span></span>
                   <span>{bigramAlphabet.symbols[bigram.l]}</span>
                </div>
                <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} barScale={barScale} onDrop={onDrop} />
@@ -116,8 +116,16 @@ export const Component = EpicComponent(self => {
             <div className='panel-body'>
                {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
                <Button onClick={onReset}>réinitialiser</Button>
-               <div className='adfgx-subst'>
-                  {bigramFreqs.map(renderBigramHisto)}
+               <div className='grillesSection'>
+                  <div className='adfgx-freq-labels'>
+                     <div className='adfgx-freq-label-freq-src'><span>Fréquences dans le texte : </span></div>
+                     <div className='adfgx-freq-label-symb-src'><span>Symboles du texte : </span></div>
+                     <div className='adfgx-freq-label-symb-tgt'><span>Substitutions : </span></div>
+                     <div className='adfgx-freq-label-freq-tgt'><span>Fréquences en français : </span></div>
+                  </div>
+                  <div className='adfgx-subst'>
+                     {bigramFreqs.map(renderBigramHisto)}
+                  </div>
                </div>
             </div>
          </div>
