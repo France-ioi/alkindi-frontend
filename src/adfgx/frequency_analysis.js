@@ -73,10 +73,18 @@ export const Component = EpicComponent(self => {
    };
 
    self.render = function() {
-      const {inputTextVariable, outputSubstitutionVariable} = self.props.toolState;
+      const {inputTextVariable, inputPermutationVariable, inputSubstitutionVariable, outputSubstitutionVariable} = self.props.toolState;
       const {bigramFreqs, bigramAlphabet, targetAlphabet, outputSubstitution, targetFrequencies} = self.props.scope;
       const substitution = outputSubstitution.mapping;
       const barScale = 42 / Math.max.apply(null, targetFrequencies);
+      const inputVars = [
+         {label: "Texte chiffré", name: inputTextVariable},
+         {label: "Substitution d'entrée", name: inputSubstitutionVariable},
+         {label: "Permutation d'entrée", name: inputPermutationVariable}
+      ];
+      const outputVars = [
+         {label: "Substitution", name: outputSubstitutionVariable}
+      ];
       const renderBigramHisto = function (bigram) {
          const targetCell = substitution[bigram.l];
          return (
@@ -99,17 +107,19 @@ export const Component = EpicComponent(self => {
                      <Python.Var name={outputSubstitutionVariable}/>
                      <Python.Call name="analyseFréquence">
                         <Python.Var name={inputTextVariable}/>
+                        <Python.Var name={inputSubstitutionVariable}/>
                         <span>…</span>
                      </Python.Call>
                   </Python.Assign>
                </span>
             </div>
             <div className='panel-body'>
+               {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
+               <Button onClick={onReset}>réinitialiser</Button>
                <div className='adfgx-subst'>
                   {bigramFreqs.map(renderBigramHisto)}
                </div>
             </div>
-            <Button onClick={onReset}>réinitialiser</Button>
          </div>
       );
    };

@@ -52,9 +52,10 @@ export const setupTools = function (workspace) {
    });
 
    const iHints = workspace.addTool(Hints, function (scopes, scope) {
-      // scope.hintsGrid
+      // scope.outputPermutation
+      // scope.outputSubstitution
    }, {
-      outputGridVariable: "lettresGrilleIndices",
+      outputSubstitutionVariable: "substitutionIndices",
       outputPermutationVariable: "permutationIndices"
    });
 
@@ -93,9 +94,12 @@ export const setupTools = function (workspace) {
       scope.targetFrequencies = referenceLetterFrequencies;
       scope.cipheredText = scopes[iApplyPermutation].outputText;
       scope.permutation = scopes[iEnumeratePermutations].outputPermutation;
+      scope.substitution = scopes[iHints].outputSubstitution;
    }, {
       editedPairs: {}, // ex. {'AD': 'E'}
       inputTextVariable: 'texteAprèsPermutation',
+      inputPermutationVariable: 'permutationCourante',
+      inputSubstitutionVariable: 'substitutionIndices',
       outputSubstitutionVariable: 'substitutionÉditée'
    });
 

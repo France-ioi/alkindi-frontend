@@ -32,7 +32,7 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               <Variables inputVars={inputVars} outputVars={outputVars} />
+               {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
                <div className='adfgx-text-input'>{renderText(outputText)}</div>
             </div>
          </div>

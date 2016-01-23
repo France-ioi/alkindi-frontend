@@ -10,11 +10,14 @@ export const Component = EpicComponent(self => {
    /*
       props:
          scope:
-            clearAlphabet
-            text
-            outputText
+            hintsGrid
+            getHint
+            getQueryCost
+            outputSubstitution
+            outputPermutation
          toolState:
-            outputTextVariable
+            outputSubstitutionVariable
+            outputPermutationVariable
    */
 
    const renderGrid = function () {
@@ -31,11 +34,11 @@ export const Component = EpicComponent(self => {
    };
 
    self.render = function() {
-      const {outputGridVariable, outputPermutationVariable} = self.props.toolState;
+      const {outputSubstitutionVariable, outputPermutationVariable} = self.props.toolState;
       const {hintsGrid, getQueryCost} = self.props.scope;
       const inputVars = [];
       const outputVars = [
-         {label: "Grille enregistrée", name: outputGridVariable},
+         {label: "Substitution", name: outputSubstitutionVariable},
          {label: "Permutation", name: outputPermutationVariable}
       ];
       const grid = hintsGrid.split('\n').map(row => row.split(''));
@@ -47,13 +50,13 @@ export const Component = EpicComponent(self => {
             <div className='panel-heading'>
                <span className='code'>
                   <Python.Assign>
-                     <Python.Var name={outputGridVariable}/>
+                     <Python.Var name={outputSubstitutionVariable}/>
                      <Python.Grid grid={grid} renderCell={renderCell}/>
                   </Python.Assign>
                </span>
             </div>
             <div className='panel-body'>
-               <Variables inputVars={inputVars} outputVars={outputVars} />
+               {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
                <div className='grillesSection'>
                   <p className='hints-title'>Plusieurs types d'indices sont disponibles :</p>
                   <p className='hints-section-title'>Des indices sur le contenu de la grille :</p>
@@ -103,7 +106,7 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   scope.outputText = scope.text;
+   scope.outputSubstitution = []; // TODO
    scope.outputPermutation = [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}];
 };
 
