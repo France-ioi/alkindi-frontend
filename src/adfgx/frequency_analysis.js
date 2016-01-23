@@ -116,7 +116,7 @@ export const Component = EpicComponent(self => {
             <div className='panel-body'>
                {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
                <Button onClick={onReset}>réinitialiser</Button>
-               <div className='clearfix'>
+               <div className='grillesSection'>
                   <div className='adfgx-freq-labels'>
                      <div className='adfgx-freq-label-freq-src'><span>Fréquences dans le texte : </span></div>
                      <div className='adfgx-freq-label-symb-src'><span>Symboles du texte : </span></div>
