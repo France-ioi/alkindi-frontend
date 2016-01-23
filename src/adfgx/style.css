@@ -80,6 +80,7 @@
 }
 .adfgx-table td {
   cursor: pointer;
+  padding: 5px;
 }
 .adfgx-table-scroll-body thead,
 .adfgx-table-scroll-body tbody {
@@ -110,7 +111,19 @@
   background-color: #000;
   color: #fff;
 }
-
+.adfgx-permutation .adfgx-cell {
+  border: 1px solid #000;
+  padding: 3px 6px;
+  border-left: none;
+  background-color: #fff;
+  font-size: 1.8rem;
+}
+.adfgx-permutation .adfgx-cell:first-child {
+  border-left: 1px solid #000;
+}
+.adfgx-perm-selected .adfgx-permutation .adfgx-cell {
+  color: #000;
+}
 /*
 
   Tool Frequency Analysis
