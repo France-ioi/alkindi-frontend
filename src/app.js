@@ -6,6 +6,7 @@ import {PureComponent} from './misc';
 import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
+import RoundOverScreen from './screens/round_over';
 
 export const App = PureComponent(self => {
 
@@ -28,16 +29,25 @@ export const App = PureComponent(self => {
     if (!have_team)
       return <JoinTeamScreen/>;
 
-    return <MainScreen/>;
+    const {round} = self.props;
+
+    if (round.status === 'open')
+      return <MainScreen/>;
+
+    if (round.status === 'over')
+      return <RoundOverScreen/>;
+
+    return <p>Cas non prévu.</p>
+
   };
 
 });
 
 export const selector = function (state) {
   const {crypto} = state;
-  const {user, team} = state.response;
+  const {user, team, round} = state.response;
   const changed = crypto && crypto.changed;
-  return {have_user: !!user, have_team: !!team, changed};
+  return {have_user: !!user, have_team: !!team, round, changed};
 };
 
 export default connect(selector)(App);
