@@ -78,18 +78,70 @@
   padding: 2px
 }
 
+/*
+
+  Tool Frequency Analysis
+
+*/
+
+/* frequency labels */
+.adfgx-freq-labels {
+  float: left;
+  width: 12em;
+  text-align: right;
+  font-size: 1.2rem;
+  margin-right: 1em;
+}
+.adfgx-freq-label-freq-src span,
+.adfgx-freq-label-symb-src span,
+.adfgx-freq-label-symb-tgt span,
+.adfgx-freq-label-freq-tgt span {
+  display: table-cell;
+}
+.adfgx-freq-label-freq-src span {
+  height: 45px;
+  vertical-align: bottom;
+}
+.adfgx-freq-label-symb-src {
+  vertical-align: middle;
+}
+.adfgx-freq-label-symb-tgt span {
+  height: 22px;
+  vertical-align: middle;
+}
+.adfgx-freq-label-freq-tgt span {
+  height: 45px;
+  vertical-align: top;
+}
+
+/* frequency display  */
 .adfgx-subst-pair {
   display: inline-block;
   width: 22px;
-  margin-right: 8px;
+  margin-right: 4px;
 }
-.adfgx-subst-src, .adfgx-subst-tgt {
+.adfgx-subst-src {
+  display: inline-block;
 }
 .adfgx-subst-freq {
+  line-height: 45px;
   display: block;
-  background-color: pink;
-  width: 12px;
   margin: 0 auto;
+  width: 12px;
+}
+.adfgx-subst-tgt .adfgx-subst-freq {
+  margin-top: 6px;
+}
+.adfgx-subst-freq span {
+  display: inline-block;
+  background-color: #333;
+  width: 100%;
+}
+.adfgx-subst-src .adfgx-subst-freq span {
+  vertical-align: bottom;
+}
+.adfgx-subst-tgt .adfgx-subst-freq span {
+  vertical-align: top;
 }
 .adfgx-subst-char {
   border: 1px solid #000;
