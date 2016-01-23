@@ -8,11 +8,11 @@ import flatten from 'flatten';
 //
 
 const qualifierClasses = {
-    'hint':      'adfgx-q-hint',
-    'confirmed': 'adfgx-q-confirmed',
-    'locked':    'adfgx-q-locked',
-    'guess':     'adfgx-q-guess',
-    'unknown':   'adfgx-q-unconfirmed'
+   'hint':      'adfgx-q-hint',
+   'confirmed': 'adfgx-q-confirmed',
+   'locked':    'adfgx-q-locked',
+   'guess':     'adfgx-q-guess',
+   'unknown':   'adfgx-q-unconfirmed'
 };
 
 export const getQualifierClass = function(qualifier) {
@@ -26,14 +26,14 @@ export const renderCell = function (key, cell, alphabet) {
 };
 
 export const cellsFromString = function (text, alphabet) {
-    const cells = [];
-    for (let iLetter = 0; iLetter < text.length; iLetter++) {
-         const letter = text.charAt(iLetter);
-         const rank = alphabet.ranks[letter];
-         if (rank !== undefined)
-             cells.push({l: rank, q: 'unknown'});
-    }
-    return cells;
+   const cells = [];
+   for (let iLetter = 0; iLetter < text.length; iLetter++) {
+      const letter = text.charAt(iLetter);
+      const rank = alphabet.ranks[letter];
+      if (rank !== undefined)
+         cells.push({l: rank, q: 'unknown'});
+   }
+   return cells;
 };
 
 export const renderText = function (text) {
@@ -50,6 +50,16 @@ export const renderText = function (text) {
    if (line.length > 0)
       lines.push(<div key={lines.length}>{line}</div>)
    return <div className='adfgx-text'>{lines}</div>;
+};
+
+export const renderPermutation = function (cells, alphabet) {
+   if (alphabet === undefined)
+      alphabet = numbersAlphabet;
+   const line = [];
+   cells.forEach(function (cell, iCell) {
+      line.push(renderCell(iCell, cell, alphabet));
+   });
+   return <div className='adfgx-permutation'>{line}</div>;
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -73,6 +83,7 @@ export const makeBigramAlphabet = function (symbols) {
 export const clearAlphabet = makeAlphabet('ABCDEFGHIJKLMNOPQRSTUVXYZ'.split(''));
 export const adfgxAlphabet = makeAlphabet('ADFGX'.split(''));
 export const bigramAlphabet = makeBigramAlphabet('ADFGX'.split(''));
+export const numbersAlphabet = makeAlphabet('123456');
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -80,22 +91,22 @@ export const bigramAlphabet = makeBigramAlphabet('ADFGX'.split(''));
 //
 
 export const bigramsFromText = function (text) {
-  const {cells, alphabet} = text;
-  const bigrams = [];
-  let first = true;
-  let c0;
-  cells.forEach(function (c1) {
-       if (first) {
-           c0 = c1;
-       } else {
-           const l = c0.l * alphabet.size + c1.l;
-           const v = alphabet.symbols[c0.l] + alphabet.symbols[c1.l];
-           bigrams.push({l, v, c0, c1});
-       }
-       first = !first;
-  });
-  // XXX compute/memoize the result's alphabet
-  return {cells: bigrams, alphabet: bigramAlphabet, halfabet: alphabet};
+   const {cells, alphabet} = text;
+   const bigrams = [];
+   let first = true;
+   let c0;
+   cells.forEach(function (c1) {
+      if (first) {
+         c0 = c1;
+      } else {
+         const l = c0.l * alphabet.size + c1.l;
+         const v = alphabet.symbols[c0.l] + alphabet.symbols[c1.l];
+         bigrams.push({l, v, c0, c1});
+      }
+      first = !first;
+   });
+   // XXX compute/memoize the result's alphabet
+   return {cells: bigrams, alphabet: bigramAlphabet, halfabet: alphabet};
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -145,8 +156,6 @@ export const getFrequencies = function (text) {
 //
 // Permutation
 //
-
-export const numbersAlphabet = makeAlphabet('0123456789');
 
 export const permutationFromString = function (str, alphabet) {
    return cellsFromString(str, alphabet || numbersAlphabet);
@@ -238,6 +247,21 @@ export const comparePermutations = function (p1, p2) {
          return 1;
    }
    return p1.length < p2.length ? -1 : 0;
+};
+
+export const getInversePermutation = function (permutationCells) {
+   const inversePermutation = [];
+   for (let iCell = 0; iCell < permutationCells.length; iCell++) {
+      inversePermutation[iCell] = { q: "unknown" };
+   }
+   for (let iCell = 0; iCell < permutationCells.length; iCell++) {
+      const cell = permutationCells[iCell];
+      if (cell.q !== "unknown") {
+         inversePermutation[cell.l].l = iCell;
+         inversePermutation[cell.l].q = cell.q;
+      }
+   }
+   return inversePermutation;
 };
 
 ///////////////////////////////////////////////////////////////////////

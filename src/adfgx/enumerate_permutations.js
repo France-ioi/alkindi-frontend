@@ -6,7 +6,7 @@ import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
 import {bigramsFromText, coincidenceIndex, generatePermutations,
         comparePermutations, permutationFromString, applyPermutation,
-        numbersAlphabet} from './common';
+        numbersAlphabet, getInversePermutation, renderPermutation} from './common';
 
 export const Component = EpicComponent(self => {
 
@@ -38,9 +38,10 @@ export const Component = EpicComponent(self => {
          const favoritedClasses = ['fa', permutation.favorited ? 'fa-toggle-on' : 'fa-toggle-off'];
          return (
             <tr key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
-               <td>{permutation.key}</td>
-               <td>{permutation.ci.toFixed(3)}</td>
-               <td onClick={onToggleFavorited} data-key={permutation.key}><i className={classnames(favoritedClasses)}/></td>
+               <td className='adfgx-col-l'>{renderPermutation(permutation.qualified)}</td>
+               <td className='adfgx-col-l'>{renderPermutation(permutation.inverse)}</td>
+               <td className='adfgx-col-m'>{permutation.ci.toFixed(3)}</td>
+               <td className='adfgx-col-s' onClick={onToggleFavorited} data-key={permutation.key}><i className={classnames(favoritedClasses)}/></td>
             </tr>
          );
       };
@@ -69,9 +70,10 @@ export const Component = EpicComponent(self => {
                <table className='adfgx-table adfgx-table-scroll-body'>
                   <thead>
                      <tr>
-                        <th>permutation</th>
-                        <th>coïncidence (i)</th>
-                        <th>retenue</th>
+                        <th className='adfgx-col-l'>permutation</th>
+                        <th className='adfgx-col-l'>inverse</th>
+                        <th className='adfgx-col-m'>coïncidence (i)</th>
+                        <th className='adfgx-col-s'>retenue</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -120,11 +122,12 @@ export const compute = function (toolState, scope) {
          });
       }
    });
-   // Compute stats on each permutation.
+   // Compute stats and inverse on each permutation.
    permutations.forEach(function (permutation) {
       const permText = applyPermutation(cipheredText, permutation.qualified);
       const bigramText = bigramsFromText(permText);
       permutation.ci = coincidenceIndex(bigramText);
+      permutation.inverse = getInversePermutation(permutation.qualified);
    });
    // Sort the permutations.
    if (sortBy === 'ci') {

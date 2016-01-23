@@ -53,16 +53,13 @@
 .adfgx-table-scroll-body thead {
   border-bottom: 1px solid #000;
 }
-.adfgx-table-scroll-body td:first-child,
-.adfgx-table-scroll-body th:first-child {
+.adfgx-table-scroll-body .adfgx-col-l {
   width: 200px;
 }
-.adfgx-table-scroll-body td:nth-child(2),
-.adfgx-table-scroll-body th:nth-child(2) {
+.adfgx-table-scroll-body .adfgx-col-m {
   width: 150px;
 }
-.adfgx-table-scroll-body td:last-child,
-.adfgx-table-scroll-body th:last-child {
+.adfgx-table-scroll-body .adfgx-col-s {
   width: 100px;
 }
 .adfgx-table tbody tr:hover {
