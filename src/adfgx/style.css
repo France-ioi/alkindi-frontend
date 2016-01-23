@@ -12,6 +12,12 @@
 .adfgx-cell {
   padding: 2px
 }
+/*
+
+  Tool apply permutations
+
+*/
+
 .adfgx-columns {
   white-space: nowrap;
   overflow-x: auto;
@@ -29,6 +35,12 @@
   padding: 0 2px;
   display: block;
 }
+
+/*
+
+  Tool enumerate permutations
+
+*/
 
 .adfgx-table {
   width: auto;
