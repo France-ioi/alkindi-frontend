@@ -9,6 +9,9 @@
   margin: 5px 0;
   padding: 10px;
 }
+.adfgx-cell {
+  padding: 2px
+}
 .adfgx-columns {
   white-space: nowrap;
   overflow-x: auto;
@@ -71,9 +74,6 @@
   background-color: #000;
   color: #fff;
 }
-.adfgx-cell {
-  padding: 2px
-}
 
 /*
 
@@ -116,9 +116,6 @@
   display: inline-block;
   width: 22px;
   margin-right: 4px;
-}
-.adfgx-subst-src {
-  display: inline-block;
 }
 .adfgx-subst-freq {
   line-height: 45px;
