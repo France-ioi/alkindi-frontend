@@ -37,6 +37,9 @@ else:
 # images
 copytree('../images', os.path.join(target, 'images'))
 
+# adfgx
+copytree('../src/adfgx/assets', os.path.join(target, 'adfgx'))
+
 # bootstrap
 print("copying bootstrap assets")
 bootstrap_dir = os.path.join(target, 'bootstrap')
