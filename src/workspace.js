@@ -17,7 +17,6 @@ export const WorkspaceManager = function () {
 
   const setWorkspace = function (newWorkspace) {
     workspace = newWorkspace;
-    console.log('workspace changed', newWorkspace);
     emitter.emit('changed', newWorkspace);
   };
 

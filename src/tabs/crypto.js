@@ -89,19 +89,16 @@ export const CryptoTab = EpicComponent(self => {
     // If we have a workspace, leave it unchanged.
     if (crypto.workspace !== undefined) {
       self.setState({loading: false});
-      console.log('already have a workspace, leaving it alone');
       return;
     }
     // If there is no current revision, set up the task.
     if (revisionId === undefined) {
-      console.log('setting up the initial workspace');
       manager.clear();
       Tasks[task.front].setupTools(manager);
       self.setState({loading: false});
       return;
     }
     // Load the revision from the backend.
-    console.log('loading revision', revisionId, 'from the backend');
     self.props.api.loadRevision(revisionId).then(
       function (result) {
         const revision = result.workspace_revision;
