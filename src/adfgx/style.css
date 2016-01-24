@@ -155,15 +155,16 @@
   height: 45px;
   vertical-align: bottom;
 }
-.adfgx-freq-label-symb-src {
+.adfgx-freq-label-symb-src span {
   vertical-align: middle;
+  height: 40px;
 }
 .adfgx-freq-label-symb-tgt span {
-  height: 22px;
+  height: 28px;
   vertical-align: middle;
 }
 .adfgx-freq-label-freq-tgt span {
-  height: 45px;
+  padding-top: 6px;
   vertical-align: top;
 }
 
@@ -193,18 +194,27 @@
 .adfgx-subst-tgt .adfgx-subst-freq span {
   vertical-align: top;
 }
-.adfgx-subst-char {
-  border: 1px solid #000;
+.adfgx-subst-src .adfgx-subst-chars {
+  margin: 6px 0;
+  display: block;
+}
+.adfgx-subst-src .adfgx-subst-chars span {
   display: block;
   text-align: center;
-  padding: 3px;
+  line-height: 1;
+}
+.adfgx-subst-tgt {
+  cursor: move;
+  margin-top: 3px;
 }
 .adfgx-subst-tgt:hover {
   background: #eee;
 }
-.adfgx-subst-tgt {
-  cursor: move;
-  min-height: 60px;
+.adfgx-subst-tgt .adfgx-subst-char {
+  border: 1px solid #000;
+  display: block;
+  text-align: center;
+  padding: 3px;
 }
 .adfgx-subst-tgt-frequency {
   display: block;
