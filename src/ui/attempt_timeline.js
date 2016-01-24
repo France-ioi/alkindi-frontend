@@ -58,7 +58,7 @@ export default PureComponent(self => {
     // If the team is already locked, no confirmation is asked.
     if (!team.is_locked && !window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
       return;
-    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez 60 minutes pour le resoudre."))
+    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez "+attempt.duration+" minutes pour le resoudre."))
       return;
     Alkindi.api.assignAttemptTask(user.id);
   };
@@ -176,7 +176,7 @@ export default PureComponent(self => {
               </div>
             : <div className="section">
                 <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-                   accéder au sujet, vous aurez alors {'60'} minutes
+                   accéder au sujet, vous aurez alors {attempt.duration} minutes
                    pour le résoudre.
                 </p>
               </div>}
