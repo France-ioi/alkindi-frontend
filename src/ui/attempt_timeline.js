@@ -346,8 +346,8 @@ export default PureComponent(self => {
     return renderAttemptFinished(attempt);
   };
 
-  const renderBody = function (attempt) {
-    if (!attempt.is_training_open)
+  const renderBody = function (round, attempt) {
+    if (!round.is_training_open)
       return renderRoundNotOpen();
     if (attempt.is_current)
       return renderCurrentAttempt(attempt);
@@ -357,7 +357,7 @@ export default PureComponent(self => {
   };
 
   self.render = function () {
-    const {attempt} = self.props;
+    const {round, attempt} = self.props;
     const classes = ["timeline", attempt.is_current && 'timelineCurrent'];
     return (
       <div className={classnames(classes)}>
@@ -383,7 +383,7 @@ export default PureComponent(self => {
             </span>
           </div>
         </div>
-        {renderBody(attempt)}
+        {renderBody(round, attempt)}
       </div>);
   };
 
