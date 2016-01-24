@@ -142,13 +142,13 @@ export const AnswerDialog = PureComponent(self => {
 
    const onSubmit = function () {
       self.props.submit({
-         a: city.value, n1: refMetal1.value, n2: refMetal2.value, n3: refMetal3.value
+         c: city.value, m1: metal1.value, m2: metal2.value, m3: metal3.value
       });
    };
 
    self.componentDidMount = function () {
       // When the component mounts, select the first input box.
-      address && address.focus();
+      city && city.focus();
    };
 
 
