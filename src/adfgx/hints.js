@@ -35,15 +35,14 @@ export const Component = EpicComponent(self => {
 
    self.render = function() {
       const {outputSubstitutionVariable, outputPermutationVariable} = self.props.toolState;
-      const {hintsGrid, getQueryCost} = self.props.scope;
+      const {outputSubstitution, outputPermutation, getQueryCost} = self.props.scope;
       const inputVars = [];
       const outputVars = [
          {label: "Substitution", name: outputSubstitutionVariable},
          {label: "Permutation", name: outputPermutationVariable}
       ];
-      const grid = hintsGrid.split('\n').map(row => row.split(''));
       const renderCell = function (c) {
-         return c === ' ' ? 'None' : '\'' + c + '\'';
+         return 'l' in c ? c.l : 'None';
       };
       return (
          <div className='panel panel-default'>
@@ -51,7 +50,7 @@ export const Component = EpicComponent(self => {
                <span className='code'>
                   <Python.Assign>
                      <Python.Var name={outputSubstitutionVariable}/>
-                     <Python.Grid grid={grid} renderCell={renderCell}/>
+                     <Python.Grid grid={outputSubstitution} renderCell={renderCell}/>
                   </Python.Assign>
                </span>
             </div>
@@ -67,7 +66,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>Cliquez sur une case de la grille pour demander quelle lettre elle contient.</p>}/>
                      </p>
-                     {renderGrid()}
+                     {renderGrid(outputSubstitution)}
                   </div>
                   <div className='adfgx-hints-alphabet'>
                      <p>
@@ -76,7 +75,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>Cliquer sur une lettre non grisée ci-dessous pour demander sa position au sein de la grille.</p>}/>
                      </p>
-                     {renderAlphabet()}
+                     {renderAlphabet(outputSubstitution)}
                   </div>
                   <p className='hints-section-title'>Des indices sur la permutation :</p>
                   <div className='adfgx-hints-perm-forward'>
@@ -86,7 +85,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     {renderPermForward()}
+                     {renderPermForward(outputPermutation)}
                   </div>
                   <div className='adfgx-hints-perm-backward'>
                      <p>
@@ -95,7 +94,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     {renderPermBackward()}
+                     {renderPermBackward(outputPermutation)}
                   </div>
                </div>
             </div>
@@ -106,8 +105,12 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   scope.outputSubstitution = []; // TODO
-   scope.outputPermutation = [{q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}, {q:'unknown'}];
+   const {substitutionGridHints, permutationHints} = scope;
+   scope.outputSubstitution = substitutionGridHints.map(
+      row => row.map(
+         l => l === null ? {q:'unknown'} : {q:'hint',l}));
+   scope.outputPermutation = permutationHints.map(
+      l => l === null ? {q:'unknown'} : {q:'hint',l});
 };
 
 export default self => {
