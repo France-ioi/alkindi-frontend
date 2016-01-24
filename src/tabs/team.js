@@ -36,7 +36,7 @@ const TeamTab = PureComponent(self => {
   const renderTeamQualified = function () {
     return (
       <p>
-        Félicitation, votre équipe est qualifiée grâce à sa participation
+        Félicitations, votre équipe est qualifiée grâce à sa participation
         au tour précédent.
       </p>
     );
