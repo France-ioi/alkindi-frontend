@@ -114,6 +114,22 @@ export default PureComponent(self => {
     );
   };
 
+  const renderRoundNotOpen = function () {
+    const {round} = self.props;
+    return (
+      <div>
+        {renderTimeline('start')}
+        <div className="timelineInfo">
+          <div className="timelineInfoContent">
+            <Alert bsStyle='success'>
+              L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
+            </Alert>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderAttemptNotCreated = function (attempt) {
     return (
       <div>
@@ -164,26 +180,6 @@ export default PureComponent(self => {
                    pour le résoudre.
                 </p>
               </div>}
-            {renderCancelAttempt(attempt)}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderAttemptNotOpen = function (attempt) {
-    const {round} = self.props;
-    return (
-      <div>
-        {renderTimeline('unlock')}
-        <div className="timelineInfo">
-          <div className="timelineInfoContent">
-            <p>Votre équipe a confirmé l'accès au sujet, vous êtes
-               prêts à commencer dès l'ouverture de l'épreuve.
-            </p>
-            <Alert bsStyle='success'>
-              L'accès au sujet sera ouvert le {new Date(round.training_opens_at).toLocaleString()}.
-            </Alert>
             {renderCancelAttempt(attempt)}
           </div>
         </div>
@@ -343,8 +339,6 @@ export default PureComponent(self => {
       return renderAttemptNotCreated(attempt);
     if (!attempt.started_at && attempt.needs_codes)
       return renderAttemptNotConfirmed(attempt);
-    if (!attempt.is_training_open) // XXX rename is_open
-      return renderAttemptNotOpen(attempt);
     if (!attempt.has_task)
       return renderAttemptNotStarted(attempt);
     if (!attempt.is_closed && !attempt.is_completed)
@@ -353,6 +347,8 @@ export default PureComponent(self => {
   };
 
   const renderBody = function (attempt) {
+    if (!attempt.is_training_open)
+      return renderRoundNotOpen();
     if (attempt.is_current)
       return renderCurrentAttempt(attempt);
     if (attempt.created_at)
