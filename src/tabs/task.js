@@ -1,18 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {PureComponent} from '../misc';
+import EpicComponent from 'epic-component';
+import Tasks from '../tasks';
 
-const TaskTab = PureComponent(self => {
+const TaskTab = EpicComponent(self => {
   self.render = function () {
     const {user_id, round, attempt, task} = self.props;
     if (!round || !attempt || !task)
       return false;
-    const taskUrl = task.url || 'api/users/'+user_id+'/task.html';
+    const Task = Tasks[task.front].Task;
     return (
       <div className="wrapper">
         <h1>{round.title}</h1>
-        <iframe className='task' src={taskUrl} />
+        <Task task={task}/>
       </div>
     );
   };
