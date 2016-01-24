@@ -264,7 +264,7 @@ export const Feedback = EpicComponent(self => {
                            {halfScore}
                         </Alert>
                      </div>)
-             : (feedback.numbers
+             : (feedback.metals
                   ? <div>
                         <Alert bsStyle='warning'>
                            <p>Les trois métaux sont les bons, mais la ville est fausse.</p>
