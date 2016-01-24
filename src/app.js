@@ -34,7 +34,7 @@ export const App = PureComponent(self => {
     if (round.status === 'open')
       return <MainScreen/>;
 
-    if (round.status === 'over')
+    if (round.status === 'over' || round.status === 'closed')
       return <RoundOverScreen/>;
 
     return <p>Cas non prévu.</p>

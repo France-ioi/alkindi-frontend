@@ -20,10 +20,14 @@ const RoundOverScreen = EpicComponent(self => {
         <p>
           {'Le score de votre équipe pour ce tour est : '}{team.score||0}
         </p>
-        <p>
+        {round.status === 'over' && <p>
           Les résultats seront bientôt annoncés, vous pourrez bientôt voir sur
           cette page si votre équipe est qualifiée pour le tour suivant.
-        </p>
+        </p>}
+        {round.status === 'closed' && <div>
+          <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>
+          <p>Merci pour votre participation.</p>
+        </div>}
       </div>
     );
   };
