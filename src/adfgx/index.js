@@ -115,22 +115,17 @@ export const setupTools = function (workspace) {
 
 };
 
-export const TabContent = EpicComponent(self => {
-
-   self.render = function () {
-      const {workspace, task} = self.props;
-      const rootScope = {
-         ...task,
-         clearAlphabet,
-         adfgxAlphabet,
-         bigramAlphabet,
-         cipheredText: task.cipher_text,
-         hintsGrid: task.hints
-      };
-      return workspace.render(rootScope);
+export const getRootScope = function (task) {
+   return {
+      ...task,
+      clearAlphabet,
+      adfgxAlphabet,
+      bigramAlphabet,
+      cipheredText: task.cipher_text,
+      substitutionGridHints: task.substitution_grid,
+      permutationHints: task.permutation
    };
-
-});
+};
 
 export const AnswerDialog = EpicComponent(self => {
 

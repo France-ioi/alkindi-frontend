@@ -20,6 +20,7 @@ import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
 import {Api, ApiFactory} from './api';
+import {WorkspaceManager} from './workspace';
 
 // Install a global error handler.
 /*
@@ -194,6 +195,8 @@ window.Alkindi = (function () {
   Alkindi.logout = function () {
     openInLoginWindow(Alkindi.config.logout_url);
   };
+
+  Alkindi.manager = WorkspaceManager();
 
   return Alkindi;
 }());

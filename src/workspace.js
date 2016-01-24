@@ -10,12 +10,19 @@ const defaultMergeState = function (state, update) {
   return {...state, ...update};
 };
 
-export const Workspace = function (getWorkspace, setWorkspace) {
+export const WorkspaceManager = function () {
 
   const emitter = new EventEmitter();
+  let workspace = {};
+
+  const setWorkspace = function (newWorkspace) {
+    workspace = newWorkspace;
+    console.log('workspace changed', newWorkspace);
+    emitter.emit('changed', newWorkspace);
+  };
 
   const isInitialized = function () {
-    return getWorkspace().tools !== undefined;
+    return workspace.tools !== undefined;
   };
 
   const clear = function () {
@@ -25,7 +32,6 @@ export const Workspace = function (getWorkspace, setWorkspace) {
   };
 
   const addTool = function (factory, wire, initialState) {
-    const workspace = getWorkspace();
     const i = workspace.tools.length;
     const tool = {};
     tool.mergeState = defaultMergeState;
@@ -38,18 +44,15 @@ export const Workspace = function (getWorkspace, setWorkspace) {
   };
 
   const setToolState = function (id, update) {
-    const workspace = getWorkspace();
     const tools = at(id, function (tool) {
       const state = tool.mergeState(tool.state, update);
       return {...tool, state}
     })(workspace.tools);
     setWorkspace({tools});
-    emitter.emit('changed');
   };
 
   const load = function (dump) {
     // Load the tool states from the given dump.
-    const workspace = getWorkspace();
     const tools = workspace.tools.map(function (tool, i) {
       return {...tool, state: dump[i]};
     });
@@ -58,14 +61,12 @@ export const Workspace = function (getWorkspace, setWorkspace) {
 
   const save = function () {
     // Return a dump of the tool states that can be stored and passed to load.
-    const workspace = getWorkspace();
     return workspace.tools.map(function (tool) {
       return {state: tool.state};
     });
   };
 
   const render = function (rootScope) {
-    const workspace = getWorkspace();
     const scopes = [];
     const renderTool = function (tool, i) {
       const {wire, compute, Component, state, setState} = tool;
@@ -78,7 +79,6 @@ export const Workspace = function (getWorkspace, setWorkspace) {
     return <div>{workspace.tools.map(renderTool)}</div>;
   };
 
-  const workspace = {isInitialized, clear, addTool, load, save, render, emitter};
-  setWorkspace(workspace);
-  return workspace;
+  return {isInitialized, clear, addTool, load, save, render, emitter};
+
 };

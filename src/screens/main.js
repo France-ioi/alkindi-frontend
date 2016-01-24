@@ -9,7 +9,7 @@ import CountdownTimer from '../ui/countdown_timer';
 import TeamTab from '../tabs/team';
 import AttemptsTab from '../tabs/attempts';
 import TaskTab from '../tabs/task';
-import {Tab as PlayFairTab} from '../playfair';
+import CryptoTab from '../tabs/crypto';
 import HistoryTab from '../tabs/history';
 import AnswersTab from '../tabs/answers';
 import * as actions from '../actions';
@@ -36,13 +36,13 @@ export const MainScreen = PureComponent(self => {
         content = <TaskTab round={self.props.round} attempt={self.props.attempt} task={self.props.task} />;
         break;
       case 'cryptanalysis':
-        content = <PlayFairTab/>;
+        content = <CryptoTab api={Alkindi.api} manager={Alkindi.manager} user_id={user_id} task={self.props.task}/>;
         break;
       case 'history':
-        content = <HistoryTab attempt={self.props.attempt}/>;
+        content = <HistoryTab api={Alkindi.api} attempt={self.props.attempt}/>;
         break;
       case 'answers':
-        content = <AnswersTab user_id={user_id} attempt={self.props.attempt}/>;
+        content = <AnswersTab api={Alkindi.api} user_id={user_id} attempt={self.props.attempt}/>;
         break;
     }
     return (
@@ -63,9 +63,9 @@ export const MainScreen = PureComponent(self => {
 });
 
 export const selector = function (state) {
-  const {activeTabKey, enabledTabs, response, countdown, frontendUpdate} = state;
+  const {activeTabKey, enabledTabs, response, countdown, frontendUpdate, crypto} = state;
   const {user, round, attempt, task} = state.response;
-  return {activeTabKey, enabledTabs, user_id: user.id, round, attempt, task, countdown, frontendUpdate};
+  return {activeTabKey, enabledTabs, user_id: user.id, round, attempt, task, countdown, frontendUpdate, crypto};
 };
 
 export default connect(selector)(MainScreen);
