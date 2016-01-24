@@ -92,8 +92,10 @@ export const Component = EpicComponent(self => {
             <div key={bigram.l} className='adfgx-subst-pair'>
                <div className='adfgx-subst-src'>
                   <span className='adfgx-subst-freq' title={(bigram.p * 100).toFixed(1)+'%'}><span style={{height: (bigram.p * barScale).toFixed(1)+'px'}}></span></span>
-                  <span>{symbol[0]}</span>
-                  <span>{symbol[1]}</span>
+                  <span className='adfgx-subst-chars'>
+                     <span>{symbol[0]}</span>
+                     <span>{symbol[1]}</span>
+                  </span>
                </div>
                <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} barScale={barScale} onDrop={onDrop} />
             </div>
