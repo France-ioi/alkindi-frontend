@@ -176,7 +176,9 @@ const TeamTab = PureComponent(self => {
     // The tab gets rendered when the user leaves a team?
     if (team === undefined)
       return false;
-    const teamUnlocked = !team.is_locked;
+    const allowTeamChanges = round.allow_team_changes;
+    const teamHasCode = team.code !== null;
+    const teamUnlocked = allowTeamChanges && !team.is_locked;
     const teamAdmin = team.creator.id === user.id;
     const teamInvalid = team.is_invalid.length > 0;
     return (
@@ -186,15 +188,15 @@ const TeamTab = PureComponent(self => {
           {' '}
           <RefreshButton/>
         </div>
-        <Notifier emitter={Alkindi.api.emitter}/>
+        <Notifier emitter={Alkindi.api.emitter} request={{}}/>
         <h1>{round.title}</h1>
         {renderTeamMembers(team)}
         {team.is_invalid
           ? renderInvalidTeam(team.round_access)
           : renderValidTeam()}
-        {team.is_open ? renderTeamCode(team) : renderTeamClosed()}
-        {teamAdmin && renderAdminControls(team)}
-        {teamUnlocked && renderLeaveTeam()}
+        {teamHasCode && (team.is_open ? renderTeamCode(team) : renderTeamClosed())}
+        {teamHasCode && teamAdmin && renderAdminControls(team)}
+        {allowTeamChanges && teamUnlocked && renderLeaveTeam()}
       </div>
     );
   };
