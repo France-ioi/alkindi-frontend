@@ -3,8 +3,8 @@ const options = {
   template: '{}'
 };
 
-export const image_url = function (path) {
-  return options.template.replace('{}', 'images/' + path);
+export const asset_url = function (path) {
+  return options.template.replace('{}', path);
 };
 
 export const configure = function (newOptions) {

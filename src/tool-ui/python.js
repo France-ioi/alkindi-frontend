@@ -60,7 +60,6 @@ export const Grid = PureComponent(self => {
       if (!grid) {
          return <span className="code-error">(bad grid)</span>;
       }
-      console.log('grid', '<', grid, '>');
       let strPython = "[";
       for (let i = 0; i < grid.length; i++) {
          if (i !== 0)
