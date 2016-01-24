@@ -199,7 +199,7 @@ window.Alkindi = (function () {
     openInLoginWindow(Alkindi.config.logout_url);
   };
 
-  Alkindi.manager = WorkspaceManager();
+  Alkindi.manager = WorkspaceManager(store);
 
   return Alkindi;
 }());

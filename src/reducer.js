@@ -141,8 +141,6 @@ const actualReduce = function (state, action) {
       return reduceTick(state);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
-    case 'SET_CRYPTO':
-      return {...state, crypto: action.crypto};
     case 'USE_REVISION':
       return reduceUseRevision(state, action.revision_id);
     default:

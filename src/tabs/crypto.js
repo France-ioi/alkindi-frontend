@@ -11,12 +11,13 @@ import Tasks from '../tasks';
 export const CryptoTab = EpicComponent(self => {
 
   const saveState = function () {
-    const {user_id, crypto, manager} = self.props;
+    const {user_id, manager, workspace} = self.props;
+    const {saving} = self.state;
     // Silently ignore the request if a save operation is pending.
-    if (crypto.saving)
+    if (saving)
       return;
     // Remind the user that there are no changes that need to be saved.
-    if (!crypto.changed) {
+    if (!workspace.changed) {
       alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
       return;
     }
@@ -73,21 +74,14 @@ export const CryptoTab = EpicComponent(self => {
     </p>
   );
 
-  const onWorkspaceChanged = function (workspace) {
-    self.setState({workspace});
-  };
-
   self.state = {
-    loading: true,
-    workspace: undefined
+    loading: true
   };
 
   self.componentWillMount = function () {
-    const {task, manager, revisionId} = self.props;
-    const {workspace} = self.state;
-    manager.emitter.on('changed', onWorkspaceChanged);
+    const {task, manager, workspace, revisionId} = self.props;
     // If we have a workspace, leave it unchanged.
-    if (crypto.workspace !== undefined) {
+    if (manager.isInitialized()) {
       self.setState({loading: false});
       return;
     }
@@ -113,14 +107,9 @@ export const CryptoTab = EpicComponent(self => {
     );
   };
 
-  self.componentWillUnmount = function () {
-    const {manager} = self.props;
-    manager.emitter.removeListener('changed', onWorkspaceChanged);
-  };
-
   self.render = function () {
-    const {api, user_id, task, crypto, manager} = self.props;
-    const {loading, workspace} = self.state;
+    const {api, user_id, task, crypto, manager, workspace} = self.props;
+    const {loading} = self.state;
     if (loading || workspace === undefined)
       return (
         <div>
@@ -164,8 +153,8 @@ export const CryptoTab = EpicComponent(self => {
 });
 
 export const selector = function (state) {
-  const {crypto} = state;
-  return {crypto};
+  const {crypto, workspace} = state;
+  return {crypto, workspace};
 };
 
 export default connect(selector)(CryptoTab);

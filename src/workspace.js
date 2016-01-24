@@ -10,17 +10,21 @@ const defaultMergeState = function (state, update) {
   return {...state, ...update};
 };
 
-export const WorkspaceManager = function () {
+export const WorkspaceManager = function (store) {
 
   const emitter = new EventEmitter();
-  let workspace = {};
 
-  const setWorkspace = function (newWorkspace) {
-    workspace = newWorkspace;
-    emitter.emit('changed', newWorkspace);
+  const setWorkspace = function (workspace) {
+    store.dispatch({type: 'SET_WORKSPACE', workspace});
+  };
+
+  const getWorkspace = function () {
+    const state = store.getState();
+    return state.workspace || {};
   };
 
   const isInitialized = function () {
+    const workspace = getWorkspace();
     return workspace.tools !== undefined;
   };
 
@@ -31,6 +35,7 @@ export const WorkspaceManager = function () {
   };
 
   const addTool = function (factory, wire, initialState) {
+    const workspace = getWorkspace();
     const i = workspace.tools.length;
     const tool = {};
     tool.mergeState = defaultMergeState;
@@ -38,28 +43,34 @@ export const WorkspaceManager = function () {
     tool.wire = wire;
     tool.state = initialState;
     tool.setState = setToolState.bind(null, i);
-    setWorkspace({tools: at(i, put(tool))(workspace.tools)});
+    setWorkspace({
+      tools: at(i, put(tool))(workspace.tools),
+      changed: true
+    });
     return i;
   };
 
   const setToolState = function (id, update) {
+    const workspace = getWorkspace();
     const tools = at(id, function (tool) {
       const state = tool.mergeState(tool.state, update);
       return {...tool, state}
     })(workspace.tools);
-    setWorkspace({tools});
+    setWorkspace({tools, changed: true});
   };
 
   const load = function (dump) {
     // Load the tool states from the given dump.
+    const workspace = getWorkspace();
     const tools = workspace.tools.map(function (tool, i) {
       return {...tool, state: dump[i]};
     });
-    setWorkspace({tools});
+    setWorkspace({tools, changed: false});
   };
 
   const save = function () {
     // Return a dump of the tool states that can be stored and passed to load.
+    const workspace = getWorkspace();
     return workspace.tools.map(function (tool) {
       return {state: tool.state};
     });
@@ -75,9 +86,10 @@ export const WorkspaceManager = function () {
       compute(state, scope);
       return (<Component key={i} toolState={state} setToolState={setState} scope={scope} />);
     };
+    const workspace = getWorkspace();
     return <div>{workspace.tools.map(renderTool)}</div>;
   };
 
-  return {isInitialized, clear, addTool, load, save, render, emitter};
+  return {getWorkspace, isInitialized, clear, addTool, load, save, render, emitter};
 
 };
