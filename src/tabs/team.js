@@ -33,6 +33,15 @@ const TeamTab = PureComponent(self => {
     });
   };
 
+  const renderTeamQualified = function () {
+    return (
+      <p>
+        Félicitation, votre équipe est qualifiée grâce à sa participation
+        au tour précédent.
+      </p>
+    );
+  };
+
   const renderRoundPrelude = function (round) {
     return (
       <div>
@@ -190,6 +199,7 @@ const TeamTab = PureComponent(self => {
         </div>
         <Notifier emitter={Alkindi.api.emitter} request={{}}/>
         <h1>{round.title}</h1>
+        {team.parent_id && renderTeamQualified()}
         {renderTeamMembers(team)}
         {team.is_invalid
           ? renderInvalidTeam(team.round_access)
