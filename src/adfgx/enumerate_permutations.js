@@ -1,6 +1,7 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
+import {Button} from 'react-bootstrap';
 
 import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
@@ -9,6 +10,28 @@ import {bigramsFromText, coincidenceIndex, generatePermutations,
         numbersAlphabet, getInversePermutation, renderPermutation} from './common';
 
 export const Component = EpicComponent(self => {
+
+   let tbody, tr;
+
+   const refTbody = function (element) {
+      tbody = element;
+      jumpToTr();
+   };
+   const refTr = function (element) {
+      tr = element;
+      jumpToTr();
+   };
+   const jumpToTr = function () {
+      if (!tbody || !tr)
+         return;
+      const trTop = tr.offsetTop;
+      const trBottom = trTop + tr.offsetHeight;
+      const tbodyTop = tbody.scrollTop;
+      const tbodyBottom = tbodyTop + tbody.offsetHeight;
+      console.log(trTop, tbodyBottom, trBottom, tbodyTop);
+      if (trTop > tbodyBottom || trBottom <= tbodyTop + 27)
+         tbody.scrollTop = tr.offsetTop - 27;
+   };
 
    const onSelectPermutation = function (event) {
       const key = event.currentTarget.getAttribute('data-key');
@@ -30,17 +53,18 @@ export const Component = EpicComponent(self => {
    };
 
    self.render = function() {
-      const {selectedPermutationKey, permutationData, showOnlyFavorited,
+      const {selectedPermutationKey, permutationData, showOnlyFavorited, useCoincidenceIndex,
          inputPermutationVariable, inputCipheredTextVariable, outputPermutationVariable} = self.props.toolState;
-      const {selectedPermutation, permutations} = self.props.scope;
+      const {selectedPermutation, permutations, prevPermutation, nextPermutation} = self.props.scope;
       const renderPermutationItem = function (permutation, i) {
-         const classes = ['adfgx-perm', selectedPermutation === permutation && 'adfgx-perm-selected'];
+         const isSelected = selectedPermutation === permutation;
+         const classes = ['adfgx-perm', isSelected && 'adfgx-perm-selected'];
          const favoritedClasses = ['fa', permutation.favorited ? 'fa-toggle-on' : 'fa-toggle-off'];
          return (
-            <tr key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation}>
+            <tr key={i} className={classnames(classes)} data-key={permutation.key} onClick={onSelectPermutation} ref={isSelected&&refTr}>
                <td className='adfgx-col-l'>{renderPermutation(permutation.qualified)}</td>
                <td className='adfgx-col-l'>{renderPermutation(permutation.inverse)}</td>
-               <td className='adfgx-col-m'>{permutation.ci.toFixed(3)}</td>
+               {useCoincidenceIndex && <td className='adfgx-col-m'>{permutation.ci.toFixed(3)}</td>}
                <td className='adfgx-col-s' onClick={onToggleFavorited} data-key={permutation.key}><i className={classnames(favoritedClasses)}/></td>
             </tr>
          );
@@ -72,18 +96,26 @@ export const Component = EpicComponent(self => {
                      <tr>
                         <th className='adfgx-col-l'>permutation</th>
                         <th className='adfgx-col-l'>inverse</th>
-                        <th className='adfgx-col-m'>coïncidence (i)</th>
+                        {useCoincidenceIndex && <th className='adfgx-col-m'>coïncidence (i)</th>}
                         <th className='adfgx-col-s'>retenue</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody ref={refTbody}>
                      {permutations.map(renderPermutationItem)}
                   </tbody>
                </table>
-               <div onClick={onToggleShowOnlyFavorited}>
+               <Button onClick={onToggleShowOnlyFavorited}>
                   <i className={classnames(['fa', 'fa-toggle-' + (showOnlyFavorited ? 'on' : 'off')])}/>
                   {' retenues uniquement'}
-               </div>
+               </Button>
+               <Button onClick={onSelectPermutation} disabled={!prevPermutation} data-key={prevPermutation&&prevPermutation.key}>
+                  <i className={classnames(['fa', 'fa-arrow-up'])}/>
+                  {' permutation précédente'}
+               </Button>
+               <Button onClick={onSelectPermutation} disabled={!nextPermutation} data-key={nextPermutation&&nextPermutation.key}>
+                  <i className={classnames(['fa', 'fa-arrow-down'])}/>
+                  {' permutation suivante'}
+               </Button>
             </div>
          </div>
       );
@@ -92,7 +124,7 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {selectedPermutationKey, permutationInfos, showOnlyFavorited, sortBy} = toolState;
+   const {selectedPermutationKey, permutationInfos, showOnlyFavorited, useCoincidenceIndex, sortBy} = toolState;
    const {inputPermutation, cipheredText, bigramAlphabet} = scope;
    // showOnlyFavorited disabled the generation of permutations.
    let permutations = [];  // {key,qualified,favorited}
@@ -126,11 +158,12 @@ export const compute = function (toolState, scope) {
    permutations.forEach(function (permutation) {
       const permText = applyPermutation(cipheredText, permutation.qualified);
       const bigramText = bigramsFromText(permText);
-      permutation.ci = coincidenceIndex(bigramText);
+      if (useCoincidenceIndex)
+         permutation.ci = coincidenceIndex(bigramText);
       permutation.inverse = getInversePermutation(permutation.qualified);
    });
    // Sort the permutations.
-   if (sortBy === 'ci') {
+   if (useCoincidenceIndex && sortBy === 'ci') {
       permutations.sort(function (p1, p2) {
          const result = p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
             comparePermutations(p1.qualified, p2.qualified));
@@ -143,11 +176,16 @@ export const compute = function (toolState, scope) {
    }
    scope.permutations = permutations;
    // Find the selected permutation (use the first one if not found).
-   let selectedPermutation = permutations.find(function (p) {
-      return p.key == selectedPermutationKey
+   let selectedPermutationIndex = permutations.findIndex(function (p) {
+      return p.key == selectedPermutationKey;
    });
-   if (!selectedPermutation)
-      selectedPermutation = permutations[0];
+   if (selectedPermutationIndex === -1)
+      selectedPermutationIndex = 0;
+   if (selectedPermutationIndex !== 0)
+      scope.prevPermutation = permutations[selectedPermutationIndex - 1];
+   if (selectedPermutationIndex + 1 !== permutations.length)
+      scope.nextPermutation = permutations[selectedPermutationIndex + 1];
+   const selectedPermutation = permutations[selectedPermutationIndex];
    scope.selectedPermutation = selectedPermutation;
    // Output a qualified permutation.
    if (selectedPermutation)

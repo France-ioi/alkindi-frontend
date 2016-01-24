@@ -64,6 +64,7 @@ export const setupTools = function (workspace) {
       scope.inputPermutation = scopes[iHints].outputPermutation;
    }, {
       // sortBy may be 'ci' (coincidence index) or 'key' (permutation-as-string)
+      useCoincidenceIndex: false,
       sortBy: 'ci',
       // selectedPermutationKey is a permutation-as-string, e.g. '012345';
       // if undefined (or if the selected permutation is filtered out), the
