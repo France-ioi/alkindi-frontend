@@ -299,10 +299,10 @@ export const Task = EpicComponent(self => {
    {task.cipher_text}
 
    <p>
-      Votre but de est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'une ville et trois noms d'éléments.
+      Votre but est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'une ville et trois noms de métaux.
    </p>
    <p>
-      Comme pour le tour précédent, vous disposez d'outils pour vous aider, et pouvez obtenir des indices.
+      Comme pour le tour précédent, vous disposez d'outils pour vous aider et pouvez obtenir des indices.
    </p>
    <p>
       Il n'y a plus d'entraînement cette fois, mais vous pouvez effectuer autant de tentatives en temps limité que vous le souhaitez. Pour chaque tentative, vous disposez d'1h30 pour tenter de déchiffrer le message en utilisant le moins d'indices possible.
@@ -314,21 +314,21 @@ export const Task = EpicComponent(self => {
    <h2>Méthode de chiffrement ADFGX</h2>
 
    <p>
-      Votre amie a reconnu la méthode utilisée pour chiffrer le message. Il s'agit du chiffrement ADFGX. Bien sûr vous ne disposez pas de la clé.
+      Votre amie a reconnu la méthode utilisée pour chiffrer le message. Il s'agit du chiffrement ADFGX. Vous ne disposez pas de la clé.
    </p>
    <p>
-      Pour chiffrer et déchiffrer un message avec la méthode ADFGX on doit se munir de :
+      Pour chiffrer et déchiffrer un message avec la méthode ADFGX on doit se munir :
    </p>
    <ol>
       <li>
-         <p>une grille secrète (la clé-grille) : on place toutes les lettres de l'alphabet sauf W dans une grille 5x5 pour laquelle les lignes et les colonnes portent des étiquettes A, D, F, G et X, par exemple :</p>
-         <p className='text-center'><img src={asset_url('adfgx/grille_1.png')} style={{width:'280px'}} title=""/></p>
+         <p>d'une grille secrète (la clé-grille) : on place toutes les lettres de l'alphabet sauf W dans une grille 5x5 pour laquelle les lignes et les colonnes portent des étiquettes A, D, F, G et X, par exemple :</p>
+         <p class="text-center"><img src={asset_url("adfgx/grille_1.png")} style="width:280px" title=""/></p>
       </li>
       <li>
-         <p>une permutation secrète (la clé-permutation) : en mathématiques une permutation de taille n est une faon de réordonner n objets. Voici un exemple de permutation de taille 6 :</p>
-         <p className='text-center'><img src={asset_url('adfgx/permutation_1.png')} style={{width:'400px'}} title=""/></p>
+         <p>d'une permutation secrète (la clé-permutation) : en mathématiques une permutation de taille n est une façon de réordonner n objets. Voici un exemple de permutation de taille 6 :</p>
+         <p class="text-center"><img src={asset_url("adfgx/permutation_1.png")} style="width:400px" title=""/></p>
          <p>Cette permutation est notée en mathématiques :</p>
-         <p className='text-center'><img src={asset_url('adfgx/permutation_maths.png')} style={{width:'150px'}} title=""/></p>
+         <p class="text-center"><img src={asset_url("adfgx/permutation_maths.png")} style="width:150px" title=""/></p>
          <p>En informatique, on la note [4,1,5,2,3,6]. Nous utiliserons la notation informatique dans les outils.</p>
       </li>
    </ol>
@@ -346,12 +346,12 @@ export const Task = EpicComponent(self => {
       <li>
          <p>On cherche chaque lettre du message dans la grille et on la remplace par deux lettres : l'étiquette de sa ligne puis l'étiquette de sa colonne dans la grille.</p>
          <p>Par exemple, dans la grille ci-dessous O est chiffré par DF :</p>
-         <p className='text-center'><img src={asset_url('adfgx/grille_2.png')}  title=""/></p>
+         <p class="text-center"><img src={asset_url("adfgx/grille_2.png")} title=""/></p>
          <p>En appliquant cette procédure sur toutes les lettres de notre message &laquo;AGEORGESPAINVIN&raquo;, il devient &nbsp;&laquo;XXFGADDFAFFGADFADGXXDDXGXDDDXG&raquo;. On appelle ce nouveau texte le message intermédiaire.</p>
       </li>
       <li>
-         <p>On écrit les lettres du message intermédiaire, qui sont uniquement des A, D, F, G et X sur six lignes comme ci-dessous, dans le rectangle de gauche : XXFGAD va sur la première colonne, DFAFFG sur la deuxième et ainsi de suite.</p>
-         <p className='text-center' style={{textAlign: 'center', 'fontFamily': 'monospace', fontSize: '20px'}}>
+         <p>On écrit les lettres du message intermédiaire, qui sont uniquement des A, D, F, G et X sur six lignes comme ci-dessous : XXFGAD va sur la première colonne, DFAFFG sur la deuxième et ainsi de suite.</p>
+         <p style="text-align:center;font-family:monospace;font-size:20px">
             X &nbsp;D &nbsp;A &nbsp;X &nbsp;X<br/>
             X &nbsp;F &nbsp;D &nbsp;X &nbsp;D<br/>
             F &nbsp;A &nbsp;F &nbsp;D &nbsp;D<br/>
@@ -362,13 +362,12 @@ export const Task = EpicComponent(self => {
       </li>
       <li>
          <p>On applique notre permutation en l'inscrivant sur le côté des lignes à gauche, puis en triant les lignes selon ces valeurs. Ainsi pour la permutation [4, 1, 5, 2, 3 6], la 1ère ligne va à la 4e position, la ligne 2 va à la 1ère position, la ligne 3 à la 5e position, la 4e à la 2e position et la 5e à la 3e position, tandis que la 6e reste sur place</p>
-         <p className='text-center'><img src={asset_url('adfgx/permutation_2.png')} title=""/></p>
+         <p class="text-center"><img src={asset_url("adfgx/permutation_2.png")} title=""/></p>
       </li>
       <li>
          <p>
-            On lit ensuite le message ligne par ligne dans la grille obtenue, à droite.<br/>
-            Dans notre exemple on lit donc la 1e ligne XFDXD, puis GFADD, AFDXX, XDAXX, FAFDD et enfin DGGGG, ce qui donne le message chiffré : &laquo;XFDXDGFADDAFDXXXDAXXFAFDDDGGGG&raquo;.
-         </p>
+         On lit ensuite le message ligne par ligne dans la grille obtenue, à droite.<br/>
+         Dans notre exemple on lit donc la 1e ligne XFDXD, puis GFADD, AFDXX, XDAXX, FAFDD et enfin DGGGG, ce qui donne le message chiffré : &laquo;XFDXDGFADDAFDXXXDAXXFAFDDDGGGG&raquo;.</p>
       </li>
    </ol>
    <h2>Déchiffrement</h2>
@@ -379,6 +378,17 @@ export const Task = EpicComponent(self => {
       </li>
       <li>
          <p>permuter les lignes en appliquant la permutation inverse de celle utilisée pour chiffrer. Par exemple la permutation inverse de [4,1,5,2,3,6] est [2,4,5,1,3,6] ;</p>
+         <p>
+         Pour calculer l’inverse d’une permutation, on l’écrit sous la notation mathématique, on échange la rangée de haut et celle de bas et ensuite on trie les colonnes dans l’ordre des valeurs de la rangée qui est maintenant en haut. Par exemple quand on échange la rangée de haut et de bas pour [4,1,5,2,3,6] on trouve
+         </p>
+         <p class="text-center"><img src={asset_url("adfgx/permutation_maths_2.png")} style="width:150px" title=""/></p>
+         <p>
+         et quand on trie les colonnes dans l’ordre des valeurs de la première rangée, on obtient la permutation inverse :
+         </p>
+         <p class="text-center"><img src={asset_url("adfgx/permutation_maths_3.png")} style="width:150px" title=""/></p>
+         <p>
+            ou [2,4,5,1,3,6] en notation informatique ;
+         </p>
       </li>
       <li>
          <p>lire le texte colonne par colonne, ce qui donne le texte intermédiaire ;</p>
