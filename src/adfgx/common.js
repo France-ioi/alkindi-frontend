@@ -25,13 +25,14 @@ export const renderCell = function (key, cell, alphabet) {
    return <span key={key} className={q0}>{c0}</span>;
 };
 
-export const cellsFromString = function (text, alphabet) {
+export const cellsFromString = function (text, alphabet, defaultQ) {
    const cells = [];
    for (let iLetter = 0; iLetter < text.length; iLetter++) {
       const letter = text.charAt(iLetter);
       const rank = alphabet.ranks[letter];
-      if (rank !== undefined)
-         cells.push({l: rank, q: 'unknown'});
+      if (rank !== undefined) {
+         cells.push({l: rank, q: defaultQ});
+      }
    }
    return cells;
 };
@@ -157,12 +158,18 @@ export const getFrequencies = function (text) {
 // Permutation
 //
 
-export const permutationFromString = function (str, alphabet) {
-   return cellsFromString(str, alphabet || numbersAlphabet);
+export const permutationFromString = function (str, refPermutation) {
+   const cells = cellsFromString(str, numbersAlphabet, 'guess');
+   for (let iCell = 0; iCell < cells.length; iCell++) {
+      const cell = cells[iCell];
+      if (refPermutation.q === 'hint' && refPermutation.l == cell.l)
+         cell.q = 'hint';
+   }
+   return cells;
 };
 
-export const permutationToString = function (permutation, alphabet) {
-   cellsToString(permutation, alphabet || numbersAlphabet)
+export const permutationToString = function (permutation) {
+   return cellsToString(permutation, numbersAlphabet);
 };
 
 /**

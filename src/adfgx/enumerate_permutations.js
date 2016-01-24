@@ -28,7 +28,6 @@ export const Component = EpicComponent(self => {
       const trBottom = trTop + tr.offsetHeight;
       const tbodyTop = tbody.scrollTop;
       const tbodyBottom = tbodyTop + tbody.offsetHeight;
-      console.log(trTop, tbodyBottom, trBottom, tbodyTop);
       if (trTop > tbodyBottom || trBottom <= tbodyTop + 27)
          tbody.scrollTop = tr.offsetTop - 27;
    };
@@ -36,6 +35,12 @@ export const Component = EpicComponent(self => {
    const onSelectPermutation = function (event) {
       const key = event.currentTarget.getAttribute('data-key');
       self.props.setToolState({selectedPermutationKey: key})
+   };
+
+   const onSetSortBy = function (event) {
+      const key = event.currentTarget.getAttribute('data-key');
+      console.log('sortBy', key);
+      self.props.setToolState({sortBy: key});
    };
 
    const onToggleFavorited = function (event) {
@@ -53,7 +58,7 @@ export const Component = EpicComponent(self => {
    };
 
    self.render = function() {
-      const {selectedPermutationKey, permutationData, showOnlyFavorited, useCoincidenceIndex,
+      const {selectedPermutationKey, permutationData, showOnlyFavorited, useCoincidenceIndex, sortBy,
          inputPermutationVariable, inputCipheredTextVariable, outputPermutationVariable} = self.props.toolState;
       const {selectedPermutation, permutations, prevPermutation, nextPermutation} = self.props.scope;
       const renderPermutationItem = function (permutation, i) {
@@ -94,9 +99,9 @@ export const Component = EpicComponent(self => {
                <table className='adfgx-table adfgx-table-scroll-body'>
                   <thead>
                      <tr>
-                        <th className='adfgx-col-l'>permutation</th>
-                        <th className='adfgx-col-l'>inverse</th>
-                        {useCoincidenceIndex && <th className='adfgx-col-m'>coïncidence (i)</th>}
+                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='permutation'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='permutation'>permutation</th>
+                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='inverse'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='inverse'>inverse</th>
+                        {useCoincidenceIndex && <th className={classnames(['adfgx-col-m', 'adfgx-col-sort', sortBy==='ci'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='ci'>coïncidence (i)</th>}
                         <th className='adfgx-col-s'>retenue</th>
                      </tr>
                   </thead>
@@ -149,7 +154,7 @@ export const compute = function (toolState, scope) {
          // Add the permutation to the output.
          permutations.push({
             key: key,
-            qualified: permutationFromString(key),
+            qualified: permutationFromString(key, inputPermutation),
             favorited: infos.favorited
          });
       }
@@ -168,6 +173,10 @@ export const compute = function (toolState, scope) {
          const result = p1.ci < p2.ci ? 1 : (p1.ci > p2.ci ? -1 :
             comparePermutations(p1.qualified, p2.qualified));
          return result;
+      });
+   } else if (sortBy === 'inverse') {
+      permutations.sort(function (p1, p2) {
+         return comparePermutations(p1.inverse, p2.inverse);
       });
    } else {
       permutations.sort(function (p1, p2) {

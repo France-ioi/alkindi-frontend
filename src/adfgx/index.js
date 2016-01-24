@@ -65,7 +65,7 @@ export const setupTools = function (workspace) {
    }, {
       // sortBy may be 'ci' (coincidence index) or 'key' (permutation-as-string)
       useCoincidenceIndex: false,
-      sortBy: 'ci',
+      sortBy: 'permutation',
       // selectedPermutationKey is a permutation-as-string, e.g. '012345';
       // if undefined (or if the selected permutation is filtered out), the
       // first permutation displayed is selected.

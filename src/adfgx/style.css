@@ -102,6 +102,13 @@
 .adfgx-table-scroll-body .adfgx-col-s {
   width: 100px;
 }
+.adfgx-table-scroll-body .adfgx-col-sort {
+  cursor: pointer;
+}
+.adfgx-table-scroll-body .adfgx-col-sort-key {
+  font-weight: bold;
+}
+.adfgx-table-scroll-body .adfgx-col-sort:hover,
 .adfgx-table tbody tr:hover {
   background-color: #ccc;
   color: #000;
