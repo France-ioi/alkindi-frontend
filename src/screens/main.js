@@ -1,7 +1,6 @@
 import React from 'react';
+import EpicComponent from 'epic-component';
 import {connect} from 'react-redux';
-
-import {PureComponent} from '../misc';
 
 import Logout from '../ui/logout';
 import Tabs from '../ui/tabs';
@@ -15,7 +14,7 @@ import AnswersTab from '../tabs/answers';
 import * as actions from '../actions';
 import {asset_url} from '../assets';
 
-export const MainScreen = PureComponent(self => {
+export const MainScreen = EpicComponent(self => {
 
    const setActiveTab = function (tabKey) {
      self.props.dispatch(actions.setActiveTab(tabKey));
@@ -23,7 +22,8 @@ export const MainScreen = PureComponent(self => {
 
    self.render = function () {
     // Interface principale...
-    const {activeTabKey, enabledTabs, user_id, countdown, frontendUpdate} = self.props;
+    const {activeTabKey, enabledTabs, user, countdown, frontendUpdate} = self.props;
+    const user_id = user.id;
     let content = false;
     switch (activeTabKey) {
       case 'team':
@@ -64,8 +64,8 @@ export const MainScreen = PureComponent(self => {
 
 export const selector = function (state) {
   const {activeTabKey, enabledTabs, response, countdown, frontendUpdate, crypto} = state;
-  const {user, round, attempt, task} = state.response;
-  return {activeTabKey, enabledTabs, user_id: user.id, round, attempt, task, countdown, frontendUpdate, crypto};
+  const {attempt, task} = state.response;
+  return {activeTabKey, enabledTabs, attempt, task, countdown, frontendUpdate, crypto};
 };
 
 export default connect(selector)(MainScreen);
