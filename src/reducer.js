@@ -141,6 +141,8 @@ const actualReduce = function (state, action) {
       return reduceTick(state);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
+    case 'SET_WORKSPACE':
+      return {...state, workspace: action.workspace};
     case 'USE_REVISION':
       return reduceUseRevision(state, action.revision_id);
     default:
