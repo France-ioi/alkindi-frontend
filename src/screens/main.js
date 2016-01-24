@@ -13,7 +13,7 @@ import {Tab as PlayFairTab} from '../playfair';
 import HistoryTab from '../tabs/history';
 import AnswersTab from '../tabs/answers';
 import * as actions from '../actions';
-import {image_url} from '../assets';
+import {asset_url} from '../assets';
 
 export const MainScreen = PureComponent(self => {
 
@@ -49,7 +49,7 @@ export const MainScreen = PureComponent(self => {
       <div>
         <div id="header">
           <div className="wrapper">
-            <img id="header-logo" src={image_url('alkindi-logo.png')} />
+            <img id="header-logo" src={asset_url('images/alkindi-logo.png')} />
             <Tabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
             <CountdownTimer visible={countdown !== undefined} seconds={Math.round(countdown/1000)}/>
             {frontendUpdate && '*'}
