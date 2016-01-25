@@ -8,12 +8,21 @@ export const OkCancel = PureComponent(self => {
    */
    self.render = function () {
       let {onOk, onCancel} = self.props;
+      if (!onCancel) {
+         return (
+            <div className='text-center'>
+               <button type='button' className='btn-tool' onClick={onOk}>OK</button>
+            </div>
+         );
+      }
       return (
          <div className='text-center'>
             <button type='button' className='btn-tool' onClick={onOk}>Valider</button>
-            &nbsp;&nbsp;&nbsp;
+            {'   '}
             <button type='button' className='btn-tool' onClick={onCancel}>Annuler</button>
          </div>
       );
    };
 });
+
+export default OkCancel;
