@@ -98,8 +98,8 @@ export const Component = EpicComponent(self => {
                <table className='adfgx-table adfgx-table-scroll-body'>
                   <thead>
                      <tr>
-                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='permutation'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='permutation'>permutation</th>
-                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='inverse'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='inverse'>inverse</th>
+                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='permutation'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='permutation'>permutation chiffrage</th>
+                        <th className={classnames(['adfgx-col-l', 'adfgx-col-sort', sortBy==='inverse'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='inverse'>permutation déchiffrage</th>
                         {useCoincidenceIndex && <th className={classnames(['adfgx-col-m', 'adfgx-col-sort', sortBy==='ci'&&'adfgx-col-sort-key'])} onClick={onSetSortBy} data-key='ci'>coïncidence (i)</th>}
                         <th className='adfgx-col-s'>retenue</th>
                      </tr>
