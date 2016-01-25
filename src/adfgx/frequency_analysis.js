@@ -12,7 +12,6 @@ const BareSubstTarget = EpicComponent(self => {
    self.render = function () {
       const {source, target, targetAlphabet, targetFrequency, barScale} = self.props;
       const {isDragging, connectDropTarget, connectDragSource} = self.props;
-      console.log(self.props);
       const isDragTarget = typeof connectDropTarget === 'function';
       const isDragSource = typeof connectDragSource === 'function';
       const targetSymbol = targetAlphabet.symbols[target.l];
