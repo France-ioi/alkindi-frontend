@@ -12,13 +12,22 @@ const BareSubstTarget = EpicComponent(self => {
    self.render = function () {
       const {source, target, targetAlphabet, targetFrequency, barScale} = self.props;
       const {isDragging, connectDropTarget, connectDragSource} = self.props;
+      console.log(self.props);
+      const isDragTarget = typeof connectDropTarget === 'function';
+      const isDragSource = typeof connectDragSource === 'function';
       const targetSymbol = targetAlphabet.symbols[target.l];
-      return connectDropTarget(connectDragSource(
-         <div className={classnames(['adfgx-subst-tgt', isDragging && 'dragging'])}>
+      const classes = ['adfgx-subst-tgt', isDragSource && 'adfgx-draggable', isDragging && 'dragging']
+      let el = (
+         <div className={classnames(classes)}>
             <span className='adfgx-subst-char'>{targetSymbol}</span>
             <span className='adfgx-subst-freq' title={(targetFrequency * 100).toFixed(1)+'%'}><span style={{height: (targetFrequency * barScale).toFixed(1)+'px'}}></span></span>
          </div>
-      ));
+      );
+      if (isDragTarget)
+         el = connectDropTarget(el);
+      if (isDragSource)
+         el = connectDragSource(el);
+      return el;
    };
 });
 
@@ -87,8 +96,10 @@ export const Component = EpicComponent(self => {
       const renderBigramHisto = function (bigram) {
          const targetCell = substitution[bigram.l];
          const symbol = bigramAlphabet.symbols[bigram.l];
+         const isEditable = targetCell.q === 'unknown' || targetCell.q === 'guess';
+         const Target = isEditable ? SubstTarget : BareSubstTarget;
          return (
-            <div key={bigram.l} className='adfgx-subst-pair'>
+            <div key={bigram.l} className={classnames(['adfgx-subst-pair', getQualifierClass(targetCell.q)])}>
                <div className='adfgx-subst-src'>
                   <span className='adfgx-subst-freq' title={(bigram.p * 100).toFixed(1)+'%'}><span style={{height: (bigram.p * barScale).toFixed(1)+'px'}}></span></span>
                   <span className='adfgx-subst-chars'>
@@ -96,7 +107,7 @@ export const Component = EpicComponent(self => {
                      <span>{symbol[1]}</span>
                   </span>
                </div>
-               <SubstTarget source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} barScale={barScale} onDrop={onDrop} />
+               <Target source={bigram} target={targetCell} targetAlphabet={targetAlphabet} targetFrequency={targetFrequencies[targetCell.l]} barScale={barScale} onDrop={onDrop} />
             </div>
          );
       };
@@ -142,8 +153,13 @@ export const compute = function (toolState, scope) {
    const {editedPairs} = toolState;
    // Compute bigram frequencies.
    scope.bigramFreqs = getFrequencies(cipheredText);
-   // Mark symbols in editedPairs as used, other target symbols as unused.
+   // Mark symbols in inputSubstitution and editedPairs as used, other target
+   // symbols as unused.
    const symbolUsed = Array(bigramAlphabet.size).fill(false);
+   inputSubstitution.mapping.forEach(function (cell) {
+      if (cell.l !== undefined)
+         symbolUsed[cell.l] = true;
+   });
    Object.keys(editedPairs).forEach(function (bigram) {
       const rank = targetAlphabet.ranks[editedPairs[bigram]];
       symbolUsed[rank] = true;
@@ -164,8 +180,10 @@ export const compute = function (toolState, scope) {
    });
    // Generate a substitution using editedPairs and filling with the stats.
    let nextUnusedRankPos = 0;
-   const substitution = Array(bigramAlphabet.size);
+   const substitution = inputSubstitution.mapping.slice();
    scope.bigramFreqs.forEach(function (bigram) {
+      if (substitution[bigram.l].q !== 'unknown')
+         return;
       const symbol = bigramAlphabet.symbols[bigram.l];
       let targetRank, qualifier;
       if (symbol in editedPairs) {

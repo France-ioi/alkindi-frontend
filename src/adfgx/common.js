@@ -210,9 +210,10 @@ export const generatePermutations = function (partialPermutation, alphabet) {
    const valuesAvailable = Array(stride).fill(true);
    const curPermutation = Array(stride);
    for (let iPos = 0; iPos < stride; iPos++) {
-      if (partialPermutation[iPos].q !== "unknown") {
-         valuesAvailable[iPos] = false;
-         curPermutation[iPos] = partialPermutation[iPos];
+      const cell = partialPermutation[iPos];
+      if (cell.q !== "unknown") {
+         valuesAvailable[cell.l] = false;
+         curPermutation[iPos] = cell;
       }
    }
    const permutations = [];
@@ -259,11 +260,11 @@ export const comparePermutations = function (p1, p2) {
 export const getInversePermutation = function (permutationCells) {
    const inversePermutation = [];
    for (let iCell = 0; iCell < permutationCells.length; iCell++) {
-      inversePermutation[iCell] = { q: "unknown" };
+      inversePermutation[iCell] = {q: "unknown"};
    }
    for (let iCell = 0; iCell < permutationCells.length; iCell++) {
       const cell = permutationCells[iCell];
-      if (cell.q !== "unknown") {
+      if (cell.l !== undefined) {
          inversePermutation[cell.l].l = iCell;
          inversePermutation[cell.l].q = cell.q;
       }

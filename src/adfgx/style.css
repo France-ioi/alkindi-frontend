@@ -13,6 +13,13 @@
   padding: 2px
 }
 
+.adfgx-q-guess {
+  background-color: #eee;
+}
+.adfgx-q-hint {
+  background-color: #aaa;
+}
+
 /*
 
   Tool hints
@@ -209,11 +216,15 @@
   line-height: 1;
 }
 .adfgx-subst-tgt {
-  cursor: move;
   margin-top: 3px;
 }
-.adfgx-subst-tgt:hover {
-  background: #eee;
+.adfgx-q-unconfirmed .adfgx-subst-tgt,
+.adfgx-q-guess .adfgx-subst-tgt {
+  cursor: move;
+}
+.adfgx-q-guess .adfgx-subst-tgt:hover,
+.adfgx-q-unconfirmed .adfgx-subst-tgt:hover {
+  background: #ccc;
 }
 .adfgx-subst-tgt .adfgx-subst-char {
   border: 1px solid #000;

@@ -52,6 +52,8 @@ export const setupTools = function (workspace) {
    });
 
    const iHints = workspace.addTool(Hints, function (scopes, scope) {
+      scope.bigramAlphabet = bigramAlphabet;
+      scope.clearAlphabet = clearAlphabet;
       // scope.outputPermutation
       // scope.outputSubstitution
    }, {

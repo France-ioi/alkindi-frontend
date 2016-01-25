@@ -114,10 +114,21 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {substitutionGridHints, permutationHints} = scope;
-   scope.outputSubstitution = substitutionGridHints.map(
-      row => row.map(
-         l => l === null ? {q:'unknown'} : {q:'hint',l}));
+   // Substitution
+   const {substitutionGridHints, bigramAlphabet, clearAlphabet} = scope;
+   const mapping = [];
+   substitutionGridHints.forEach(function (row, i) {
+      row.forEach(function (l, j) {
+         mapping.push(l === null ? {q:'unknown'} : {q:'hint',l});
+      })
+   });
+   scope.outputSubstitution = {
+      mapping,
+      sourceAlphabet: bigramAlphabet,
+      targetAlphabet: clearAlphabet
+   };
+   // Permutation
+   const {permutationHints} = scope;
    scope.outputPermutation = permutationHints.map(
       l => l === null ? {q:'unknown'} : {q:'hint',l});
 };

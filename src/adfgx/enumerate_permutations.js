@@ -120,6 +120,12 @@ export const Component = EpicComponent(self => {
                   <i className={classnames(['fa', 'fa-arrow-down'])}/>
                   {' permutation suivante'}
                </Button>
+               <div>
+                  {'Permutation '}
+                  {permutations.indexOf(selectedPermutation) + 1}
+                  {' / '}
+                  {permutations.length}
+               </div>
             </div>
          </div>
       );
@@ -130,7 +136,7 @@ export const Component = EpicComponent(self => {
 export const compute = function (toolState, scope) {
    const {selectedPermutationKey, permutationInfos, showOnlyFavorited, useCoincidenceIndex, sortBy} = toolState;
    const {inputPermutation, cipheredText, bigramAlphabet} = scope;
-   // showOnlyFavorited disabled the generation of permutations.
+   // showOnlyFavorited disables the generation of permutations.
    let permutations = [];  // {key,qualified,favorited}
    const permutationMap = {};  // key → {key,qualified,favorited}
    if (!showOnlyFavorited) {
