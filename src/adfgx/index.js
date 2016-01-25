@@ -283,6 +283,7 @@ export const Task = EpicComponent(self => {
 
    self.render = function () {
       const {task} = self.props;
+      const lines = task.cipher_text.match(/.{1,40}/g);
       return (<div>
 
    <p>
@@ -291,7 +292,9 @@ export const Task = EpicComponent(self => {
    <p>
    Voici le texte du message :
    </p>
-   {task.cipher_text}
+   <div className="y-scrollBloc adfgx-text" style={{width:'480px',margin:'0 auto 15px'}}>
+      {lines.map((line, i) => <div key={i} className="adfgx-line">{line}</div>)}
+   </div>
 
    <p>
       Votre but est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'une ville et trois noms de métaux.
