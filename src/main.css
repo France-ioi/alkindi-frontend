@@ -87,6 +87,19 @@ table input:focus {
 #pageFooter .wrapper {
   padding: 0 10px;
 }
+
+.epic-fail {
+  font-size: 14px;
+  color: #000;
+  background: #ff8;
+  border: 2px solid #f00;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 400px;
+  overflow: hidden;
+  font-weight: bold;
+}
+
 /* radio buttons with hanging labels */
 .radio-label {
   display: inline-block;
