@@ -121,12 +121,12 @@ const HistoryTab = EpicComponent(self => {
 });
 
 const selector = function (state) {
-  const {crypto, attempt} = state;
+  const {workspace, attempt} = state;
   const {revisions, users, workspaces} = state.response;
   return {
     attempt_id: attempt.id,
-    cryptoChanged: crypto.changed,
-    currentRevisionId: crypto.revisionId,
+    cryptoChanged: workspace.changed,
+    currentRevisionId: workspace.revisionId,
     revisions, users, workspaces
   };
 };
