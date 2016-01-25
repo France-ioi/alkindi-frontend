@@ -108,18 +108,18 @@ const AttemptsTab = PureComponent(self => {
         </div>
         <Notifier emitter={Alkindi.api.emitter}/>
         <h1>{round.title}</h1>
-        {typeof score === 'number'
-        ? <p className="team-score">
-            Score actuel de l'équipe (meilleur score parmi les épreuves
-            en temps limité) : <span className="team-score">{score}</span>.
-          </p>
-        : (noTraining &&
-            <p>
-              Pour ce tour, il n'y a pas d'épreuve d'entraînement.
-              Vous pouvez faire autant de tentatives en temps limité que
-              vous le souhaitez.
-              Votre score sera celui de la meilleure de vos tentatives.
-            </p>)}
+        {noTraining &&
+          <p>
+            Pour ce tour, il n'y a pas d'épreuve d'entraînement.
+            Vous pouvez faire autant de tentatives en temps limité que
+            vous le souhaitez.
+            Votre score sera celui de la meilleure de vos tentatives.
+          </p>}
+        {score &&
+          <p className="team-score">
+              Score actuel de l'équipe (meilleur score parmi les épreuves
+              en temps limité) : <span className="team-score">{score}</span>.
+            </p>}
         {codeEntry && renderCodeEntry()}
         {attempts &&
           <div className="attempts">
