@@ -99,15 +99,15 @@ export const Alphabet = EpicComponent(self => {
          );
       };
       const renderRow = function (row) {
-         return (
-            <table key={row} className='adfgx-alphabet'>
-               <tbody>
-                  <tr>{range(0, 13).map(col => renderCell(row * 13 + col))}</tr>
-               </tbody>
-            </table>
-         );
+         return <tr key={row}>{range(0, 13).map(col => renderCell(row * 13 + col))}</tr>;
       };
-      return <div>{renderRow(0)}{renderRow(1)}</div>;
+      return (
+         <table className='adfgx-alphabet'>
+            <tbody>
+               {renderRow(0)}{renderRow(1)}
+            </tbody>
+         </table>
+      );
    };
 
 });
