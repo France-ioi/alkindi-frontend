@@ -42,8 +42,8 @@ export const App = EpicComponent(self => {
 
 export const selector = function (state) {
   const {user, team, round} = state.response;
-  const {crypto} = state; // XXX clean up
-  const changed = crypto && crypto.changed;
+  const {workspace} = state; // XXX clean up
+  const changed = workspace && workspace.changed;
   return {user, team, round, changed};
 };
 
