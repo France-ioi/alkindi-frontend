@@ -49,14 +49,6 @@ const BareDemo = EpicComponent(self => {
 
    self.state = {};
 
-   self.componentWillMount = function () {
-      self.props.manager.emitter.on('changed', onWorkspaceChanged);
-   };
-
-   self.componentWillUnmount = function () {
-      self.props.manager.emitter.removeListener('changed', onWorkspaceChanged);
-   };
-
    self.render = function () {
       const {task, manager} = self.props;
       const taskApi = {...task, getQueryCost, getHint};
@@ -76,6 +68,8 @@ const reducer = function (state, action) {
    switch (action.type) {
       case '@@redux/INIT':
          return {task: initialTask};
+      case 'SET_WORKSPACE':
+         return {...state, workspace: action.workspace};
       default:
          throw action;
    }
@@ -85,7 +79,7 @@ const reducer = function (state, action) {
 const store = createStore(reducer);
 
 // Workspace setup.
-const manager = WorkspaceManager();
+const manager = WorkspaceManager(store);
 manager.clear();
 Adfgx.setupTools(manager);
 
