@@ -95,11 +95,10 @@ export const setupTools = function (workspace) {
       scope.targetFrequencies = referenceLetterFrequencies;
       scope.cipheredText = scopes[iApplyPermutation].outputText;
       scope.permutation = scopes[iEnumeratePermutations].outputPermutation;
-      scope.substitution = scopes[iHints].outputSubstitution;
+      scope.inputSubstitution = scopes[iHints].outputSubstitution;
    }, {
       editedPairs: {}, // ex. {'AD': 'E'}
       inputTextVariable: 'texteAprèsPermutation',
-      inputPermutationVariable: 'permutationCourante',
       inputSubstitutionVariable: 'substitutionIndices',
       outputSubstitutionVariable: 'substitutionÉditée'
    });

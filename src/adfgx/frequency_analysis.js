@@ -73,14 +73,13 @@ export const Component = EpicComponent(self => {
    };
 
    self.render = function() {
-      const {inputTextVariable, inputPermutationVariable, inputSubstitutionVariable, outputSubstitutionVariable} = self.props.toolState;
+      const {inputTextVariable, inputSubstitutionVariable, outputSubstitutionVariable} = self.props.toolState;
       const {bigramFreqs, bigramAlphabet, targetAlphabet, outputSubstitution, targetFrequencies} = self.props.scope;
       const substitution = outputSubstitution.mapping;
       const barScale = 42 / Math.max.apply(null, targetFrequencies);
       const inputVars = [
          {label: "Texte chiffré", name: inputTextVariable},
-         {label: "Substitution d'entrée", name: inputSubstitutionVariable},
-         {label: "Permutation d'entrée", name: inputPermutationVariable}
+         {label: "Substitution d'entrée", name: inputSubstitutionVariable}
       ];
       const outputVars = [
          {label: "Substitution", name: outputSubstitutionVariable}
@@ -139,7 +138,7 @@ export const Component = EpicComponent(self => {
 });
 
 export const compute = function (toolState, scope) {
-   const {targetAlphabet, bigramAlphabet, cipheredText, targetFrequencies} = scope;
+   const {targetAlphabet, bigramAlphabet, cipheredText, targetFrequencies, inputSubstitution} = scope;
    const {editedPairs} = toolState;
    // Compute bigram frequencies.
    scope.bigramFreqs = getFrequencies(cipheredText);
