@@ -69,6 +69,7 @@
 .adfgx-table {
   width: auto;
   float: left;
+  margin-right: 20px;
 }
 .adfgx-table th,
 .adfgx-table td {
@@ -104,6 +105,10 @@
 }
 .adfgx-table-scroll-body .adfgx-col-sort {
   cursor: pointer;
+}
+.adfgx-table-scroll-body .adfgx-col-sort::after {
+  content: " \f0d8";
+  font-family: FontAwesome;
 }
 .adfgx-table-scroll-body .adfgx-col-sort-key {
   font-weight: bold;
