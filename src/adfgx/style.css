@@ -32,7 +32,7 @@
 }
 .hints-section-title {
   font-weight: bold;
-  margin-bottom: 0;
+  margin: 10px 0 0;
 }
 .adfgx-hints-grid,
 .adfgx-hints-alphabet {
@@ -40,9 +40,31 @@
   vertical-align: top;
 }
 .adfgx-hints-grid {
-  margin-right: 45px;
+  width: 33%;
 }
-
+.adfgx-hints-grid p {
+  text-align: center;
+}
+.adfgx-hints-grid table.adfgx-grid {
+  width: auto;
+  border: none;
+  margin: 0 auto;
+}
+.adfgx-hints-grid .adfgx-grid th,
+.adfgx-hints-grid .adfgx-grid td {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+.adfgx-hints-grid .adfgx-grid th {
+  border: none;
+}
+.adfgx-hints-alphabet {
+  width: 66%;
+}
+.adfgx-hints-alphabet p {
+  text-align: center;
+}
 /*
 
   Tool apply permutations
