@@ -63,9 +63,9 @@ export const MainScreen = EpicComponent(self => {
 });
 
 export const selector = function (state) {
-  const {activeTabKey, enabledTabs, response, countdown, frontendUpdate, crypto} = state;
+  const {activeTabKey, enabledTabs, response, countdown, frontendUpdate} = state;
   const {attempt, task} = state.response;
-  return {activeTabKey, enabledTabs, attempt, task, countdown, frontendUpdate, crypto};
+  return {activeTabKey, enabledTabs, attempt, task, countdown, frontendUpdate};
 };
 
 export default connect(selector)(MainScreen);
