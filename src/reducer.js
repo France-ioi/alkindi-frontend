@@ -5,7 +5,7 @@ const initialState = {
   response: {},
   activeTabKey: undefined,
   enabledTabs: {},
-  crypto: {}
+  workspace: {}
 };
 
 const reduceBeginRefresh = function (state, action) {
@@ -41,7 +41,7 @@ const reduceEndRefresh = function (state, action) {
   // Clear the crypto tab when the current attempt changes.
   const attempt = newState.attempt;
   if (state.attempt && state.attempt.id !== current_attempt_id) {
-    newState.crypto = {};
+    newState.workspace = {};
   }
   // If the workspace has not been loaded, set the initial revisionId.
   const {workspace} = newState;
