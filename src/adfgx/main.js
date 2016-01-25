@@ -32,7 +32,7 @@ const initialTask = {
 const BareDemo = EpicComponent(self => {
 
    const getQueryCost = function (query) {
-      return 10;
+      return 200;
    };
 
    const getHint = function (query, callback) {
