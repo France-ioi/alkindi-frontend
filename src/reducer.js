@@ -43,10 +43,10 @@ const reduceEndRefresh = function (state, action) {
   if (state.attempt && state.attempt.id !== current_attempt_id) {
     newState.crypto = {};
   }
-  // If the crypto tab has not been loaded, set the initial revisionId.
-  const {crypto} = newState;
-  if (crypto.tools === undefined && response.my_latest_revision_id !== null) {
-    newState.crypto = {revisionId: response.my_latest_revision_id};
+  // If the workspace has not been loaded, set the initial revisionId.
+  const {workspace} = newState;
+  if (workspace === undefined && response.my_latest_revision_id !== null) {
+    newState.workspace = {revisionId: response.my_latest_revision_id};
   }
   return reduceTick(reduceSetActiveTab(newState));
 };
@@ -112,14 +112,10 @@ const reduceSetActiveTab = function (state, tabKey) {
   return {...state, activeTabKey, enabledTabs};
 };
 
-const reduceUseRevision = function (state, revision_id) {
+const reduceUseRevision = function (state, revisionId) {
   return {...state,
     activeTabKey: 'cryptanalysis',
-    crypto: {...state.crypto,
-      tools: undefined,
-      revisionId: revision_id,
-      changed: false
-    }
+    workspace: {revisionId}
   };
 };
 
@@ -141,10 +137,10 @@ const actualReduce = function (state, action) {
       return reduceTick(state);
     case 'SET_ACTIVE_TAB':
       return reduceSetActiveTab(state, action.tabKey);
-    case 'SET_CRYPTO':
-      return {...state, crypto: action.crypto};
+    case 'SET_WORKSPACE':
+      return {...state, workspace: action.workspace};
     case 'USE_REVISION':
-      return reduceUseRevision(state, action.revision_id);
+      return reduceUseRevision(state, action.revisionId);
     default:
       throw 'unhandled action ' + action.type;
   }

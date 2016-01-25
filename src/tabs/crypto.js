@@ -1,90 +1,67 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import EpicComponent from 'epic-component';
 import {Button, ButtonGroup} from 'react-bootstrap';
 
-import {PureComponent} from '../misc';
-import * as actions from '../actions';
-import * as PlayFair from './playfair';
+import Notifier from '../ui/notifier';
+import Tooltip from '../ui/tooltip';
+import RefreshButton from '../ui/refresh_button';
+import Tasks from '../tasks';
 
-const CryptanalysisTab = PureComponent(self => {
-
-  const api = Alkindi.api;
-
-  const changeCrypto = function (func) {
-    const {crypto, dispatch} = self.props;
-    dispatch({
-      type: 'SET_CRYPTO',
-      crypto: func(crypto)
-    });
-  };
-
-  const getToolState = function (i) {
-    return self.props.crypto.tools[i].state
-  };
-
-  const setToolState = function (i, data) {
-    changeCrypto(function (crypto) {
-      return {
-        ...crypto,
-        changed: true,
-        tools: at(i, function (tool) { return {...tool, state: data}; })(crypto.tools)
-      };
-    });
-  };
+export const CryptoTab = EpicComponent(self => {
 
   const saveState = function () {
-    const user_id = self.props.user_id;
-    const {crypto, dispatch} = self.props;
-    const {changed} = crypto;
-    if (!changed) {
+    const {user_id, manager, workspace} = self.props;
+    // Silently ignore the request if a save operation is pending.
+    if (workspace.saving)
+      return;
+    // Remind the user that there are no changes that need to be saved.
+    if (!workspace.changed) {
       alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
       return;
     }
     const data = {
       title: "Révision du " + new Date().toLocaleString(),
-      state: crypto.tools,
-      parent_id: crypto.revisionId
+      state: manager.save(),
+      parent_id: workspace.revisionId
     };
-    changeCrypto(function (crypto) {
-      return {...crypto, changed: false};
-    });
-    api.storeRevision(user_id, data).then(
+    // XXX move this into manager
+    manager.beginSave();
+    self.props.api.storeRevision(user_id, data).then(
       function (result) {
-        changeCrypto(function (crypto) {
-          return {...crypto,
-            changed: false,
-            revisionId: result.revision_id
-          };
-        });
+        manager.endSave(result.revision_id);
       },
       function () {
         // Reset the changed flag to true as the state was not changed.
-        changeCrypto(function (crypto) {
-          return {...crypto, changed: true};
-        });
+        manager.endSave();
       }
     );
   };
 
   const resetState = function () {
     if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
-      changeCrypto(function (crypto) {
-        return {
-          ...crypto,
-          tools: initialTools,
-          revisionId: undefined,
-          changed: false
-        };
-      });
+      setupTaskTools();
     }
+  };
+
+  const setupTaskTools = function () {
+    const {task, manager} = self.props;
+    // XXX move this into manager
+    manager.clear();
+    Tasks[task.front].setupTools(manager);
+    manager.clearChanged();
   };
 
   const getHint = function (query, callback) {
     const user_id = self.props.user_id;
-    api.getHint(user_id, query).then(
+    self.props.api.getHint(user_id, query).then(
       function () { callback(false); },
       callback
     );
+  };
+
+  const getQueryCost = function (query) {
+    return 300;
   };
 
   const saveStateTooltip = (
@@ -105,51 +82,52 @@ const CryptanalysisTab = PureComponent(self => {
     </p>
   );
 
-  // Create the workspace.
-  const workspace = Workspace({getToolState, setToolState});
-  PlayFair.setupTools(workspace.addTool);
+  self.state = {
+    loading: false
+  };
 
   self.componentWillMount = function () {
-    const {revisionId, tools} = self.props.crypto;
-    // If the tools are already loaded, do nothing.
-    if (tools !== undefined)
-      return;
-    // Load initial tools if there is no current revision.
-    if (revisionId === undefined) {
-      changeCrypto(function (crypto) {
-        return {...crypto, tools: initialTools};
-      });
-      return;
-    }
-    // Load the revision from the backend.
-    changeCrypto(function (crypto) {
-      return {...crypto, loading: true};
-    });
-    api.loadRevision(revisionId).then(
-      function (result) {
-        const revision = result.workspace_revision;
-        changeCrypto(function (crypto) {
-          return {...crypto, loading: false, tools: revision.state};
-        });
-      },
-      function () {
-        changeCrypto(function (crypto) {
-          return {...crypto, loading: false};
-        });
+    // XXX consider moving all of this into the manager.
+    const {task, manager, workspace} = self.props;
+    if (workspace !== undefined) {
+      // If the workspace is already set up, leave it unchanged.
+      if (workspace.tools !== undefined) {
+        return;
       }
-    );
+      // If there is a revision that can be loaded, attempt to load it.
+      if (workspace.revisionId !== undefined) {
+        self.setState({loading: true});
+        self.props.api.loadRevision(workspace.revisionId).then(
+          function (result) {
+            const revision = result.workspace_revision;
+            manager.clear();
+            Tasks[task.front].setupTools(manager);
+            manager.load(revision.state);
+            self.setState({loading: false});
+          },
+          function () {
+            self.setState({loading: false});
+            // XXX leaving a broken state?
+          }
+        );
+        return;
+      }
+    }
+    // Fall back to clearing the workspace and letting the task set up
+    // the tools with their initial state.
+    setupTaskTools();
   };
 
   self.render = function () {
-    const {user_id, task, crypto} = self.props;
-    const {tools, loading, changed} = crypto;
-    if (loading || tools === undefined)
+    const {api, user_id, task, manager, workspace} = self.props;
+    const {loading} = self.state;
+    if (loading || workspace === undefined)
       return (
         <div>
           Chargement en cours, veuillez patienter...
           <Notifier emitter={api.emitter}/>
         </div>);
-    const saveStyle = changed ? 'primary' : 'default';
+    const saveStyle = workspace.changed ? 'primary' : 'default';
     const header = (
       <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
         <div className='pull-right'>
@@ -173,21 +151,24 @@ const CryptanalysisTab = PureComponent(self => {
         </span>
       </div>
     );
-    const taskApi = {...task, getHint};
+    const {TabHeader, getRootScope} = Tasks[task.front];
+    const rootScope = getRootScope({...task, getHint, getQueryCost});
+    const tools = manager.render(rootScope);
     return (
       <div>
         <Notifier emitter={api.emitter}/>
-        <PlayFair.TabContent header={header} task={taskApi} workspace={workspace} user_id={user_id}/>
+        <TabHeader task={task}/>
+        {header}
+        {tools}
       </div>
     );
   };
 
 });
 
-const tabSelector = function (state) {
-  const {crypto, response} = state;
-  const {user, task} = response;
-  return {user_id: user.id, task, crypto};
+export const selector = function (state) {
+  const {workspace} = state;
+  return {workspace};
 };
 
-export default connect(selector)(CryptanalysisTab);
+export default connect(selector)(CryptoTab);

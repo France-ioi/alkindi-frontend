@@ -97,6 +97,8 @@ const AttemptsTab = PureComponent(self => {
     const {user, round, team, attempt, attempts} = self.props;
     const codeEntry = attempt && attempt.needs_codes;
     const score = getMaxScore(attempts);
+    const noTraining = round.max_attempts === null;
+    // or noTraining = !!attempts.find(attempt => attempt.is_training)
     return (
       <div className="wrapper">
         <div className="pull-right">
@@ -111,7 +113,7 @@ const AttemptsTab = PureComponent(self => {
             Score actuel de l'équipe (meilleur score parmi les épreuves
             en temps limité) : <span className="team-score">{score}</span>.
           </p>
-        : (round.max_attempts === null &&
+        : (noTraining &&
             <p>
               Pour ce tour, il n'y a pas d'épreuve d'entraînement.
               Vous pouvez faire autant de tentatives en temps limité que

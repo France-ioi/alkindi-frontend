@@ -4,14 +4,16 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import EpicComponent from 'epic-component';
 
-import {PureComponent, at, put} from '../misc';
+import {at, put} from '../misc';
 
-import {Workspace} from '../workspace';
+import {WorkspaceManager} from '../workspace';
 import * as Adfgx from '.';
 
 const initialTask = {
-   hints: "MA   \n     \n     \n     \n     ",
+   substitution_grid: [[13,1,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]],
+   permutation: [null,null,null,null,null],
    cipher_text: "AAGAXADFGFAAFFFGGFAADAFAXXGGADAGDXFXXAGFAFFAAFAGDFXAFGDXFAGAAAGAFGXXXXAFXAAFDDDDAAFFFAFXDFAFGFFFGGFDFXFAFFXAGADDADGAFXAXAXFXAXDXFXADFGXXFADXADGFFDADXAADAXAGXADFXAAFXFFXAAFXFDFXGGXAXAFAADXFDADFDXGAXFAGAFAFGAAGDFDGADFDGFADAAGAAFFAFFDXXDXFXAGFFAADFAAXAADGFDGXFAFFXFFFGFFXAAFAFFGDADDDDAXAFXADAAXFGAFAADDGFFFAAGAGGXAAXAFXXAAGDAFAFDFFAFFXAFAFGGDAAXFDFFGAAGGDXAFGXAGDAFFFAAFFXAAFGAFAAFXFAAFFXGAAAFADAFFGFDAADXAFDFAAGDFGDGDFAGADDAFGAAFGAAXAXGAAXAFFDAXDGAAAAXAADADGAXADFXFAAXGFXADFADAGDXAAFAXGGFDGXDAAXFGAFFAGFXAGAXXAAGXXADAGGAXDXXGDDAAXXXGXGDGDXADGXGGFADDDGDXXDXDGDAGGDDDXAAGXGXXXADGADDAFDGGXDDADAGDDDGAGDDAXXGGGXDGXDAGDGXGXGXGXGGXADAXGXDDDGDXDGGGADGDGDADXGDXAXDDAGGDDXGXGXAAXGGAXFDGGGGDFDDGAXAAGADXDDDDGGDAGAGADGDAGAADGXGGXDDADAXDGDAXDXAXGGDXXDDFXGFAGFGDXGGXXXGGADGXXGGGAGAGXDDDDXDAXDAXXXDDDXAXADAGDDXGDXFXXGGGXGXXGAGFDGXDGXDAAFXADDAADXAAGGXDAXXXDXDDDXXAGGXAFGAGDGXXGXGDXXAADAADGXGXGXGDDFDXDXXGXAGXXGFDGXXXXXAXGXADADAAGDXAGXXAAXAGAAXXGXGGXDXXXDDXDGDAGDXADXXGXDAGDXADGXXGXGGXAAAFAXAADGXAGGGXADDGGDXXDXGGGAGDGFXDXADGDGXGGDGXDGXAA"
 };
 
@@ -28,7 +30,7 @@ x O L F D Z
 "Mes félicitations pour ce que vous avez realisé sans accroc dans cette partie initiale du plan. Voici la marche à suivre afin que le plan aboutisse et envisager la suite avec sérénité. L'étape suivante consiste à augmenter de façon artificielle le coût financier de certains métaux de terre rare aussi vite que possible et sans délais ou nuisances. Nous avons entériné la liste suivante de métaux de terre rare : le terbium, le  neodyme et le  gadolinium. Le meilleur endroit pour agir se situe à la bourse de Barcelone. Hâtez-vous aussitôt pour aller acheter plein de ces actions en prévision de la hausse de l'indice du marché."
 */
 
-const BareDemo = PureComponent(self => {
+const BareDemo = EpicComponent(self => {
 
    const getQueryCost = function (query) {
       return 10;
@@ -41,10 +43,24 @@ const BareDemo = PureComponent(self => {
       }, 1000);
    };
 
+  const onWorkspaceChanged = function (workspace) {
+    self.setState({workspace});
+  };
+
+   self.state = {};
+
+   self.componentWillMount = function () {
+      self.props.manager.emitter.on('changed', onWorkspaceChanged);
+   };
+
+   self.componentWillUnmount = function () {
+      self.props.manager.emitter.removeListener('changed', onWorkspaceChanged);
+   };
+
    self.render = function () {
-      const {task, workspace} = self.props;
+      const {task, manager} = self.props;
       const taskApi = {...task, getQueryCost, getHint};
-      return (<Adfgx.TabContent task={taskApi} workspace={workspace}/>);
+      return manager.render(Adfgx.getRootScope(taskApi));
    };
 });
 
@@ -60,8 +76,6 @@ const reducer = function (state, action) {
    switch (action.type) {
       case '@@redux/INIT':
          return {task: initialTask};
-      case 'SET_WORKSPACE':
-         return {...state, workspace: {...state.workspace, ...action.workspace}};
       default:
          throw action;
    }
@@ -71,15 +85,9 @@ const reducer = function (state, action) {
 const store = createStore(reducer);
 
 // Workspace setup.
-const getWorkspace = function (callback) {
-   return store.getState().workspace;
-};
-const setWorkspace = function (workspace) {
-   store.dispatch({type: 'SET_WORKSPACE', workspace});
-};
-const workspace = Workspace(getWorkspace, setWorkspace);
-workspace.clear();
-Adfgx.setupTools(workspace);
+const manager = WorkspaceManager();
+manager.clear();
+Adfgx.setupTools(manager);
 
 const container = document.getElementById('react-container');
-ReactDOM.render(<Provider store={store}><Demo/></Provider>, container);
+ReactDOM.render(<Provider store={store}><Demo manager={manager}/></Provider>, container);

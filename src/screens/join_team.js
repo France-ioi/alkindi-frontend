@@ -1,8 +1,7 @@
 import React from 'react';
+import EpicComponent from 'epic-component';
 import {Alert, Button} from 'react-bootstrap';
-import {connect} from 'react-redux';
 
-import {PureComponent} from '../misc';
 import Notifier from '../ui/notifier';
 import AuthHeader from '../ui/auth_header';
 import Logout from '../ui/logout';
@@ -16,7 +15,7 @@ JoinTeamScreen interface:
   onLogout: called after the user has logged out
 
 */
-const JoinTeamScreen = PureComponent(self => {
+const JoinTeamScreen = EpicComponent(self => {
   const api = Alkindi.api;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
@@ -165,9 +164,4 @@ const JoinTeamScreen = PureComponent(self => {
   return {joinTeam: false};
 });
 
-export const selector = function (state) {
-  const {user, round} = state.response;
-  return {user, round};
-};
-
-export default connect(selector)(JoinTeamScreen);
+export default JoinTeamScreen;

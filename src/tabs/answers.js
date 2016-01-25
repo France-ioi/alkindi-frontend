@@ -5,10 +5,10 @@ import Tooltip from '../ui/tooltip';
 import classnames from 'classnames';
 
 import {PureComponent, toMap} from '../misc';
-import {AnswerDialog, Answer} from '../playfair';
 import Notifier from '../ui/notifier';
 import {RefreshButton} from '../ui/refresh_button';
 import {setActiveTab} from '../actions';
+import Tasks from '../tasks';
 
 const AnswersTab = PureComponent(self => {
 
@@ -29,7 +29,7 @@ const AnswersTab = PureComponent(self => {
     self.props.dispatch(setActiveTab('attempts'));
   };
 
-  const renderAnswers = function (answers) {
+  const renderAnswers = function (answers, Answer) {
     const users = toMap(self.props.users)
     const {submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
@@ -85,14 +85,15 @@ const AnswersTab = PureComponent(self => {
   };
 
   self.render = function () {
-    const {answers} = self.props;
+    const {answers, task} = self.props;
     const {feedback} = self.state;
+    const {AnswerDialog, Answer} = Tasks[task.front];
     const answersBlock =
       (answers === undefined
         ? <p>Chargement en cours...</p>
         : (answers.length == 0
            ? <p className="noRowsMessage">Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
-           : renderAnswers(answers)));
+           : renderAnswers(answers, Answer)));
     return (
       <div className="wrapper">
         <div style={{marginBottom: '10px'}}>
@@ -117,8 +118,8 @@ const AnswersTab = PureComponent(self => {
 
 const selector = function (state) {
   const {user_id, attempt, response} = state;
-  const {answers, users} = response;
-  return {user_id, attempt, answers, users};
+  const {answers, users, task} = response;
+  return {user_id, attempt, answers, users, task};
 };
 
 export default connect(selector)(AnswersTab);

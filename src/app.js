@@ -1,14 +1,13 @@
 import React from 'react';
+import EpicComponent from 'epic-component';
 import {connect} from 'react-redux';
-
-import {PureComponent} from './misc';
 
 import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 import RoundOverScreen from './screens/round_over';
 
-export const App = PureComponent(self => {
+export const App = EpicComponent(self => {
 
   self.componentWillMount = function () {
     window.addEventListener('beforeunload', function (event) {
@@ -21,18 +20,16 @@ export const App = PureComponent(self => {
   };
 
   self.render = function () {
-    const {have_user, have_team} = self.props;
+    const {user, team, round} = self.props;
 
-    if (!have_user)
-      return <LoginScreen/>;
+    if (user === undefined)
+      return <LoginScreen user={user} round={round}/>;
 
-    if (!have_team)
+    if (team === undefined)
       return <JoinTeamScreen/>;
 
-    const {round} = self.props;
-
     if (round.status === 'open')
-      return <MainScreen/>;
+      return <MainScreen user={user} round={round} team={team}/>;
 
     if (round.status === 'over' || round.status === 'closed')
       return <RoundOverScreen/>;
@@ -44,10 +41,10 @@ export const App = PureComponent(self => {
 });
 
 export const selector = function (state) {
-  const {crypto} = state;
   const {user, team, round} = state.response;
-  const changed = crypto && crypto.changed;
-  return {have_user: !!user, have_team: !!team, round, changed};
+  const {workspace} = state; // XXX clean up
+  const changed = workspace && workspace.changed;
+  return {user, team, round, changed};
 };
 
 export default connect(selector)(App);

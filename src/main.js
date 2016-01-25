@@ -15,11 +15,14 @@ import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import {Promise} from 'es6-promise';
+import {DragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import {configure as configureAssets} from './assets';
 import reducer from './reducer';
 import App from './app';
 import {Api, ApiFactory} from './api';
+import {WorkspaceManager} from './workspace';
 
 // Install a global error handler.
 /*
@@ -62,6 +65,8 @@ window.reportError = function (value) {
   setTimeout(function () { throw value; }, 0);
 };
 */
+
+window.React = React;
 
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
 /*global Alkindi*/
@@ -161,7 +166,8 @@ window.Alkindi = (function () {
     window.addEventListener('message', messageListener);
     sendTickInterval = setInterval(sendTick, 1000);
     // Insert HTML.
-    ReactDOM.render(<Provider store={store}><App/></Provider>, mainElement);
+    const WrappedApp = DragDropContext(HTML5Backend)(App);
+    ReactDOM.render(<Provider store={store}><WrappedApp/></Provider>, mainElement);
   };
 
   Alkindi.dispatch = function (action) {
@@ -194,6 +200,8 @@ window.Alkindi = (function () {
   Alkindi.logout = function () {
     openInLoginWindow(Alkindi.config.logout_url);
   };
+
+  Alkindi.manager = WorkspaceManager(store);
 
   return Alkindi;
 }());

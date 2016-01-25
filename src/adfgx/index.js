@@ -115,21 +115,36 @@ export const setupTools = function (workspace) {
 
 };
 
-export const TabContent = EpicComponent(self => {
-
-   self.render = function () {
-      const {workspace, task} = self.props;
-      const rootScope = {
-         ...task,
-         clearAlphabet,
-         adfgxAlphabet,
-         bigramAlphabet,
-         cipheredText: task.cipher_text,
-         hintsGrid: task.hints
-      };
-      return workspace.render(rootScope);
+export const getRootScope = function (task) {
+   return {
+      ...task,
+      clearAlphabet,
+      adfgxAlphabet,
+      bigramAlphabet,
+      cipheredText: task.cipher_text,
+      substitutionGridHints: task.substitution_grid,
+      permutationHints: task.permutation
    };
+};
 
+export const TabHeader = EpicComponent(self => {
+   self.render = function () {
+      return (
+         <div>
+            <p>
+               Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,
+               lisez-le attentivement.
+            </p>
+            <p>
+               {'Voici ci-dessous des outils pour vous aider à déchiffrer le message, '}
+               {'leur documentation est '}
+               <a href="http://concours-alkindi.fr/docs/tour3-outils.pdf" title="documentation des outils au format .PDF" target="new">
+                  {'disponible en téléchargement '}
+                  <i className="fa fa-download"/>
+               </a>.</p>
+            <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponses.</p>
+         </div>);
+   };
 });
 
 export const AnswerDialog = EpicComponent(self => {
@@ -269,7 +284,7 @@ export const Feedback = EpicComponent(self => {
                            {halfScore}
                         </Alert>
                      </div>)
-             : (feedback.numbers
+             : (feedback.metals
                   ? <div>
                         <Alert bsStyle='warning'>
                            <p>Les trois métaux sont les bons, mais la ville est fausse.</p>
@@ -288,6 +303,7 @@ export const Task = EpicComponent(self => {
 
    self.render = function () {
       const {task} = self.props;
+      const lines = task.cipher_text.match(/.{1,40}/g);
       return (<div>
 
    <p>
@@ -296,7 +312,9 @@ export const Task = EpicComponent(self => {
    <p>
    Voici le texte du message :
    </p>
-   {task.cipher_text}
+   <div className="y-scrollBloc adfgx-text" style={{width:'480px',margin:'0 auto 15px'}}>
+      {lines.map((line, i) => <div key={i} className="adfgx-line">{line}</div>)}
+   </div>
 
    <p>
       Votre but est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'une ville et trois noms de métaux.

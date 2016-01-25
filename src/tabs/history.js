@@ -1,27 +1,28 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import EpicComponent from 'epic-component';
 import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import memoize from 'memoizejs';
 
-import {PureComponent, toMap} from '../misc';
+import {toMap} from '../misc';
 import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
-import {RefreshButton} from '../ui/refresh_button';
+import RefreshButton from '../ui/refresh_button';
 
-const HistoryTab = PureComponent(self => {
+const HistoryTab = EpicComponent(self => {
 
   const api = Alkindi.api;
 
-  const onLoadRevision = memoize(function (revision_id) {
+  const onLoadRevision = memoize(function (revisionId) {
     return function () {
       const {cryptoChanged} = self.props;
       if (cryptoChanged) {
         if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
           return;
       }
-      self.props.dispatch({type: 'USE_REVISION', revision_id});
+      self.props.dispatch({type: 'USE_REVISION', revisionId});
     };
   });
 

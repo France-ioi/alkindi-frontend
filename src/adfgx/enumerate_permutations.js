@@ -39,7 +39,6 @@ export const Component = EpicComponent(self => {
 
    const onSetSortBy = function (event) {
       const key = event.currentTarget.getAttribute('data-key');
-      console.log('sortBy', key);
       self.props.setToolState({sortBy: key});
    };
 

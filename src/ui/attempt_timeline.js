@@ -80,6 +80,12 @@ export default PureComponent(self => {
   };
 
   const renderCancelAttempt = function (attempt) {
+    const {round} = self.props;
+    const haveTraining = round.max_attempts !== null; // XXX mostly correct
+    // XXX If there is no training attempt, cancelling the current attempt is
+    // not supported.
+    if (!haveTraining)
+      return false;
     return (attempt.is_training ?
       <div>
         {attempt.is_training && <p>
@@ -273,6 +279,7 @@ export default PureComponent(self => {
 
   const renderAttemptFinished = function (attempt) {
     const {round} = self.props;
+    const haveTraining = round.max_attempts !== null; // XXX mostly correct
     return (
       <div>
         {renderTimeline('done')}
@@ -302,15 +309,15 @@ export default PureComponent(self => {
                 <p>
                   Votre tentative en temps limité s'est terminée le {new Date(attempt.closes_at).toLocaleString()}.
                 </p>
-                <p>
+                {haveTraining && <p>
                   {'Vous pouvez revenir au sujet d\'entraînement ou démarrer une nouvelle '}
                   {'tentative en temps limité.'}
-                </p>
-                <p className="text-center">
+                </p>}
+                {haveTraining && <p className="text-center">
                   <Button onClick={onResetToTraining}>
                      <i className="fa fa-arrow-left"/> retour à l'entraînement
                   </Button>
-                </p>
+                </p>}
               </div>}
           </div>
         </div>
