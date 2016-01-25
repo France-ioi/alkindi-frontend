@@ -7,6 +7,7 @@ import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
 import OkCancel from '../tool-ui/ok_cancel';
 import Tooltip from '../ui/tooltip';
+import {getInversePermutation}  from './common';
 
 const Grid = EpicComponent(self => {
 
@@ -113,6 +114,43 @@ export const Alphabet = EpicComponent(self => {
 });
 
 
+export const Permutation = EpicComponent(self => {
+
+   const onClick = function (event) {
+      const element = event.currentTarget;
+      const fromLine = parseInt(element.getAttribute('data-from'));
+      let toLine = parseInt(element.getAttribute('data-to'));
+      if (isNaN(toLine))
+         toLine = null;
+      self.props.onClick(fromLine, toLine);
+   };
+
+   self.render = function () {
+      const {permutation, selectedPos} = self.props;
+      const renderCell = function (cell, iCell) {
+         const classes = [
+            'adfgx-cell',
+            selectedPos === iCell && 'adfgx-cell-selected',
+            cell.q === 'hint' && 'adfgx-hint-obtained'
+         ];
+         return (
+            <td key={iCell} className={classnames(classes)} onClick={onClick} data-from={iCell} data-to={cell.l}>
+               {cell.l === undefined ? ' ' : (cell.l + 1)}
+            </td>
+         );
+      };
+      return (
+         <table className='adfgx-alphabet'>
+            <tbody>
+               <tr>{permutation.map(renderCell)}</tr>
+            </tbody>
+         </table>
+      );
+   };
+
+});
+
+
 const HintQuery = EpicComponent(self => {
 
    self.render = function () {
@@ -127,9 +165,9 @@ const HintQuery = EpicComponent(self => {
                   {query.type === "subst-decipher" &&
                      <span>lettre déchiffrant le bigramme <strong>{query.bigram}</strong></span>}
                   {query.type === "perm-decipher" &&
-                     <span>ligne où est envoyée la ligne <strong>{query.line}</strong> au déchiffrage</span>}
+                     <span>ligne où est envoyée la ligne <strong>{query.line + 1}</strong> lors du déchiffrage</span>}
                   {query.type === "perm-cipher" &&
-                     <span>ligne où est envoyée la ligne <strong>{query.line}</strong> au chiffrage</span>}
+                     <span>ligne où est envoyée la ligne <strong>{query.line + 1}</strong> lors du chiffrage</span>}
                </p>
                {!obtained && <p><strong>Coût :</strong> {cost} points</p>}
                {!obtained && <p><strong>Score disponible :</strong> {score} points</p>}
@@ -195,11 +233,19 @@ export const Component = EpicComponent(self => {
       return false;
    };
 
+   const noSelection = {
+      selectedLetterRank: undefined,
+      selectedRow: undefined,
+      selectedCol: undefined,
+      selectedCipherPos: undefined,
+      selectedDecipherPos: undefined
+   };
+
    const onSelectInGrid = function (row, col, bigram, rank) {
       self.setState({
+         ...noSelection,
          selectedRow: row,
          selectedCol: col,
-         selectedLetterRank: undefined,
          hintQuery: {
             type: 'subst-decipher',
             bigram: bigram
@@ -211,8 +257,7 @@ export const Component = EpicComponent(self => {
 
    const onSelectInAlphabet = function (letterRank, letter, bigram) {
       self.setState({
-         selectedRow: undefined,
-         selectedCol: undefined,
+         ...noSelection,
          selectedLetterRank: letterRank,
          hintQuery: {
             type: 'subst-cipher',
@@ -220,6 +265,32 @@ export const Component = EpicComponent(self => {
          },
          hintStep: 'preparing',
          hintObtained: bigram !== null
+      });
+   };
+
+   const onSelectInDecipherPerm = function (fromLine, toLine) {
+      self.setState({
+         ...noSelection,
+         selectedDecipherPos: fromLine,
+         hintQuery: {
+            type: 'perm-decipher',
+            line: fromLine
+         },
+         hintStep: 'preparing',
+         hintObtained: toLine !== null
+      });
+   };
+
+   const onSelectInCipherPerm = function (fromLine, toLine) {
+      self.setState({
+         ...noSelection,
+         selectedCipherPos: fromLine,
+         hintQuery: {
+            type: 'perm-cipher',
+            line: fromLine
+         },
+         hintStep: 'preparing',
+         hintObtained: toLine !== null
       });
    };
 
@@ -240,9 +311,9 @@ export const Component = EpicComponent(self => {
 
    self.render = function() {
       const {outputSubstitutionVariable, outputPermutationVariable} = self.props.toolState;
-      const {outputSubstitution, outputPermutation, getQueryCost, score} = self.props.scope;
+      const {outputSubstitution, outputPermutation, inversePermutation, getQueryCost, score} = self.props.scope;
       const {substitutionGridHints, bigramAlphabet, clearAlphabet} = self.props.scope;
-      const {selectedRow, selectedCol, selectedLetterRank, hintQuery, hintObtained, hintStep} = self.state;
+      const {selectedRow, selectedCol, selectedLetterRank, selectedDecipherPos, selectedCipherPos, hintQuery, hintObtained, hintStep} = self.state;
       const inputVars = [];
       const outputVars = [
          {label: "Substitution", name: outputSubstitutionVariable},
@@ -294,7 +365,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     {renderPermForward(outputPermutation)}
+                     <Permutation permutation={outputPermutation} selectedPos={selectedDecipherPos} onClick={onSelectInDecipherPerm}/>
                   </div>
                   <div className='adfgx-hints-perm-cipher'>
                      <p>
@@ -303,7 +374,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     {renderPermBackward(outputPermutation)}
+                     <Permutation permutation={inversePermutation} selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
                   </div>
                </div>}
                {!areHintsEnabled && <div>
@@ -340,6 +411,7 @@ export const compute = function (toolState, scope) {
    const {permutationHints} = scope;
    scope.outputPermutation = permutationHints.map(
       l => l === null ? {q:'unknown'} : {q:'hint',l});
+   scope.inversePermutation = getInversePermutation(scope.outputPermutation);
 };
 
 export default self => {
