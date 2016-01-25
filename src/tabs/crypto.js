@@ -12,9 +12,8 @@ export const CryptoTab = EpicComponent(self => {
 
   const saveState = function () {
     const {user_id, manager, workspace} = self.props;
-    const {saving} = self.state;
     // Silently ignore the request if a save operation is pending.
-    if (saving)
+    if (workspace.saving)
       return;
     // Remind the user that there are no changes that need to be saved.
     if (!workspace.changed) {
@@ -24,23 +23,28 @@ export const CryptoTab = EpicComponent(self => {
     const data = {
       title: "Révision du " + new Date().toLocaleString(),
       state: manager.save(),
-      parent_id: crypto.revisionId
+      parent_id: workspace.revisionId
     };
-    self.props.dispatch({type: 'CRYPTO:SAVE:BEGIN'});
+    // XXX move this into manager
+    manager.beginSave();
     self.props.api.storeRevision(user_id, data).then(
       function (result) {
-        self.props.dispatch({type: 'CRYPTO:SAVE:DONE', revisionId: result.revision_id});
+        manager.endSave(result.revision_id);
       },
       function () {
         // Reset the changed flag to true as the state was not changed.
-        self.props.dispatch({type: 'CRYPTO:SAVE:ERROR'});
+        manager.endSave();
       }
     );
   };
 
   const resetState = function () {
     if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
-      self.props.dispatch({type: 'CRYPTO:RESET'});
+      const {task, manager} = self.props;
+      // XXX move this into manager
+      manager.clear();
+      Tasks[task.front].setupTools(manager);
+      manager.clearChanged();
     }
   };
 
@@ -75,25 +79,26 @@ export const CryptoTab = EpicComponent(self => {
   );
 
   self.state = {
-    loading: true
+    loading: false
   };
 
   self.componentWillMount = function () {
-    const {task, manager, workspace, revisionId} = self.props;
+    // XXX consider moving all of this into the manager.
+    const {task, manager, workspace} = self.props;
     // If we have a workspace, leave it unchanged.
-    if (manager.isInitialized()) {
-      self.setState({loading: false});
+    if (workspace.tools !== undefined) {
       return;
     }
     // If there is no current revision, set up the task.
-    if (revisionId === undefined) {
+    if (workspace.revisionId === undefined) {
       manager.clear();
       Tasks[task.front].setupTools(manager);
-      self.setState({loading: false});
+      manager.clearChanged();
       return;
     }
     // Load the revision from the backend.
-    self.props.api.loadRevision(revisionId).then(
+    self.setState({loading: true});
+    self.props.api.loadRevision(workspace.revisionId).then(
       function (result) {
         const revision = result.workspace_revision;
         manager.clear();
@@ -108,7 +113,7 @@ export const CryptoTab = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {api, user_id, task, crypto, manager, workspace} = self.props;
+    const {api, user_id, task, manager, workspace} = self.props;
     const {loading} = self.state;
     if (loading || workspace === undefined)
       return (
@@ -116,7 +121,7 @@ export const CryptoTab = EpicComponent(self => {
           Chargement en cours, veuillez patienter...
           <Notifier emitter={api.emitter}/>
         </div>);
-    const saveStyle = crypto.changed ? 'primary' : 'default';
+    const saveStyle = workspace.changed ? 'primary' : 'default';
     const header = (
       <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
         <div className='pull-right'>
@@ -153,8 +158,8 @@ export const CryptoTab = EpicComponent(self => {
 });
 
 export const selector = function (state) {
-  const {crypto, workspace} = state;
-  return {crypto, workspace};
+  const {workspace} = state;
+  return {workspace};
 };
 
 export default connect(selector)(CryptoTab);

@@ -15,14 +15,14 @@ const HistoryTab = EpicComponent(self => {
 
   const api = Alkindi.api;
 
-  const onLoadRevision = memoize(function (revision_id) {
+  const onLoadRevision = memoize(function (revisionId) {
     return function () {
       const {cryptoChanged} = self.props;
       if (cryptoChanged) {
         if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
           return;
       }
-      self.props.dispatch({type: 'USE_REVISION', revision_id});
+      self.props.dispatch({type: 'USE_REVISION', revisionId});
     };
   });
 

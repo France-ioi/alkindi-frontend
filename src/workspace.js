@@ -2,7 +2,6 @@
 // rather than the server-side workspaces which are sets of revisions.
 
 import React from 'react';
-import {EventEmitter} from 'events';
 
 import {at, put} from './misc';
 
@@ -11,8 +10,6 @@ const defaultMergeState = function (state, update) {
 };
 
 export const WorkspaceManager = function (store) {
-
-  const emitter = new EventEmitter();
 
   const setWorkspace = function (workspace) {
     store.dispatch({type: 'SET_WORKSPACE', workspace});
@@ -23,14 +20,15 @@ export const WorkspaceManager = function (store) {
     return state.workspace || {};
   };
 
-  const isInitialized = function () {
+  const clearChanged = function () {
     const workspace = getWorkspace();
-    return workspace.tools !== undefined;
+    setWorkspace({...workspace, changed: false});
   };
 
   const clear = function () {
     setWorkspace({
-      tools: [] // [{mergeState,wire,compute,Component,state}]
+      tools: [], // [{mergeState,wire,compute,Component,state}]
+      changed: false
     });
   };
 
@@ -42,8 +40,10 @@ export const WorkspaceManager = function (store) {
     factory(tool);
     tool.wire = wire;
     tool.state = initialState;
+    tool.initialState = initialState;
     tool.setState = setToolState.bind(null, i);
     setWorkspace({
+      ...workspace,
       tools: at(i, put(tool))(workspace.tools),
       changed: true
     });
@@ -56,16 +56,25 @@ export const WorkspaceManager = function (store) {
       const state = tool.mergeState(tool.state, update);
       return {...tool, state}
     })(workspace.tools);
-    setWorkspace({tools, changed: true});
+    setWorkspace({...workspace, tools, changed: true});
   };
 
   const load = function (dump) {
     // Load the tool states from the given dump.
     const workspace = getWorkspace();
     const tools = workspace.tools.map(function (tool, i) {
-      return {...tool, state: dump[i]};
+      return {...tool, state: dump[i].state};
     });
-    setWorkspace({tools, changed: false});
+    setWorkspace({...workspace, tools, changed: false});
+  };
+
+  const beginSave = function () {
+    const workspace = getWorkspace();
+    setWorkspace({
+      ...workspace,
+      saving: true,
+      changed: false
+    });
   };
 
   const save = function () {
@@ -74,6 +83,17 @@ export const WorkspaceManager = function (store) {
     return workspace.tools.map(function (tool) {
       return {state: tool.state};
     });
+  };
+
+  const endSave = function (revisionId) {
+    const workspace = getWorkspace();
+    const newWorkspace = {...workspace, saving: false};
+    if (revisionId) {
+      newWorkspace.revisionId = revisionId;
+    } else {
+      newWorkspace.changed = true;
+    }
+    setWorkspace(newWorkspace);
   };
 
   const render = function (rootScope) {
@@ -90,6 +110,12 @@ export const WorkspaceManager = function (store) {
     return <div>{workspace.tools.map(renderTool)}</div>;
   };
 
-  return {getWorkspace, isInitialized, clear, addTool, load, save, render, emitter};
+  return {
+    getWorkspace,
+    clearChanged,
+    clear, addTool, load,
+    beginSave, save, endSave,
+    render
+  };
 
 };
