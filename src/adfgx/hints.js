@@ -14,31 +14,31 @@ const Grid = EpicComponent(self => {
       const element = event.currentTarget;
       const row = parseInt(element.getAttribute('data-row'));
       const col = parseInt(element.getAttribute('data-col'));
-      const {grid, sourceAlphabet} = self.props;
-      const nbCols = grid[0].length;
-      const cell = grid[row][col];
-      const bigram = sourceAlphabet.symbols[row * nbCols + col];
-      self.props.onClick(row, col, cell, bigram);
+      const bigram = element.getAttribute('data-bigram');
+      const rank = parseInt(element.getAttribute('data-rank'));
+      self.props.onClick(row, col, bigram, rank);
    };
 
    self.render = function () {
-      const {grid, sourceAlphabet, targetAlphabet} = self.props;
+      const {grid, bigramAlphabet, clearAlphabet} = self.props;
       const {selectedRow, selectedCol} = self.props;
       const nbRows = grid.length;
       const nbCols = grid[0].length;
       const renderCell = function (row, col) {
          const rank = grid[row][col];
-         const classes = ['adfgx-cell'];
-         if (selectedRow === row && selectedCol === col) {
-            classes.push("adfgx-cell-selected");
-         }
-         const symbol = rank === null ? ' ' : targetAlphabet.symbols[rank];
-         return <td key={col} className={classnames(classes)} onClick={onClick} data-row={row} data-col={col}>{symbol}</td>;
+         const symbol = rank === null ? ' ' : clearAlphabet.symbols[rank];
+         const bigram = bigramAlphabet.symbols[row * nbCols + col];
+         const classes = [
+            'adfgx-cell',
+            (selectedRow === row && selectedCol === col) && 'adfgx-cell-selected',
+            rank !== null && 'adfgx-hint-obtained'
+         ];
+         return <td key={col} className={classnames(classes)} onClick={onClick} data-row={row} data-col={col} data-rank={rank} data-bigram={bigram}>{symbol}</td>;
       };
       const renderRow = function (row) {
          return (
             <tr key={row}>
-               <th>{sourceAlphabet.symbols[row * nbCols].charAt(0)}</th>
+               <th>{bigramAlphabet.symbols[row * nbCols].charAt(0)}</th>
                {range(0, nbCols).map(col => renderCell(row, col))}
             </tr>
          );
@@ -46,7 +46,7 @@ const Grid = EpicComponent(self => {
       return (
          <table className='adfgx-grid'>
             <thead>
-               <tr><th/>{range(0, nbRows).map(i => <th key={i}>{sourceAlphabet.symbols[i].charAt(1)}</th>)}</tr>
+               <tr><th/>{range(0, nbRows).map(i => <th key={i}>{bigramAlphabet.symbols[i].charAt(1)}</th>)}</tr>
             </thead>
             <tbody>
                {range(0, nbRows).map(renderRow)}
@@ -56,6 +56,62 @@ const Grid = EpicComponent(self => {
    };
 
 });
+
+
+export const Alphabet = EpicComponent(self => {
+
+   const onClick = function (event) {
+      const element = event.currentTarget;
+      const rank = parseInt(element.getAttribute('data-rank'));
+      const letter = element.getAttribute('data-letter');
+      const bigram = element.getAttribute('data-bigram');
+      self.props.onClick(rank, letter, bigram);
+   };
+
+   self.render = function () {
+      const {grid, bigramAlphabet, clearAlphabet, selectedLetterRank} = self.props;
+      const letterRankBigram = Array(bigramAlphabet.size).fill(null);
+      const nCols = grid[0].length;
+      grid.forEach(function (row, iRow) {
+         row.forEach(function (rank, iCol) {
+            if (rank !== null)
+               letterRankBigram[rank] = bigramAlphabet.symbols[iRow * nCols + iCol];
+         });
+      });
+      const renderCell = function (i) {
+         if (i === 22) {
+            return <td key={i} className='qualifier-disabled'></td>;
+         }
+         // no W
+         const letterRank = i > 22 ? i - 1 : i;
+         const letter = clearAlphabet.symbols[letterRank];
+         const bigram = letterRankBigram[letterRank];
+         const classes = [
+            'adfgx-cell',
+            selectedLetterRank === letterRank && 'adfgx-cell-selected',
+            bigram !== null && 'adfgx-hint-obtained'
+         ];
+         return (
+            <td key={i} className={classnames(classes)} onClick={onClick} data-rank={letterRank} data-letter={letter} data-bigram={bigram}>
+               <span className='adfgx-target'>{letter}</span>
+               <span className='adfgx-source'>{bigram}</span>
+            </td>
+         );
+      };
+      const renderRow = function (row) {
+         return (
+            <table key={row} className='adfgx-alphabet'>
+               <tbody>
+                  <tr>{range(0, 13).map(col => renderCell(row * 13 + col))}</tr>
+               </tbody>
+            </table>
+         );
+      };
+      return <div>{renderRow(0)}{renderRow(1)}</div>;
+   };
+
+});
+
 
 const HintQuery = EpicComponent(self => {
 
@@ -139,16 +195,31 @@ export const Component = EpicComponent(self => {
       return false;
    };
 
-   const onSelectCell = function (row, col, cell, bigram) {
+   const onSelectInGrid = function (row, col, bigram, rank) {
       self.setState({
          selectedRow: row,
          selectedCol: col,
+         selectedLetterRank: undefined,
          hintQuery: {
             type: 'subst-decipher',
             bigram: bigram
          },
          hintStep: 'preparing',
-         hintObtained: cell !== null
+         hintObtained: rank !== null
+      });
+   };
+
+   const onSelectInAlphabet = function (letterRank, letter, bigram) {
+      self.setState({
+         selectedRow: undefined,
+         selectedCol: undefined,
+         selectedLetterRank: letterRank,
+         hintQuery: {
+            type: 'subst-cipher',
+            letter: letter
+         },
+         hintStep: 'preparing',
+         hintObtained: bigram !== null
       });
    };
 
@@ -171,7 +242,7 @@ export const Component = EpicComponent(self => {
       const {outputSubstitutionVariable, outputPermutationVariable} = self.props.toolState;
       const {outputSubstitution, outputPermutation, getQueryCost, score} = self.props.scope;
       const {substitutionGridHints, bigramAlphabet, clearAlphabet} = self.props.scope;
-      const {selectedRow, selectedCol, hintQuery, hintObtained, hintStep} = self.state;
+      const {selectedRow, selectedCol, selectedLetterRank, hintQuery, hintObtained, hintStep} = self.state;
       const inputVars = [];
       const outputVars = [
          {label: "Substitution", name: outputSubstitutionVariable},
@@ -204,7 +275,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>Cliquez sur une case de la grille pour demander quelle lettre elle contient.</p>}/>
                      </p>
-                     <Grid grid={substitutionGridHints} sourceAlphabet={bigramAlphabet} targetAlphabet={clearAlphabet} onClick={onSelectCell} selectedRow={selectedRow} selectedCol={selectedCol}/>
+                     <Grid grid={substitutionGridHints} bigramAlphabet={bigramAlphabet} clearAlphabet={clearAlphabet} onClick={onSelectInGrid} selectedRow={selectedRow} selectedCol={selectedCol}/>
                   </div>
                   <div className='adfgx-hints-alphabet'>
                      <p>
@@ -213,7 +284,7 @@ export const Component = EpicComponent(self => {
                         {' points '}
                         <Tooltip content={<p>Cliquer sur une lettre non grisée ci-dessous pour demander sa position au sein de la grille.</p>}/>
                      </p>
-                     {renderAlphabet(outputSubstitution)}
+                     <Alphabet grid={substitutionGridHints} bigramAlphabet={bigramAlphabet} clearAlphabet={clearAlphabet} onClick={onSelectInAlphabet} selectedLetterRank={selectedLetterRank}/>
                   </div>
                   <p className='hints-section-title'>Des indices sur la permutation :</p>
                   <div className='adfgx-hints-perm-decipher'>
