@@ -145,12 +145,15 @@ export const CryptoTab = EpicComponent(self => {
         </span>
       </div>
     );
-    const rootScope = Tasks[task.front].getRootScope({...task, getHint, getQueryCost});
+    const {TabHeader, getRootScope} = Tasks[task.front];
+    const rootScope = getRootScope({...task, getHint, getQueryCost});
+    const tools = manager.render(rootScope);
     return (
       <div>
         <Notifier emitter={api.emitter}/>
+        <TabHeader task={task}/>
         {header}
-        {manager.render(rootScope)}
+        {tools}
       </div>
     );
   };
