@@ -56,7 +56,7 @@ export const Component = EpicComponent(self => {
             </div>
             <div className='panel-body'>
                {false && <Variables inputVars={inputVars} outputVars={outputVars} />}
-               <div className='grillesSection'>
+               {false && <div className='grillesSection'>
                   <p className='hints-title'>Plusieurs types d'indices sont disponibles :</p>
                   <p className='hints-section-title'>Des indices sur le contenu de la grille :</p>
                   <div className='adfgx-hints-grid'>
@@ -96,6 +96,15 @@ export const Component = EpicComponent(self => {
                      </p>
                      {renderPermBackward(outputPermutation)}
                   </div>
+               </div>}
+               <div>
+                  <p>Pour la première journée du 3ème tour, les indices sont désactivés.</p>
+                  <p>
+                     Nous vous invitons à essayer de déchiffrer le message sans aucun
+                     indice.
+                     C'est possible avec un peu de persévérance et une bonne stratégie.
+                  </p>
+                  <p>À partir de demain, vous pourrez demander des indices.</p>
                </div>
             </div>
          </div>
