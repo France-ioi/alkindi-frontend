@@ -127,6 +127,26 @@ export const getRootScope = function (task) {
    };
 };
 
+export const TabHeader = EpicComponent(self => {
+   self.render = function () {
+      return (
+         <div>
+            <p>
+               Attention, <strong>l'onglet sujet contient des informations essentielles</strong>,
+               lisez-le attentivement.
+            </p>
+            <p>
+               {'Voici ci-dessous des outils pour vous aider à déchiffrer le message, '}
+               {'leur documentation est '}
+               <a href="http://concours-alkindi.fr/docs/tour3-outils.pdf" title="documentation des outils au format .PDF" target="new">
+                  {'disponible en téléchargement '}
+                  <i className="fa fa-download"/>
+               </a>.</p>
+            <p>Une fois que vous avez déchiffré le message, entrez votre réponse dans l'onglet Réponses.</p>
+         </div>);
+   };
+});
+
 export const AnswerDialog = EpicComponent(self => {
 
    let city, metal1, metal2, metal3;
