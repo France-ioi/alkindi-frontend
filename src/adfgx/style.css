@@ -65,6 +65,24 @@
 .adfgx-hints-alphabet p {
   text-align: center;
 }
+ table.adfgx-alphabet {
+  width: auto;
+  text-align: center;
+ }
+.adfgx-alphabet .adfgx-cell,
+.adfgx-alphabet td.qualifier-disabled {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.adfgx-alphabet .adfgx-hint-obtained {
+  background-color: #aaa;
+}
+.adfgx-alphabet .adfgx-source {
+  font-size: 10px;
+  display: block;
+  height: 1em;
+}
 /*
 
   Tool apply permutations
