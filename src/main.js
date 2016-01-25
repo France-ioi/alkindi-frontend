@@ -66,6 +66,8 @@ window.reportError = function (value) {
 };
 */
 
+window.React = React;
+
 // This is the application's public interface.  FOR EXTERNAL USE ONLY!
 /*global Alkindi*/
 window.Alkindi = (function () {
