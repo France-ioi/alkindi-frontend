@@ -40,12 +40,16 @@ export const CryptoTab = EpicComponent(self => {
 
   const resetState = function () {
     if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
-      const {task, manager} = self.props;
-      // XXX move this into manager
-      manager.clear();
-      Tasks[task.front].setupTools(manager);
-      manager.clearChanged();
+      setupTaskTools();
     }
+  };
+
+  const setupTaskTools = function () {
+    const {task, manager} = self.props;
+    // XXX move this into manager
+    manager.clear();
+    Tasks[task.front].setupTools(manager);
+    manager.clearChanged();
   };
 
   const getHint = function (query, callback) {
@@ -85,31 +89,33 @@ export const CryptoTab = EpicComponent(self => {
   self.componentWillMount = function () {
     // XXX consider moving all of this into the manager.
     const {task, manager, workspace} = self.props;
-    // If we have a workspace, leave it unchanged.
-    if (workspace.tools !== undefined) {
-      return;
-    }
-    // If there is no current revision, set up the task.
-    if (workspace.revisionId === undefined) {
-      manager.clear();
-      Tasks[task.front].setupTools(manager);
-      manager.clearChanged();
-      return;
-    }
-    // Load the revision from the backend.
-    self.setState({loading: true});
-    self.props.api.loadRevision(workspace.revisionId).then(
-      function (result) {
-        const revision = result.workspace_revision;
-        manager.clear();
-        Tasks[task.front].setupTools(manager);
-        manager.load(revision.state);
-        self.setState({loading: false});
-      },
-      function () {
-        self.setState({loading: false});
+    if (workspace !== undefined) {
+      // If the workspace is already set up, leave it unchanged.
+      if (workspace.tools !== undefined) {
+        return;
       }
-    );
+      // If there is a revision that can be loaded, attempt to load it.
+      if (workspace.revisionId !== undefined) {
+        self.setState({loading: true});
+        self.props.api.loadRevision(workspace.revisionId).then(
+          function (result) {
+            const revision = result.workspace_revision;
+            manager.clear();
+            Tasks[task.front].setupTools(manager);
+            manager.load(revision.state);
+            self.setState({loading: false});
+          },
+          function () {
+            self.setState({loading: false});
+            // XXX leaving a broken state?
+          }
+        );
+        return;
+      }
+    }
+    // Fall back to clearing the workspace and letting the task set up
+    // the tools with their initial state.
+    setupTaskTools();
   };
 
   self.render = function () {
