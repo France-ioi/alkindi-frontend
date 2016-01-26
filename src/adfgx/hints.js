@@ -437,11 +437,25 @@ export const Component = EpicComponent(self => {
       });
    };
 
+   const getQueryCost = function (query) {
+      if (query.type === 'subst-decipher') {
+         return 35;
+      } else if (query.type === 'subst-cipher') {
+         return 50;
+      } else if (query.type === 'perm-decipher') {
+         return 200;
+      } else if (query.type === 'perm-cipher') {
+         return 200;
+      } else {
+         return 1000;
+      }
+   };
+
    self.state = {};
 
    self.render = function() {
       const {outputSubstitutionVariable, outputPermutationVariable} = self.props.toolState;
-      const {outputSubstitution, outputPermutation, inversePermutation, getQueryCost, score} = self.props.scope;
+      const {outputSubstitution, outputPermutation, inversePermutation, score} = self.props.scope;
       const {substitutionGridHints, bigramAlphabet, clearAlphabet} = self.props.scope;
       const {selectedRow, selectedCol, selectedLetterRank, selectedDecipherPos, selectedCipherPos, hintQuery, hintObtained, hintStep} = self.state;
       const inputVars = [];
