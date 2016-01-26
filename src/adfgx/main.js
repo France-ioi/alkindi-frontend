@@ -38,7 +38,17 @@ const findInGrid = function (grid, rank) {
 const BareDemo = EpicComponent(self => {
 
    const getQueryCost = function (query) {
-      return 200;
+      if (query.type === 'subst-decipher') {
+         return 35;
+      } else if (query.type === 'subst-cipher') {
+         return 50;
+      } else if (query.type === 'perm-decipher') {
+         return 200;
+      } else if (query.type === 'perm-cipher') {
+         return 200;
+      } else {
+         return 1000;
+      }
    };
 
    const getHint = function (query, callback) {
