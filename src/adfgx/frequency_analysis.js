@@ -155,13 +155,13 @@ export const compute = function (toolState, scope) {
    // Mark symbols in inputSubstitution and editedPairs as used, other target
    // symbols as unused.
    const symbolUsed = Array(bigramAlphabet.size).fill(false);
-   inputSubstitution.mapping.forEach(function (cell) {
-      if (cell.l !== undefined)
-         symbolUsed[cell.l] = true;
-   });
    Object.keys(editedPairs).forEach(function (bigram) {
       const rank = targetAlphabet.ranks[editedPairs[bigram]];
-      symbolUsed[rank] = true;
+      symbolUsed[rank] = 'edit';
+   });
+   inputSubstitution.mapping.forEach(function (cell) {
+      if (cell.l !== undefined)
+         symbolUsed[cell.l] = 'hint';
    });
    // Build a list of unused ranks in target alphabet sorted by decreasing target frequency.
    const sortedFrequencies = Array(targetFrequencies.size);
@@ -186,9 +186,13 @@ export const compute = function (toolState, scope) {
       const symbol = bigramAlphabet.symbols[bigram.l];
       let targetRank, qualifier;
       if (symbol in editedPairs) {
+         // If there is a hint that maps to this letter, ignore the edit.
          targetRank = targetAlphabet.ranks[editedPairs[symbol]];
-         qualifier = 'guess';  // XXX or locked
-      } else {
+         if (symbolUsed[targetRank] !== 'hint') {
+            qualifier = 'guess';  // XXX or locked
+         }
+      }
+      if (qualifier === undefined) {
          targetRank = unusedRanks[nextUnusedRankPos];
          nextUnusedRankPos += 1;
          qualifier = 'unknown';
