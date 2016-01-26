@@ -187,7 +187,7 @@ export const AnswerDialog = EpicComponent(self => {
                   d'une minute.
                </p>
                <p className="input">
-                  <label htmlFor="answer-c">{'Ville : '}</label>
+                  <label htmlFor="answer-c">{'Lieu : '}</label>
                   <input type="text" id="answer-c" ref={refCity} />
                </p>
                <p className="input">
@@ -220,9 +220,9 @@ export const AnswerDialog = EpicComponent(self => {
                   <li>vous partez d'un capital de 1000 points ;</li>
                   <li>300 points sont retirés de ce capital pour chaque indice
                       demandé avant votre réponse ;</li>
-                  <li>si vous avez à la fois la bonne ville et les trois métaux,
+                  <li>si vous avez à la fois le bon lieu et les trois métaux,
                      votre score est égal au capital restant ;</li>
-                  <li>si vous n'avez que la ville, ou bien que les trois métaux,
+                  <li>si vous n'avez que le lieu, ou bien que les trois métaux,
                       votre score est égal à la moitié du capital restant.</li>
                </ul>
                <p>Autres remarques sur les scores :</p>
@@ -285,18 +285,18 @@ export const Feedback = EpicComponent(self => {
                      </div>
                   : <div>
                         <Alert bsStyle='warning'>
-                           <p>La ville est la bonne, mais au moins un des trois métaux est faux.</p>
+                           <p>Le lieu est le bon, mais au moins un des trois métaux est faux.</p>
                            {halfScore}
                         </Alert>
                      </div>)
              : (feedback.metals
                   ? <div>
                         <Alert bsStyle='warning'>
-                           <p>Les trois métaux sont les bons, mais la ville est fausse.</p>
+                           <p>Les trois métaux sont les bons, mais le lieu est faux.</p>
                            {halfScore}
                         </Alert>
                      </div>
-                  : <Alert bsStyle='danger'>Ni la ville ni les métaux ne sont les bons.</Alert>)}
+                  : <Alert bsStyle='danger'>Ni le lieu ni les métaux ne sont les bons.</Alert>)}
          </div>
       );
    };
@@ -322,7 +322,7 @@ export const Task = EpicComponent(self => {
    </div>
 
    <p>
-      Votre but est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'une ville et trois noms de métaux.
+      Votre but est de l'aider à déchiffrer ce texte. Vous devez y trouver le nom d'un lieu et trois noms de métaux.
    </p>
    <p>
       Comme pour le tour précédent, vous disposez d'outils pour vous aider et pouvez obtenir des indices.
