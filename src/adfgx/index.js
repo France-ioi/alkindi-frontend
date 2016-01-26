@@ -116,6 +116,10 @@ export const setupTools = function (workspace) {
 
 };
 
+const clipGrid = function (grid) {
+   return grid.map(row => row.slice(0, 5));
+};
+
 export const getRootScope = function (task) {
    return {
       ...task,
@@ -123,7 +127,7 @@ export const getRootScope = function (task) {
       adfgxAlphabet,
       bigramAlphabet,
       cipheredText: task.cipher_text,
-      substitutionGridHints: task.substitution_grid,
+      substitutionGridHints: clipGrid(task.substitution_grid),
       permutationHints: task.permutation
    };
 };
