@@ -235,6 +235,9 @@
 .adfgx-perm-selected .adfgx-permutation .adfgx-cell {
   color: #000;
 }
+.adfgx-controls button {
+  margin-bottom: 10px;
+}
 /*
 
   Tool Frequency Analysis

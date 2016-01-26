@@ -108,18 +108,20 @@ export const Component = EpicComponent(self => {
                      {permutations.map(renderPermutationItem)}
                   </tbody>
                </table>
-               <Button onClick={onToggleShowOnlyFavorited}>
-                  <i className={classnames(['fa', 'fa-toggle-' + (showOnlyFavorited ? 'on' : 'off')])}/>
-                  {' retenues uniquement'}
-               </Button>
-               <Button onClick={onSelectPermutation} disabled={!prevPermutation} data-key={prevPermutation&&prevPermutation.key}>
-                  <i className={classnames(['fa', 'fa-arrow-up'])}/>
-                  {' permutation précédente'}
-               </Button>
-               <Button onClick={onSelectPermutation} disabled={!nextPermutation} data-key={nextPermutation&&nextPermutation.key}>
-                  <i className={classnames(['fa', 'fa-arrow-down'])}/>
-                  {' permutation suivante'}
-               </Button>
+                  <div className='adfgx-controls'>
+                     <Button onClick={onToggleShowOnlyFavorited}>
+                        <i className={classnames(['fa', 'fa-toggle-' + (showOnlyFavorited ? 'on' : 'off')])}/>
+                        {' retenues uniquement'}
+                     </Button>
+                     <Button onClick={onSelectPermutation} disabled={!prevPermutation} data-key={prevPermutation&&prevPermutation.key}>
+                        <i className={classnames(['fa', 'fa-arrow-up'])}/>
+                        {' permutation précédente'}
+                     </Button>
+                     <Button onClick={onSelectPermutation} disabled={!nextPermutation} data-key={nextPermutation&&nextPermutation.key}>
+                        <i className={classnames(['fa', 'fa-arrow-down'])}/>
+                        {' permutation suivante'}
+                     </Button>
+                  </div>
                <div>
                   {'Permutation '}
                   {permutations.indexOf(selectedPermutation) + 1}
