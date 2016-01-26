@@ -219,7 +219,7 @@ const PermWiring = EpicComponent(self => {
       // connexions going to the left get the first ones, in increasing order so they don't intersect eachother
       for (let src = 0; src < permutation.length; src++) {
          const dst = permutation[src];
-         if (dst && dst < src) {
+         if (dst !== undefined && dst < src) {
             srcHeights[src] = height;
             height++;
          }
@@ -227,7 +227,7 @@ const PermWiring = EpicComponent(self => {
       // then straight connexions
       for (let src = 0; src < permutation.length; src++) {
          const dst = permutation[src];
-         if (dst && dst == src) {
+         if (dst !== undefined && dst == src) {
             srcHeights[src] = height;
             height++;
          }
@@ -235,7 +235,7 @@ const PermWiring = EpicComponent(self => {
       // then connexions going to the right, in reverse order so they don't intersect eachother
       for (let src = permutation.length - 1; src >= 0; src--) {
          const dst = permutation[src];
-         if (dst && src < dst) {
+         if (dst !== undefined && src < dst) {
             srcHeights[src] = height;
             height++;
          }
@@ -260,7 +260,7 @@ const PermWiring = EpicComponent(self => {
       // we add each connexion one by one
       for (let src = 0; src < permutation.length; src++) {
          const dst = permutation[src];
-         if (!dst)
+         if (dst === undefined)
             continue;
          const side = dst <= src ? 1 : 0;
          const height = srcHeights[src];
