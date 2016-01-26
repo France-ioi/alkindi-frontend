@@ -464,8 +464,8 @@ export const Component = EpicComponent(self => {
          {label: "Permutation", name: outputPermutationVariable}
       ];
       const areHintsEnabled = true;
-      const renderCell = function (c) {
-         return 'l' in c ? c.l : 'None';
+      const renderCell = function (l) {
+         return l === null ? 'None' : ('\''+clearAlphabet.symbols[l]+'\'');
       };
       return (
          <div className='panel panel-default'>
@@ -473,7 +473,7 @@ export const Component = EpicComponent(self => {
                <span className='code'>
                   <Python.Assign>
                      <Python.Var name={outputSubstitutionVariable}/>
-                     <Python.Grid grid={outputSubstitution} renderCell={renderCell}/>
+                     <Python.Grid grid={substitutionGridHints} renderCell={renderCell}/>
                   </Python.Assign>
                </span>
             </div>
