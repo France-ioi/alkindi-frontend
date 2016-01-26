@@ -16,7 +16,9 @@ const Grid = EpicComponent(self => {
       const row = parseInt(element.getAttribute('data-row'));
       const col = parseInt(element.getAttribute('data-col'));
       const bigram = element.getAttribute('data-bigram');
-      const rank = parseInt(element.getAttribute('data-rank'));
+      let rank = parseInt(element.getAttribute('data-rank'));
+      if (isNaN(rank))
+         rank = null;
       self.props.onClick(row, col, bigram, rank);
    };
 
@@ -363,7 +365,9 @@ export const Component = EpicComponent(self => {
          selectedCol: col,
          hintQuery: {
             type: 'subst-decipher',
-            bigram: bigram
+            bigram: bigram,
+            row: row,
+            col: col
          },
          hintStep: 'preparing',
          hintObtained: rank !== null
@@ -376,7 +380,8 @@ export const Component = EpicComponent(self => {
          selectedLetterRank: letterRank,
          hintQuery: {
             type: 'subst-cipher',
-            letter: letter
+            letter: letter,
+            rank: letterRank
          },
          hintStep: 'preparing',
          hintObtained: bigram !== null
@@ -410,13 +415,21 @@ export const Component = EpicComponent(self => {
    };
 
    const onQueryHint = function () {
-      console.log(self.state.hintQuery);
+      const {getHint} = self.props.scope;
+      const {hintQuery} = self.state;
+      self.setState({hintStep: 'waiting'});
+      getHint(hintQuery, function (err) {
+         self.setState({
+            ...noSelection,
+            hintQuery: undefined,
+            hintStep: err ? 'error' : 'received'
+         });
+      });
    };
 
    const onCancelHintQuery = function () {
       self.setState({
-         selectedRow: undefined,
-         selectedCol: undefined,
+         ...noSelection,
          hintQuery: undefined,
          hintStep: undefined
       });
