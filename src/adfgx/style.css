@@ -34,6 +34,9 @@
   font-weight: bold;
   margin: 10px 0 0;
 }
+.adfgx-cell-selected {
+  background-color: #ccc;
+}
 .adfgx-hints-grid,
 .adfgx-hints-alphabet {
   display: inline-block;
@@ -58,9 +61,6 @@
 }
 .adfgx-hints-grid .adfgx-grid th {
   border: none;
-}
-.adfgx-grid .adfgx-cell-selected {
-  background-color: #ccc;
 }
 .adfgx-hints-alphabet {
   width: 66%;
