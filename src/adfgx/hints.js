@@ -507,13 +507,13 @@ export const Component = EpicComponent(self => {
                         {'Révéler la ligne où sera envoyée chacune des 6 lignes pour obtenir le message intermédiaire : '}
                         {getQueryCost({type: "perm-decipher"})}
                         {' points '}
-                        <Tooltip content={<p>TODO</p>}/>
+                        <Tooltip content={<p>Cliquez sur une case de la ligne du haut pour voir vers quelle position elle est envoyée lors de l'application de la permutation de déchiffrement.</p>}/>
                      </p>
                      <p>
                         {'Révéler la ligne d\'origine d\'une des 6 lignes du message intermédiaire : '}
                         {getQueryCost({type: "perm-cipher"})}
                         {' points '}
-                        <Tooltip content={<p>TODO</p>}/>
+                        <Tooltip content={<p>Cliquez sur une case de la ligne du bas pour voir quelle position de la ligne du haut est envoyée vers cette position lors de la permutation de déchiffrement.</p>}/>
                      </p>
                   </div>
                   <div className='adfgx-hints-perm-grid'>
