@@ -158,7 +158,7 @@ export const Permutation = EpicComponent(self => {
 const HintQuery = EpicComponent(self => {
 
    self.render = function () {
-      const {step, query, cost, score, obtained, onOk, onCancel} = self.props;
+      const {step, query, getQueryCost, score, obtained, onOk, onCancel} = self.props;
       if (step === "preparing") {
          return (
             <div className='dialog'>
@@ -173,7 +173,7 @@ const HintQuery = EpicComponent(self => {
                   {query.type === "perm-cipher" &&
                      <span>ligne où est envoyée la ligne <strong>{query.line + 1}</strong> lors du chiffrage</span>}
                </p>
-               {!obtained && <p><strong>Coût :</strong> {cost} points</p>}
+               {!obtained && <p><strong>Coût :</strong> {getQueryCost(query)} points</p>}
                {!obtained && <p><strong>Score disponible :</strong> {score} points</p>}
                {!obtained && <p>L’indice obtenu sera visible par toute l’équipe.</p>}
                {obtained && <p>L’indice a déjà été obtenu.</p>}
@@ -464,7 +464,7 @@ export const Component = EpicComponent(self => {
                </span>
             </div>
             <div className='panel-body'>
-               {hintStep && <HintQuery step={hintStep} query={hintQuery} cost={getQueryCost(hintQuery)} obtained={hintObtained} score={score} onOk={onQueryHint} onCancel={onCancelHintQuery}/>}
+               {hintStep && <HintQuery step={hintStep} query={hintQuery} getQueryCost={getQueryCost} obtained={hintObtained} score={score} onOk={onQueryHint} onCancel={onCancelHintQuery}/>}
                {false && <Variables inputVars={inputVars} outputVars={outputVars}/>}
                {areHintsEnabled && <div className='grillesSection'>
                   <p className='hints-title'>Plusieurs types d'indices sont disponibles :</p>
@@ -472,7 +472,7 @@ export const Component = EpicComponent(self => {
                   <div className='adfgx-hints-grid'>
                      <p>
                         {'Révéler une case : '}
-                        {getQueryCost({type: "grid"})}
+                        {getQueryCost({type: "subst-decipher"})}
                         {' points '}
                         <Tooltip content={<p>Cliquez sur une case de la grille pour demander quelle lettre elle contient.</p>}/>
                      </p>
@@ -481,7 +481,7 @@ export const Component = EpicComponent(self => {
                   <div className='adfgx-hints-alphabet'>
                      <p>
                         {'Révéler la position d\'une lettre : '}
-                        {getQueryCost({type: "alphabet"})}
+                        {getQueryCost({type: "subst-cipher"})}
                         {' points '}
                         <Tooltip content={<p>Cliquer sur une lettre non grisée ci-dessous pour demander sa position au sein de la grille.</p>}/>
                      </p>
