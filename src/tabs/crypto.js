@@ -60,10 +60,6 @@ export const CryptoTab = EpicComponent(self => {
     );
   };
 
-  const getQueryCost = function (query) {
-    return 300;
-  };
-
   const saveStateTooltip = (
     <p>
       Enregistrez de temps en temps votre travail pour ne pas risquer de le
@@ -152,7 +148,7 @@ export const CryptoTab = EpicComponent(self => {
       </div>
     );
     const {TabHeader, getRootScope} = Tasks[task.front];
-    const rootScope = getRootScope({...task, getHint, getQueryCost});
+    const rootScope = getRootScope({...task, getHint});
     const tools = manager.render(rootScope);
     return (
       <div>
