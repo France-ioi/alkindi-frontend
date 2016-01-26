@@ -55,7 +55,6 @@ const BareDemo = EpicComponent(self => {
             const line = hints.permutation.indexOf(query.line);
             newTask = {...task, permutation: at(line, put(hints.permutation[line]))(task.permutation)};
          } else {
-            console.log(query);
             return callback('error');
          }
          self.props.dispatch({type: 'SET_TASK', task: newTask});
