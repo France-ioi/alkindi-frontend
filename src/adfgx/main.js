@@ -16,17 +16,23 @@ const initialTask = {
    // subst. par freq. EATISNRUOLDCVMPFBXGHQJYZK
    // grille: AHVNR LIFTD PKXMO UCBQS JGYEZ
    // texte: NOTREPLANCOMMENCEDEFACONFORMIDABLEETJETI…
-   substitution_grid:
-      // [[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]],
-      [[0,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,4,null]],
-      // [[0, 7, 21, 13, 17], [11, 8, 5, 19, 3], [15, 10, 22, 12, 14], [20, 2, 1, 16, 18], [9, 6, 23, 4, 24]],
-   permutation:
-      // [null,null,null,null,null],
-      // LUHYPF → [5, 2, 0, 4, 1, 3]
-      // [5, 2, 0, 4, 1, 3],
-      [5, null, null, null, null, null],
-      // [null, null, 0, null, 1, null],
+   substitution_grid: [[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]],
+   permutation: [null, null, null, null, null, null],
+   hints: {
+      substitution_grid: [[0, 7, 21, 13, 17], [11, 8, 5, 19, 3], [15, 10, 22, 12, 14], [20, 2, 1, 16, 18], [9, 6, 23, 4, 24]],
+      permutation: [5, 2, 0, 4, 1, 3],
+   },
    cipher_text: "GAGGGXAGXXAGGGFXADXDXXXAGDGGDGGAGAXGGGDGXXGAGAAAGGXADGGAXGFGXGFGXAAGFXGADXXXGGGAGDXADGDXXAGGXGAGAAGGAXGGXGXAFGDGGAAXGDXGXAXAAFXGXXGAGXAGDXADXDGAAXXAADGGFGFXAFXXDFFDGXXXAGXGXFDAXADDAGGADDAFDDXFGAXAADDAGADFDXADGGGDFAXXGXAAXDADDDXGXGADDDAAGDADADAGFXXAAGGADXDFDAADADDDGFDADAGFDAAXADDXGDXDFFAXFDGXGDAXGDFGAAFGAGXGAADGFGXGDFAXXDGFDDDAGADXAGXGGDGADFAGDAGADXDFADXDAGGDDDAXDXDDDFADXXADDFAGAAGGDDDXADXXFFDDAGAGDDDDXDADXGXAAXGFFDAGDDDFGAFXXGDAFGFGAXADGDDDGDXGFDXXGFADAGADADDFAFADAAADDDDAAGDDADDGGAXDXXDXXAXGFXDXDADFXAXFGAXAGADXAAGXDXGDFDAAAAAAAGAGGGAXXAAXGGDXGFFAAAAXDDGAXFADXXAXFGXXDXXGGFFDGXFAGAAGAXDFAAXAGXDDADGGFAFAFGDXAXDXGXADGDGDFGAGADXXFDGFDAADGXDXGAXADAXAAAXFGGGAGGGDGDXGDGXGDGAFXGAXGGXFXXAXGAXAGGAGFGGGAFAGGAFXGDADGDGXGAGXXGAAGGXAGGAGAAGGXXDAADXXXGXGDGGGXGGDXXGGAXADGAXXGDXGAXGGFXXDFGGGAAGDGXDGGXXAGDAXGFXXGGGAAAGGXAAAXFGXDGGDAFXXXXGGAGXXGDADDDGAGFADAGAAAXXXADGXXGGGAXXFGGGFGXAAXDAGFGADDFXFDXFDGAAGADGGXXDGXXAGXGGGXGFAFXAXAFGD"
+};
+
+const findInGrid = function (grid, rank) {
+   for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[row].length; col++) {
+         if (grid[row][col] === rank) {
+            return {row, col};
+         }
+      }
+   }
 };
 
 const BareDemo = EpicComponent(self => {
@@ -37,9 +43,24 @@ const BareDemo = EpicComponent(self => {
 
    const getHint = function (query, callback) {
       setTimeout(function () {
-         // call props.dispatch with an action to reveal a hint
-         callback('not implemented');
-      }, 1000);
+         const {task} = self.props;
+         const {hints} = task;
+         let newTask = task;
+         if (query.type === 'subst-decipher') {
+            const {row, col} = query;
+            newTask = {...task, substitution_grid: at(row, at(col, put(hints.substitution_grid[row][col])))(task.substitution_grid)};
+         } else if (query.type === 'subst-cipher') {
+            const {row, col} = findInGrid(hints.substitution_grid, query.rank);
+            newTask = {...task, substitution_grid: at(row, at(col, put(hints.substitution_grid[row][col])))(task.substitution_grid)};
+         } else if (query.type === 'perm-decipher') {
+            newTask = {...task, permutation: at(0, put(hints.permutation[0]))(task.permutation)};
+         } else {
+            console.log(query);
+            return callback('error');
+         }
+         self.props.dispatch({type: 'SET_TASK', task: newTask});
+         callback();
+      }, 200);
    };
 
   const onWorkspaceChanged = function (workspace) {
@@ -69,6 +90,8 @@ const reducer = function (state, action) {
          return {task: initialTask};
       case 'SET_WORKSPACE':
          return {...state, workspace: action.workspace};
+      case 'SET_TASK':
+         return {...state, task: action.task};
       default:
          throw action;
    }
