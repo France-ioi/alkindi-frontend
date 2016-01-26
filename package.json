@@ -1,6 +1,6 @@
 {
   "name": "alkindi-r2-front",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "Alkindi competition round 2 front-end",
   "authors": [
     "Epixode"
@@ -27,6 +27,7 @@
     "memoizejs": "^0.1.1",
     "node-range": "^0.1.0",
     "object.assign": "^4.0.3",
+    "postcss-url": "^5.1.0",
     "rc-tooltip": "^3.3.0",
     "react": "^0.14.6",
     "react-bootstrap": "^0.27.3",
