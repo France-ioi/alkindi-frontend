@@ -187,7 +187,7 @@ export const AnswerDialog = EpicComponent(self => {
                   d'une minute.
                </p>
                <p className="input">
-                  <label htmlFor="answer-c">{'Lieu : '}</label>
+                  <label htmlFor="answer-c">{'Lieu (ville ou pays) : '}</label>
                   <input type="text" id="answer-c" ref={refCity} />
                </p>
                <p className="input">
@@ -218,8 +218,8 @@ export const AnswerDialog = EpicComponent(self => {
                <p>Le score est calculé comme suit :</p>
                <ul>
                   <li>vous partez d'un capital de 1000 points ;</li>
-                  <li>300 points sont retirés de ce capital pour chaque indice
-                      demandé avant votre réponse ;</li>
+                  <li>35, 50 ou 200 points sont retirés de ce capital pour chaque indice
+                      demandé avant votre réponse, suivant le type d'indice ;</li>
                   <li>si vous avez à la fois le bon lieu et les trois métaux,
                      votre score est égal au capital restant ;</li>
                   <li>si vous n'avez que le lieu, ou bien que les trois métaux,
