@@ -468,7 +468,7 @@ export const Component = EpicComponent(self => {
          return l === null ? 'None' : ('\''+clearAlphabet.symbols[l]+'\'');
       };
       return (
-         <div className='panel panel-default'>
+         <div className='panel panel-default task-hints'>
             <div className='panel-heading'>
                <span className='code'>
                   <Python.Assign>
@@ -528,6 +528,13 @@ export const Component = EpicComponent(self => {
                      </div>
                   </div>
                </div>}
+               <div className='task-score'>
+                  <span>
+                     <strong>{'Points disponibles :'}</strong>
+                     {' '+score+' points '}
+                     <Tooltip content={<p>Score que votre équipe obtiendra si vous résolvez le sujet sans demander d’autres indices. Il diminue à chaque fois qu’un membre de l’équipe demande un indice.</p>}/>
+                  </span>
+               </div>
                {!areHintsEnabled && <div>
                   <p>Pour la première journée du 3ème tour, les indices sont désactivés.</p>
                   <p>
