@@ -53,7 +53,11 @@ const BareDemo = EpicComponent(self => {
             const {row, col} = findInGrid(hints.substitution_grid, query.rank);
             newTask = {...task, substitution_grid: at(row, at(col, put(hints.substitution_grid[row][col])))(task.substitution_grid)};
          } else if (query.type === 'perm-decipher') {
-            newTask = {...task, permutation: at(0, put(hints.permutation[0]))(task.permutation)};
+            const {line} = query;
+            newTask = {...task, permutation: at(line, put(hints.permutation[line]))(task.permutation)};
+         } else if (query.type === 'perm-cipher') {
+            const line = hints.permutation.indexOf(query.line);
+            newTask = {...task, permutation: at(line, put(hints.permutation[line]))(task.permutation)};
          } else {
             console.log(query);
             return callback('error');
