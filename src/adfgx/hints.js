@@ -473,26 +473,30 @@ export const Component = EpicComponent(self => {
                      <Alphabet grid={substitutionGridHints} bigramAlphabet={bigramAlphabet} clearAlphabet={clearAlphabet} onClick={onSelectInAlphabet} selectedLetterRank={selectedLetterRank}/>
                   </div>
                   <p className='hints-section-title'>Des indices sur la permutation :</p>
-                  <div className='adfgx-hints-perm-decipher'>
+                  <div className='adfgx-hints-perm-labels'>
                      <p>
                         {'Révéler la ligne où sera envoyée chacune des 6 lignes pour obtenir le message intermédiaire : '}
                         {getQueryCost({type: "perm-decipher"})}
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     <Permutation permutation={outputPermutation} selectedPos={selectedDecipherPos} onClick={onSelectInDecipherPerm}/>
-                  </div>
-                  <div className='adfgx-hints-perm-cipher'>
                      <p>
                         {'Révéler la ligne d\'origine d\'une des 6 lignes du message intermédiaire : '}
                         {getQueryCost({type: "perm-cipher"})}
                         {' points '}
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
-                     <Permutation permutation={inversePermutation} selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
                   </div>
-                  <div>
-                     <PermWiring permutation={outputPermutation}/>
+                  <div className='adfgx-hints-perm-grid'>
+                     <div className='adfgx-hints-perm-decipher'>
+                        <Permutation permutation={outputPermutation} selectedPos={selectedDecipherPos} onClick={onSelectInDecipherPerm}/>
+                     </div>
+                     <div>
+                        <PermWiring permutation={outputPermutation}/>
+                     </div>
+                     <div className='adfgx-hints-perm-cipher'>
+                        <Permutation permutation={inversePermutation} selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
+                     </div>
                   </div>
                </div>}
                {!areHintsEnabled && <div>

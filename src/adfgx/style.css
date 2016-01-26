@@ -87,6 +87,54 @@
   display: block;
   height: 1em;
 }
+
+/* Wires section */
+.adfgx-hints-perm-labels {
+  display: inline-block;
+  width: 50%;
+  margin: 0 20px;
+  vertical-align: top;
+}
+.adfgx-hints-perm-grid {
+  display: inline-block;
+}
+.adfgx-hints-perm-grid table {
+  border: 1px solid #000;
+  text-align: center;
+}
+.adfgx-hints-perm-grid td {
+  width: 30px;
+  height: 30px;
+}
+.adfgx-wire-line {
+  clear: both;
+}
+.adfgx-wire-line::before,
+.adfgx-wire-line::after {
+  content: " ";
+  display: table;
+  clear: both;
+}
+.adfgx-wire-cell {
+  width: 15px;
+  height: 5px;
+  border: none;
+  float: left;
+}
+.adfgx-wire-cell {
+  background-image: url("../src/adfgx/traits.png");
+  background-repeat: no-repeat;
+}
+.adfgx-wire-cell-a {background: transparent;}
+.adfgx-wire-cell-b {background-position: 0px -4px;}
+.adfgx-wire-cell-c {background-position: 0px -19px;}
+.adfgx-wire-cell-d {background-position: 0px -34px;}
+.adfgx-wire-cell-e {background-position: 0px -49px;}
+.adfgx-wire-cell-f {background-position: 0px -64px;}
+.adfgx-wire-cell-g {background-position: 0px -79px;}
+.adfgx-wire-cell-h {background-position: 0px -94px;}
+
+
 /*
 
   Tool apply permutations
@@ -279,43 +327,3 @@
 .adfgx-subst-tgt-frequency {
   display: block;
 }
-
-
-.adfgx-wire-symb span {
-  border: 1px solid #000;
-  width: 29px;
-  height: 29px;
-  display: block;
-  float: left;
-  border-left: none;
-}
-.adfgx-wire-symb span:first-child {
-  border-left: 1px solid #000;
-}
-.adfgx-wire-line {
-  clear: both;
-}
-.adfgx-wire-line::before,
-.adfgx-wire-line::after {
-  content: " ";
-  display: table;
-  clear: both;
-}
-.adfgx-wire-cell {
-  width: 15px;
-  height: 5px;
-  border: none;
-  float: left;
-}
-.adfgx-wire-cell {
-  background-image: url("../src/adfgx/traits.png");
-  background-repeat: no-repeat;
-}
-.adfgx-wire-cell-a {background: transparent;}
-.adfgx-wire-cell-b {background-position: 0px -4px;}
-.adfgx-wire-cell-c {background-position: 0px -19px;}
-.adfgx-wire-cell-d {background-position: 0px -34px;}
-.adfgx-wire-cell-e {background-position: 0px -49px;}
-.adfgx-wire-cell-f {background-position: 0px -64px;}
-.adfgx-wire-cell-g {background-position: 0px -79px;}
-.adfgx-wire-cell-h {background-position: 0px -94px;}
