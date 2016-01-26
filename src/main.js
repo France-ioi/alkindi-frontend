@@ -8,6 +8,8 @@ require('es5-sham-ie8');
 require('object.assign').shim();
 // Array.prototype.find not available on Chrome
 require('es6-shim');
+// Array.prototype.fill not available on IE
+require('array.prototype.fill');
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
 import React from 'react';
