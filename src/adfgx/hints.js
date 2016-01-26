@@ -208,6 +208,121 @@ const HintQuery = EpicComponent(self => {
 
 });
 
+const PermWiring = EpicComponent(self => {
+
+   // distributes heights from 1 to premutation.length included
+   const getPlateauHeights = function (permutation) {
+      let height = 1;
+      const srcHeights = [];
+      // connexions going to the left get the first ones, in increasing order so they don't intersect eachother
+      for (let src = 0; src < permutation.length; src++) {
+         const dst = permutation[src];
+         if (dst && dst < src) {
+            srcHeights[src] = height;
+            height++;
+         }
+      }
+      // then straight connexions
+      for (let src = 0; src < permutation.length; src++) {
+         const dst = permutation[src];
+         if (dst && dst == src) {
+            srcHeights[src] = height;
+            height++;
+         }
+      }
+      // then connexions going to the right, in reverse order so they don't intersect eachother
+      for (let src = permutation.length - 1; src >= 0; src--) {
+         const dst = permutation[src];
+         if (dst && src < dst) {
+            srcHeights[src] = height;
+            height++;
+         }
+      }
+      return srcHeights;
+   };
+
+   // we build a permutation.length x permutation.length*2 grid, containing
+   // the descriptions of connectors for the given permutation
+   // connectors start in even cells at the top, and odd cells at the bottom
+   const getPermutationDisplayGrid = function (permutation) {
+      const grid = [];
+      for (let row = 0; row < permutation.length + 2; row++) {
+         grid[row] = [];
+         for (let col = 0; col < permutation.length; col++) {
+            grid[row][col * 2] = 0;
+            grid[row][col * 2 + 1] = 0;
+         }
+      }
+      // for each top (source) connector, we get the height of the plateau
+      const srcHeights = getPlateauHeights(permutation);
+      // we add each connexion one by one
+      for (let src = 0; src < permutation.length; src++) {
+         const dst = permutation[src];
+         if (!dst)
+            continue;
+         const side = dst <= src ? 1 : 0;
+         const height = srcHeights[src];
+         // top vertical line
+         for (let row = 0; row < height; row++) {
+            grid[row][src * 2] += 5; // |
+         }
+         // bottom vertical line
+         for (let row = height + 1; row < permutation.length + 2; row++) {
+            grid[row][dst * 2 + 1] += 5; // |
+         }
+         if (src <= dst) { // top is on the left side of bottom connector)
+            // horizontal line (too long but will be overwritten)
+            for (let col = src; col <= dst; col++) {
+               grid[height][col * 2] += 10; // -
+               grid[height][col * 2 + 1] += 10; // -
+            }
+            // elbows (overwrites part of the horizontal line)
+            grid[height][src * 2] = 3; // └
+            grid[height][dst * 2 + 1] = 12; // ┐
+         } else if (src > dst) {
+            // right elbow
+            grid[height][src * 2] = 9; // ┘
+            // horizontal line
+            for (let col = dst + 1; col < src; col++) {
+               grid[height][col * 2] += 10; // -
+               grid[height][col * 2 + 1] += 10; // -
+            }
+            // left elbow
+            grid[height][dst * 2 + 1] = 6; // ┌
+         }
+      }
+      return grid;
+   };
+
+   const renderTile = function (key, bits) {
+      const tile = 'a..b.cd..ef.g..h'.charAt(bits);
+      return <div key={key} className={"adfgx-wire-cell adfgx-wire-cell-"+tile}/>;
+   };
+
+   self.componentWillMount = function () {
+      self.setState({grid: getPermutationDisplayGrid(self.props.permutation.map(c => c.l))});
+   };
+
+   self.componentWillReceiveProps = function (props) {
+      if (self.props.permutation !== props.permutation) {
+         self.setState({grid: getPermutationDisplayGrid(props.permutation.map(c => c.l))});
+      }
+   };
+
+   self.render = function () {
+      const {grid} = self.state;
+      return (
+         <div className="adfgx-perm-wiring">
+            {grid.map((row, iRow) =>
+               <div key={iRow} className="adfgx-wire-line">
+                  {row.map((cell, iCol) => renderTile(iCol, cell))}
+               </div>)}
+         </div>
+      );
+   };
+
+});
+
 export const Component = EpicComponent(self => {
 
    /*
@@ -375,6 +490,9 @@ export const Component = EpicComponent(self => {
                         <Tooltip content={<p>TODO</p>}/>
                      </p>
                      <Permutation permutation={inversePermutation} selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
+                  </div>
+                  <div>
+                     <PermWiring permutation={outputPermutation}/>
                   </div>
                </div>}
                {!areHintsEnabled && <div>
