@@ -59,6 +59,9 @@
 .adfgx-hints-grid .adfgx-grid th {
   border: none;
 }
+.adfgx-grid .adfgx-cell-selected {
+  background-color: #ccc;
+}
 .adfgx-hints-alphabet {
   width: 66%;
 }
