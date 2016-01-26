@@ -128,16 +128,18 @@ export const Permutation = EpicComponent(self => {
    };
 
    self.render = function () {
-      const {permutation, selectedPos} = self.props;
+      const {permutation, selectedPos, show} = self.props;
       const renderCell = function (cell, iCell) {
          const classes = [
             'adfgx-cell',
             selectedPos === iCell && 'adfgx-cell-selected',
             cell.q === 'hint' && 'adfgx-hint-obtained'
          ];
+         const symbol = show === 'source' ? iCell + 1 :
+            (cell.l === undefined ? ' ' : cell.l + 1);
          return (
             <td key={iCell} className={classnames(classes)} onClick={onClick} data-from={iCell} data-to={cell.l}>
-               {cell.l === undefined ? ' ' : (cell.l + 1)}
+               {symbol}
             </td>
          );
       };
@@ -502,13 +504,13 @@ export const Component = EpicComponent(self => {
                   </div>
                   <div className='adfgx-hints-perm-grid'>
                      <div className='adfgx-hints-perm-decipher'>
-                        <Permutation permutation={outputPermutation} selectedPos={selectedDecipherPos} onClick={onSelectInDecipherPerm}/>
+                        <Permutation permutation={outputPermutation} show='target' selectedPos={selectedDecipherPos} onClick={onSelectInDecipherPerm}/>
                      </div>
                      <div>
                         <PermWiring permutation={outputPermutation}/>
                      </div>
                      <div className='adfgx-hints-perm-cipher'>
-                        <Permutation permutation={inversePermutation} selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
+                        <Permutation permutation={inversePermutation} show='source' selectedPos={selectedCipherPos} onClick={onSelectInCipherPerm}/>
                      </div>
                   </div>
                </div>}
