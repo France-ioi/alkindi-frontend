@@ -92,7 +92,7 @@ export const CryptoTab = EpicComponent(self => {
       }
       // If there is a revision that can be loaded, attempt to load it.
       if (workspace.revisionId !== undefined) {
-        self.setState({loading: true});
+        self.setState({loading: true, broken: false});
         self.props.api.loadRevision(workspace.revisionId).then(
           function (result) {
             const revision = result.workspace_revision;
@@ -101,9 +101,8 @@ export const CryptoTab = EpicComponent(self => {
             manager.load(revision.state);
             self.setState({loading: false});
           },
-          function () {
-            self.setState({loading: false});
-            // XXX leaving a broken state?
+          function (err) {
+            self.setState({loading: false, broken: true});
           }
         );
         return;
@@ -116,13 +115,17 @@ export const CryptoTab = EpicComponent(self => {
 
   self.render = function () {
     const {api, user_id, task, manager, workspace} = self.props;
-    const {loading} = self.state;
-    if (loading || workspace === undefined)
+    const {loading, broken} = self.state;
+    if (loading || broken) {
+      // Keep the same Notifier instance displayed if workspace.tools becomes
+      // undefined, otherwise the Notifier will miss the error event.
+      // XXX The API error should be move into the global state.
       return (
         <div>
           Chargement en cours, veuillez patienter...
           <Notifier emitter={api.emitter}/>
         </div>);
+    }
     const saveStyle = workspace.changed ? 'primary' : 'default';
     const header = (
       <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
