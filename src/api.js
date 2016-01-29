@@ -21,14 +21,7 @@ export const ApiFactory = function (methods) {
     storeRevision: (user_id, data) => post('users/'+user_id+'/store_revision', data),
     submitAnswer: (user_id, attempt_id, data) => post('users/'+user_id+'/attempts/'+attempt_id+'/answers', data),
     resetTeamToTraining: (team_id) => post('teams/'+team_id+'/reset_to_training'),
-    // GET, still used:
-    loadRevision: (revision_id) => get('workspace_revisions/'+revision_id),
-    // Legacy
-    readUser: (user_id) => get('users/'+user_id),
-    getAccessCode: (user_id) => get('users/'+user_id+'/access_code'),
-    listAttemptRevisions: (attempt_id) => get('attempts/'+attempt_id+'/revisions'),
-    listAttemptAnswers: (attempt_id) => get('attempts/'+attempt_id+'/answers'),
-    listTeamAttempts: (team_id) => get('teams/'+team_id+'/attempts'),
+    loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)
   };
 };
 
