@@ -10,7 +10,7 @@ const ErrorMessages = {
   'not qualified for any round': "Vous n'êtes pas qualifié.",
   'unknown access code': "Le code d'accès saisi n'est pas valide.",
   'unknown team code': "Le code d'équipe saisi n'est pas valide.",
-  'team is locked': "L'équipe a déjà commencée une épreuve et ne peut plus être changée.",
+  'team is locked': "L'équipe a déjà commencé une épreuve, il n'est plus possible de la quitter.",
   'team is closed': "Le créateur de l'équipe a verrouillé la composition de l'équipe.",
   'registration is closed': "L'enregistrement pour ce tour n'est pas encore ouvert.",
   'already have a task': "Votre équipe a déjà accès au sujet.",
