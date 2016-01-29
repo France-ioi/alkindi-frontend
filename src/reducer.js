@@ -44,8 +44,7 @@ const reduceEndRefresh = function (state, action) {
     newState.workspace = {};
   }
   // If the workspace has not been loaded, set the initial revisionId.
-  const {workspace} = newState;
-  if (workspace === undefined && response.my_latest_revision_id !== null) {
+  if (newState.workspace.tools === undefined && response.my_latest_revision_id !== null) {
     newState.workspace = {revisionId: response.my_latest_revision_id};
   }
   return reduceTick(reduceSetActiveTab(newState));
