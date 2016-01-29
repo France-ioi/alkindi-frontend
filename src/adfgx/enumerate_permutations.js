@@ -7,7 +7,8 @@ import Variables from '../tool-ui/variables';
 import Python from '../tool-ui/python';
 import {bigramsFromText, coincidenceIndex, generatePermutations,
         comparePermutations, permutationFromString, applyPermutation,
-        numbersAlphabet, getInversePermutation, renderPermutation} from './common';
+        numbersAlphabet, getInversePermutation, renderPermutation,
+        arePermutationsCompatible} from './common';
 
 export const Component = EpicComponent(self => {
 
@@ -147,7 +148,7 @@ export const compute = function (toolState, scope) {
          permutationMap[permutation.key] = permutation;
       });
    }
-   // Add all favorited permutations.
+   // Add all favorited permutations that do not conflict with the input.
    Object.keys(permutationInfos).forEach(function (key) {
       const infos = permutationInfos[key];
       if (key in permutationMap) {
@@ -158,12 +159,15 @@ export const compute = function (toolState, scope) {
          // stick around after the user has obtained hints).
          if (!infos.favorited)
             return;
-         // Add the permutation to the output.
-         permutations.push({
-            key: key,
-            qualified: permutationFromString(key, inputPermutation),
-            favorited: infos.favorited
-         });
+         // Add the permutation to the output, if compatible with the input.
+         const permutation = permutationFromString(key, inputPermutation);
+         if (arePermutationsCompatible(inputPermutation, permutation)) {
+            permutations.push({
+               key: key,
+               qualified: permutation,
+               favorited: true
+            });
+         }
       }
    });
    // Compute stats and inverse on each permutation.

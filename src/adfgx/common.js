@@ -272,6 +272,16 @@ export const getInversePermutation = function (permutationCells) {
    return inversePermutation;
 };
 
+export const arePermutationsCompatible = function (p1, p2) {
+   for (let iPos = 0; iPos < p1.length; iPos++) {
+      if (p1[iPos].l === undefined || p2[iPos].l === undefined)
+         continue;
+      if (p1[iPos].l !== p2[iPos].l)
+         return false;
+   }
+   return true;
+};
+
 ///////////////////////////////////////////////////////////////////////
 //
 // Substitution
