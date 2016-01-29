@@ -77,7 +77,10 @@ const AttemptsTab = PureComponent(self => {
   const getMaxScore = function (attempts) {
     let max_score;
     attempts.forEach(function (attempt) {
-      if (!attempt.is_training && attempt.max_score !== null) {
+      // The attempt's max_score may be null (no score) or undefined
+      // (synthetic attempt).  If there is a score it will be a non-
+      // empty string, which is truthy.
+      if (!attempt.is_training && attempt.max_score) {
         // Parse max_score as it is a decimal type sent as a string.
         const score = parseInt(attempt.max_score);
         if (max_score === undefined || score > max_score)
