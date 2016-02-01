@@ -60,7 +60,7 @@ const AttemptsTab = PureComponent(self => {
         <p>Pour autoriser l'accès au sujet, vous devez saisir des codes de
            lancement.</p>
         <p>Voici la composition de votre équipe :</p>
-        <table width="100%">
+        <table className="table">
           <tbody>
             <tr>
               <th>Login</th>
@@ -120,7 +120,7 @@ const AttemptsTab = PureComponent(self => {
             vous le souhaitez.
             Votre score sera celui de la meilleure de vos tentatives.
           </p>}
-        {score &&
+        {typeof score == 'number' &&
           <p className="team-score">
               Score actuel de l'équipe (meilleur score parmi les épreuves
               en temps limité) : <span className="team-score">{score}</span>.

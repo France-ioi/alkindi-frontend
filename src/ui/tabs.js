@@ -9,7 +9,8 @@ const tabs = [
   {key: 'task', label: "Sujet"},
   {key: 'cryptanalysis', label: "Cryptanalyse"},
   {key: 'history', label: "Historique"},
-  {key: 'answers', label: "Réponses"}
+  {key: 'answers', label: "Réponses"},
+  {key: 'results', label: "Résultats"}
 ];
 
 let AlkindiTabs = PureComponent(self => {

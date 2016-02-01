@@ -61,7 +61,7 @@ const AnswersTab = PureComponent(self => {
       );
     };
     return (
-      <table className="answer-list">
+      <table className="table answer-list">
         <thead>
           <tr>
             <th></th>

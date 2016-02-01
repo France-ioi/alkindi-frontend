@@ -68,7 +68,7 @@ const HistoryTab = EpicComponent(self => {
       );
     };
     return (
-      <table className="revision-list">
+      <table className="table revision-list">
         <thead>
           <tr>
             <th></th>

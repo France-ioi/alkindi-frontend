@@ -11,6 +11,7 @@ import TaskTab from '../tabs/task';
 import CryptoTab from '../tabs/crypto';
 import HistoryTab from '../tabs/history';
 import AnswersTab from '../tabs/answers';
+import ResultsTab from '../tabs/results';
 import * as actions from '../actions';
 import {asset_url} from '../assets';
 
@@ -43,6 +44,9 @@ export const MainScreen = EpicComponent(self => {
         break;
       case 'answers':
         content = <AnswersTab api={Alkindi.api} user_id={user_id} attempt={self.props.attempt}/>;
+        break;
+      case 'results':
+        content = <ResultsTab/>;
         break;
     }
     return (

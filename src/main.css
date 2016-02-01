@@ -55,22 +55,30 @@ textarea.full-width {
   width: 100%;
   max-width: 100%;
 }
-table {
+
+table.table {
   border: 1px solid #777;
   border-collapse: collapse;
   width: 100%;
 }
-table td,
-table th {
+table.table td,
+table.table th {
   border: 1px solid #777;
   padding: 3px 5px;
 }
-table input {
+table.table input {
   margin: 3px 0;
 }
-table input:focus {
+table.table input:focus {
   box-shadow: 0px 0px 3px #ccc inset;
 }
+table.table .colDate {
+  width: 25%;
+}
+table.table .colScore {
+  text-align: right;
+}
+
 .fa-question-circle {
   color: #0f33ff;
   cursor: pointer;
@@ -1069,4 +1077,5 @@ iframe.task {
 }
 
 @import "rc-tooltip/assets/bootstrap";
+@import "playfair/style.css";
 @import "adfgx/style.css";

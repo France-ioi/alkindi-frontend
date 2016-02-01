@@ -25,10 +25,20 @@ export const ApiFactory = function (methods) {
   };
 };
 
+const locationSearchAsObject = function () {
+  return window.location.search.substring(1).split("&").reduce(function(result, value) {
+    const parts = value.split('=');
+    if (parts[0] !== "") {
+      result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+    }
+    return result;
+  }, {})
+};
+
 export const Api = function (config) {
 
   function get (path) {
-    var req = request.get(config.api_url + path);
+    var req = request.get(config.api_url + path + window.location.search);
     req.set('Accept', 'application/json');
     req.set('X-Frontend-Version', config.frontend_version);
     return req;
@@ -39,8 +49,9 @@ export const Api = function (config) {
     req.set('X-CSRF-Token', config.csrf_token);
     req.set('Accept', 'application/json');
     req.set('X-Frontend-Version', config.frontend_version);
-    if (data !== undefined)
-      req.send(data);
+    const postBody = {};
+    Object.assign(postBody, data, {override: locationSearchAsObject()});
+    req.send(postBody);
     return req;
   }
 

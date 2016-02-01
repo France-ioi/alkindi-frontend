@@ -74,7 +74,7 @@ const TeamTab = PureComponent(self => {
     };
     return (
       <div className="section">
-        <table width="100%">
+        <table className="table">
           <tbody>
             <tr>
               <th>Login</th>

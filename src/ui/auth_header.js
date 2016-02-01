@@ -7,7 +7,7 @@ export default PureComponent(self => {
   self.render = function () {
     return (
         <div id="auth-header">
-          <table style={{width:'100%'}}><tbody><tr>
+          <table className="table" style={{width:'100%'}}><tbody><tr>
             <td style={{width:'20%'}}><img src={asset_url('images/alkindi-logo.png')}/></td>
             <td>
               <h1 className="general_title">Concours Alkindi</h1>

@@ -101,7 +101,8 @@ const reduceSetActiveTab = function (state, tabKey) {
     task: haveTask,
     cryptanalysis: haveTask,
     history: haveTask,
-    answers: haveTask
+    answers: haveTask,
+    results: true
   };
   // If the active tab has become disabled, select the team tab, which is
   // always available.
