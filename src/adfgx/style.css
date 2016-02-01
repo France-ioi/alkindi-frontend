@@ -42,6 +42,12 @@
   display: inline-block;
   vertical-align: top;
 }
+.adfgx-hints-grid table td,
+.adfgx-hints-alphabet table td,
+.adfgx-hints-perm-grid  table td {
+    border: 1px solid #777;
+    padding: 3px 5px;
+}
 .adfgx-alphabet .adfgx-hint-obtained {
   background-color: #aaa;
 }
@@ -169,6 +175,8 @@
   width: auto;
   float: left;
   margin-right: 20px;
+  border: 1px solid #777;
+  padding: 3px 5px;
 }
 .adfgx-table th,
 .adfgx-table td {
