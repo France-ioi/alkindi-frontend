@@ -1,5 +1,5 @@
 .adfgx-text, .adfgx-columns {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
   font-size: 18px;
 }
 .adfgx-text {
@@ -310,6 +310,7 @@
   vertical-align: top;
 }
 .adfgx-subst-src .adfgx-subst-chars {
+  font-family: "Lucida Console", Monaco, monospace;
   margin: 6px 0;
   display: block;
 }
@@ -330,6 +331,7 @@
   background: #ccc;
 }
 .adfgx-subst-tgt .adfgx-subst-char {
+  font-family: "Lucida Console", Monaco, monospace;
   border: 1px solid #000;
   display: block;
   text-align: center;
