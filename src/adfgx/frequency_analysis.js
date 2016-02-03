@@ -156,8 +156,12 @@ export const compute = function (toolState, scope) {
    // symbols as unused.
    const symbolUsed = Array(bigramAlphabet.size).fill(false);
    Object.keys(editedPairs).forEach(function (bigram) {
-      const rank = targetAlphabet.ranks[editedPairs[bigram]];
-      symbolUsed[rank] = 'edit';
+      // Ignore editedPairs that are overridden by a hint.
+      const bigramRank = bigramAlphabet.ranks[bigram];
+      if (inputSubstitution.mapping[bigramRank].l === undefined) {
+         const rank = targetAlphabet.ranks[editedPairs[bigram]];
+         symbolUsed[rank] = 'edit';
+      }
    });
    inputSubstitution.mapping.forEach(function (cell) {
       if (cell.l !== undefined)
