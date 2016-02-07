@@ -58,8 +58,14 @@ export default PureComponent(self => {
     // If the team is already locked, no confirmation is asked.
     if (!team.is_locked && !window.confirm("Confirmez-vous définitivement la composition de votre équipe ?"))
       return;
-    if (!attempt.is_training && !confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez "+attempt.duration+" minutes pour le resoudre."))
-      return;
+    if (!attempt.is_training) {
+      if (attempt.duration !== null) {
+        if (!confirm("Voulez vous vraiment démarrer le sujet en temps limité ?  Vous aurez "+attempt.duration+" minutes pour le resoudre."))
+          return;
+      } else {
+        // TODO: confirm with message explaining that time taken to solve the task may influence the final score/rankind
+      }
+    }
     Alkindi.api.assignAttemptTask(user.id);
   };
   const onResetHints = function () {
@@ -181,10 +187,12 @@ export default PureComponent(self => {
                    plus de 50% des codes.</strong></p>
               </div>
             : <div className="section">
-                <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-                   accéder au sujet, vous aurez alors {attempt.duration} minutes
-                   pour le résoudre.
-                </p>
+                {attempt.duration !== null
+                  ? <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
+                      accéder au sujet, vous aurez alors {attempt.duration} minutes
+                      pour le résoudre.
+                    </p>
+                  : <p>TODO: message à écrire.</p>}
               </div>}
             {renderCancelAttempt(attempt)}
           </div>
@@ -382,11 +390,15 @@ export default PureComponent(self => {
             <span className="">
               {attempt.is_training
                 ? "Épreuve d'entraînement"
-                : <span>
-                    {"Épreuve en temps limité ("}
-                    {attempt.duration}
-                    {" minutes)"}
-                  </span>}
+                : (attempt.duration !== null
+                    ? <span>
+                        {"Épreuve en temps limité ("}
+                        {attempt.duration}
+                        {" minutes)"}
+                      </span>
+                    : <span>
+                        {"Épreuve sans limite de temps"}
+                      </span>)}
             </span>
           </div>
         </div>
