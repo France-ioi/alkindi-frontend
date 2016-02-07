@@ -34,7 +34,7 @@ export const App = EpicComponent(self => {
     if (round.status === 'over' || round.status === 'closed')
       return <RoundOverScreen/>;
 
-    return <p>Cas non prévu.</p>
+    return <p>Cas non prévu.</p>;
 
   };
 
