@@ -199,7 +199,7 @@ const TeamTab = PureComponent(self => {
         </div>
         <Notifier emitter={Alkindi.api.emitter} request={{}}/>
         <h1>{round.title}</h1>
-        {team.parent_id && renderTeamQualified()}
+        {renderTeamQualified()}
         {renderTeamMembers(team)}
         {team.is_invalid
           ? renderInvalidTeam(team.round_access)
