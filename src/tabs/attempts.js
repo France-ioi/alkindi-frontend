@@ -120,6 +120,28 @@ const AttemptsTab = PureComponent(self => {
             vous le souhaitez.
             Votre score sera celui de la meilleure de vos tentatives.
           </p>}
+        {round.id === 4 && <div>
+          <p>
+            Pour ce tour, il n'y a qu'une seule épreuve, sans limite de temps.
+            Votre score sera celui de votre dernière réponse, mais vous ne le
+            connaîtrez qu'après la fin du concours le 26 mars.
+          </p>
+          <p>
+            <strong>Attention :</strong> ce que vous faites pendant la première
+            heure et demie après avoir démarré l'épreuve sera utilisé pour
+            départager les ex-aequo. Allez voir le <a
+            href="http://concours-alkindi.fr/#/pageManual" target="_blank">manuel
+            du concours</a> pour les détails.
+          </p>
+          <p>
+            En résumé : faites en un maximum pendant la première heure et demie
+            après avoir démarré l'épreuve, en soumettant votre réponse à chaque
+            fois que vous pensez avoir déchiffré correctement une information de
+            plus.
+            Une fois la première heure et demie écoulée, vous avez jusqu'au
+            26 mars pour compléter votre réponse.
+          </p>
+        </div>}
         {typeof score == 'number' &&
           <p className="team-score">
               Score actuel de l'équipe (meilleur score parmi les épreuves
