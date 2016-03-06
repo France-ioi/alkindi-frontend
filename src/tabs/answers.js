@@ -52,12 +52,12 @@ const AnswersTab = PureComponent(self => {
           <td className="colSubmitter">{submitter.username}</td>
           <td className="colAnswer"><Answer answer={answer.answer}/></td>
           {showScores && <td className="colScore">{answer.score}</td>}
-          <td className="colIsSolution">
+          {showScores && <td className="colIsSolution">
             {answer.is_solution &&
               <Tooltip content={<p>Cette réponse valide l'épreuve, félicitations !</p>}>
                 <i className="fa fa-thumbs-o-up"/>
               </Tooltip>}
-          </td>
+          </td>}
         </tr>
       );
     };
@@ -71,7 +71,7 @@ const AnswersTab = PureComponent(self => {
             <th>Auteur</th>
             <th>Réponse</th>
             {showScores && <th>Score</th>}
-            <th></th>
+            {showScores && <th></th>}
           </tr>
         </thead>
         <tbody>
