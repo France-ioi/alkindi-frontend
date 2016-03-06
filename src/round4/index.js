@@ -130,7 +130,7 @@ export const TabHeader = EpicComponent(self => {
             <p>
                Pendant la première heure et demie, soumettez dans l'onglet réponses
                à chaque fois que vous pensez avoir déchiffré une information
-               de plus parmi les 7 à fournir, car le temps compte.
+               de plus parmi les 8 à fournir, car le temps compte.
             </p>
          </div>);
    };
@@ -166,7 +166,7 @@ export const AnswerDialog = EpicComponent(self => {
                   d'une minute.
                </p>
                <p className="input">
-                  <label htmlFor="answer-1">{'Les 6 premières lignes du texte déchiffré : '}</label>
+                  <label htmlFor="answer-1">{'Les 7 premières lignes du texte déchiffré : '}</label>
                   <textarea id="answer-1" ref={refInput1} style={{height: '146px', width: '400px', verticalAlign: 'top'}}></textarea>
                   <label htmlFor="answer-2">{'Le numéro fourni sur la dernière ligne, une fois déchiffré, en chiffres : '}</label>
                   <input type="text" id="answer-2" ref={refInput2} style={{width: '300px', verticalAlign: 'top'}} />
@@ -179,13 +179,13 @@ export const AnswerDialog = EpicComponent(self => {
             </div>
             <div className='section'>
                <p>
-                  Les 6 informations fournies au début du texte sont à fournir en un seul bloc sur 6 lignes. Mettez toujours les 6 lignes du début du texte déchiffré, sans retirer les lignes qui ne sont pas encore correctement déchiffrées.
+                  Les 7 informations fournies au début du texte sont à fournir en un seul bloc sur 7 lignes. Mettez toujours les 7 lignes du début du texte déchiffré, sans retirer les lignes qui ne sont pas encore correctement déchiffrées.
                </p>
                <p>
                   Chaque ligne sera notée individuellement lors du calcul du score après la clôture du concours. Les éventuelles différences d'espaces seront ignorées lors de la comparaison entre les réponses fournies et celles attendues.
                </p>
                <p>
-                  Chaque information correcte rapportera 200 points, donc le score maximum possible pour ce tour est de 1400 points.
+                  Chaque information correcte rapportera 200 points, donc le score maximum possible pour ce tour est de 1600 points.
                </p>
                <p>
                   Votre score sera celui de la toute dernière réponse que vous avez fournie.
@@ -234,10 +234,10 @@ export const Task = EpicComponent(self => {
             Votre but est de l'aider à déchiffrer ce texte. Vous devrez y trouver sept informations différentes.
          </p>
          <p>
-            Les six premières informations sont le contenu exact de chacune des 6 premières lignes du texte, une fois déchiffré.
+            Les sept premières informations sont le contenu exact de chacune des 7 premières lignes du texte, une fois déchiffré.
          </p>
          <p>
-            La septième information est un numéro de téléphone, fourni sur la dernière ligne du texte.
+            La huitième information est un numéro de téléphone, fourni sur la dernière ligne du texte.
          </p>
          <h2>Méthode de chiffrement : substitution</h2>
          <p>
