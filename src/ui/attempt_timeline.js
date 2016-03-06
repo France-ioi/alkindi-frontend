@@ -256,15 +256,16 @@ export default PureComponent(self => {
         {renderTimeline('solve')}
         <div className="timelineInfo">
           <div className="timelineInfoContent">
-            {attempt.is_training
-              ? <p>
-                  Le sujet d'entraînement est visible dans l'onglet Sujet.
-                  Lisez le attentivement, il contient des informations
-                  importantes !
-                </p>
-              : <Alert bsStyle='success'>
-                  Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
-                </Alert>}
+            {attempt.is_training &&
+              <p>
+                Le sujet d'entraînement est visible dans l'onglet Sujet.
+                Lisez le attentivement, il contient des informations
+                importantes !
+              </p>}
+            {attempt.closes_at &&
+              <Alert bsStyle='success'>
+                Votre tentative en temps limité se termine le {new Date(attempt.closes_at).toLocaleString()}.
+              </Alert>}
             <p className="text-center">
               <Button bsStyle="primary" bsSize="large" onClick={onGoToTask}>
                 lire le sujet <i className="fa fa-arrow-right"/>
