@@ -204,9 +204,10 @@ export const AnswerDialog = EpicComponent(self => {
 export const Answer = EpicComponent(self => {
    self.render = function () {
       const {answer} = self.props;
+      const {input1, input2} = answer;
       return (
          <div>
-            <span>TODO: réponse</span>
+            <span><pre>{input1}{'\n'}{input2}</pre></span>
          </div>
       );
    };
@@ -218,7 +219,7 @@ export const Feedback = EpicComponent(self => {
       const {feedback, onSuccess} = self.props;
       return (
          <div>
-            <p>TODO: résultat de l'évaluation</p>
+            <p>Votre réponse a bien été enregistrée.</p>
          </div>
       );
    };
