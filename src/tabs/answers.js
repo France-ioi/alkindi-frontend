@@ -30,6 +30,7 @@ const AnswersTab = PureComponent(self => {
   };
 
   const renderAnswers = function (answers, Answer) {
+    const showScores = !self.props.round.hide_scores;
     const users = toMap(self.props.users)
     const {submittedAnswerId} = self.state;
     const renderAnswerRow = function (answer) {
@@ -50,7 +51,7 @@ const AnswersTab = PureComponent(self => {
           <td className="colSubmittedAt">{new Date(answer.created_at).toLocaleString()}</td>
           <td className="colSubmitter">{submitter.username}</td>
           <td className="colAnswer"><Answer answer={answer.answer}/></td>
-          <td className="colScore">{answer.score}</td>
+          {showScores && <td className="colScore">{answer.score}</td>}
           <td className="colIsSolution">
             {answer.is_solution &&
               <Tooltip content={<p>Cette réponse valide l'épreuve, félicitations !</p>}>
@@ -69,7 +70,7 @@ const AnswersTab = PureComponent(self => {
             <th>Date de soumission</th>
             <th>Auteur</th>
             <th>Réponse</th>
-            <th>Score</th>
+            {showScores && <th>Score</th>}
             <th></th>
           </tr>
         </thead>
@@ -118,8 +119,8 @@ const AnswersTab = PureComponent(self => {
 
 const selector = function (state) {
   const {user_id, attempt, response} = state;
-  const {answers, users, task} = response;
-  return {user_id, attempt, answers, users, task};
+  const {answers, users, task, round} = response;
+  return {user_id, attempt, answers, users, task, round};
 };
 
 export default connect(selector)(AnswersTab);

@@ -101,7 +101,7 @@ const AttemptsTab = PureComponent(self => {
   self.render = function () {
     const {user, round, team, attempt, attempts} = self.props;
     const codeEntry = attempt && attempt.needs_codes;
-    const score = getMaxScore(attempts);
+    const score = round.hide_scores ? null : getMaxScore(attempts);
     const noTraining = round.max_attempts === null;
     // or noTraining = !!attempts.find(attempt => attempt.is_training)
     return (
