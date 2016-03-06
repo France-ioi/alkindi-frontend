@@ -167,9 +167,9 @@ export const AnswerDialog = EpicComponent(self => {
                </p>
                <p className="input">
                   <label htmlFor="answer-1">{'Les 6 premières lignes du texte déchiffré : '}</label>
-                  <textarea id="answer-1" ref={refInput1}></textarea>
+                  <textarea id="answer-1" ref={refInput1} style={{height: '126px', width: '400px', verticalAlign: 'top'}}></textarea>
                   <label htmlFor="answer-2">{'Le numéro fourni sur la dernière ligne, une fois déchiffré, en chiffres : '}</label>
-                  <textarea id="answer-2" ref={refInput2}></textarea>
+                  <input type="text" id="answer-2" ref={refInput2} style={{width: '300px', verticalAlign: 'top'}} />
                </p>
                <p><Button onClick={onSubmit}>Soumettre</Button></p>
             </div>
