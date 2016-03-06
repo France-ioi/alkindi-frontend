@@ -187,12 +187,16 @@ export default PureComponent(self => {
                    plus de 50% des codes.</strong></p>
               </div>
             : <div className="section">
-                {attempt.duration !== null
-                  ? <p>Lorsque vous aurez saisi plus de 50% des codes vous pourrez
-                      accéder au sujet, vous aurez alors {attempt.duration} minutes
-                      pour le résoudre.
-                    </p>
-                  : <p>TODO: message à écrire.</p>}
+                <p>
+                  Lorsque vous aurez saisi plus de 50% des codes vous pourrez
+                  accéder au sujet.
+                  {attempt.duration !== null &&
+                    <span>
+                      {" Vous aurez alors "}
+                      {attempt.duration}
+                      {" minutes pour le résoudre."}
+                    </span>}
+                </p>
               </div>}
             {renderCancelAttempt(attempt)}
           </div>
