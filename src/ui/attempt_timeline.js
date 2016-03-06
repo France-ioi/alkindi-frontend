@@ -292,7 +292,7 @@ export default PureComponent(self => {
 
   const renderAttemptFinished = function (attempt) {
     const {round} = self.props;
-    const haveTraining = round.max_attempts !== null; // XXX mostly correct
+    const haveTraining = round.have_training_attempt;
     return (
       <div>
         {renderTimeline('done')}
