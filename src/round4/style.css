@@ -1,0 +1,123 @@
+
+.y15r4-textDisplay, .y15r4-textInput, .y15r4-textOutput, .y15r4-subst, .y15r4-freqSymbol {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 14px;
+}
+.y15r4-textDisplay, .y15r4-textInput, .y15r4-textOutput, .y15r4-subst {
+  overflow-y: auto;
+  width: 100%;
+}
+.y15r4-textDisplay, .y15r4-textInput, .y15r4-textOutput {
+  height: 194px;
+  resize: vertical;
+}
+.y15r4-subst {
+  height: 354px;
+}
+.y15r4-textDisplay, .y15r4-textInput {
+  white-space: pre;
+}
+.y15r4-textOutput {
+  border: 1px solid black;
+  padding: 4px;
+  word-break: break-word;
+}
+.y15r4-textOutput {
+  white-space: pre;
+}
+
+.y15r4-substRow {
+  line-height: 25px;
+}
+.y15r4-substPair {
+  margin: 2px;
+  padding: 2px;
+  display: inline-block;
+  width: 26px;
+  white-space: pre;
+}
+.y15r4-substSource, .y15r4-substMapsTo, .y15r4-substTarget {
+  display: block;
+  text-align: center;
+}
+.y15r4-substSourceSymbol {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0 1px;
+}
+.y15r4-substHistoUp, .y15r4-substHistoDown {
+  line-height: 45px;
+  display: block;
+  margin: 0 auto;
+  width: 12px;
+}
+.y15r4-substHistoUp > span, .y15r4-substHistoDown > span {
+  display: inline-block;
+  background-color: #333;
+  width: 8px;
+}
+.y15r4-substHistoUp > span {
+  vertical-align: bottom;
+}
+.y15r4-substHistoDown > span {
+  vertical-align: top;
+}
+
+.y15r4-freqBlock {
+  display: inline-block;
+}
+.y15r4-freqLeft, .y15r4-freqRight {
+  width: 80px;
+  max-height: 100px;
+  overflow-y: scroll;
+  float: left;
+}
+.y15r4-freqLeft {
+  text-align: right;
+  margin-right: 10px;
+  padding-right: 2px;
+}
+.y15r4-freqRight {
+  text-align: left;
+}
+.y15r4-freqRow {
+  cursor: pointer;
+}
+.y15r4-freqRow:hover {
+  background-color: #eee;
+}
+.y15r4-freqRowSelected {
+  background-color: #ccc;
+}
+.y15r4-freqHisto {
+  width: 42px;
+  background: #fff;
+}
+.y15r4-freqLeftHisto {
+  margin-right: 2px;
+}
+.y15r4-freqRightHisto {
+  margin-left: 2px;
+}
+.y15r4-freqHisto > span {
+  display: inline-block;
+  background-color: #333;
+  height: 8px;
+}
+
+.y15r4-substBigram-edited {
+  background-color: #ccc;
+}
+.y15r4-substBigram-swapped {
+  background-color: #ccc;
+}
+.y15r4-substBigram-suggested {
+  background-color: #f0f0f0;
+}
+.y15r4-substBigram-filler {
+  background-color: #f0f0f0;
+}
+
+.y15r4-substChar-edited, .y15r4-substChar-swapped {
+  background-color: #ccc;
+}
