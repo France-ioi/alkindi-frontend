@@ -87,7 +87,7 @@ export default PureComponent(self => {
 
   const renderCancelAttempt = function (attempt) {
     const {round} = self.props;
-    const haveTraining = round.max_attempts !== null; // XXX mostly correct
+    const haveTraining = round.have_training_attempt;
     // XXX If there is no training attempt, cancelling the current attempt is
     // not supported.
     if (!haveTraining)
