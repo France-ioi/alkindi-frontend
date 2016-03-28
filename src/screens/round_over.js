@@ -17,9 +17,9 @@ const RoundOverScreen = EpicComponent(self => {
         <p>
           {'Le '}{round.title}{' est maintenant terminé.'}
         </p>
-        <p>
+        {!round.hide_scores && <p>
           {'Le score de votre équipe pour ce tour est : '}{team.score||0}
-        </p>
+        </p>}
         {round.status === 'over' && <p>
           Les résultats seront bientôt annoncés, vous pourrez bientôt voir sur
           cette page si votre équipe est qualifiée pour le tour suivant.
