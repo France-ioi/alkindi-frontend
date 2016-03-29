@@ -6,6 +6,7 @@ import LoginScreen from './screens/login';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 import RoundOverScreen from './screens/round_over';
+import FinalScreen from './screens/final';
 
 export const App = EpicComponent(self => {
 
@@ -29,7 +30,10 @@ export const App = EpicComponent(self => {
       return <JoinTeamScreen/>;
 
     if (round.status === 'open' || is_admin)
-      return <MainScreen user={user} round={round} team={team}/>;
+      return <MainScreen/>;
+
+    if (round.status === 'final')
+      return <FinalScreen/>;
 
     if (round.status === 'over' || round.status === 'closed')
       return <RoundOverScreen/>;

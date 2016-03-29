@@ -28,7 +28,7 @@ export const MainScreen = EpicComponent(self => {
     let content = false;
     switch (activeTabKey) {
       case 'team':
-        content = <TeamTab/>;
+        content = <TeamTab/>;  // XXX team={team}
         break;
       case 'attempts':
         content = <AttemptsTab/>;
@@ -68,8 +68,8 @@ export const MainScreen = EpicComponent(self => {
 
 export const selector = function (state) {
   const {activeTabKey, enabledTabs, response, countdown, frontendUpdate} = state;
-  const {attempt, task} = state.response;
-  return {activeTabKey, enabledTabs, attempt, task, countdown, frontendUpdate};
+  const {user, round, team, attempt, task} = state.response;
+  return {activeTabKey, enabledTabs, user, round, team, attempt, task, countdown, frontendUpdate};
 };
 
 export default connect(selector)(MainScreen);
