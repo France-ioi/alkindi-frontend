@@ -141,6 +141,8 @@ const actualReduce = function (state, action) {
       return {...state, workspace: action.workspace};
     case 'USE_REVISION':
       return reduceUseRevision(state, action.revisionId);
+    case 'SHOW_MAIN_SCREEN':
+      return {...state, showMainScreen: true};
     default:
       throw 'unhandled action ' + action.type;
   }

@@ -1,11 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 
 import AuthHeader from '../ui/auth_header';
 import Logout from '../ui/logout';
 
 const RoundOverScreen = EpicComponent(self => {
+
+  const onShowMainScreen = function () {
+    self.props.dispatch({type: 'SHOW_MAIN_SCREEN'});
+  };
 
   const renderPostRound4 = function () {
     const {participations} = self.props;
@@ -64,9 +69,13 @@ const RoundOverScreen = EpicComponent(self => {
                 </p>
                 <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>
                 <p>Merci pour votre participation.</p>
-              </div>
+                      </div>
             : renderPostRound4()
           )}
+        <p>
+          Vous pouvez revoir votre participation en cliquant le bouton ci-dessous.
+        </p>
+        <p><Button onClick={onShowMainScreen}>revoir ma participation</Button></p>
       </div>
     );
   };

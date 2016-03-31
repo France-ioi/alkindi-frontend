@@ -21,7 +21,7 @@ export const App = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {user, team, round, is_admin} = self.props;
+    const {user, team, round, showMainScreen} = self.props;
 
     if (user === undefined)
       return <LoginScreen user={user} round={round}/>;
@@ -29,7 +29,7 @@ export const App = EpicComponent(self => {
     if (team === undefined)
       return <JoinTeamScreen/>;
 
-    if (round.status === 'open' || is_admin)
+    if (round.status === 'open' || showMainScreen)
       return <MainScreen/>;
 
     if (round.status === 'final')
@@ -46,9 +46,9 @@ export const App = EpicComponent(self => {
 
 export const selector = function (state) {
   const {user, team, round, is_admin} = state.response;
-  const {workspace} = state; // XXX clean up
+  const {workspace, showMainScreen} = state; // XXX clean up
   const changed = workspace && workspace.changed;
-  return {user, team, round, is_admin, changed};
+  return {user, team, round, is_admin, changed, showMainScreen};
 };
 
 export default connect(selector)(App);
