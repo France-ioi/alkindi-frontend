@@ -21,7 +21,7 @@ export const App = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {user, team, round, showMainScreen} = self.props;
+    const {user, team, round, showMainScreen, participation} = self.props;
 
     if (user === undefined)
       return <LoginScreen user={user} round={round}/>;
@@ -53,7 +53,7 @@ export const selector = function (state) {
     if (participation.is_current)
       currentParticipation = participation;
   });
-  return {user, team, round, is_admin, changed, showMainScreen, participation};
+  return {user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
 };
 
 export default connect(selector)(App);
