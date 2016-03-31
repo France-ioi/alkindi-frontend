@@ -43,7 +43,7 @@ const ResultsTab = EpicComponent(self => {
             <tr>
               <th>Date</th>
               <th>Épreuve</th>
-              <th>État</th>
+              {false && <th>État</th>}
               <th>Score</th>
               {<th></th>}
             </tr>
@@ -57,7 +57,7 @@ const ResultsTab = EpicComponent(self => {
                     ? <strong>{participation.round.title}</strong>
                     : <span>{participation.round.title}</span>}
                 </td>
-                <td>{participation.round.status}</td>
+                {false && <td>{participation.round.status}</td>}
                 <td className="colScore">{participation.score}</td>
                 <td>
                   <Button onClick={onSetParticipation} data-id={participation.id}>
