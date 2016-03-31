@@ -105,7 +105,7 @@ const AnswersTab = PureComponent(self => {
           </div>
         </div>
         <Notifier emitter={api.emitter}/>
-        <AnswerDialog answers={answersBlock} submit={submitAnswer} feedback={feedback} onSuccess={onSuccess}/>
+        <AnswerDialog task={task} answers={answersBlock} submit={submitAnswer} feedback={feedback} onSuccess={onSuccess}/>
       </div>
     );
     // TODO: bouton vers onglet épreuve
@@ -119,8 +119,8 @@ const AnswersTab = PureComponent(self => {
 
 const selector = function (state) {
   const {user_id, attempt, response} = state;
-  const {answers, users, task, round} = response;
-  return {user_id, attempt, answers, users, task, round};
+  const {answers, users, task, round, expectedAnswer} = response;
+  return {user_id, attempt, answers, users, task, round, expectedAnswer};
 };
 
 export default connect(selector)(AnswersTab);

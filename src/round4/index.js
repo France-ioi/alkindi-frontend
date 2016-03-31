@@ -152,27 +152,33 @@ export const AnswerDialog = EpicComponent(self => {
    };
 
    self.render = function () {
-      const {answers, feedback, onSuccess} = self.props;
+      const {task, answers, feedback, onSuccess} = self.props;
       return (
          <div className='task-answer-dialog'>
-            <div className='section'>
-               <p>
-                  Entrez ci-dessous les deux parties de votre réponse, puis
-                  cliquez sur le bouton Soumettre pour l'enregistrer.
-               </p>
-               <p>
-                  Vous pouvez soumettre plusieurs réponses. La seule limite est
-                  que vous ne pouvez pas soumettre plus de deux fois en moins
-                  d'une minute.
-               </p>
-               <p className="input">
-                  <label htmlFor="answer-1">{'Les 7 premières lignes du texte déchiffré : '}</label>
-                  <textarea id="answer-1" ref={refInput1} style={{height: '146px', width: '400px', verticalAlign: 'top'}}></textarea>
-                  <label htmlFor="answer-2">{'Le numéro fourni sur la dernière ligne, une fois déchiffré, en chiffres : '}</label>
-                  <input type="text" id="answer-2" ref={refInput2} style={{width: '300px', verticalAlign: 'top'}} />
-               </p>
-               <p><Button onClick={onSubmit}>Soumettre</Button></p>
-            </div>
+            {task.expectedAnswer
+             ? <div className='section'>
+                  <p>Le tour est terminé, voici la réponse qui était attendue
+                     pour obtenir le maximum de points :</p>
+                  <pre>{task.expectedAnswer.join('\n')}</pre>
+               </div>
+             : <div className='section'>
+                  <p>
+                     Entrez ci-dessous les deux parties de votre réponse, puis
+                     cliquez sur le bouton Soumettre pour l'enregistrer.
+                  </p>
+                  <p>
+                     Vous pouvez soumettre plusieurs réponses. La seule limite est
+                     que vous ne pouvez pas soumettre plus de deux fois en moins
+                     d'une minute.
+                  </p>
+                  <p className="input">
+                     <label htmlFor="answer-1">{'Les 7 premières lignes du texte déchiffré : '}</label>
+                     <textarea id="answer-1" ref={refInput1} style={{height: '146px', width: '400px', verticalAlign: 'top'}}></textarea>
+                     <label htmlFor="answer-2">{'Le numéro fourni sur la dernière ligne, une fois déchiffré, en chiffres : '}</label>
+                     <input type="text" id="answer-2" ref={refInput2} style={{width: '300px', verticalAlign: 'top'}} />
+                  </p>
+                  <p><Button onClick={onSubmit}>Soumettre</Button></p>
+               </div>}
             {feedback && <Feedback feedback={feedback} onSuccess={onSuccess}/>}
             <div className='section'>
                {answers}
