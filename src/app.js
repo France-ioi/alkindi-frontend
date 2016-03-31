@@ -29,7 +29,7 @@ export const App = EpicComponent(self => {
     if (team === undefined)
       return <JoinTeamScreen/>;
 
-    if (round.status === 'open' || showMainScreen)
+    if (round.status === 'open' || showMainScreen || participation.is_qualified)
       return <MainScreen/>;
 
     if (round.status === 'final')
@@ -45,10 +45,15 @@ export const App = EpicComponent(self => {
 });
 
 export const selector = function (state) {
-  const {user, team, round, is_admin} = state.response;
+  const {user, team, round, participations, is_admin} = state.response;
   const {workspace, showMainScreen} = state; // XXX clean up
   const changed = workspace && workspace.changed;
-  return {user, team, round, is_admin, changed, showMainScreen};
+  let currentParticipation = null;
+  participations.forEach(function (participation) {
+    if (participation.is_current)
+      currentParticipation = participation;
+  });
+  return {user, team, round, is_admin, changed, showMainScreen, participation};
 };
 
 export default connect(selector)(App);
