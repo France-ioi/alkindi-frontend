@@ -42,15 +42,6 @@ const RoundOverScreen = EpicComponent(self => {
         <p>
           {"Malheureusement ce n'est pas suffisant pour vous qualifier à la finale."}
         </p>
-        {team.rank && <p>
-          {'Votre rang au niveau national est : '}{team.rank}
-          {' sur '}{team.n_teams}{' équipes ayant participé au 2ème tour.'}
-        </p>}
-        {team.rank_region && <p>
-          {'Votre rang au sein de votre académie ('}{team.region.name}
-          {') est : '}{team.rank_region}
-          {' sur '}{team.n_teams_region}{' équipes ayant participé au 2ème tour'}.
-        </p>}
       </div>
     );
   };
@@ -78,9 +69,18 @@ const RoundOverScreen = EpicComponent(self => {
                 </p>
                 <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>
                 <p>Merci pour votre participation.</p>
-                      </div>
+              </div>
             : renderPostRound4()
           )}
+        {team.rank && <p>
+          {'Votre rang au niveau national est : '}{team.rank}
+          {' sur '}{team.n_teams}{' équipes ayant participé au 2ème tour.'}
+        </p>}
+        {team.rank_region && <p>
+          {'Votre rang au sein de votre académie ('}{team.region.name}
+          {') est : '}{team.rank_region}
+          {' sur '}{team.n_teams_region}{' équipes ayant participé au 2ème tour'}.
+        </p>}
         <p>
           Vous pouvez revoir votre participation en cliquant le bouton ci-dessous.
         </p>
