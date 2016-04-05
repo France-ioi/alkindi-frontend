@@ -13,7 +13,7 @@ const RoundOverScreen = EpicComponent(self => {
   };
 
   const renderPostRound4 = function () {
-    const {participations} = self.props;
+    const {team, participations} = self.props;
     let totalScore = 0;
     let participation;
     participations.forEach(function (p) {
@@ -42,6 +42,15 @@ const RoundOverScreen = EpicComponent(self => {
         <p>
           {"Malheureusement ce n'est pas suffisant pour vous qualifier à la finale."}
         </p>
+        {team.rank && <p>
+          {'Votre rang au niveau national est : '}{team.rank}
+          {' sur '}{team.n_teams}{' équipes ayant participé au 2ème tour.'}
+        </p>}
+        {team.rank_region && <p>
+          {'Votre rang au sein de votre académie ('}{team.region.name}
+          {') est : '}{team.rank_region}
+          {' sur '}{team.n_teams_region}{' équipes ayant participé au 2ème tour'}.
+        </p>}
       </div>
     );
   };
