@@ -22,6 +22,7 @@ const reduceEndRefresh = function (state, action) {
   // Discart a response to a stale request, but not the initial seeding.
   if (state.request && !(state.user_id == user_id && state.request === request))
     return state;
+  // console.log('REFRESH', response);
   const newState = {...state, refreshing: false, response: response};
   if (response.now) {
     // Save a relative time offset (local - remote) in milliseconds.

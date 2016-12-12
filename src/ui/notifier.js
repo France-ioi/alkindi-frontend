@@ -61,7 +61,7 @@ const Notifier = PureComponent(self => {
       self.setState({state: 'idle'});
     } else {
       // Automatically refresh after actions.
-      refresh();
+      refresh(self.props.request);
       self.setState({
         state: 'success',
         message: undefined,

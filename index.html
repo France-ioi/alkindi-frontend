@@ -6,11 +6,16 @@
 <div id="main">
   <div class="container"><p>Chargement en cours, merci de patienter…</p></div>
 </div>
-<script type="text/javascript" src="dist/main.js"></script>
+<script src="jspm_packages/system.js"></script>
+<script src="jspm.config.js"></script>
+<script src="assets/deps.js"></script>
 <script type="text/javascript">
-// Install in #main.
+System.import('alkindi-frontend').then(function (m) {
 
-const getMockup =  function (body) {
+var Alkindi = m['default'];
+
+// TODO: use https://github.com/M6Web/superagent-mock
+var getMockup =  function (body) {
   return {end: function (callback) { callback(null, {req: {method: 'GET'}, body: body})}};
 };
 
@@ -25,4 +30,6 @@ Alkindi.api.listAttemptAnswers = function (attempt_id) {
   return getMockup({"answers": [{"is_solution": false, "score": "0", "ordinal": 4, "submitter_id": 1, "answer": {"n2": "210", "a": "1", "n1": "23"}, "id": 11, "created_at": "2016-01-11T09:30:56Z"}, {"is_solution": false, "score": "0", "ordinal": 3, "submitter_id": 1, "answer": {"n2": "", "a": "1", "n1": ""}, "id": 10, "created_at": "2016-01-11T09:29:45Z"}, {"is_solution": false, "score": "0", "ordinal": 2, "submitter_id": 1, "answer": {"n2": "3", "a": "1", "n1": "2"}, "id": 9, "created_at": "2016-01-11T09:29:40Z"}, {"is_solution": false, "score": "0", "ordinal": 1, "submitter_id": 1, "answer": {"n2": "3", "a": "1", "n1": "2"}, "id": 8, "created_at": "2016-01-11T09:25:41Z"}], "users": [{"firstname": "S\u00e9bastien", "lastname": "Carlier", "username": "sebc", "id": 1}], "success": true});
 };
 Alkindi.dispatch({type: 'SET_ACTIVE_TAB', tabKey: 'history'});
+
+});
 </script>

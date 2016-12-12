@@ -1,7 +1,7 @@
 import {Promise} from 'es6-promise';
 
 import {EventEmitter} from 'events';
-var request = require('superagent');
+import request from 'superagent';
 
 export const ApiFactory = function (methods) {
   const {get, post} = methods;
@@ -50,7 +50,7 @@ export const Api = function (config) {
     req.set('Accept', 'application/json');
     req.set('X-Frontend-Version', config.frontend_version);
     const postBody = {};
-    Object.assign(postBody, data, {override: locationSearchAsObject()});
+    Object.assign(postBody, data, {override: locationSearchAsObject()}); // XXX move to main.js, Alkindi.settings
     req.send(postBody);
     return req;
   }

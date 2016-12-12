@@ -1,6 +1,10 @@
 
+import playfair from './playfair/index';
+import adfgx from './adfgx/index';
+import round4 from './round4/index';
+
 export default {
-  playfair: require('./playfair'),
-  adfgx: require('./adfgx'),
-  round4: require('./round4')
+  playfair,
+  adfgx,
+  round4,
 };
