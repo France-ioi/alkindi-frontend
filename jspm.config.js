@@ -9,7 +9,7 @@ SystemJS.config({
   },
   packages: {
     "alkindi-frontend": {
-      "main": "main.js"
+      "main": "index.js"
     }
   }
 });
