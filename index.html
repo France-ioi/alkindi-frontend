@@ -25,30 +25,15 @@
   <script src="assets/deps.js"></script>
   <script type="text/javascript">
   !function () {
-    var mainElement = document.getElementById('main');
     System.import('alkindi-frontend').then(function (m) {
-      var Alkindi = window.Alkindi = m['default'];
-      if (!Alkindi) {
-        // Redirect to ?nocdn, if not already there.
-        if (window.location.pathname === '/') {
-          window.location.pathname = 'nocdn.html';
-        } else {
-          mainElement.innerHTML = "<p style='font-size: 24px; color: red;'>Le chargement a échoué, n'hésitez pas à contacter info@concours-alkindi.fr.</p>";
-        }
-        return;
-      }
-      Alkindi.configure({
+      // XXX get csrf_token from backend
+      m['default']({
         "csrf_token": "968bea2969a2cf43f1571a951a463e8c626b3ee7",
         "login_url": "http://alkindi.home.epixode.fr/login",
         "api_url": "http://alkindi.home.epixode.fr/api/",
         "logout_url": "http://alkindi.home.epixode.fr:8001/logout",
-        "nocdn": true,
-        "seed": {
-          "now": "2016-12-13T09:06:35.736656Z",
-          "is_admin": false
-        }
-      });
-      Alkindi.install(mainElement);
+        "nocdn": true
+      }, document.getElementById('main'));
     });
   }();
   </script>

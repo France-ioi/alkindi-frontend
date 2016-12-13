@@ -23,6 +23,7 @@ SystemJS.config({
   map: {
     "array.prototype.fill": "npm:array.prototype.fill@1.0.1",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
+    "babel-runtime": "npm:babel-runtime@6.20.0",
     "bootstrap-sass": "npm:bootstrap-sass@3.3.7",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.1",
     "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
@@ -33,7 +34,7 @@ SystemJS.config({
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
     "epic-component": "npm:epic-component@0.3.1",
-    "epic-linker": "npm:epic-linker@1.0.5",
+    "epic-linker": "npm:epic-linker@1.0.6",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
     "es6-promise": "npm:es6-promise@4.0.5",
@@ -573,7 +574,7 @@ SystemJS.config({
         "mime-db": "npm:mime-db@1.25.0"
       }
     },
-    "npm:epic-linker@1.0.5": {
+    "npm:epic-linker@1.0.6": {
       "map": {
         "babel-runtime": "npm:babel-runtime@6.20.0"
       }

@@ -1,61 +1,66 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
-import {connect} from 'react-redux';
+import {use, defineSelector, defineView} from 'epic-linker';
 
-import LoginScreen from './screens/login';
-import JoinTeamScreen from './screens/join_team';
-import MainScreen from './screens/main';
-import RoundOverScreen from './screens/round_over';
-import FinalScreen from './screens/final';
+//import JoinTeamScreen from './screens/join_team';
+//import MainScreen from './screens/main';
+//import RoundOverScreen from './screens/round_over';
+//import FinalScreen from './screens/final';
 
-export const App = EpicComponent(self => {
+export default function* (deps) {
 
-  self.componentWillMount = function () {
-    window.addEventListener('beforeunload', function (event) {
-      if (self.props.changed) {
-        const confirmMessage = "Vous avez des changements pas enregistrés qui seront perdus si vous quittez ou rechargez la page.";
-        (event || window.event).returnValue = confirmMessage;
-        return confirmMessage;
-      }
-    });
-  };
+  yield use('LoginScreen');
 
-  self.render = function () {
-    const {alkindi, user, team, round, showMainScreen, participation} = self.props;
+  yield defineSelector('AppSelector', function (state) {
+    const {user, team, round, participations, is_admin} = state.response;
+    const {workspace, showMainScreen} = state; // XXX clean up
+    const changed = workspace && workspace.changed;
+    let currentParticipation = null;
+    if (participations) {
+      participations.forEach(function (participation) {
+        if (participation.is_current)
+          currentParticipation = participation;
+      });
+    }
+    return {user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
+  });
 
-    if (user === undefined)
-      return <LoginScreen alkindi={alkindi} user={user} round={round}/>;
+  yield defineView('App', 'AppSelector', EpicComponent(self => {
 
-    if (team === undefined)
-      return <JoinTeamScreen alkindi={alkindi}/>;
+    self.componentWillMount = function () {
+      window.addEventListener('beforeunload', function (event) {
+        if (self.props.changed) {
+          const confirmMessage = "Vous avez des changements pas enregistrés qui seront perdus si vous quittez ou rechargez la page.";
+          (event || window.event).returnValue = confirmMessage;
+          return confirmMessage;
+        }
+      });
+    };
 
-    if (round.status === 'open' || showMainScreen || participation && participation.is_qualified)
-      return <MainScreen alkindi={alkindi}/>;
+    self.render = function () {
+      const {alkindi, user, team, round, showMainScreen, participation} = self.props;
 
-    if (round.status === 'final')
-      return <FinalScreen alkindi={alkindi}/>;
+      if (user === undefined)
+        return <deps.LoginScreen/>;
 
-    if (round.status === 'over' || round.status === 'closed')
-      return <RoundOverScreen alkindi={alkindi}/>;
+      /*
+      if (team === undefined)
+        return <JoinTeamScreen alkindi={alkindi}/>;
 
-    return <p>Cas non prévu.</p>;
+      if (round.status === 'open' || showMainScreen || participation && participation.is_qualified)
+        return <MainScreen alkindi={alkindi}/>;
 
-  };
+      if (round.status === 'final')
+        return <FinalScreen alkindi={alkindi}/>;
 
-});
+      if (round.status === 'over' || round.status === 'closed')
+        return <RoundOverScreen alkindi={alkindi}/>;
+      */
 
-export const selector = function (state) {
-  const {user, team, round, participations, is_admin} = state.response;
-  const {workspace, showMainScreen} = state; // XXX clean up
-  const changed = workspace && workspace.changed;
-  let currentParticipation = null;
-  if (participations) {
-    participations.forEach(function (participation) {
-      if (participation.is_current)
-        currentParticipation = participation;
-    });
-  }
-  return {user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
+      return <p>Cas non prévu.</p>;
+
+    };
+
+  }));
+
 };
-
-export default connect(selector)(App);
