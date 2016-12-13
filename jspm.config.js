@@ -33,6 +33,7 @@ SystemJS.config({
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
     "epic-component": "npm:epic-component@0.3.1",
+    "epic-linker": "npm:epic-linker@1.0.5",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
     "es6-promise": "npm:es6-promise@4.0.5",
@@ -61,6 +62,7 @@ SystemJS.config({
     "react-dom": "npm:react-dom@15.4.1",
     "react-redux": "npm:react-redux@4.4.6",
     "redux": "npm:redux@3.6.0",
+    "redux-saga": "npm:redux-saga@0.12.1",
     "reselect": "npm:reselect@2.5.4",
     "shuffle": "npm:shuffle@0.2.2",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
@@ -569,6 +571,11 @@ SystemJS.config({
     "npm:mime-types@2.1.13": {
       "map": {
         "mime-db": "npm:mime-db@1.25.0"
+      }
+    },
+    "npm:epic-linker@1.0.5": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0"
       }
     }
   }
