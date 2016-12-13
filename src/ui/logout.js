@@ -13,7 +13,7 @@ export const LogoutButton = PureComponent(self => {
     return (
       <div id="logout">
         <span>{username}</span>
-        <Button onClick={Alkindi.logout}>déconnexion</Button>
+        <Button onClick={self.props.alkindi.logout}>déconnexion</Button>
       </div>
     );
   };

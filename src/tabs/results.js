@@ -28,7 +28,7 @@ const ResultsTab = EpicComponent(self => {
     });
     const url = window.location.origin + window.location.pathname + '?' + searchParts.join('&');
     history.replaceState({}, "", url);
-    Alkindi.refresh();
+    self.props.alkindi.refresh();
   };
 
   self.render = function () {

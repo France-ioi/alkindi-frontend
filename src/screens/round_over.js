@@ -47,11 +47,11 @@ const RoundOverScreen = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {team, round} = self.props;
+    const {alkindi, team, round} = self.props;
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout/>
+          <Logout alkindi={alkindi}/>
         </div>
         <AuthHeader/>
         <p>

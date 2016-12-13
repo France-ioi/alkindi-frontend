@@ -7,7 +7,7 @@ import classnames from 'classnames';
 
 export const RefreshButton = PureComponent(self => {
   const onClick = function () {
-    Alkindi.refresh().then(function () {
+    self.props.alkindi.refresh().then(function () {
       onRefresh({success: true});
     }, function () {
       onRefresh({success: false});

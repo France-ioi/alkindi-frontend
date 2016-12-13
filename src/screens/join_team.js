@@ -16,17 +16,17 @@ JoinTeamScreen interface:
 
 */
 const JoinTeamScreen = EpicComponent(self => {
-  const api = Alkindi.api;
   let teamCode;  const refTeamCode = function (el) { teamCode = el; };
   let qualCode;  const refQualCode = function (el) { qualCode = el; };
   const onShowJoinTeam = function () {
     self.setState({joinTeam: true});
   };
   const onQualify = function () {
+    const {alkindi} = self.props;
     const user_id = self.props.user.id;
     const data = {code: qualCode.value};
     self.setState({qualifyError: undefined});
-    api.qualifyUser(user_id, data).then(function (result) {
+    alkindi.api.qualifyUser(user_id, data).then(function (result) {
       const {codeStatus, userIDStatus, profileUpdated} = result;
       if (codeStatus === 'registered' && userIDStatus === 'registered') {
         if (!profileUpdated) {
@@ -56,12 +56,12 @@ const JoinTeamScreen = EpicComponent(self => {
   };
   const onCreateTeam = function () {
     const user_id = self.props.user.id;
-    api.createTeam(user_id);
+    self.props.alkindi.api.createTeam(user_id);
   };
   const onJoinTeam = function () {
     const user_id = self.props.user.id;
     const data = {code: teamCode.value};
-    api.joinTeam(user_id, data);
+    self.props.alkindi.api.joinTeam(user_id, data);
   };
   const renderNotQualified = function () {
     const {qualifyError} = self.state;
@@ -143,20 +143,20 @@ const JoinTeamScreen = EpicComponent(self => {
     );
   };
   self.render = function () {
-    const {user, round} = self.props;
+    const {alkindi, user, round} = self.props;
     const {joinTeam} = self.state;
     const body = [];
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout/>
+          <Logout alkindi={alkindi}/>
         </div>
         <AuthHeader/>
         {round ? renderQualified(round) : renderNotQualified()}
         {round && renderCreateTeam()}
         {round && joinTeam && renderQualifiedJoinTeam()}
         {!round && renderNotQualifiedJoinTeam()}
-        <Notifier emitter={api.emitter}/>
+        <Notifier emitter={alkindi.api.emitter}/>
       </div>
     );
   };

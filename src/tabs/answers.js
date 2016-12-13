@@ -12,16 +12,14 @@ import Tasks from '../tasks';
 
 const AnswersTab = PureComponent(self => {
 
-  const api = Alkindi.api;
-
   const submitAnswer = function (data) {
-    const {user_id, attempt} = self.props;
-    api.submitAnswer(user_id, attempt.id, data).then(function (result) {
+    const {alkindi, user_id, attempt} = self.props;
+    alkindi.api.submitAnswer(user_id, attempt.id, data).then(function (result) {
       self.setState({
         submittedAnswerId: result.answer_id,
         feedback: result.feedback
       });
-      Alkindi.refresh();
+      alkindi.refresh();
     });
   };
 
@@ -82,11 +80,11 @@ const AnswersTab = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
-    Alkindi.refresh({'answers': true});
+    alkindi.refresh({'answers': true});
   };
 
   self.render = function () {
-    const {answers, task} = self.props;
+    const {alkindi, answers, task} = self.props;
     const {feedback} = self.state;
     const {AnswerDialog, Answer} = Tasks[task.front];
     const answersBlock =
@@ -101,10 +99,10 @@ const AnswersTab = PureComponent(self => {
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des réponses soumises par votre équipe.</p>}/>
             {' '}
-            <RefreshButton/>
+            <RefreshButton alkindi={alkindi}/>
           </div>
         </div>
-        <Notifier emitter={api.emitter}/>
+        <Notifier alkindi={alkindi}/>
         <AnswerDialog task={task} answers={answersBlock} submit={submitAnswer} feedback={feedback} onSuccess={onSuccess}/>
       </div>
     );

@@ -167,7 +167,7 @@ Alkindi.install = function (mainElement) {
   sendTickInterval = setInterval(sendTick, 1000);
   // Insert HTML.
   const WrappedApp = DragDropContext(HTML5Backend)(App);
-  ReactDOM.render(<Provider store={store}><WrappedApp/></Provider>, mainElement);
+  ReactDOM.render(<Provider store={store}><WrappedApp alkindi={Alkindi}/></Provider>, mainElement);
 };
 
 Alkindi.dispatch = function (action) {

@@ -51,6 +51,7 @@ const reduceEndRefresh = function (state, action) {
   return reduceTick(reduceSetActiveTab(newState));
 };
 
+// XXX turn into a saga
 const reduceTick = function (state) {
   // Periodic process, this executes every second and
   // at the end of every refresh.

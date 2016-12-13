@@ -18,13 +18,13 @@ const TeamTab = PureComponent(self => {
 
   const onLeaveTeam = function () {
     const user_id = self.props.user.id;
-    Alkindi.api.leaveTeam(user_id);
+    self.props.alkindi.api.leaveTeam(user_id);
   };
 
   const onUpdateTeam = function () {
     const user_id = self.props.user.id;
     const data = {is_open: self.state.isOpen};
-    Alkindi.api.updateUserTeam(user_id, data);
+    self.props.alkindi.api.updateUserTeam(user_id, data);
   };
 
   const onIsOpenChanged = function (event) {
@@ -181,7 +181,7 @@ const TeamTab = PureComponent(self => {
   };
 
   self.render = function () {
-    const {user, round, team} = self.props;
+    const {alkindi, user, round, team} = self.props;
     // The tab gets rendered when the user leaves a team?
     if (team === undefined)
       return false;
@@ -195,9 +195,9 @@ const TeamTab = PureComponent(self => {
         <div className="pull-right">
           <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de votre équipe.</p>}/>
           {' '}
-          <RefreshButton/>
+          <RefreshButton alkindi={alkindi}/>
         </div>
-        <Notifier emitter={Alkindi.api.emitter} request={{}}/>
+        <Notifier alkindi={alkindi}/>
         <h1>{round.title}</h1>
         {renderTeamQualified()}
         {renderTeamMembers(team)}

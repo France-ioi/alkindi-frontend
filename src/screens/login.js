@@ -7,7 +7,7 @@ import AuthHeader from '../ui/auth_header';
 const LoginScreen = PureComponent(self => {
 
   const onLogin = function () {
-    Alkindi.login();
+    self.props.alkindi.login();
   };
 
   self.render = function () {

@@ -11,7 +11,7 @@ import Tasks from '../tasks';
 export const CryptoTab = EpicComponent(self => {
 
   const saveState = function () {
-    const {user_id, manager, workspace} = self.props;
+    const {alkindi, user_id, workspace} = self.props;
     // Silently ignore the request if a save operation is pending.
     if (workspace.saving)
       return;
@@ -20,6 +20,7 @@ export const CryptoTab = EpicComponent(self => {
       alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
       return;
     }
+    const manager = alkindi.manager;
     const data = {
       title: "Révision du " + new Date().toLocaleString(),
       state: manager.save(),
@@ -27,7 +28,7 @@ export const CryptoTab = EpicComponent(self => {
     };
     // XXX move this into manager
     manager.beginSave();
-    self.props.api.storeRevision(user_id, data).then(
+    alkind.api.storeRevision(user_id, data).then(
       function (result) {
         manager.endSave(result.revision_id);
       },
@@ -54,7 +55,7 @@ export const CryptoTab = EpicComponent(self => {
 
   const getHint = function (query, callback) {
     const user_id = self.props.user_id;
-    self.props.api.getHint(user_id, query).then(
+    self.props.alkindi.api.getHint(user_id, query).then(
       function () { callback(false); },
       callback
     );
@@ -93,7 +94,7 @@ export const CryptoTab = EpicComponent(self => {
       // If there is a revision that can be loaded, attempt to load it.
       if (workspace.revisionId !== undefined) {
         self.setState({loading: true, broken: false});
-        self.props.api.loadRevision(workspace.revisionId).then(
+        self.props.alkindi.api.loadRevision(workspace.revisionId).then(
           function (result) {
             const revision = result.workspace_revision;
             manager.clear();
@@ -114,7 +115,7 @@ export const CryptoTab = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {api, user_id, task, manager, workspace} = self.props;
+    const {alkindi, user_id, task, workspace} = self.props;
     const {loading, broken} = self.state;
     if (loading || broken) {
       // Keep the same Notifier instance displayed if workspace.tools becomes
@@ -123,7 +124,7 @@ export const CryptoTab = EpicComponent(self => {
       return (
         <div>
           Chargement en cours, veuillez patienter...
-          <Notifier emitter={api.emitter}/>
+          <Notifier emitter={alkindi.emitter}/>
         </div>);
     }
     const saveStyle = workspace.changed ? 'primary' : 'default';
@@ -132,7 +133,7 @@ export const CryptoTab = EpicComponent(self => {
         <div className='pull-right'>
           <Tooltip content={<p>Cliquez sur ce bouton pour obtenir les indices demandés par vos coéquipiers depuis le dernier chargement de la page.</p>}/>
           {' '}
-          <RefreshButton/>
+          <RefreshButton alkindi={alkindi}/>
         </div>
         <Button bsStyle={saveStyle} onClick={saveState}>
           <i className="fa fa-save"/>
@@ -152,10 +153,10 @@ export const CryptoTab = EpicComponent(self => {
     );
     const {TabHeader, getRootScope} = Tasks[task.front];
     const rootScope = getRootScope({...task, getHint});
-    const tools = manager.render(rootScope);
+    const tools = alkindi.manager.render(rootScope);
     return (
       <div>
-        <Notifier emitter={api.emitter}/>
+        <Notifier alkindi={alkindi}/>
         <TabHeader task={task}/>
         {header}
         {tools}

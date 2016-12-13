@@ -13,8 +13,6 @@ import RefreshButton from '../ui/refresh_button';
 
 const HistoryTab = EpicComponent(self => {
 
-  const api = Alkindi.api;
-
   const onLoadRevision = memoize(function (revisionId) {
     return function () {
       const {cryptoChanged} = self.props;
@@ -27,8 +25,8 @@ const HistoryTab = EpicComponent(self => {
   });
 
   const onRefresh = function () {
-    const {attempt_id} = self.props;
-    Alkindi.refresh({history: attempt_id});
+    const {alkindi, attempt_id} = self.props;
+    alkindi.refresh({history: attempt_id});
   };
 
   const renderRevisions = function (revisions) {
@@ -89,17 +87,17 @@ const HistoryTab = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {revisions} = self.props;
+    const {alkindi, revisions} = self.props;
     return (
       <div>
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>
             {' '}
-            <RefreshButton refresh={onRefresh}/>
+            <RefreshButton alkindi={alkindi} refresh={onRefresh}/>
           </div>
         </div>
-        <Notifier emitter={api.emitter}/>
+        <Notifier alkindi={alkindi}/>
         <p>
           Ci-dessous, vous pouvez trouver toutes les versions précédemment
           enregistrées par vous et vos coéquipiers.

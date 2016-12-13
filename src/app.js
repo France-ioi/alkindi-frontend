@@ -21,22 +21,22 @@ export const App = EpicComponent(self => {
   };
 
   self.render = function () {
-    const {user, team, round, showMainScreen, participation} = self.props;
+    const {alkindi, user, team, round, showMainScreen, participation} = self.props;
 
     if (user === undefined)
-      return <LoginScreen user={user} round={round}/>;
+      return <LoginScreen alkindi={alkindi} user={user} round={round}/>;
 
     if (team === undefined)
-      return <JoinTeamScreen/>;
+      return <JoinTeamScreen alkindi={alkindi}/>;
 
     if (round.status === 'open' || showMainScreen || participation && participation.is_qualified)
-      return <MainScreen/>;
+      return <MainScreen alkindi={alkindi}/>;
 
     if (round.status === 'final')
-      return <FinalScreen/>;
+      return <FinalScreen alkindi={alkindi}/>;
 
     if (round.status === 'over' || round.status === 'closed')
-      return <RoundOverScreen/>;
+      return <RoundOverScreen alkindi={alkindi}/>;
 
     return <p>Cas non prévu.</p>;
 

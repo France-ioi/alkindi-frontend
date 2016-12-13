@@ -34,7 +34,7 @@ const AttemptsTab = PureComponent(self => {
     const element = accessCodes[code_user_id];
     const code = element.value.trim();
     element.value = '';
-    Alkindi.api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
+    self.props.alkindi.api.enterAccessCode(user_id, {code: code, user_id: code_user_id});
   };
 
   const renderCodeEntry = function () {
@@ -91,15 +91,15 @@ const AttemptsTab = PureComponent(self => {
   };
 
   self.componentWillMount = function () {
-    Alkindi.api.emitter.on('refresh', clearAccessCode);
+    selp.props.alkindi.api.emitter.on('refresh', clearAccessCode);
   };
 
   self.componentWillUnmount = function () {
-    Alkindi.api.emitter.removeListener('refresh', clearAccessCode);
+    selp.props.alkindi.api.emitter.removeListener('refresh', clearAccessCode);
   };
 
   self.render = function () {
-    const {user, round, team, attempt, attempts} = self.props;
+    const {alkindi, user, round, team, attempt, attempts} = self.props;
     const codeEntry = attempt && attempt.needs_codes;
     const score = round.hide_scores ? null : getMaxScore(attempts);
     const noTraining = round.max_attempts === null;
@@ -109,9 +109,9 @@ const AttemptsTab = PureComponent(self => {
         <div className="pull-right">
           <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de vos épreuves.</p>}/>
           {' '}
-          <RefreshButton/>
+          <RefreshButton alkindi={alkindi}/>
         </div>
-        <Notifier emitter={Alkindi.api.emitter}/>
+        <Notifier alkindi={alkindi}/>
         <h1>{round.title}</h1>
         {noTraining &&
           <p>
@@ -150,7 +150,7 @@ const AttemptsTab = PureComponent(self => {
         {codeEntry && renderCodeEntry()}
         {attempts &&
           <div className="attempts">
-            {attempts.map(attempt => <AttemptTimeline key={attempt.ordinal} attempt={attempt} round={round} team={team} user={user} onSwitchTab={onSwitchTab}/>)}
+            {attempts.map(attempt => <AttemptTimeline alkindi={alkindi} key={attempt.ordinal} attempt={attempt} round={round} team={team} user={user} onSwitchTab={onSwitchTab}/>)}
           </div>}
       </div>
     );

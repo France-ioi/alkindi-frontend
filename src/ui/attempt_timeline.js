@@ -42,16 +42,16 @@ export default PureComponent(self => {
 
   const onStartAttempt = function () {
     const user_id = self.props.user.id;
-    Alkindi.api.startAttempt(user_id);
+    self.props.alkindi.api.startAttempt(user_id);
   };
   const onCancelAttempt = function () {
     const user_id = self.props.user.id;
-    Alkindi.api.cancelAttempt(user_id);
+    self.props.alkindi.api.cancelAttempt(user_id);
   };
   const onRevealAccessCode = function () {
     const {attempt} = self.props;
     const user_id = self.props.user.id;
-    Alkindi.refresh({access_code: attempt.id});
+    self.props.alkindi.refresh({access_code: attempt.id});
   };
   const onAccessTask = function () {
     const {user, team, attempt} = self.props;
@@ -66,17 +66,17 @@ export default PureComponent(self => {
         // TODO: confirm with message explaining that time taken to solve the task may influence the final score/rankind
       }
     }
-    Alkindi.api.assignAttemptTask(user.id);
+    self.props.alkindi.api.assignAttemptTask(user.id);
   };
   const onResetHints = function () {
     const user_id = self.props.user.id;
     if (window.confirm("Voulez vous vraiment effacer tous les indices ?  Assurez-vous de prévenir vos coéquipiers.")) {
-      Alkindi.api.resetHints(user_id);
+      self.props.alkindi.api.resetHints(user_id);
     }
   };
   const onResetToTraining = function () {
     const team_id = self.props.team.id;
-    Alkindi.api.resetTeamToTraining(team_id);
+    self.props.alkindi.api.resetTeamToTraining(team_id);
   };
   const onGoToTask = function () {
     self.props.onSwitchTab('task');

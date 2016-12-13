@@ -45,7 +45,7 @@ const Notifier = PureComponent(self => {
   };
 
   const refresh = function () {
-    Alkindi.refresh();
+    self.props.alkindi.refresh();
   }
 
   const endWithBackendError = function (result) {
@@ -111,11 +111,11 @@ const Notifier = PureComponent(self => {
   };
 
   const onLogin = function () {
-    Alkindi.login().then(onDismiss);
+    self.props.alkindi.login().then(onDismiss);
   };
 
   self.componentWillMount = function () {
-    const {emitter} = self.props;
+    const emitter = self.props.alkindi.api.emitter;
     emitter.on('begin', begin);
     emitter.on('server_error', endWithServerError);
     emitter.on('backend_error', endWithBackendError);
@@ -123,7 +123,7 @@ const Notifier = PureComponent(self => {
   };
 
   self.componentWillUnmount = function () {
-    const {emitter} = self.props;
+    const emitter = self.props.alkindi.api.emitter;
     emitter.removeListener('begin', begin);
     emitter.removeListener('server_error', endWithServerError);
     emitter.removeListener('backend_error', endWithBackendError);
