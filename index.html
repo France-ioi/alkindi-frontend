@@ -20,22 +20,15 @@
 
   <div id="reports" style="position: fixed; right: 0; bottom: 0; width: 0; height: 0;"></div>
 
-  <script src="jspm_packages/system.js"></script>
-  <script src="jspm.config.js"></script>
-  <script src="assets/deps.js"></script>
+  <script src="assets/bundle.js"></script>
   <script type="text/javascript">
-  !function () {
-    System.import('alkindi-frontend').then(function (m) {
-      // XXX get csrf_token from backend
-      m['default']({
-        "csrf_token": "968bea2969a2cf43f1571a951a463e8c626b3ee7",
-        "login_url": "https://alkindi.home.epixode.fr/login",
-        "logout_url": "https://alkindi.home.epixode.fr/logout",
-        "api_url": "https://alkindi.home.epixode.fr/api/",
-        "nocdn": true
-      }, document.getElementById('main'));
-    });
-  }();
+  Alkindi.run({
+    "csrf_token": "968bea2969a2cf43f1571a951a463e8c626b3ee7",
+    "login_url": "https://alkindi.home.epixode.fr/login",
+    "logout_url": "https://alkindi.home.epixode.fr/logout",
+    "api_url": "https://alkindi.home.epixode.fr/api/",
+    "nocdn": true
+  }, document.getElementById('main'));
   </script>
 
 </body>

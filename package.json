@@ -8,7 +8,7 @@
   "scripts": {
     "build": "babel src -d dist/",
     "build-dev": "babel --source-maps --watch src -d dist/",
-    "bundle": "jspm bundle --minify dist/index.js assets/bundle.js",
+    "bundle": "jspm build dist/index.js assets/bundle.js --format umd --minify --global-name Alkindi",
     "build-deps": "jspm bundle 'alkindi-frontend' - '[dist/**/*]' assets/deps.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
