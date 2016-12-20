@@ -26,18 +26,38 @@ export const CryptoTab = EpicComponent(self => {
       state: manager.save(),
       parent_id: workspace.revisionId
     };
-    // XXX move this into manager
-    manager.beginSave();
+    beginSave();
     alkind.api.storeRevision(user_id, data).then(
       function (result) {
-        manager.endSave(result.revision_id);
+        endSave(result.revision_id);
       },
       function () {
         // Reset the changed flag to true as the state was not changed.
-        manager.endSave();
+        endSave();
       }
     );
   };
+
+  const beginSave = function () { // XXX
+    const workspace = getWorkspace();
+    setWorkspace({
+      ...workspace,
+      saving: true,
+      changed: false
+    });
+  };
+
+  const endSave = function (revisionId) { // XXX
+    const workspace = getWorkspace();
+    const newWorkspace = {...workspace, saving: false};
+    if (revisionId) {
+      newWorkspace.revisionId = revisionId;
+    } else {
+      newWorkspace.changed = true;
+    }
+    setWorkspace(newWorkspace);
+  };
+
 
   const resetState = function () {
     if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
