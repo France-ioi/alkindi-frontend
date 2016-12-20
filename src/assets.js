@@ -1,10 +1,10 @@
 
 const options = {
-  template: '{}'
+  template: '/assets/{}'
 };
 
 export const asset_url = function (path) {
-  return options.template.replace('{}', path);
+  return `/assets/${path}`;
 };
 
 export const configure = function (newOptions) {

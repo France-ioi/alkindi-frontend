@@ -8,11 +8,14 @@
   "scripts": {
     "build": "babel src -d dist/",
     "build-dev": "babel --source-maps --watch src -d dist/",
-    "bundle": "jspm build dist/index.js assets/bundle.js --format umd --minify --global-name Alkindi",
-    "build-deps": "jspm bundle 'alkindi-frontend' - '[dist/**/*]' assets/deps.js",
+    "bundle": "jspm build dist/index.js build/index.js --format umd --minify --global-name Alkindi",
+    "bundle-dev": "jspm bundle 'alkindi-frontend' - '[dist/**/*]' build/dev-bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "colors": "^1.1.2",
+    "express": "^4.14.0",
+    "pug": "^2.0.0-beta6",
     "systemjs": "^0.19.41"
   },
   "devDependencies": {
@@ -74,7 +77,7 @@
       "path": "npm:jspm-nodelibs-path@^0.2.0",
       "process": "npm:jspm-nodelibs-process@^0.2.0",
       "querystring": "npm:jspm-nodelibs-querystring@^0.2.0",
-      "react": "npm:react@^15.4.1",
+      "react": "npm:react@^15.0.0",
       "react-dnd": "npm:react-dnd@^2.1.4",
       "react-dom": "npm:react-dom@^15.4.1",
       "redux": "npm:redux@^3.6.0",

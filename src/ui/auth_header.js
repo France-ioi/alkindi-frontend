@@ -8,7 +8,7 @@ export default PureComponent(self => {
     return (
         <div id="auth-header">
           <table className="table" style={{width:'100%'}}><tbody><tr>
-            <td style={{width:'20%'}}><img src={asset_url('images/alkindi-logo.png')}/></td>
+            <td style={{width:'20%'}}><img src={asset_url('alkindi-logo.png')}/></td>
             <td>
               <h1 className="general_title">Concours Alkindi</h1>
               <h2 className="general_subtitle">Plateforme du concours</h2>
