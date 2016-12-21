@@ -24,6 +24,10 @@ import {link, include, defineAction, defineSelector, addReducer} from 'epic-link
 import App from './app';
 import Login from './login'
 
+import './base.scss!scss';
+import "rc-tooltip/assets/bootstrap.css!";
+import './index.scss!scss';
+
 // XXX old imports, review
 import {configure as configureAssets} from './assets';
 import {Api, ApiFactory} from './api'; // XXX

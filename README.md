@@ -16,14 +16,10 @@ You may want to install jspm globally:
 
 ## Production
 
-The `build` script transpiles all source files using babel:
-
-    $ npm run build
-
-The `bundle` script builds the production bundle `build/bundle.js`
+The `build` script builds the production bundle `build/bundle.js`
 containing the transpiled source files and all dependencies:
 
-    $ npm run bundle
+    $ npm run build
 
 A lightweight server script is used to generate the HTML index:
 
@@ -33,17 +29,44 @@ The LISTEN environment variable can be a TCP port or a UNIX socket path.
 
 ## Development
 
-A development workflow is provided by the `build-dev` script which
-watches all sources files and updates transpiled outputs:
+The `build-dev` script generates a bundle (build/dev-bundle.js) to
+reduce page load time during development:
 
     $ npm run build-dev
 
-A `bundle-dev` script generates a bundle (build/dev-bundle.js) to speed
-up loading the dependencies:
+Remember to rebuild this bundle whenever dependencies are updated, or
+you could run into issues with multiple version of packages being loaded
+simultaneously.  Things can get particularly confusing when this happens
+with React.
 
-    $ npm run bundle-dev
+## jspm hell
 
-Remember to update (or delete) this bundle whenever dependencies are
-updated, or you could run into issues with multiple version of packages
-being loaded simultaneously.  Things can get particularly confusing when
-this happens with React.
+### transpiling
+
+The build-dev script adds the transpiling packages (`plugin-babel` and
+`babel-plugin-transform-react-jsx`) to the bundle to make it available
+for transpiling source files.
+
+Using `babel-cli --watch` would be a little faster, but using plugin-babel
+allows jspm to be used to include css files from jspm/npm packages.
+It is also required for native jspm packages including ES6 code that
+needs transpiling.
+
+### debug
+
+Package debug@^2.5.1 needs an override in `package.json` to resolve a 404
+error on `browser.js`, until the jspm registry is updated:
+```
+jspm.overrides['npm:debug@2.5.1'].directories.lib: "src"
+````
+
+### scss
+
+The build-dev script looks weird because jspm fails to include plugin-sass
+in the bundle.  Adding sass.js fails with an out-of-memory error.  Adding
+postcss and autoprefixer works and limits the number of requests used to
+load the plugin-sass.
+
+To avoid transforming bootstrap-sass every time the page is loaded, it is
+included in src/base.scss, which is included in dev-bundle.js.
+

@@ -3,15 +3,43 @@ SystemJS.config({
   paths: {
     "npm:": "jspm_packages/npm/",
     "github:": "jspm_packages/github/",
-    "alkindi-frontend/": "dist/"
+    "alkindi-frontend/": "src/"
   },
   browserConfig: {
     "baseURL": "/"
   },
+  transpiler: "plugin-babel",
   packages: {
     "alkindi-frontend": {
-      "main": "index.js"
+      "main": "index.js",
+      "meta": {
+        "*.js": {
+          "loader": "plugin-babel"
+        }
+      }
     }
+  },
+  meta: {
+    "*.sass": {
+      "loader": "scss"
+    },
+    "*.scss": {
+      "loader": "scss"
+    }
+  },
+  babelOptions: {
+    "optional": [
+      "runtime"
+    ],
+    "plugins": [
+      "babel-plugin-transform-react-jsx"
+    ],
+    "blacklist": []
+  },
+  map: {
+    "css": "github:systemjs/plugin-css@0.1.32",
+    "scss": "github:mobilexag/plugin-sass@0.5.1",
+    "sass": "github:mobilexag/plugin-sass@0.5.1"
   }
 });
 
@@ -25,7 +53,7 @@ SystemJS.config({
     "array.prototype.fill": "npm:array.prototype.fill@1.0.1",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "babel-runtime": "npm:babel-runtime@6.20.0",
-    "bootstrap-sass": "npm:bootstrap-sass@3.3.7",
+    "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.7",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.1",
     "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
     "classnames": "npm:classnames@2.2.5",
@@ -543,7 +571,7 @@ SystemJS.config({
       "map": {
         "readable-stream": "npm:readable-stream@2.2.2",
         "component-emitter": "npm:component-emitter@1.2.1",
-        "debug": "npm:debug@2.3.3",
+        "debug": "npm:debug@2.4.5",
         "mime": "npm:mime@1.3.4",
         "cookiejar": "npm:cookiejar@2.1.0",
         "extend": "npm:extend@3.0.0",
@@ -560,11 +588,6 @@ SystemJS.config({
         "mime-types": "npm:mime-types@2.1.13"
       }
     },
-    "npm:debug@2.3.3": {
-      "map": {
-        "ms": "npm:ms@0.7.2"
-      }
-    },
     "npm:combined-stream@1.0.5": {
       "map": {
         "delayed-stream": "npm:delayed-stream@1.0.0"
@@ -578,6 +601,11 @@ SystemJS.config({
     "npm:epic-linker@1.0.6": {
       "map": {
         "babel-runtime": "npm:babel-runtime@6.20.0"
+      }
+    },
+    "npm:debug@2.4.5": {
+      "map": {
+        "ms": "npm:ms@0.7.2"
       }
     }
   }
