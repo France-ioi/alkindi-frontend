@@ -10,6 +10,7 @@
     "build-dev": "babel --source-maps --watch src -d dist/",
     "bundle": "jspm build dist/index.js build/index.js --format umd --minify --global-name Alkindi",
     "bundle-dev": "jspm bundle 'alkindi-frontend' - '[dist/**/*]' build/dev-bundle.js",
+    "start": "node backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
