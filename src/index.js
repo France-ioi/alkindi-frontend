@@ -60,6 +60,12 @@ const {store, scope, start} = link(function* (deps) {
 
 export function run (config, container) {
 
+  /*
+  System.import("@system-env").then(function (env) {
+    console.log('running in', env.production ? 'production' : 'development', 'mode');
+  });
+  */
+
   // Initialize the store.
   if ('assets_template' in config) {
     configureAssets({template: config.assets_template}); // XXX

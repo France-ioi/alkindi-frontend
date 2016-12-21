@@ -1,4 +1,5 @@
 SystemJS.config({
+  production: true,
   paths: {
     "npm:": "jspm_packages/npm/",
     "github:": "jspm_packages/github/",

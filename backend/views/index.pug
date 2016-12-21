@@ -15,10 +15,13 @@ body(id='app')
   if development
     script(type='text/javascript', src='jspm_packages/system.src.js')
     script(type='text/javascript', src='jspm.config.js')
+    script(type='text/javascript', src='jspm.dev.js')
     script(type='text/javascript', src='build/dev-bundle.js')
     script(type='text/javascript', src='start')
   else
-    script(type='text/javascript', src='build/index.js')
+    script(type='text/javascript', src='jspm_packages/system.js')
+    script(type='text/javascript', src='jspm.config.js')
+    script(type='text/javascript', src='build/bundle.js')
     script(type='text/javascript', src='start')
 
   div#pageFooter
