@@ -55,6 +55,7 @@
     "devDependencies": {
       "babel": "npm:babel-core@^6.21.0",
       "babel-plugin-transform-react-jsx": "npm:babel-plugin-transform-react-jsx@^6.8.0",
+      "css": "github:systemjs/plugin-css@0.1.32",
       "debug": "npm:debug@^2.5.1",
       "graceful-fs": "npm:graceful-fs@^4.1.6",
       "module": "npm:jspm-nodelibs-module@^0.2.0",
@@ -76,7 +77,7 @@
       "https": "npm:jspm-nodelibs-https@^0.2.0",
       "os": "npm:jspm-nodelibs-os@^0.2.0",
       "path": "npm:jspm-nodelibs-path@^0.2.0",
-      "process": "npm:jspm-nodelibs-process@^0.2.0",
+      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
       "querystring": "npm:jspm-nodelibs-querystring@^0.2.0",
       "react": "npm:react@^15.0.0",
       "react-dnd": "npm:react-dnd@^2.1.4",

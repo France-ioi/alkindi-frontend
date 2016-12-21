@@ -8,7 +8,9 @@ SystemJS.config({
     "module": "npm:jspm-nodelibs-module@0.2.0",
     "plugin-babel": "npm:systemjs-plugin-babel@0.0.17",
     "postcss": "npm:postcss@5.2.6",
-    "autoprefixer": "npm:autoprefixer@6.5.4"
+    "scss": "github:mobilexag/plugin-sass@0.5.1",
+    "sass": "github:mobilexag/plugin-sass@0.5.1",
+    "css": "github:systemjs/plugin-css@0.1.32"
   },
   packages: {
     "npm:chalk@1.1.3": {

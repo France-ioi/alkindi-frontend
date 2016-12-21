@@ -35,11 +35,6 @@ SystemJS.config({
       "babel-plugin-transform-react-jsx"
     ],
     "blacklist": []
-  },
-  map: {
-    "css": "github:systemjs/plugin-css@0.1.32",
-    "scss": "github:mobilexag/plugin-sass@0.5.1",
-    "sass": "github:mobilexag/plugin-sass@0.5.1"
   }
 });
 
@@ -82,7 +77,7 @@ SystemJS.config({
     "object.assign": "npm:object.assign@4.0.4",
     "os": "npm:jspm-nodelibs-os@0.2.0",
     "path": "npm:jspm-nodelibs-path@0.2.1",
-    "process": "npm:jspm-nodelibs-process@0.2.0",
+    "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "querystring": "npm:jspm-nodelibs-querystring@0.2.0",
     "rc-tooltip": "npm:rc-tooltip@3.4.2",
     "react": "npm:react@15.4.1",
