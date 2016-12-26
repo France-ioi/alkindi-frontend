@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production jspm bundle src/index.js build/bundle.js --minify",
-    "build-dev": "jspm bundle 'alkindi-frontend' - '[alkindi-frontend/**/*]' - '[alkindi-frontend/**/index.scss!scss]' + plugin-babel + babel-plugin-transform-react-jsx + postcss + autoprefixer build/dev-bundle.js",
+    "build-dev": "jspm bundle 'alkindi-frontend' - '[alkindi-frontend/**/*]' - '[alkindi-frontend/**/index.scss!scss]' + plugin-babel + babel-plugin-transform-react-jsx + postcss build/dev-bundle.js",
     "start": "node backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
