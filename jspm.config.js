@@ -59,7 +59,7 @@ SystemJS.config({
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
     "epic-component": "npm:epic-component@0.3.1",
-    "epic-linker": "npm:epic-linker@1.0.6",
+    "epic-linker": "npm:epic-linker@1.1.0",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
     "es6-promise": "npm:es6-promise@4.0.5",
@@ -597,11 +597,6 @@ SystemJS.config({
         "mime-db": "npm:mime-db@1.25.0"
       }
     },
-    "npm:epic-linker@1.0.6": {
-      "map": {
-        "babel-runtime": "npm:babel-runtime@6.20.0"
-      }
-    },
     "npm:debug@2.4.5": {
       "map": {
         "ms": "npm:ms@0.7.2"
@@ -722,6 +717,11 @@ SystemJS.config({
     "npm:once@1.4.0": {
       "map": {
         "wrappy": "npm:wrappy@1.0.2"
+      }
+    },
+    "npm:epic-linker@1.1.0": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0"
       }
     }
   }
