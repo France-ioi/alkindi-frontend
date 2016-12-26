@@ -32,11 +32,13 @@ import './index.scss!scss';
 import {configure as configureAssets} from './assets';
 import {Api, ApiFactory} from './api'; // XXX
 import {WorkspaceManager} from './workspace';
+import ClientApi from './client_api';
 
 const {store, scope, start} = link(function* (deps) {
 
   yield include(App);
   yield include(Login);
+  yield include(ClientApi);
 
   yield defineAction('init', 'Init');
   yield addReducer('init', function (state, action) {
