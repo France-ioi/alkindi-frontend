@@ -8,49 +8,6 @@ const initialState = {
   workspace: {}
 };
 
-const reduceBeginRefresh = function (state, action) {
-  const {user_id, request} = action;
-  return {...state, refreshing: true, user_id, request};
-};
-
-const reduceCancelRefresh = function (state) {
-  return {...state, refreshing: false};
-};
-
-const reduceEndRefresh = function (state, action) {
-  const {user_id, request, response} = action;
-  // Discart a response to a stale request, but not the initial seeding.
-  if (state.request && !(state.user_id == user_id && state.request === request))
-    return state;
-  // console.log('REFRESH', response);
-  const newState = {...state, refreshing: false, response: response};
-  if (response.now) {
-    // Save a relative time offset (local - remote) in milliseconds.
-    newState.timeDelta = Date.now() - (new Date(response.now)).getTime();
-  }
-  // TODO: check action.frontend_version.
-  // Seed with the user id from the response.
-  if (state.request === undefined && response.user !== undefined)
-    newState.user_id = response.user.id;
-  // Set an attempt based on attempts, current_attempt_id.
-  const {attempts, current_attempt_id} = response;
-  if (attempts && current_attempt_id)  {
-    newState.attempt = attempts.find(attempt => attempt.id == current_attempt_id);
-  } else {
-    newState.attempt = undefined;
-  }
-  // Clear the crypto tab when the current attempt changes.
-  const attempt = newState.attempt;
-  if (state.attempt && state.attempt.id !== current_attempt_id) {
-    newState.workspace = {};
-  }
-  // If the workspace has not been loaded, set the initial revisionId.
-  if (newState.workspace.tools === undefined && response.my_latest_revision_id !== null) {
-    newState.workspace = {revisionId: response.my_latest_revision_id};
-  }
-  return reduceTick(reduceSetActiveTab(newState));
-};
-
 // XXX turn into a saga
 const reduceTick = function (state) {
   // Periodic process, this executes every second and
@@ -127,12 +84,6 @@ const actualReduce = function (state, action) {
       break;
     case 'INIT':
       return initialState;
-    case 'BEGIN_REFRESH':
-      return reduceBeginRefresh(state, action);
-    case 'END_REFRESH':
-      return reduceEndRefresh(state, action);
-    case 'CANCEL_REFRESH':
-      return reduceCancelRefresh(state);
     case 'AFTER_LOGOUT':
       return initialState;
     case 'TICK':

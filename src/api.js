@@ -3,6 +3,32 @@ import {Promise} from 'es6-promise';
 import {EventEmitter} from 'events';
 import request from 'superagent';
 
+export const asyncGetJson = function (path) {
+  return new Promise(function (resolve, reject) {
+    var req = request.get(path);
+    req.end(function (err, res) {
+      if (err || !res.ok)
+        return reject({err, res});
+      resolve(res.body);
+    });
+  });
+};
+
+export const asyncPostJson = function (path, body) {
+  return new Promise(function (resolve, reject) {
+    var req = request.post(path);
+    if (body) {
+      req.set('Accept', 'application/json');
+      req.send(body);
+    }
+    req.end(function (err, res) {
+      if (err || !res.ok)
+        return reject({err, res});
+      resolve(res.body);
+    });
+  });
+};
+
 export const ApiFactory = function (methods) {
   const {get, post} = methods;
   return {
@@ -25,22 +51,11 @@ export const ApiFactory = function (methods) {
   };
 };
 
-const locationSearchAsObject = function () {
-  return window.location.search.substring(1).split("&").reduce(function(result, value) {
-    const parts = value.split('=');
-    if (parts[0] !== "") {
-      result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
-    }
-    return result;
-  }, {})
-};
-
 export const Api = function (config) {
 
   function get (path) {
-    var req = request.get(config.api_url + path + window.location.search);
+    var req = request.get(config.api_url);
     req.set('Accept', 'application/json');
-    req.set('X-Frontend-Version', config.frontend_version);
     return req;
   }
 
@@ -48,9 +63,6 @@ export const Api = function (config) {
     var req = request.post(config.api_url + path);
     req.set('X-CSRF-Token', config.csrf_token);
     req.set('Accept', 'application/json');
-    req.set('X-Frontend-Version', config.frontend_version);
-    const postBody = {};
-    Object.assign(postBody, data, {override: locationSearchAsObject()}); // XXX move to main.js, Alkindi.settings
     req.send(postBody);
     return req;
   }

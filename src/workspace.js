@@ -3,6 +3,16 @@
 
 import React from 'react';
 
+      // Clear the crypto tab when the current attempt changes.
+      const attempt = state.attempt;
+      if (state.attempt && state.attempt.id !== current_attempt_id) {
+        newState.workspace = {};
+      }
+      // If the workspace has not been loaded, set the initial revisionId.
+      if (newState.workspace.tools === undefined && response.my_latest_revision_id !== null) {
+        newState.workspace = {revisionId: response.my_latest_revision_id};
+      }
+
 import {at, put} from './misc';
 
 const defaultMergeState = function (state, update) {

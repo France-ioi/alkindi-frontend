@@ -2,7 +2,7 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
-import {use, defineAction, defineSelector, defineView, addSaga} from 'epic-linker';
+import {use, defineAction, defineSelector, defineView, addSaga, addReducer} from 'epic-linker';
 import {eventChannel, buffers} from 'redux-saga';
 import {put, take, select} from 'redux-saga/effects'
 
@@ -111,6 +111,7 @@ export default function* (deps) {
   yield addSaga(function* () {
     while (true) {
       let {error, csrf_token, user_id} = yield take(deps.loginFeedback);
+      console.log('loginFeedback', {error, csrf_token, user_id});
       if (error) {
         yield put({type: deps.loginFailed, error});
       } else {
@@ -119,12 +120,17 @@ export default function* (deps) {
              may need to send us a new one after the user has re-authenticated. */
           yield put({type: deps.setCsrfToken, csrf_token});
         }
-        /* Trigger a refresh for the now logged-in user. */
-        yield put({type: deps.refresh, user_id});
         /* Indicate that login succeeded. */
-        yield put({type: deps.loginSucceeded});
+        yield put({type: deps.loginSucceeded, userId: user_id});
+        /* Trigger a refresh for the now logged-in user. */
+        yield put({type: deps.refresh});
       }
     }
+  });
+
+  yield addReducer('loginSucceeded', function (state, action) {
+    const {userId} = action;
+    return {...state, userId};
   });
 
   /* Handle logout messages posted by the backend via the client API. */

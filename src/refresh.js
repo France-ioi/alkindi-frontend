@@ -1,39 +1,77 @@
 
-// XXX saga
-Alkindi.refresh = function (user_id, request) {
-  const state = store.getState();
-  // Support omitting the user_id and the request, reading the value from state.
-  if (typeof user_id === 'object') {
-    request = user_id;
-    user_id = undefined;
-  }
-  if (user_id === undefined)
-    user_id = state.user_id;
-  if (typeof request !== 'object') {
-    request = state.request;
-  }
-  if (request === undefined)
-    request = {};
-  return new Promise(function (resolve, reject) {
-    store.dispatch({type: 'BEGIN_REFRESH', user_id, request});
-    Alkindi.api.bare.refresh(user_id, request).end(function (err, res) {
-      if (err) {
-        if (err.status == 403) {
-          alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
-          Alkindi.login().then(function () {
-            Alkindi.refresh(request);
-          });
-        }
-        store.dispatch({type: 'CANCEL_REFRESH'});
-        return reject(err, request);
-      }
-      const response = res.body;
-      const frontend_version = res.header['x-frontend-version'];
-      store.dispatch({type: 'END_REFRESH', response, user_id, request, frontend_version});
-      const event = {response, user_id, request, frontend_version};
-      Alkindi.api.emitter.emit('refresh', event);
-      resolve(event);
-    });
-  });
-};
+import {use, defineAction, addSaga, addReducer} from 'epic-linker';
+import {takeLatest} from 'redux-saga';
 
+export default function* (deps) {
+
+  yield use('login');
+
+  yield defineAction('refresh', 'Refresh');
+  yield defineAction('refreshStarted', 'Refresh.Started');
+  yield defineAction('refreshSucceeded', 'Refresh.Succeeded');
+  yield defineAction('refreshFailed', 'Refresh.Failed');
+
+  yield addSaga(function* () {
+    yield takeLatest('refresh', doRefresh);
+  });
+
+  function* doRefresh (action) {
+    console.log('refresh', action);
+    try {
+      const timestamp = new Date();
+      const {userId, request, api} = yield select(getRefreshState);
+      yield put({type: deps.refreshStarted, timestamp});
+      const response = yield call(api.refresh, userId, request);
+      yield put({type: deps.refreshCompleted, timestamp, response});
+    } catch (ex) {
+      // XXX test this code
+      console.log('refresh failed', ex);
+      let message;
+      if (ex.err) {
+        if (ex.err.status == 403) {
+          // XXX put an action instead of displaying an alert synchronously.
+          alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
+          yield put({type: deps.login});
+          return;
+        }
+        message = ex.err.toString();
+      } else {
+        if (ex.res) {
+          message = `${ex.res.statusCode} ${ex.res.statusText}`;
+        } else {
+          message = ex.toString();
+        }
+      }
+      yield put({type: deps.refreshFailed, timestamp, message});
+    }
+  }
+
+  yield addReducer('refreshStarted', function (state, action) {
+    console.log('refresh started', action);
+    return {...state, refreshing: true};
+  });
+
+  yield addReducer('refreshSucceeded', function (state, action) {
+    const {response} = action;
+    const newState = {...state, refreshing: false, response};
+    if (state.request === undefined && response.user !== undefined) {
+      /* Set the current user id from the response. */
+      newState.userId = response.user.id;
+    }
+    if (response.now) {
+      /* Save a relative time offset (local - remote) in milliseconds. */
+      newState.timeDelta = Date.now() - (new Date(response.now)).getTime();
+    }
+    return newState;
+  });
+
+  yield addReducer('refreshFailed', function (state, action) {
+    return {...state, refreshing: false};
+  });
+
+  function getRefreshState (state) {
+    const {userId, request, override, api} = state;
+    return {userId, request: {...request, ...override}, api};
+  }
+
+};
