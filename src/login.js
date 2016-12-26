@@ -13,11 +13,14 @@ export default function* (deps) {
   yield use('getLoginUrl', 'getLogoutUrl', 'setCsrfToken', 'refresh');
 
   yield defineAction('login', 'Login');
-  yield defineAction('loginFailed', 'Login.Failed');
+  yield defineAction('loginFeedback', 'Login.Feedback'); // sent via client API
   yield defineAction('loginSucceeded', 'Login.Succeeded');
+  yield defineAction('loginFailed', 'Login.Failed');
 
   yield defineAction('logout', 'Logout');
+  yield defineAction('logoutFeedback', 'Logout.Feedback'); // sent via client API
   yield defineAction('logoutSucceeded', 'Logout.Succeeded');
+  yield defineAction('logoutFailed', 'Logout.Failed');
 
   yield defineSelector('LoginScreenSelector', function (state) {
     return {};
@@ -71,7 +74,7 @@ export default function* (deps) {
   let loginWindow;
 
   const openInLoginWindow = function (url) {
-    // Ensure the login/logout page gets reloaded even if already open.
+    /* Ensure the login/logout page gets reloaded even if already open. */
     if (loginWindow !== undefined) {
       loginWindow.close();
       loginWindow = undefined;
@@ -81,55 +84,59 @@ export default function* (deps) {
   };
 
   yield addSaga(function* () {
-    // On login, display the login window.
+    /* On login, display the login window.  An iframe cannot be used due to a
+       privacy setting ("Block third-party cookies and site data" on Chrome)
+       that blocks cookies for origin X when an iframe with origin X is opened
+       on a page with origin Y. */
     while (true) {
       yield take(deps.login);
-      const loginUrl = yield select(deps.getLoginUrl);
+      let loginUrl = yield select(deps.getLoginUrl);
       openInLoginWindow(loginUrl);
     }
   });
 
   yield addSaga(function* () {
-    // On logout, display the logout window.
+    /* On logout, display the logout window in a popup. */
     while (true) {
       yield take(deps.logout);
-      const logoutUrl = yield select(deps.getLogoutUrl);
+      let logoutUrl = yield select(deps.getLogoutUrl);
       openInLoginWindow(logoutUrl);
     }
   });
 
-  // Event channel holding the last login/logout-related window message.
-  const loginMessageChannel = eventChannel(function (listener) {
-    const onMessage = function (event) {
-      const message = JSON.parse(event.data);
-      if (/^(afterLogin|afterLogout)$/.test(message.action)) {
-        listener(message);
-      }
-    };
-    window.addEventListener('message', onMessage);
-    return function () {
-      window.removeEventListener('message', onMessage);
-    };
-  }, buffers.sliding(1));
-
+  /* Handle login feedback messages, posted by the backend via the client API.
+      {'user_id', 'csrf_token'}
+      {'error'}
+   */
   yield addSaga(function* () {
-    // Handle afterLogin, afterLogout messages sent by the login window.
-    let message = yield take(loginMessageChannel);
-    if (message.action === 'afterLogin') {
-      const {csrf_token, user_id} =  message;
-      // Assume the login window closed itself immediately after posting
-      // the message.
-      loginWindow = undefined;
-      // The CSRF token is cleared when the user logs out, and the server
-      // may need to send us a new one after the user has re-authenticated.
-      yield put({type: deps.setCsrfToken, csrf_token});
-      // Perform a refresh.
-      yield put({type: deps.refresh, user_id});
-      // Indicate that login succeeded.
-      yield put({type: deps.loginSucceeded});
+    while (true) {
+      let action = yield take(deps.loginFeedback);
+      console.log('loginFeedback', action);
+      if (action.error) {
+        yield put({type: deps.loginFailed, action.error});
+      } else {
+        if (action.csrf_token) {
+          /* The CSRF token is cleared when the user logs out, and the server
+             may need to send us a new one after the user has re-authenticated. */
+          yield put({type: deps.setCsrfToken, action.csrf_token});
+        }
+        /* Trigger a refresh for the now logged-in user. */
+        yield put({type: deps.refresh, user_id});
+        /* Indicate that login succeeded. */
+        yield put({type: deps.loginSucceeded});
+      }
     }
-    if (message.action === 'afterLogout') {
-      yield put({type: deps.logoutSucceeded});
+  });
+
+  /* Handle logout messages posted by the backend via the client API. */
+  yield addSaga(function* () {
+    while (true) {
+      let {error} = yield take(deps.logoutFeedback);
+      if (error) {
+        yield put({type: deps.logoutFailed, error});
+      } else {
+        yield put({type: deps.logoutSucceeded});
+      }
     }
   });
 
