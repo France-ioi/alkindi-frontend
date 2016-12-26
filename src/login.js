@@ -110,15 +110,14 @@ export default function* (deps) {
    */
   yield addSaga(function* () {
     while (true) {
-      let action = yield take(deps.loginFeedback);
-      console.log('loginFeedback', action);
-      if (action.error) {
-        yield put({type: deps.loginFailed, action.error});
+      let {error, csrf_token, user_id} = yield take(deps.loginFeedback);
+      if (error) {
+        yield put({type: deps.loginFailed, error});
       } else {
-        if (action.csrf_token) {
+        if (csrf_token) {
           /* The CSRF token is cleared when the user logs out, and the server
              may need to send us a new one after the user has re-authenticated. */
-          yield put({type: deps.setCsrfToken, action.csrf_token});
+          yield put({type: deps.setCsrfToken, csrf_token});
         }
         /* Trigger a refresh for the now logged-in user. */
         yield put({type: deps.refresh, user_id});
