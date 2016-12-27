@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {link, include, defineAction, defineSelector, addReducer} from 'epic-linker';
 
+import Api from './api';
 import App from './app';
 import Login from './login'
 import JoinTeam from './join_team';
@@ -29,7 +30,6 @@ import './index.scss!scss';
 
 // XXX old imports, review
 import {configure as configureAssets} from './assets';
-import {Api, ApiFactory} from './api'; // XXX
 import ClientApi from './client_api';
 
 const {store, scope, start} = link(function* (deps) {
@@ -45,6 +45,7 @@ const {store, scope, start} = link(function* (deps) {
     const {config} = action;
     return {
       config,
+      api: new Api(config),
       response: {}
     };
   });
