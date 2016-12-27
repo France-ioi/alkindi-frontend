@@ -1,6 +1,7 @@
 
 import {use, defineAction, addSaga, addReducer} from 'epic-linker';
 import {takeLatest} from 'redux-saga';
+import {select, call, put} from 'redux-saga/effects';
 
 export default function* (deps) {
 
@@ -12,17 +13,16 @@ export default function* (deps) {
   yield defineAction('refreshFailed', 'Refresh.Failed');
 
   yield addSaga(function* () {
-    yield takeLatest('refresh', doRefresh);
+    yield takeLatest(deps.refresh, doRefresh);
   });
 
   function* doRefresh (action) {
-    console.log('refresh', action);
     try {
       const timestamp = new Date();
       const {userId, request, api} = yield select(getRefreshState);
       yield put({type: deps.refreshStarted, timestamp});
       const response = yield call(api.refresh, userId, request);
-      yield put({type: deps.refreshCompleted, timestamp, response});
+      yield put({type: deps.refreshSucceeded, timestamp, response});
     } catch (ex) {
       // XXX test this code
       console.log('refresh failed', ex);
@@ -47,13 +47,12 @@ export default function* (deps) {
   }
 
   yield addReducer('refreshStarted', function (state, action) {
-    console.log('refresh started', action);
     return {...state, refreshing: true};
   });
 
   yield addReducer('refreshSucceeded', function (state, action) {
-    const {response} = action;
-    const newState = {...state, refreshing: false, response};
+    const {timestamp, response} = action;
+    const newState = {...state, refreshing: false, refreshedAt: timestamp, response};
     if (state.request === undefined && response.user !== undefined) {
       /* Set the current user id from the response. */
       newState.userId = response.user.id;
