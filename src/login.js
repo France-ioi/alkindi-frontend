@@ -111,7 +111,6 @@ export default function* (deps) {
   yield addSaga(function* () {
     while (true) {
       let {error, csrf_token, user_id} = yield take(deps.loginFeedback);
-      console.log('loginFeedback', {error, csrf_token, user_id});
       if (error) {
         yield put({type: deps.loginFailed, error});
       } else {
