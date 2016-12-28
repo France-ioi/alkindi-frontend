@@ -1,39 +1,12 @@
 import {Promise} from 'es6-promise';
 
-import {EventEmitter} from 'events';
 import request from 'superagent';
-
-export const asyncGetJson = function (path) {
-  return new Promise(function (resolve, reject) {
-    var req = request.get(path);
-    req.end(function (err, res) {
-      if (err || !res.ok)
-        return reject({err, res});
-      resolve(res.body);
-    });
-  });
-};
-
-export const asyncPostJson = function (path, body) {
-  return new Promise(function (resolve, reject) {
-    var req = request.post(path);
-    if (body) {
-      req.set('Accept', 'application/json');
-      req.send(body);
-    }
-    req.end(function (err, res) {
-      if (err || !res.ok)
-        return reject({err, res});
-      resolve(res.body);
-    });
-  });
-};
 
 export const ApiFactory = function (methods) {
   const {get, post} = methods;
   return {
     refresh: (user_id, request) => post('users/'+user_id, request),
-    qualifyUser: (user_id, data) => post('users/'+user_id+'/qualify', data),
+    addBadge: (user_id, data) => post('users/'+user_id+'/add_badge', data),
     createTeam: (user_id) => post('users/'+user_id+'/create_team'),
     joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),
     leaveTeam: (user_id) => post('users/'+user_id+'/leave_team'),
@@ -54,46 +27,33 @@ export const ApiFactory = function (methods) {
 export const Api = function (config) {
 
   function get (path) {
-    var req = request.get(config.api_url);
-    req.set('Accept', 'application/json');
-    return req;
-  }
-
-  function post (path, data) {
-    var req = request.post(config.api_url + path);
-    req.set('X-CSRF-Token', config.csrf_token);
-    req.set('Accept', 'application/json');
-    req.send(data);
-    return req;
-  }
-
-  const bare = ApiFactory({get, post});
-
-  const emitter = new EventEmitter();
-  const api = {emitter, bare};
-  Object.keys(bare).map(function (action) {
-    api[action] = function (...args) {
-      return new Promise(function (resolve, reject) {
-        emitter.emit('begin');
-        bare[action](...args).end(function (err, res) {
-          if (err) {
-            emitter.emit('server_error', err, res);
-            reject({success: false, error: 'failed', source: 'server'});
-            return;
-          }
-          if (res.body.success === false) {
-            emitter.emit('backend_error', res.body);
-            reject(res.body);
-            return;
-          }
-          emitter.emit('end', res);
-          resolve(res.body);
-        });
+    return new Promise(function (resolve, reject) {
+      var req = request.get(config.api_url + path);
+      req.end(function (err, res) {
+        if (err || !res.ok)
+          return reject({err, res});
+        resolve(res.body);
       });
-    };
-  });
+    });
+  }
 
-  return api;
+  function post (path, body) {
+    return new Promise(function (resolve, reject) {
+      var req = request.post(config.api_url + path);
+      req.set('X-CSRF-Token', config.csrf_token);
+      if (body) {
+        req.set('Accept', 'application/json');
+        req.send(body);
+      }
+      req.end(function (err, res) {
+        if (err || !res.ok)
+          return reject({err, res});
+        resolve(res.body);
+      });
+    });
+  }
+
+  return ApiFactory({get, post});
 };
 
 export default Api;
