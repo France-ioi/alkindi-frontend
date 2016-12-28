@@ -2,9 +2,7 @@ import React from 'react';
 import EpicComponent from 'epic-component';
 import {use, defineSelector, defineView} from 'epic-linker';
 
-//import MainScreen from './screens/main';
-//import RoundOverScreen from './screens/round_over';
-//import FinalScreen from './screens/final';
+import AuthHeader from './ui/auth_header';
 
 export default function* (deps) {
 
@@ -47,34 +45,24 @@ export default function* (deps) {
       // Select the appropriate screen to display.
       let screen = false;
       if (team === undefined) {
-        screen = <deps.JoinTeamScreen/>;
+        return <deps.JoinTeamScreen/>;
       }
-      /*
-      else if (round.status === 'open' || showMainScreen || participation && participation.is_qualified)
-        screen = <deps.MainScreen/>;
-      else if (round.status === 'final')
-        screen = <deps.FinalScreen/>;
-      else if (round.status === 'over' || round.status === 'closed')
-        screen = <deps.RoundOverScreen/>;
-      */
-      else {
-        screen = <p>Cas non prévu.</p>;
+      if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
+        return <deps.MainScreen/>;
       }
 
-/*
-      TODO: add common elements:
-        <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout alkindi={alkindi}/>
-        </div>
-        <AuthHeader/>
-        <Notifier emitter={alkindi.api.emitter}/>
-*/
+      /*
+      if (round.status === 'final')
+        return <deps.FinalScreen/>;
+      if (round.status === 'over' || round.status === 'closed')
+        return <deps.RoundOverScreen/>;
+      */
+
       return (
         <div>
-          {screen}
+          <p>Cas non prévu.</p>
         </div>
       );
-
     };
 
   }));
