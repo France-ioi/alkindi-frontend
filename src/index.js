@@ -31,8 +31,6 @@ import "rc-tooltip/assets/bootstrap.css!";
 import './index.scss!scss';
 
 // XXX old imports, review
-import {configure as configureAssets} from './assets';
-import ClientApi from './client_api';
 
 const {store, scope, start} = link(function* (deps) {
 
