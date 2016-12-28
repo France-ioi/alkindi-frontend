@@ -25,8 +25,8 @@ import DevTools from './dev_tools';
 import App from './app';
 import ClientApi from './client_api';
 import Login from './login'
-import JoinTeam from './join_team';
 import Refresh from './refresh';
+import JoinTeamScreen from './screens/join_team';
 
 import './base.scss!scss';
 import "font-awesome/css/font-awesome.min.css!";
@@ -37,11 +37,11 @@ import './index.scss!scss';
 
 const {store, scope, start} = link(function* (deps) {
 
-  yield include(App);
   yield include(ClientApi);
   yield include(Login);
-  yield include(JoinTeam);
   yield include(Refresh);
+  yield include(App);
+  yield include(JoinTeamScreen);
 
   yield defineAction('init', 'Init');
   yield addReducer('init', function (state, action) {
