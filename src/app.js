@@ -6,7 +6,7 @@ import AuthHeader from './ui/auth_header';
 
 export default function* (deps) {
 
-  yield use('LoginScreen', 'JoinTeamScreen');
+  yield use('LoginScreen', 'JoinTeamScreen', 'MainScreen');
 
   yield defineSelector('AppSelector', function (state) {
     const {user, team, round, participations, is_admin} = state.response;

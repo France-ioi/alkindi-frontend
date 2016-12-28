@@ -27,6 +27,7 @@ import ClientApi from './client_api';
 import Login from './login'
 import Refresh from './refresh';
 import JoinTeamScreen from './screens/join_team';
+import MainScreen from './screens/main';
 
 import './base.scss!scss';
 import "font-awesome/css/font-awesome.min.css!";
@@ -42,6 +43,7 @@ const {store, scope, start} = link(function* (deps) {
   yield include(Refresh);
   yield include(App);
   yield include(JoinTeamScreen);
+  yield include(MainScreen);
 
   yield defineAction('init', 'Init');
   yield addReducer('init', function (state, action) {
@@ -49,7 +51,10 @@ const {store, scope, start} = link(function* (deps) {
     return {
       config,
       api: new Api(config),
-      response: {}
+      response: {},
+      enabledTabs: {
+        team: true
+      }
     };
   });
 
