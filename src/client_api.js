@@ -26,7 +26,14 @@ export default function* (deps) {
   const messageChannel = eventChannel(function (listener) {
     const onMessage = function (event) {
       const {source, data} = event;
-      const message = JSON.parse(data);
+      let message;
+      if (typeof data === 'object') {
+        message = data;
+      } else if (typeof data === 'string' && data.startsWith('{')) {
+        message = JSON.parse(data);
+      } else {
+        return;
+      }
       if (typeof message === 'object') {
         listener({source, message});
       }
