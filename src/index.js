@@ -23,7 +23,7 @@ import DevTools from './dev_tools';
 import App from './app';
 import Login from './login'
 import JoinTeam from './join_team';
-import Refresh from './refresh'
+import Refresh from './refresh';
 
 import './base.scss!scss';
 import "font-awesome/css/font-awesome.min.css!";
