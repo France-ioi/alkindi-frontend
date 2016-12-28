@@ -19,8 +19,11 @@ import {Provider} from 'react-redux';
 import {link, include, defineAction, defineSelector, addReducer, addEnhancer} from 'epic-linker';
 
 import Api from './api';
+import {configure as configureAssets} from './assets';
 import DevTools from './dev_tools';
+
 import App from './app';
+import ClientApi from './client_api';
 import Login from './login'
 import JoinTeam from './join_team';
 import Refresh from './refresh';
