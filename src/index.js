@@ -16,9 +16,10 @@ import {Promise} from 'es6-promise';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {link, include, defineAction, defineSelector, addReducer} from 'epic-linker';
+import {link, include, defineAction, defineSelector, addReducer, addEnhancer} from 'epic-linker';
 
 import Api from './api';
+import DevTools from './dev_tools';
 import App from './app';
 import Login from './login'
 import JoinTeam from './join_team';
@@ -61,6 +62,11 @@ const {store, scope, start} = link(function* (deps) {
     return state.config.logout_url;
   });
 
+  // yield addEnhancer(DevTools.instrument());
+  if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+    yield addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
+  }
+
 });
 
 export function run (config, container) {
@@ -84,7 +90,13 @@ export function run (config, container) {
   }
 
   // Render the application.
-  ReactDOM.render(<Provider store={store}><scope.App/></Provider>, container);
+  ReactDOM.render(
+    <Provider store={store}>
+      <div>
+        <scope.App/>
+        <DevTools/>
+      </div>
+    </Provider>, container);
 
   return {store, scope};
 

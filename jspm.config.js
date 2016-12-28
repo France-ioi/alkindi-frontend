@@ -89,6 +89,9 @@ SystemJS.config({
     "react-dom": "npm:react-dom@15.4.1",
     "react-redux": "npm:react-redux@4.4.6",
     "redux": "npm:redux@3.6.0",
+    "redux-devtools": "npm:redux-devtools@3.3.1",
+    "redux-devtools-dock-monitor": "npm:redux-devtools-dock-monitor@1.1.1",
+    "redux-devtools-log-monitor": "npm:redux-devtools-log-monitor@1.1.1",
     "redux-saga": "npm:redux-saga@0.12.1",
     "reselect": "npm:reselect@2.5.4",
     "sass": "github:mobilexag/plugin-sass@0.5.1",
@@ -722,6 +725,84 @@ SystemJS.config({
     "npm:epic-linker@1.1.0": {
       "map": {
         "babel-runtime": "npm:babel-runtime@6.20.0"
+      }
+    },
+    "npm:redux-devtools@3.3.1": {
+      "map": {
+        "lodash": "npm:lodash@4.17.2",
+        "react-redux": "npm:react-redux@4.4.6",
+        "redux-devtools-instrument": "npm:redux-devtools-instrument@1.5.0"
+      }
+    },
+    "npm:redux-devtools-instrument@1.5.0": {
+      "map": {
+        "symbol-observable": "npm:symbol-observable@0.2.4",
+        "lodash": "npm:lodash@4.17.2"
+      }
+    },
+    "npm:redux-devtools-log-monitor@1.1.1": {
+      "map": {
+        "lodash.debounce": "npm:lodash.debounce@4.0.8",
+        "react-pure-render": "npm:react-pure-render@1.0.2",
+        "redux-devtools-themes": "npm:redux-devtools-themes@1.0.0",
+        "react-json-tree": "npm:react-json-tree@0.10.0"
+      }
+    },
+    "npm:react-json-tree@0.10.0": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0",
+        "react-pure-render": "npm:react-pure-render@1.0.2",
+        "babel-plugin-transform-runtime": "npm:babel-plugin-transform-runtime@6.15.0",
+        "react-base16-styling": "npm:react-base16-styling@0.4.6"
+      }
+    },
+    "npm:redux-devtools-themes@1.0.0": {
+      "map": {
+        "base16": "npm:base16@1.0.0"
+      }
+    },
+    "npm:babel-plugin-transform-runtime@6.15.0": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0"
+      }
+    },
+    "npm:react-base16-styling@0.4.6": {
+      "map": {
+        "base16": "npm:base16@1.0.0",
+        "lodash.curry": "npm:lodash.curry@4.1.1",
+        "lodash.flow": "npm:lodash.flow@3.5.0",
+        "pure-color": "npm:pure-color@1.2.0",
+        "color-space": "npm:color-space@1.14.7"
+      }
+    },
+    "npm:color-space@1.14.7": {
+      "map": {
+        "husl": "npm:husl@5.0.3",
+        "mumath": "npm:mumath@3.3.1"
+      }
+    },
+    "npm:mumath@3.3.1": {
+      "map": {
+        "almost-equal": "npm:almost-equal@1.1.0"
+      }
+    },
+    "npm:redux-devtools-dock-monitor@1.1.1": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0",
+        "react-pure-render": "npm:react-pure-render@1.0.2",
+        "parse-key": "npm:parse-key@0.2.1",
+        "react-dock": "npm:react-dock@0.2.3"
+      }
+    },
+    "npm:react-dock@0.2.3": {
+      "map": {
+        "lodash.debounce": "npm:lodash.debounce@3.1.1",
+        "object-assign": "npm:object-assign@4.1.0"
+      }
+    },
+    "npm:lodash.debounce@3.1.1": {
+      "map": {
+        "lodash._getnative": "npm:lodash._getnative@3.9.1"
       }
     }
   }
