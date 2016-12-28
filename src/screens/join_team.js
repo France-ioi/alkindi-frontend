@@ -5,7 +5,7 @@ import {use, defineAction, defineSelector, defineView, addSaga, addReducer} from
 import {eventChannel, buffers} from 'redux-saga';
 import {call, put, take, select} from 'redux-saga/effects'
 
-import AuthHeader from './ui/auth_header';
+import AuthHeader from '../ui/auth_header';
 
 export default function* (deps) {
 
