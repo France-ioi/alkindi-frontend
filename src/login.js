@@ -144,4 +144,9 @@ export default function* (deps) {
     }
   });
 
+  yield addReducer('logoutSucceeded', function (state, action) {
+    // TODO: update enabledTabs
+    return {...state, userId: undefined, request: {}, response: {}};
+  });
+
 };
