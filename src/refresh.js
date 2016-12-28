@@ -1,5 +1,9 @@
 
-import {use, defineAction, addSaga, addReducer} from 'epic-linker';
+import {use, defineAction, addSaga, addReducer, defineSelector, defineView} from 'epic-linker';
+import React from 'react';
+import EpicComponent from 'epic-component';
+import {Button} from 'react-bootstrap';
+import classnames from 'classnames';
 import {takeLatest} from 'redux-saga';
 import {select, call, put} from 'redux-saga/effects';
 
@@ -72,5 +76,25 @@ export default function* (deps) {
     const {userId, request, override, api} = state;
     return {userId, request: {...request, ...override}, api};
   }
+
+  yield defineSelector('RefreshButtonSelector', function (state, _props) {
+    const {refreshing} = self.state;
+    return {refreshing};
+  });
+
+  yield defineView('RefreshButton', 'RefreshButtonSelector', EpicComponent(self => {
+    const onClick = function () {
+      self.props.dispatch({type: deps.refresh});
+    };
+    self.render = function () {
+      const refreshing = self.props.refreshing;
+      const classes = refreshing ? ['fa','fa-spinner','fa-spin'] : ['fa','fa-refresh'];
+      return (
+        <Button bsStyle='primary' onClick={onClick} disabled={refreshing}>
+          <i className={classnames(classes)}/>
+        </Button>
+      );
+    };
+  }));
 
 };
