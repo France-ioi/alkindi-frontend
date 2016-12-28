@@ -25,6 +25,7 @@ import JoinTeam from './join_team';
 import Refresh from './refresh'
 
 import './base.scss!scss';
+import "font-awesome/css/font-awesome.min.css!";
 import "rc-tooltip/assets/bootstrap.css!";
 import './index.scss!scss';
 
