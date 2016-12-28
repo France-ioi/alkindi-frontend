@@ -1,7 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-
-import {PureComponent} from '../misc';
+import EpicComponent from 'epic-component';
 
 const tabs = [
   {key: 'team', label: "Équipe"},
@@ -13,7 +12,7 @@ const tabs = [
   {key: 'results', label: "Résultats"}
 ];
 
-let AlkindiTabs = PureComponent(self => {
+const AlkindiTabs = EpicComponent(self => {
   const setActiveTab = function (key) {
     return function () {
       self.props.setActiveTab(key);

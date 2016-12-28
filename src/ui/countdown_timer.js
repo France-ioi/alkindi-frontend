@@ -1,13 +1,12 @@
 import React from 'react';
-
-import {PureComponent} from '../misc';
 import {Alert} from 'react-bootstrap';
+import EpicComponent from 'epic-component';
 
 const twoDigits = function (number) {
   return ("0" + number).slice(-2);
 };
 
-export const RefreshButton = PureComponent(self => {
+export const RefreshButton = EpicComponent(self => {
   self.render = function () {
     let {visible, seconds} = self.props;
     if (!visible)
