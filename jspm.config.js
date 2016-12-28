@@ -79,7 +79,7 @@ SystemJS.config({
     "object.assign": "npm:object.assign@4.0.4",
     "os": "npm:jspm-nodelibs-os@0.2.0",
     "path": "npm:jspm-nodelibs-path@0.2.1",
-    "process": "github:jspm/nodelibs-process@0.2.0-alpha",
+    "process": "npm:jspm-nodelibs-process@0.2.0",
     "querystring": "npm:jspm-nodelibs-querystring@0.2.0",
     "rc-tooltip": "npm:rc-tooltip@3.4.2",
     "react": "npm:react@15.4.1",
