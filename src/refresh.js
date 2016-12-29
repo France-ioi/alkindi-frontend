@@ -78,7 +78,7 @@ export default function* (deps) {
   }
 
   yield defineSelector('RefreshButtonSelector', function (state, _props) {
-    const {refreshing} = self.state;
+    const {refreshing} = state;
     return {refreshing};
   });
 
