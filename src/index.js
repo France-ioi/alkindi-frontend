@@ -28,6 +28,8 @@ import Login from './login'
 import Refresh from './refresh';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
+//import RoundOverScreen from './screens/round_over';
+//import FinalScreen from './screens/final';
 
 import './base.scss!scss';
 import "font-awesome/css/font-awesome.min.css!";
@@ -51,10 +53,7 @@ const {store, scope, start} = link(function* (deps) {
     return {
       config,
       api: new Api(config),
-      response: {},
-      enabledTabs: {
-        team: true
-      }
+      response: {}
     };
   });
 

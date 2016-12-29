@@ -18,14 +18,14 @@ export default function* (deps) {
 
   yield include(TeamTab);
 
-  yield use('LogoutButton');
+  yield use('LogoutButton', 'TeamTab');
 
   yield defineAction('setActiveTab', 'Tabs.SetActive');
 
   yield defineView('MainScreen', 'MainScreenSelector', EpicComponent(self => {
 
     const setActiveTab = function (tabKey) {
-      self.props.dispatch({type: deps.setActiveTab, key: tabKey});
+      self.props.dispatch({type: deps.setActiveTab, tabKey});
     };
 
     self.render = function () {
@@ -35,7 +35,7 @@ export default function* (deps) {
       let content = false;
       switch (activeTabKey) {
         case 'team':
-          content = <TeamTab/>;  // XXX team={team}
+          content = <deps.TeamTab/>;  // XXX team={team}
           break;
         /*
         case 'attempts':
@@ -82,6 +82,34 @@ export default function* (deps) {
   });
 
   yield addReducer('setActiveTab', function (state, action) {
-    return {...state, activeTabKey: action.tabKey};
+    const {tabKey} = action;
+    const {enabledTabs} = state;
+    return enabledTabs[tabKey] ? {...state, activeTabKey: tabKey} : state;
   });
+
+  /* Tabs are updated after a refresh. */
+  yield addReducer('refreshSucceeded', function (state, action) {
+    return selectTab(state, state.activeTabKey);
+  });
+
+  function selectTab (state, tabKey) {
+    const haveTask = !!state.response.task;
+    const haveAttempts = !!state.response.attempts;
+    const enabledTabs = {
+      team: true,
+      attempts: haveAttempts,
+      task: haveTask,
+      cryptanalysis: haveTask,
+      history: haveTask,
+      answers: haveTask,
+      results: true
+    };
+    // If the active tab has become disabled, select the team tab, which is
+    // always available.
+    if (tabKey === undefined || !enabledTabs[tabKey]) {
+      tabKey = 'team';
+    }
+    return {...state, activeTabKey: tabKey, enabledTabs};
+  };
+
 };

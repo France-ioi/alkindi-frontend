@@ -51,26 +51,6 @@ const reduceTick = function (state) {
   return newState;
 };
 
-const reduceSetActiveTab = function (state, tabKey) {
-  const haveTask = !!state.response.task;
-  const haveAttempts = !!state.response.attempts;
-  const enabledTabs = {
-    team: true,
-    attempts: haveAttempts,
-    task: haveTask,
-    cryptanalysis: haveTask,
-    history: haveTask,
-    answers: haveTask,
-    results: true
-  };
-  // If the active tab has become disabled, select the team tab, which is
-  // always available.
-  let activeTabKey = tabKey || state.activeTabKey;
-  if (activeTabKey === undefined || !enabledTabs[activeTabKey])
-    activeTabKey = 'team';
-  return {...state, activeTabKey, enabledTabs};
-};
-
 const reduceUseRevision = function (state, revisionId) {
   return {...state,
     activeTabKey: 'cryptanalysis',
