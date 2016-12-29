@@ -9,7 +9,7 @@ import {select, call, put} from 'redux-saga/effects';
 
 export default function* (deps) {
 
-  yield use('login');
+  yield use('loginExpired');
 
   yield defineAction('refresh', 'Refresh');
   yield defineAction('refreshStarted', 'Refresh.Started');
@@ -33,9 +33,7 @@ export default function* (deps) {
       let message;
       if (ex.err) {
         if (ex.err.status == 403) {
-          // XXX put an action instead of displaying an alert synchronously.
-          alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
-          yield put({type: deps.login});
+          yield put({type: deps.loginExpired});
           return;
         }
         message = ex.err.toString();

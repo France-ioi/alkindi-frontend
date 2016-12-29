@@ -16,6 +16,7 @@ export default function* (deps) {
   yield defineAction('loginFeedback', 'Login.Feedback'); // sent via client API
   yield defineAction('loginSucceeded', 'Login.Succeeded');
   yield defineAction('loginFailed', 'Login.Failed');
+  yield defineAction('loginExpired', 'Login.Expired');
 
   yield defineAction('logout', 'Logout');
   yield defineAction('logoutFeedback', 'Logout.Feedback'); // sent via client API
@@ -147,6 +148,14 @@ export default function* (deps) {
   yield addReducer('logoutSucceeded', function (state, action) {
     // TODO: update enabledTabs
     return {...state, userId: undefined, request: {}, response: {}};
+  });
+
+  yield addSaga(function* () {
+    // while (true) {
+    yield take(deps.loginExpired);
+    alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");
+    yield put({type: deps.login});
+    // }
   });
 
 };
