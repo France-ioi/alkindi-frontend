@@ -13,7 +13,7 @@ export default function (namePrefix, typePrefix, preSaga) {
     failedAction: `${namePrefix}Failed`,
     failed: `${typePrefix}.Failed`,
     success: () => put({type: p.succeeded}),
-    failure: (error) => put({type: p.failed})
+    failure: (error) => put({type: p.failed, error})
   };
   const saga = preSaga(p);
   return function* () {
@@ -29,7 +29,7 @@ export default function (namePrefix, typePrefix, preSaga) {
       return {...state, pendingAction: false, lastAction: namePrefix, lastError: error};
     });
     yield addReducer(p.succeededAction, function (state, action) {
-      return {...state, pendingAction: false};
+      return {...state, pendingAction: false, lastAction: namePrefix, lastError: false};
     });
     yield addSaga(function* () {
       while (true) {
@@ -58,10 +58,10 @@ export const getManagedProcessState = function (state, name) {
     return {pending: true};
   }
   if (state.lastAction === name) {
-    if (state.lastError) {
-      return {error: state.lastError};
-    } else {
+    if (state.lastError === false) {
       return {success: true};
+    } else {
+      return {error: state.lastError};
     }
   }
   return {};

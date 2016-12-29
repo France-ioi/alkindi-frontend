@@ -7,6 +7,7 @@ import {call, put, take, select} from 'redux-saga/effects'
 
 import AuthHeader from '../ui/auth_header';
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
+import getMessage from '../messages';
 
 export default function* (deps) {
 
@@ -23,13 +24,16 @@ export default function* (deps) {
   yield defineSelector('JoinTeamScreenSelector', function (state) {
     const {user, round} = state.response;
     const addBadge = getManagedProcessState(state, 'addBadge');
+    const joinTeam = getManagedProcessState(state, 'joinTeam');
     const createTeam = getManagedProcessState(state, 'createTeam');
-    return {user, round, addBadge, createTeam};
+    return {user, round, addBadge, joinTeam, createTeam};
   });
 
   yield defineView('JoinTeamScreen', 'JoinTeamScreenSelector', EpicComponent(self => {
-    self.state = {joinTeam: false, qualCode: ''};
-    let teamCode;  const refTeamCode = function (el) { teamCode = el; };
+    self.state = {joinTeam: false, teamCode: '', qualCode: ''};
+    const onTeamCodeChanged = function (event) {
+      self.setState({teamCode: event.target.value});
+    };
     const onQualCodeChanged = function (event) {
       self.setState({qualCode: event.target.value});
     };
@@ -40,7 +44,7 @@ export default function* (deps) {
       self.props.dispatch({type: deps.createTeam});
     };
     const onJoinTeam = function () {
-      self.props.dispatch({type: deps.joinTeam, code: teamCode.value});
+      self.props.dispatch({type: deps.joinTeam, code: self.state.teamCode});
     };
     const onAddBadge = function () {
       self.props.dispatch({type: deps.addBadge, code: self.state.qualCode});
@@ -71,16 +75,7 @@ export default function* (deps) {
                   <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
               </Button>
             </p>
-            {error &&
-              <Alert bsStyle='danger'>
-                {error === 'server error' && "Le serveur n'a pas pu être contacté, merci de ré-essayer dans quelques minutes."}
-                {error === 'update failed' && "Votre session a probablement expirée, rechargez la page pour vous reconnecter."}
-                {error === 'invalid code' && "Ce code de qualification est invalide."}
-                {error === 'used code' && "Ce code de qualification est rattaché à un autre utilisateur."}
-                {error === 'invalid user' && "L'identifiant d'utilisateur est invalide."}
-                {error === 'already qualified' && "Vous êtes déjà qualifié avec un autre code."}
-                {error === 'unexpected' && "Une erreur imprévue s'est produite, n'hésitez pas à nous contacter."}
-              </Alert>}
+            {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
           </div>
         </div>
       );
@@ -98,6 +93,7 @@ export default function* (deps) {
     };
     const renderCreateTeam = function () {
       const {round, createTeam} = self.props;
+      const {pending, error, success} = createTeam;
       if (!round.is_registration_open) {
         return (
           <div className="section">
@@ -113,33 +109,35 @@ export default function* (deps) {
           <div className="bloc-boutons">
             <button type="button" className="tabButton selected" onClick={onCreateTeam}>
               {'Créer une équipe'}
-              {createTeam.pending &&
+              {pending &&
                   <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </button>
             <button type="button" className="tabButton" onClick={onShowJoinTeam}>Rejoindre une équipe</button>
           </div>
-          {createTeam && createTeam.success &&
-            <Alert bsStyle='success'>TODO</Alert>}
-          {createTeam && createTeam.error &&
-            <Alert bsStyle='danger'>
-              {createTeam.error === "registration is closed" &&
-                "La période d'enregistrement est fermée."}
-              {createTeam.error === "already in a team" &&
-                "Vous êtes déjà dans une équipe, rechargez la page."}
-            </Alert>}
+          {success && <Alert bsStyle='success'>{'Équipe créée'}</Alert>}
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
         </div>
       );
     };
     const renderJoinTeam = function (explanations) {
+      const {teamCode} = self.state;
+      const {pending, error} = self.props.joinTeam;
       return (
         <div className="section">
           {explanations}
           <div>
             <p className="input">
               <label htmlFor="team-code">Code d'équipe :&nbsp;</label>
-              <input type="text" id="team-code" ref={refTeamCode} />
+              <input type="text" id="team-code" value={teamCode} onChange={onTeamCodeChanged}/>
             </p>
-            <p><Button onClick={onJoinTeam}>Rejoindre une équipe</Button></p>
+            <p>
+              <Button onClick={onJoinTeam} disabled={pending || teamCode === ''}>
+                {'Rejoindre une équipe'}
+                {pending &&
+                  <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
+              </Button>
+            </p>
+            {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
           </div>
         </div>
       );
@@ -205,25 +203,28 @@ export default function* (deps) {
   }));
   yield use('createTeam');
 
-  yield defineAction('joinTeam', 'Team.Join');
-  yield addSaga(function* () {
-    while (true) {
-      let {code} = yield take(deps.joinTeam);
-      let {api, userId} = yield select(joinTeamSelector);
-      let result = yield call(api.joinTeam, userId, {code});
-      if (result.success) {
-        // TODO: display a success notification
-        yield put({type: deps.refresh});
-      } else {
-        // TODO: display a failure notification
-      }
-    }
-    function joinTeamSelector (state) {
+  yield include(ManagedProcess('joinTeam', 'Team.Join', p => function* (action) {
+    const {code} = action;
+    let {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
       return {api, userId};
+    });
+    let result;
+    try {
+      result = yield call(api.joinTeam, userId, {code});
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
     }
-  });
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  yield use('joinTeam');
 
   yield include(ManagedProcess('addBadge', 'User.AddBadge', p => function* (action) {
     const {code} = action;
@@ -247,9 +248,9 @@ export default function* (deps) {
       }
     } else {
       if (/already registered/.test(error)) {
-        errorCode = 'used code';
+        errorCode = 'used qualification code';
       } else if (/error_badge_code_invalid/.test(error)) {
-        errorCode = 'invalid code';
+        errorCode = 'bad qualification code';
       } else {
         errorCode = 'unexpected';
       }

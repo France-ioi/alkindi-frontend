@@ -8,6 +8,7 @@ import {call, put, take, select} from 'redux-saga/effects'
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import Tooltip from '../ui/tooltip';
+import getMessage from '../messages';
 
 export default function* (deps) {
 
@@ -120,7 +121,7 @@ export default function* (deps) {
                 <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </Button>
           </p>
-          {error && <Alert bsStyle='danger'>{error}</Alert>}
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
         </div>
       );
     };
@@ -176,7 +177,7 @@ export default function* (deps) {
                 <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </Button>
           </p>
-          {error && <Alert bsStyle='danger'>{error}</Alert>}
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
         </div>
       );
     };
