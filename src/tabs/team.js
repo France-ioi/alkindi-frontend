@@ -1,11 +1,12 @@
 
-import {use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
+import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import {call, put, take, select} from 'redux-saga/effects'
 
+import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import Tooltip from '../ui/tooltip';
 
 export default function* (deps) {
@@ -13,16 +14,20 @@ export default function* (deps) {
   yield use('setActiveTab', 'RefreshButton', 'refresh');
 
   yield defineSelector('TeamTabSelector', function (state, _props) {
-    const {leaveTeam} = state;
     const {user, round, team} = state.response;
+    if (!team) {
+      return {};
+    }
     const allowTeamChanges = round.allow_team_changes;
     const teamHasCode = team.code !== null;
     const teamUnlocked = allowTeamChanges && !team.is_locked;
     const teamAdmin = team.creator.id === user.id;
     const teamInvalid = team.is_invalid;
     const haveAttempts = !!state.response.attempts;
+    const leaveTeam = getManagedProcessState(state, 'leaveTeam');
+    const updateTeam = getManagedProcessState(state, 'updateTeam');
     return {
-      round, team, haveAttempts, leaveTeam,
+      round, team, haveAttempts, leaveTeam, updateTeam,
       allowTeamChanges, teamHasCode, teamUnlocked, teamAdmin, teamInvalid};
   });
 
@@ -146,6 +151,7 @@ export default function* (deps) {
     };
 
     const renderAdminControls = function (team) {
+      const {pending, error} = self.props.updateTeam || {};
       const {isOpen} = self.state;
       return (
         <div className="section">
@@ -164,9 +170,13 @@ export default function* (deps) {
           </div>
           <p className="text-center">
             <Button onClick={onUpdateTeam}>
-              <i className="fa fa-save"/> enregistrer les modifications
+              <i className="fa fa-save"/>
+              {' enregistrer les modifications'}
+              {pending &&
+                <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </Button>
           </p>
+          {error && <Alert bsStyle='danger'>{error}</Alert>}
         </div>
       );
     };
@@ -234,72 +244,53 @@ export default function* (deps) {
   // Leaving the team
   //
 
-  yield defineAction('leaveTeam', 'Team.Leave');
-  yield defineAction('leaveTeamSucceeded', 'Team.Leave.Succeeded');
-  yield defineAction('leaveTeamFailed', 'Team.Leave.Failed');
-  yield addReducer('leaveTeam', function (state, _action) {
-    return {...state, leaveTeam: {pending: true}};
-  });
-  yield addReducer('leaveTeamFailed', function (state, action) {
-    const {error} = action;
-    return {...state, leaveTeam: {error}};
-  });
-  yield addReducer('leaveTeamSucceeded', function (state, action) {
-    return {...state, leaveTeam: undefined};
-  });
-  yield addSaga(function* () {
-    while (true) {
-      yield take(deps.leaveTeam);
-      let {api, userId} = yield select(leaveTeamSelector);
-      let result = yield call(api.leaveTeam, userId);
-      if (result.success) {
-        yield put({type: deps.leaveTeamSucceeded});
-        yield put({type: deps.refresh});
-      } else {
-        yield put({type: deps.leaveTeamFailed, error: result.error});
-      }
-    }
-    function leaveTeamSelector (state) {
+  yield include(ManagedProcess('leaveTeam', 'Team.Leave', p => function* () {
+    const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
       return {api, userId};
+    });
+    let result;
+    try {
+      result = yield call(api.leaveTeam, userId);
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
     }
-  });
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  yield use('leaveTeam');
 
   //
   // Updating the team's setting(s)
   //
 
-  yield defineAction('updateTeam', 'Team.Update');
-  yield defineAction('updateTeamSucceeded', 'Team.Update.Succeeded');
-  yield defineAction('updateTeamFailed', 'Team.Update.Failed');
-  yield addReducer('updateTeam', function (state, _action) {
-    return {...state, updateTeam: {pending: true}};
-  });
-  yield addReducer('updateTeamFailed', function (state, action) {
-    const {error} = action;
-    return {...state, updateTeam: {error}};
-  });
-  yield addReducer('updateTeamSucceeded', function (state, action) {
-    return {...state, updateTeam: undefined};
-  });
-  yield addSaga(function* () {
-    while (true) {
-      const {isOpen} = yield take(deps.updateTeam);
-      let {api, userId} = yield select(updateTeamSelector);
-      let result = yield call(api.updateUserTeam, userId, {is_open: isOpen});
-      if (result.success) {
-        yield put({type: deps.updateTeamSucceeded});
-        yield put({type: deps.refresh});
-      } else {
-        yield put({type: deps.updateTeamFailed, error: result.error});
-      }
-    }
-    function updateTeamSelector (state) {
+  yield include(ManagedProcess('updateTeam', 'Team.Update', p => function* (action) {
+    const {isOpen} = action;
+    const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
       return {api, userId};
+    });
+    let result;
+    try {
+      result = yield call(api.updateUserTeam, userId, {is_open: isOpen});
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
     }
-  });
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  yield use('updateTeam');
 
 };

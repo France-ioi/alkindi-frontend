@@ -1,11 +1,12 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Alert, Button} from 'react-bootstrap';
-import {use, defineAction, defineSelector, defineView, addSaga, addReducer} from 'epic-linker';
+import {use, include, defineAction, defineSelector, defineView, addSaga, addReducer} from 'epic-linker';
 import {eventChannel, buffers} from 'redux-saga';
 import {call, put, take, select} from 'redux-saga/effects'
 
 import AuthHeader from '../ui/auth_header';
+import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 
 export default function* (deps) {
 
@@ -20,8 +21,9 @@ export default function* (deps) {
 
   */
   yield defineSelector('JoinTeamScreenSelector', function (state) {
-    const {response, addBadge, createTeam} = state;
-    const {user, round} = response;
+    const {user, round} = state.response;
+    const addBadge = getManagedProcessState(state, 'addBadge');
+    const createTeam = getManagedProcessState(state, 'createTeam');
     return {user, round, addBadge, createTeam};
   });
 
@@ -44,7 +46,7 @@ export default function* (deps) {
       self.props.dispatch({type: deps.addBadge, code: self.state.qualCode});
     };
     const renderNotQualified = function () {
-      const {pending, error} = self.props.addBadge || {};
+      const {pending, error} = self.props.addBadge;
       const {qualCode} = self.state;
       return (
         <div className="section">
@@ -109,12 +111,16 @@ export default function* (deps) {
           <p>Pour participer aux prochaines épreuves du concours, vous devez être membre d'une équipe, soit en créant une équipe, soit en rejoignant une équipe existante.</p>
           <p>Choisissez ce que vous voulez faire : </p>
           <div className="bloc-boutons">
-            <button type="button" className="tabButton selected" onClick={onCreateTeam}>Créer une équipe</button>
+            <button type="button" className="tabButton selected" onClick={onCreateTeam}>
+              {'Créer une équipe'}
+              {createTeam.pending &&
+                  <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
+            </button>
             <button type="button" className="tabButton" onClick={onShowJoinTeam}>Rejoindre une équipe</button>
           </div>
           {createTeam && createTeam.success &&
             <Alert bsStyle='success'>TODO</Alert>}
-          {createTeam && !createTeam.success &&
+          {createTeam && createTeam.error &&
             <Alert bsStyle='danger'>
               {createTeam.error === "registration is closed" &&
                 "La période d'enregistrement est fermée."}
@@ -177,33 +183,27 @@ export default function* (deps) {
     };
   }));
 
-  yield defineAction('createTeam', 'Team.Create');
-  yield defineAction('createTeamFailed', 'Team.Create.Failed');
-  yield addReducer('createTeamFailed', function (state, action) {
-    return {...state, createTeam: action.result};
-  });
-  yield addSaga(function* () {
-    while (true) {
-      yield take(deps.createTeam);
-      try {
-        let {api, userId} = yield select(createTeamSelector);
-        let result = yield call(api.createTeam, userId);
-        if (!result.success) {
-          yield put({type: deps.createTeamFailed, result});
-        } else {
-          // TODO: display a success notification popup
-          yield put({type: deps.refresh});
-        }
-      } catch (err) {
-        // XXX handle backend communication error
-      }
-    }
-    function createTeamSelector (state) {
+  yield include(ManagedProcess('createTeam', 'Team.Create', p => function* () {
+    const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
       return {api, userId};
+    });
+    let result;
+    try {
+      result = yield call(api.createTeam, userId);
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
     }
-  });
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  yield use('createTeam');
 
   yield defineAction('joinTeam', 'Team.Join');
   yield addSaga(function* () {
@@ -225,64 +225,41 @@ export default function* (deps) {
     }
   });
 
-  yield defineAction('addBadge', 'User.AddBadge');
-  yield defineAction('addBadgeFailed', 'User.AddBadge.Failed');
-  yield defineAction('addBadgeSucceeded', 'User.AddBadge.Succeeded');
-
-  yield addReducer('addBadge', function (state, _action) {
-    return {...state, addBadge: {pending: true}};
-  });
-
-  yield addReducer('addBadgeFailed', function (state, action) {
-    const {errorCode} = action;
-    return {...state, addBadge: {error: errorCode}};
-  });
-
-  yield addReducer('addBadgeSucceeded', function (state, action) {
-    return {...state, addBadge: undefined};
-  });
-
-  yield addSaga(function* () {
-    while (true) {
-      let {code} = yield take(deps.addBadge);
-      let {api, userId} = yield select(addBadgeSelector);
-      let result;
-      try {
-        result = yield call(api.addBadge, userId, {code});
-      } catch (err) {
-        yield put({type: deps.addBadgeFailed, errorCode: 'server error'});
-        continue;
-      }
-      const {success, profileUpdated, error} = result;
-      let errorCode = false;
-      if (success) {
-        if (!profileUpdated) {
-          errorCode = 'update failed';
-        } else {
-          yield put({type: deps.addBadgeSucceeded});
-        }
-      } else {
-        if (/already registered/.test(error)) {
-          errorCode = 'used code';
-        } else if (/error_badge_code_invalid/.test(error)) {
-          errorCode = 'invalid code';
-        } else {
-          errorCode = 'unexpected';
-        }
-        // 'invalid user';
-        // 'already qualified'
-        // 'unexpected'
-      }
-      if (errorCode) {
-        yield put({type: deps.addBadgeFailed, errorCode});
-      }
-      yield put({type: deps.refresh});
-    }
-    function addBadgeSelector (state) {
+  yield include(ManagedProcess('addBadge', 'User.AddBadge', p => function* (action) {
+    const {code} = action;
+    const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
       return {api, userId};
+    });
+    let result;
+    try {
+      result = yield call(api.addBadge, userId, {code});
+    } catch (err) {
+      yield p.failure('server error');
+      return;
     }
-  });
+    const {success, profileUpdated, error} = result;
+    let errorCode = false;
+    if (success) {
+      if (!profileUpdated) {
+        errorCode = 'update failed';
+      }
+    } else {
+      if (/already registered/.test(error)) {
+        errorCode = 'used code';
+      } else if (/error_badge_code_invalid/.test(error)) {
+        errorCode = 'invalid code';
+      } else {
+        errorCode = 'unexpected';
+      }
+      // 'invalid user';
+      // 'already qualified'
+      // 'unexpected'
+    }
+    yield errorCode ? p.failure(errorCode) : p.success();
+    yield put({type: deps.refresh});
+  }));
+  yield use('addBadge');
 
 };
