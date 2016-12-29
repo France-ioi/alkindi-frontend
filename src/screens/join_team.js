@@ -118,6 +118,8 @@ export default function* (deps) {
             <Alert bsStyle='danger'>
               {createTeam.error === "registration is closed" &&
                 "La période d'enregistrement est fermée."}
+              {createTeam.error === "already in a team" &&
+                "Vous êtes déjà dans une équipe, rechargez la page."}
             </Alert>}
         </div>
       );
@@ -175,8 +177,8 @@ export default function* (deps) {
     };
   }));
 
-  yield defineAction('createTeam', 'CreateTeam');
-  yield defineAction('createTeamFailed', 'CreateTeam.Failed');
+  yield defineAction('createTeam', 'Team.Create');
+  yield defineAction('createTeamFailed', 'Team.Create.Failed');
   yield addReducer('createTeamFailed', function (state, action) {
     return {...state, createTeam: action.result};
   });
@@ -203,7 +205,7 @@ export default function* (deps) {
     }
   });
 
-  yield defineAction('joinTeam', 'JoinTeam');
+  yield defineAction('joinTeam', 'Team.Join');
   yield addSaga(function* () {
     while (true) {
       let {code} = yield take(deps.joinTeam);
@@ -223,9 +225,9 @@ export default function* (deps) {
     }
   });
 
-  yield defineAction('addBadge', 'AddBadge');
-  yield defineAction('addBadgeFailed', 'AddBadge.Failed');
-  yield defineAction('addBadgeSucceeded', 'AddBadge.Succeeded');
+  yield defineAction('addBadge', 'User.AddBadge');
+  yield defineAction('addBadgeFailed', 'User.AddBadge.Failed');
+  yield defineAction('addBadgeSucceeded', 'User.AddBadge.Succeeded');
 
   yield addReducer('addBadge', function (state, _action) {
     return {...state, addBadge: {pending: true}};
