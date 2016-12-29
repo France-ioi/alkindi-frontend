@@ -70,7 +70,11 @@ export default function* (deps) {
              <li>L'équipe doit contenir entre {round.min_team_size} et {round.max_team_size} membres.</li>
              <li>Au moins {round.min_team_ratio * 100}% des membres doivent avoir été qualifiés suite au premier tour du concours.</li>
           </ul>
-          <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
+          {false && <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>}
+          <p>Notez que seules les équipes composées uniquement d'élèves
+             en classes de quatrième, troisième et seconde (générale ou pro)
+             seront classées officiellement.
+          </p>
         </div>
       );
     };
