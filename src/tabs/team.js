@@ -1,22 +1,29 @@
 
-import {use, defineAction, defineSelector, defineView} from 'epic-linker';
+import {use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import React from 'react';
+import EpicComponent from 'epic-component';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
-import EpicComponent from 'epic-component';
+import {call, put, take, select} from 'redux-saga/effects'
 
 import Tooltip from '../ui/tooltip';
 
 export default function* (deps) {
 
-  yield use('setActiveTab', 'RefreshButton');
-
-  yield defineAction('leaveTeam', 'Team.Leave');
-  yield defineAction('updateTeam', 'Team.Update');
+  yield use('setActiveTab', 'RefreshButton', 'refresh');
 
   yield defineSelector('TeamTabSelector', function (state, _props) {
+    const {leaveTeam} = state;
     const {user, round, team} = state.response;
-    return {user, round, team};
+    const allowTeamChanges = round.allow_team_changes;
+    const teamHasCode = team.code !== null;
+    const teamUnlocked = allowTeamChanges && !team.is_locked;
+    const teamAdmin = team.creator.id === user.id;
+    const teamInvalid = team.is_invalid;
+    const haveAttempts = !!state.response.attempts;
+    return {
+      round, team, haveAttempts, leaveTeam,
+      allowTeamChanges, teamHasCode, teamUnlocked, teamAdmin, teamInvalid};
   });
 
   yield defineView('TeamTab', 'TeamTabSelector', EpicComponent(self => {
@@ -58,7 +65,6 @@ export default function* (deps) {
              <li>Au moins {round.min_team_ratio * 100}% des membres doivent avoir été qualifiés suite au premier tour du concours.</li>
           </ul>
           <p>Notez que seules les équipes composées uniquement d'élèves en classe de seconde (générale ou pro) seront classées officiellement.</p>
-          <p>Votre équipe est constituée de :</p>
         </div>
       );
     };
@@ -81,6 +87,7 @@ export default function* (deps) {
       };
       return (
         <div className="section">
+          <p>Votre équipe est constituée de :</p>
           <table className="table">
             <tbody>
               <tr>
@@ -97,14 +104,18 @@ export default function* (deps) {
     };
 
     const renderLeaveTeam = function () {
+      const {pending, error} = self.props.leaveTeam || {};
       return (
         <div className="section">
           <p>Vous pouvez quitter l'équipe :</p>
           <p className="text-center">
             <Button onClick={onLeaveTeam}>
               <i className="fa fa-arrow-left"/> quitter l'équipe
+              {pending &&
+                <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </Button>
           </p>
+          {error && <Alert bsStyle='danger'>{error}</Alert>}
         </div>
       );
     };
@@ -192,15 +203,10 @@ export default function* (deps) {
     };
 
     self.render = function () {
-      const {user, round, team} = self.props;
-      // The tab gets rendered when the user leaves a team?
-      if (team === undefined)
-        return false;
-      const allowTeamChanges = round.allow_team_changes;
-      const teamHasCode = team.code !== null;
-      const teamUnlocked = allowTeamChanges && !team.is_locked;
-      const teamAdmin = team.creator.id === user.id;
-      const teamInvalid = team.is_invalid.length > 0;
+      const {
+        round, team, haveAttempts,
+        allowTeamChanges,
+        teamHasCode, teamUnlocked, teamAdmin, teamInvalid} = self.props;
       return (
         <div className="wrapper">
           <div className="pull-right">
@@ -209,11 +215,12 @@ export default function* (deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          {renderTeamQualified()}
+          {renderRoundPrelude(round)}
+          {false && renderTeamQualified()}
           {renderTeamMembers(team)}
-          {team.is_invalid
+          {teamInvalid
             ? renderInvalidTeam(team.round_access)
-            : renderValidTeam()}
+            : haveAttempts && renderValidTeam()}
           {teamHasCode && (team.is_open ? renderTeamCode(team) : renderTeamClosed())}
           {teamHasCode && teamAdmin && renderAdminControls(team)}
           {allowTeamChanges && teamUnlocked && renderLeaveTeam()}
@@ -223,7 +230,76 @@ export default function* (deps) {
 
   }));
 
-  // TODO: saga on leaveTeam => api.leaveTeam(user_id);
-  // TODO: saga on updateTeam => api.updateTeam(user_id, {is_open: isOpen});
+  //
+  // Leaving the team
+  //
+
+  yield defineAction('leaveTeam', 'Team.Leave');
+  yield defineAction('leaveTeamSucceeded', 'Team.Leave.Succeeded');
+  yield defineAction('leaveTeamFailed', 'Team.Leave.Failed');
+  yield addReducer('leaveTeam', function (state, _action) {
+    return {...state, leaveTeam: {pending: true}};
+  });
+  yield addReducer('leaveTeamFailed', function (state, action) {
+    const {error} = action;
+    return {...state, leaveTeam: {error}};
+  });
+  yield addReducer('leaveTeamSucceeded', function (state, action) {
+    return {...state, leaveTeam: undefined};
+  });
+  yield addSaga(function* () {
+    while (true) {
+      yield take(deps.leaveTeam);
+      let {api, userId} = yield select(leaveTeamSelector);
+      let result = yield call(api.leaveTeam, userId);
+      if (result.success) {
+        yield put({type: deps.leaveTeamSucceeded});
+        yield put({type: deps.refresh});
+      } else {
+        yield put({type: deps.leaveTeamFailed, error: result.error});
+      }
+    }
+    function leaveTeamSelector (state) {
+      const {api, response} = state;
+      const userId = response.user.id;
+      return {api, userId};
+    }
+  });
+
+  //
+  // Updating the team's setting(s)
+  //
+
+  yield defineAction('updateTeam', 'Team.Update');
+  yield defineAction('updateTeamSucceeded', 'Team.Update.Succeeded');
+  yield defineAction('updateTeamFailed', 'Team.Update.Failed');
+  yield addReducer('updateTeam', function (state, _action) {
+    return {...state, updateTeam: {pending: true}};
+  });
+  yield addReducer('updateTeamFailed', function (state, action) {
+    const {error} = action;
+    return {...state, updateTeam: {error}};
+  });
+  yield addReducer('updateTeamSucceeded', function (state, action) {
+    return {...state, updateTeam: undefined};
+  });
+  yield addSaga(function* () {
+    while (true) {
+      const {isOpen} = yield take(deps.updateTeam);
+      let {api, userId} = yield select(updateTeamSelector);
+      let result = yield call(api.updateUserTeam, userId, {is_open: isOpen});
+      if (result.success) {
+        yield put({type: deps.updateTeamSucceeded});
+        yield put({type: deps.refresh});
+      } else {
+        yield put({type: deps.updateTeamFailed, error: result.error});
+      }
+    }
+    function updateTeamSelector (state) {
+      const {api, response} = state;
+      const userId = response.user.id;
+      return {api, userId};
+    }
+  });
 
 };
