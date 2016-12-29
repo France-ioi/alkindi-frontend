@@ -3,10 +3,10 @@ import EpicComponent from 'epic-component';
 import {include, use, defineAction, defineSelector, defineView, addReducer} from 'epic-linker';
 
 import TeamTab from '../tabs/team';
+import AttemptsTab from '../tabs/attempts';
 
 import Tabs from '../ui/tabs';
 import CountdownTimer from '../ui/countdown_timer';
-//import AttemptsTab from '../tabs/attempts';
 //import TaskTab from '../tabs/task';
 //import CryptoTab from '../tabs/crypto';
 //import HistoryTab from '../tabs/history';
@@ -17,8 +17,9 @@ import {asset_url} from '../assets';
 export default function* (deps) {
 
   yield include(TeamTab);
+  yield include(AttemptsTab);
 
-  yield use('LogoutButton', 'TeamTab');
+  yield use('LogoutButton', 'TeamTab', 'AttemptsTab');
 
   yield defineAction('setActiveTab', 'Tabs.SetActive');
 
@@ -37,10 +38,10 @@ export default function* (deps) {
         case 'team':
           content = <deps.TeamTab/>;  // XXX team={team}
           break;
-        /*
         case 'attempts':
-          content = <AttemptsTab/>;
+          content = <deps.AttemptsTab/>;
           break;
+        /*
         case 'task':
           content = <TaskTab round={self.props.round} attempt={self.props.attempt} task={self.props.task} />;
           break;
