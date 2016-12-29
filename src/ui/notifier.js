@@ -1,3 +1,6 @@
+/* This file is no longer used and its mechanisms are being replaced by the use
+   of redux-saga. */
+
 import React from 'react';
 import {Alert} from 'react-bootstrap';
 import {connect} from 'react-redux';
