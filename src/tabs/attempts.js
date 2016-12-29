@@ -91,22 +91,6 @@ export default function* (deps) {
       );
     };
 
-    const getMaxScore = function (attempts) {
-      let max_score;
-      attempts.forEach(function (attempt) {
-        // The attempt's max_score may be null (no score) or undefined
-        // (synthetic attempt).  If there is a score it will be a non-
-        // empty string, which is truthy.
-        if (!attempt.is_training && attempt.max_score) {
-          // Parse max_score as it is a decimal type sent as a string.
-          const score = parseInt(attempt.max_score);
-          if (max_score === undefined || score > max_score)
-            max_score = score;
-        }
-      });
-      return max_score;
-    };
-
     self.render = function () {
       const {round, attempts, codeEntry, score, noTraining} = self.props;
       return (
@@ -166,3 +150,19 @@ export default function* (deps) {
   });
 
 };
+
+function getMaxScore (attempts) {
+  let max_score;
+  attempts.forEach(function (attempt) {
+    // The attempt's max_score may be null (no score) or undefined
+    // (synthetic attempt).  If there is a score it will be a non-
+    // empty string, which is truthy.
+    if (!attempt.is_training && attempt.max_score) {
+      // Parse max_score as it is a decimal type sent as a string.
+      const score = parseInt(attempt.max_score);
+      if (max_score === undefined || score > max_score)
+        max_score = score;
+    }
+  });
+  return max_score;
+}
