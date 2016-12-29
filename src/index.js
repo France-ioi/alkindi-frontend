@@ -52,12 +52,18 @@ const {store, scope, start} = link(function* (deps) {
     const {config} = action;
     return {
       config,
-      api: new Api(config),
+      api: Api(config),
       response: {}
     };
   });
 
   yield defineAction('setCsrfToken', 'SetCsrfToken');
+  yield addReducer('setCsrfToken', function (state, action) {
+    const {csrf_token} = action;
+    let {config} = state;
+    config = {...config, csrf_token};
+    return {...state, config, api: Api(config)};
+  });
 
   yield defineSelector('getLoginUrl', function (state) {
     return state.config.login_url;
