@@ -5,13 +5,20 @@ head(lang='fr')
   meta(name="viewport", content="width=device-width, initial-scale=1")
   title Concours Alkindi
 body(id='app')
-  div#main Chargement en cours, merci de patienter...
-    div(style="margin: 10px auto; width: 100px;")
-      img#gears(src='assets/gears.svg', style="width: 100%")
+  div#main
+    div(style="margin: 10px auto; width: 400px; overflow: hidden;")
+      img#gears(src='assets/gears.svg', style="width: 48px; margin: 10px; float: left;")
+      p(style="vertical-align: middle; font-size: 24px; font-family: sans;") Chargement en cours...
   div#error(style='font-size: 24px; color: red; display: none;')
     | Le chargement a échoué, n'hésitez pas à contacter 
     a(href=contact_email)= contact_email
     | .
+  div#pageFooter
+    div.wrapper(style="text-align: center;")
+      | En cas de difficultés techniques, contactez 
+      a(href=contact_email)= contact_email
+      |  en décrivant précisément la situation et en
+      | indiquant votre login.
   if development
     script(type='text/javascript', src='jspm_packages/system.src.js')
     script(type='text/javascript', src='jspm.config.js')
@@ -23,12 +30,5 @@ body(id='app')
     script(type='text/javascript', src='jspm.config.js')
     script(type='text/javascript', src='build/bundle.js')
     script(type='text/javascript', src='start')
-
-  div#pageFooter
-    div.wrapper
-      | En cas de difficultés techniques, contactez 
-      a(href=contact_email)= contact_email
-      |  en décrivant précisément la situation et en
-      | indiquant votre login.
 
   div#reports(style="position: fixed; right: 0; bottom: 0; width: 0; height: 0;")
