@@ -31,12 +31,11 @@ export default function* (deps) {
 
     self.render = function () {
       // Interface principale...
-      const {activeTabKey, enabledTabs, user, countdown, frontendUpdate} = self.props;
-      const user_id = user.id;
+      const {activeTabKey, enabledTabs, countdown, frontendUpdate} = self.props;
       let content = false;
       switch (activeTabKey) {
         case 'team':
-          content = <deps.TeamTab/>;  // XXX team={team}
+          content = <deps.TeamTab/>;
           break;
         case 'attempts':
           content = <deps.AttemptsTab/>;
