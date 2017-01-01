@@ -5,14 +5,15 @@ Alkindi competition, rounds 2+.
 
 # Installation
 
+It is recommended to instal jspm globally (otherwise replace `jspm` by
+`./node_modules/.bin/jspm` in subsequent instructions):
+
+    $ npm install -g jspm@beta
+
 The build process uses npm and jspm 0.17:
 
     $ npm install
-    $ ./node_modules/.bin/jspm install
-
-You may want to install jspm globally:
-
-    $ npm install -g jspm@beta
+    $ jspm install
 
 ## Production
 
@@ -29,6 +30,15 @@ The LISTEN environment variable can be a TCP port or a UNIX socket path.
 
 ## Development
 
+Transpiling is done server-side as babel currently produces much better
+source maps this way.  During development, run the `watch` script to
+automatically transpile source files as they are modified.
+
+    $ npm run watch
+
+If you delete a file in `src/`, be sure to delete its transpiled version
+in `lib/`.  If in doubt, delete and rebuild `lib/`.
+
 The `build-dev` script generates a bundle (build/dev-bundle.js) to
 reduce page load time during development:
 
@@ -41,32 +51,27 @@ with React.
 
 ## jspm hell
 
-### transpiling
+Server-side transpiling using babel seems (as of 2017-01-01) to be the
+only way of producing useable source maps (when using JSX).
+This rules out the use of native jspm packages that include ES6 code
+that needs transpiling.
 
-The build-dev script adds the transpiling packages (`plugin-babel` and
-`babel-plugin-transform-react-jsx`) to the bundle to make it available
-for transpiling source files.
+As a result plugin-sass and plugin-scss cannot be used, and plugin-css
+must be used to load plain css files from jspm dependencies:
 
-Using `babel-cli --watch` would be a little faster, but using plugin-babel
-allows jspm to be used to include css files from jspm/npm packages.
-It is also required for native jspm packages including ES6 code that
-needs transpiling.
+    import "font-awesome/css/font-awesome.min.css!";
+    import "bootstrap/dist/css/bootstrap.min.css!";
+    import "rc-tooltip/assets/bootstrap.css!";
 
-### debug
+No build step is needed for the project's css, but additional jspm
+configuration is needed to make the css (in `src/`) available to the
+transpiled javascript (in `lib/`).  This is done by mapping a
+pseudo-package named `alkindi-frontend.css` to the `src/` path
+in `jspm.config.js`.
+The project's css is then imported thus:
 
-Package debug@^2.5.1 needs an override in `package.json` to resolve a 404
-error on `browser.js`, until the jspm registry is updated:
-```
-jspm.overrides['npm:debug@2.5.1'].directories.lib: "src"
-````
+    import "alkindi-frontend.css/style.css!";
 
-### scss
-
-The build-dev script looks weird because jspm fails to include plugin-sass
-in the bundle.  Adding sass.js fails with an out-of-memory error.  Adding
-postcss and autoprefixer works and limits the number of requests used to
-load the plugin-sass.
-
-To avoid transforming bootstrap-sass every time the page is loaded, it is
-included in src/base.scss, which is included in dev-bundle.js.
+If a css build step becomes necessary, the use of a gulp script to build
+'lib/style.css' is suggested.
 

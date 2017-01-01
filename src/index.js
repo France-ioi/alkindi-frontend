@@ -31,12 +31,11 @@ import MainScreen from './screens/main';
 //import RoundOverScreen from './screens/round_over';
 //import FinalScreen from './screens/final';
 
-import './base.scss!scss';
+// Inject style
 import "font-awesome/css/font-awesome.min.css!";
+import "bootstrap/dist/css/bootstrap.min.css!";
 import "rc-tooltip/assets/bootstrap.css!";
-import './index.scss!scss';
-
-// XXX old imports, review
+import "alkindi-frontend.css/style.css!";
 
 const {store, scope, start} = link(function* (deps) {
 
