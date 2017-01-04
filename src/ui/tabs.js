@@ -6,9 +6,6 @@ const tabs = [
   {key: 'team', label: "Équipe"},
   {key: 'attempts', label: "Épreuves"},
   {key: 'task', label: "Sujet"},
-  {key: 'cryptanalysis', label: "Cryptanalyse"},
-  {key: 'history', label: "Historique"},
-  {key: 'answers', label: "Réponses"},
   {key: 'results', label: "Résultats"}
 ];
 

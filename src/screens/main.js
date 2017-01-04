@@ -93,16 +93,13 @@ export default function* (deps) {
   });
 
   function selectTab (state, tabKey) {
+    const haveTasks = !!state.response.tasks;
     const haveTask = !!state.response.task;
-    const haveAttempts = !!state.response.attempts;
     const enabledTabs = {
       team: true,
-      attempts: haveAttempts,
+      attempts: haveTasks,
       task: haveTask,
-      cryptanalysis: haveTask,
-      history: haveTask,
-      answers: haveTask,
-      results: true
+      results: false
     };
     // If the active tab has become disabled, select the team tab, which is
     // always available.
