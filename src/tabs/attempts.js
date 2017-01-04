@@ -61,7 +61,7 @@ export default function* (deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          <p>Les épreuves seront accessible à partir du 16 janvier.</p>
+          <p>Les épreuves seront accessibles à partir du 16 janvier.</p>
           {typeof score == 'number' &&
             <p className="team-score">
                 Score actuel de l'équipe (meilleur score parmi les épreuves
