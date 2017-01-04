@@ -14,13 +14,10 @@ export default function* (deps) {
   yield use('setActiveTab', 'RefreshButton');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
-    const {user, team, round, attempts} = state.response;
-    const {attempt} = state;
-    const codeEntry = attempt && attempt.needs_codes;
-    const score = round.hide_scores ? null : getMaxScore(attempts);
-    const noTraining = round.max_attempts === null;
-    // or noTraining = !!attempts.find(attempt => attempt.is_training)
-    return {round, attempts, codeEntry, score, noTraining};
+    const {user, round, tasks} = state.response;
+    // const {attempt} = state;
+    const score = null; // round.hide_scores ? null : getMaxScore(attempts);
+    return {round, tasks, score};
   });
 
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
@@ -54,45 +51,8 @@ export default function* (deps) {
       //       new: api.enterAccessCode(attempt_id, {code: code, user_id: code_user_id})
     };
 
-    const renderCodeEntry = function () {
-      const {team} = self.props;
-      const renderMember = function (member) {
-        const user_id = member.user_id;
-        return (
-          <tr key={user_id}>
-            <td>{member.user.username}</td>
-            <td>{member.user.lastname}, {member.user.firstname}</td>
-            {(member.access_code === undefined
-              ? <td className="access-code">
-                  <input type="text" data-user_id={user_id} ref={refAccessCode} />
-                  <Button bsSize="small" onClick={onEnterAccessCode} data-user_id={user_id}>
-                    <i className="fa fa-check"/> valider
-                  </Button>
-                </td>
-              : <td className="unlocked-code">{member.access_code}</td>)}
-          </tr>);
-      };
-      return (
-        <div className="section">
-          <p>Pour autoriser l'accès au sujet, vous devez saisir des codes de
-             lancement.</p>
-          <p>Voici la composition de votre équipe :</p>
-          <table className="table">
-            <tbody>
-              <tr>
-                <th>Login</th>
-                <th>Nom, prénom</th>
-                <th>Code de lancement du sujet</th>
-              </tr>
-              {team.members.map(renderMember)}
-            </tbody>
-          </table>
-        </div>
-      );
-    };
-
     self.render = function () {
-      const {round, attempts, codeEntry, score, noTraining} = self.props;
+      const {round, attempts, codeEntry, score} = self.props;
       return (
         <div className="wrapper">
           <div className="pull-right">
@@ -101,35 +61,7 @@ export default function* (deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          {noTraining &&
-            <p>
-              Pour ce tour, il n'y a pas d'épreuve d'entraînement.
-              Vous pouvez faire autant de tentatives en temps limité que
-              vous le souhaitez.
-              Votre score sera celui de la meilleure de vos tentatives.
-            </p>}
-          {round.id === 4 && <div>
-            <p>
-              Pour ce tour, il n'y a qu'une seule épreuve, sans limite de temps.
-              Votre score sera celui de votre dernière réponse, mais vous ne le
-              connaîtrez qu'après la fin du concours le 26 mars.
-            </p>
-            <p>
-              <strong>Attention :</strong> ce que vous faites pendant la première
-              heure et demie après avoir démarré l'épreuve sera utilisé pour
-              départager les ex-aequo. Allez voir le <a
-              href="http://concours-alkindi.fr/#/pageManual" target="_blank">manuel
-              du concours</a> pour les détails.
-            </p>
-            <p>
-              En résumé : faites en un maximum pendant la première heure et demie
-              après avoir démarré l'épreuve, en soumettant votre réponse à chaque
-              fois que vous pensez avoir déchiffré correctement une information de
-              plus.
-              Une fois la première heure et demie écoulée, vous avez jusqu'au
-              26 mars pour compléter votre réponse.
-            </p>
-          </div>}
+          <p>Les épreuves seront accessible à partir du 16 janvier.</p>
           {typeof score == 'number' &&
             <p className="team-score">
                 Score actuel de l'équipe (meilleur score parmi les épreuves
