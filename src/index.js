@@ -12,6 +12,7 @@ import 'es6-shim';
 import 'array.prototype.fill';
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
+import process from 'process';
 import {Promise} from 'es6-promise';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -36,6 +37,10 @@ import "font-awesome/css/font-awesome.min.css!";
 import "bootstrap/dist/css/bootstrap.min.css!";
 import "rc-tooltip/assets/bootstrap.css!";
 import "alkindi-frontend.css/style.css!";
+
+if (process.env.NODE_ENV === 'development') {
+  System.import('source-map-support').then(m => m.install());
+}
 
 const {store, scope, start} = link(function* (deps) {
 

@@ -63,7 +63,8 @@
       "superagent": "npm:superagent@^3.1.0"
     },
     "devDependencies": {
-      "module": "npm:jspm-nodelibs-module@^0.2.0"
+      "module": "npm:jspm-nodelibs-module@^0.2.0",
+      "source-map-support": "npm:source-map-support@^0.4.8"
     },
     "peerDependencies": {
       "assert": "npm:jspm-nodelibs-assert@^0.2.0",
