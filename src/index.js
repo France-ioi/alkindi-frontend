@@ -39,6 +39,7 @@ import "rc-tooltip/assets/bootstrap.css!";
 import "alkindi-frontend.css/style.css!";
 
 const isDev = process.env.NODE_ENV === 'development';
+const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
 if (isDev) {
   System.import('source-map-support').then(m => m.install());
 }
@@ -80,9 +81,10 @@ const {store, scope, start} = link(function* (deps) {
   });
 
   if (isDev) {
-    yield addEnhancer(DevTools.instrument());
-    if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+    if (reduxExt) {
       yield addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
+    } else {
+      yield addEnhancer(DevTools.instrument());
     }
   }
 
@@ -113,7 +115,7 @@ export function run (config, container) {
     <Provider store={store}>
       <div>
         <scope.App/>
-        {isDev && <DevTools/>}
+        {reduxExt ? false : <DevTools/>}
       </div>
     </Provider>, container);
 
