@@ -21,8 +21,8 @@ export default function* (deps) {
   });
 
   function* doRefresh (action) {
+    const timestamp = new Date();
     try {
-      const timestamp = new Date();
       const {userId, request, api} = yield select(getRefreshState);
       yield put({type: deps.refreshStarted, timestamp});
       const response = yield call(api.refresh, userId, request);

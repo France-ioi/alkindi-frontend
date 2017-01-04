@@ -6,10 +6,13 @@ import AuthHeader from './ui/auth_header';
 
 export default function* (deps) {
 
-  yield use('LoginScreen', 'JoinTeamScreen', 'MainScreen');
+  yield use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');
 
   yield defineSelector('AppSelector', function (state) {
-    const {user, team, round, participations, is_admin} = state.response;
+    const {error, user, team, round, participations, is_admin} = state.response;
+    if (error) {
+      return {error};
+    }
     const {workspace, showMainScreen} = state; // XXX clean up
     const changed = workspace && workspace.changed;
     let currentParticipation = null;
@@ -35,6 +38,16 @@ export default function* (deps) {
     };
 
     self.render = function () {
+      const {error} = self.props;
+      if (error) {
+        return (
+          <div className="container">
+            <p>Désolé, une erreur s'est produite : {error}</p>
+            <p><deps.RefreshButton/></p>
+          </div>
+        );
+      }
+
       const {user, team, round, showMainScreen, participation} = self.props;
 
       // The login screen is shown when no user is active.
