@@ -24,6 +24,10 @@ const staticAssets = {
   '/build': {
     localPath: 'build'
   },
+  '/jspm.config.js': {
+    localPath: 'jspm.config.js',
+    enabled: true
+  },
   // The package manager files are served at /jspm_packages.
   // This is needed in production for dependency assets (fonts, images, css).
   '/jspm_packages': {
@@ -31,7 +35,15 @@ const staticAssets = {
   },
   // Source frontend files are served at /src.
   '/src': {
-    localPath: 'frontend',
+    localPath: 'src',
+    enabled: isDevelopment
+  },
+  '/lib': {
+    localPath: 'lib',
+    enabled: isDevelopment
+  },
+  '/jspm.dev.js': {
+    localPath: 'jspm.dev.js',
     enabled: isDevelopment
   }
 };
@@ -48,7 +60,8 @@ Object.keys(staticAssets).forEach(function (urlPath) {
 app.get('/', function (req, res) {
   res.render('index', {
     development: isDevelopment,
-    contact_email: 'info@concours-alkindi.fr'
+    contact_email: 'info@concours-alkindi.fr',
+    start_url: process.env.START_URL
   });
 });
 

@@ -24,7 +24,10 @@ containing the transpiled source files and all dependencies:
 
 A lightweight server script is used to generate the HTML index:
 
-    $ NODE_ENV=production LISTEN=8001 npm start
+    $ NODE_ENV=production \
+      START_URL='https://suite.concours-alkindi.fr/start' \
+      LISTEN=8001
+      npm start
 
 The LISTEN environment variable can be a TCP port or a UNIX socket path.
 
@@ -48,6 +51,12 @@ Remember to rebuild this bundle whenever dependencies are updated, or
 you could run into issues with multiple version of packages being loaded
 simultaneously.  Things can get particularly confusing when this happens
 with React.
+
+Start the server script for development:
+
+    $ START_URL='https://alkindi.local/start' \
+      LISTEN=8001
+      npm start
 
 ## jspm hell
 
