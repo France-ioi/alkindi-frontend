@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "build": "babel --minified --out-dir lib src && NODE_ENV=production jspm bundle lib/index.js build/bundle.js --minify",
-    "build-dev": "babel --source-maps=true --watch --out-dir lib src && jspm bundle 'alkindi-frontend' - '[alkindi-frontend/**/*]' - '[alkindi-frontend/style.css!css]' build/dev-bundle.js",
+    "build-dev": "babel --source-maps=true --watch --out-dir lib src && jspm bundle --dev --no-mangle 'alkindi-frontend' - '[alkindi-frontend/**/*]' - '[alkindi-frontend/style.css!css]' build/dev-bundle.js",
     "watch": "babel --watch --source-maps=true --out-dir lib src",
     "start": "node backend/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
