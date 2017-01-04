@@ -39,7 +39,7 @@ export default function* (deps) {
             <p>Bienvenue sur la plateforme du 2<sup>nd</sup> tour du concours Alkindi.</p>
             <p>
               Pour accéder à l'interface du concours, connectez vous en cliquant
-              sur ce bouton:
+              sur ce bouton :
             </p>
             <p><Button onClick={onLogin}>se connecter</Button></p>
           </div>
