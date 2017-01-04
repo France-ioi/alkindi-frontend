@@ -36,7 +36,7 @@ export default function* (deps) {
         <div className="wrapper">
           <AuthHeader/>
           <div className="section">
-            <p>Bienvenue sur la plateforme du 2<sup>nd</sup> tour du concours Alkindi.</p>
+            <p>Bienvenue sur la plateforme du 2<sup>ème</sup> tour du concours Alkindi.</p>
             <p>
               Pour accéder à l'interface du concours, connectez vous en cliquant
               sur ce bouton :
