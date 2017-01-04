@@ -38,7 +38,8 @@ import "bootstrap/dist/css/bootstrap.min.css!";
 import "rc-tooltip/assets/bootstrap.css!";
 import "alkindi-frontend.css/style.css!";
 
-if (process.env.NODE_ENV === 'development') {
+const isDev = process.env.NODE_ENV === 'development';
+if (isDev) {
   System.import('source-map-support').then(m => m.install());
 }
 
@@ -56,6 +57,7 @@ const {store, scope, start} = link(function* (deps) {
     const {config} = action;
     return {
       config,
+      isDev,
       api: Api(config),
       response: {}
     };
@@ -77,9 +79,11 @@ const {store, scope, start} = link(function* (deps) {
     return state.config.logout_url;
   });
 
-  // yield addEnhancer(DevTools.instrument());
-  if (window.__REDUX_DEVTOOLS_EXTENSION__) {
-    yield addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
+  if (isDev) {
+    yield addEnhancer(DevTools.instrument());
+    if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+      yield addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
+    }
   }
 
 });
@@ -109,7 +113,7 @@ export function run (config, container) {
     <Provider store={store}>
       <div>
         <scope.App/>
-        <DevTools/>
+        {isDev && <DevTools/>}
       </div>
     </Provider>, container);
 
