@@ -45,19 +45,19 @@ export default function* (deps) {
         <div key={ordinal} className={classnames(classes)}>
           <span className='attempt-ordinal'>{ordinal}</span>
           {attempt.is_training
-            ? <span className='attempt-label-training'>{"Entraînement"}</span>
+            ? <span className='attempt-label-training attempt-tag'>{"Entraînement"}</span>
             : is_timed
-              ? <span className='attempt-label-timed'>{"Temps limité "}{duration}{"min"}</span>
-              : <span className='attempt-label-untimed'>{"Sans limite de temps"}</span>}
+              ? <span className='attempt-label-timed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Temps limité "}{duration}{"min"}</span>
+              : <span className='attempt-label-untimed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Sans limite de temps"}</span>}
           {attempt.is_timed && attempt.is_closed &&
-            <span className='attempt-label-closed'>{"Terminé"}</span>}
+            <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>}
           {attempt.is_started
             ? attempt.is_fully_solved
-              ? <span className='attempt-label-fully_solved'>{"Résolu, score maximal"}</span>
+              ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu, score maximal"}</span>
               : attempt.is_unsolved
-                ? <span className='attempt-label-unsolved'>{"En cours de résolution"}</span>
-                : <span className='attempt-label-solved'>{"Partiellement résolu (score améliorable)"}</span>
-            : <span className='attempt-label-not_started'>{"Pas démarré"}</span>}
+                ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution"}</span>
+                : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)"}</span>
+            : <span className='attempt-label-not_started attempt-tag'>{"Pas démarré"}</span>}
         </div>
       );
     };
