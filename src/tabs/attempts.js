@@ -22,8 +22,7 @@ export default function* (deps) {
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
       : round.tasks.length > 0 && round.tasks[0].id;
-    // const {attempt} = state;
-    const score = null; // round.hide_scores ? null : getMaxScore(attempts);
+    const score = null; // getMaxScore(round.tasks);
     return {now: new Date(now).getTime(), round, score, activeTaskId};
   });
 
