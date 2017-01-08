@@ -1,7 +1,8 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
-import {Button} from 'react-bootstrap';
+import {Button,} from 'react-bootstrap';
+import Collapse, {Panel} from 'rc-collapse';
 import {include, use, defineSelector, defineView, addReducer} from 'epic-linker';
 
 import Tooltip from '../ui/tooltip';
@@ -16,9 +17,10 @@ export default function* (deps) {
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {user, round} = state.response;
+    const currentTaskId = 1;
     // const {attempt} = state;
     const score = null; // round.hide_scores ? null : getMaxScore(attempts);
-    return {round, score};
+    return {round, score, currentTaskId};
   });
 
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
@@ -58,13 +60,16 @@ export default function* (deps) {
                   ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution"}</span>
                   : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)"}</span>
               : <span className='attempt-label-not_started attempt-tag'>{"Pas démarré"}</span>}
-          <Button>{"Ajouter une tentative pour ce sujet"}</Button>
         </div>
       );
     };
 
+    function onTaskChange (key) {
+      console.log(key);
+    }
+
     self.render = function () {
-      const {round, score} = self.props;
+      const {round, score, currentTaskId} = self.props;
       /* accordéon tasks */
       return (
         <div className="tab-content">
@@ -77,20 +82,26 @@ export default function* (deps) {
           {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
           {typeof score == 'number' &&
             <p className="team-score">
-                Score actuel de l'équipe (meilleur score parmi les épreuves
-                en temps limité) : <span className="team-score">{score}</span>.
-              </p>}
+              Score actuel de l'équipe (meilleur score parmi les épreuves
+              en temps limité) : <span className="team-score">{score}</span>.
+            </p>}
           <div className="tasks">
-            {round.tasks.map(round_task =>
-              <div className="task" key={round_task.id}>
-                <div className="task-title">
-                  {round_task.task.title}
-                </div>
-                {round_task.attempts &&
-                <div className="attempts">
-                  {round_task.attempts.map(renderAttempt)}
-                </div>}
-              </div>)}
+            <Collapse accordion={true}>
+              {round.tasks.map(round_task => {
+                const header = (
+                  <span className="task-title">
+                    {round_task.task.title}
+                  </span>);
+                return (
+                  <Panel key={round_task.id} className="task" header={header}>
+                    {round_task.attempts &&
+                    <div className="attempts">
+                      {round_task.attempts.map(renderAttempt)}
+                    </div>}
+                    <Button>{"Ajouter une tentative pour ce sujet"}</Button>
+                  </Panel>);
+                })}
+            </Collapse>
           </div>
         </div>
       );
