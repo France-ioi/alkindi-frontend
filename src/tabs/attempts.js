@@ -58,6 +58,7 @@ export default function* (deps) {
                 ? <span className='attempt-label-unsolved'>{"En cours de résolution"}</span>
                 : <span className='attempt-label-solved'>{"Partiellement résolu (score améliorable)"}</span>
             : <span className='attempt-label-not_started'>{"Pas démarré"}</span>}
+          <Button>{"Ajouter une tentative pour ce sujet"}</Button>
         </div>
       );
     };
