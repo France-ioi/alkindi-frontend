@@ -81,7 +81,7 @@ export default function* (deps) {
               </p>}
           <div className="tasks">
             {round.tasks.map(round_task =>
-              <div className="task">
+              <div className="task" key={round_task.id}>
                 <div className="task-title">
                   {round_task.task.title}
                 </div>
