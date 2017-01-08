@@ -3,7 +3,7 @@ import EpicComponent from 'epic-component';
 import classnames from 'classnames';
 import {Button,} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
-import {include, use, defineSelector, defineView, addReducer} from 'epic-linker';
+import {include, use, defineAction, defineSelector, defineView, addReducer} from 'epic-linker';
 
 import Tooltip from '../ui/tooltip';
 import AttemptTimeline from '../ui/attempt_timeline';
@@ -15,19 +15,41 @@ export default function* (deps) {
 
   yield use('setActiveTab', 'RefreshButton');
 
+  yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
+
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {user, round} = state.response;
-    const currentTaskId = 1;
+    const activeTaskId = 'activeTask' in state
+      ? state.activeTask && state.activeTask.id
+      : round.tasks.length > 0 && round.tasks[0].id;
     // const {attempt} = state;
     const score = null; // round.hide_scores ? null : getMaxScore(attempts);
-    return {round, score, currentTaskId};
+    return {round, score, activeTaskId};
   });
+
+  yield addReducer('activeTaskChanged', function (state, action) {
+    const activeTask = findActiveTaskByKey(state.response.round.tasks, action.key);
+    return {...state, activeTask};
+  });
+  function findActiveTaskByKey (tasks, key) {
+    for (let task of tasks) {
+      // Use of == to compare task.id (integer) and key (string).
+      if (task.id == key) {
+        return task;
+      }
+    }
+    return false;
+  }
 
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
 
-    const onSwitchTab = function (tabKey) {
+    function onSwitchTab (tabKey) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});
-    };
+    }
+
+    function onTaskChange (key) {
+      self.props.dispatch({type: deps.activeTaskChanged, key});
+    }
 
     const renderAttempt = function (attempt) {
       const {ordinal, duration} = attempt;
@@ -64,12 +86,8 @@ export default function* (deps) {
       );
     };
 
-    function onTaskChange (key) {
-      console.log(key);
-    }
-
     self.render = function () {
-      const {round, score, currentTaskId} = self.props;
+      const {round, score, activeTaskId} = self.props;
       /* accordéon tasks */
       return (
         <div className="tab-content">
@@ -86,7 +104,7 @@ export default function* (deps) {
               en temps limité) : <span className="team-score">{score}</span>.
             </p>}
           <div className="tasks">
-            <Collapse accordion={true}>
+            <Collapse accordion={true} activeKey={''+activeTaskId} onChange={onTaskChange}>
               {round.tasks.map(round_task => {
                 const header = (
                   <span className="task-title">
