@@ -65,7 +65,7 @@ app.get('/', function (req, res) {
   });
 });
 
-app.get('/dev/start', function (req, res) {
+app.get('/start', function (req, res) {
   fs.readFile("seed.json", function (err, seed) {
     const config = {
       "api_url": "/api/",
