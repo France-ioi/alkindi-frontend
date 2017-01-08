@@ -14,6 +14,11 @@ SystemJS.config({
     "alkindi-frontend": {
       "main": "index.js"
     }
+  },
+  meta: {
+    './lib/*.js': {
+      format: 'cjs'
+    }
   }
 });
 
