@@ -26,7 +26,7 @@ A lightweight server script is used to generate the HTML index:
 
     $ NODE_ENV=production \
       START_URL='https://suite.concours-alkindi.fr/start' \
-      LISTEN=8001
+      LISTEN=8001 \
       npm start
 
 The LISTEN environment variable can be a TCP port or a UNIX socket path.
