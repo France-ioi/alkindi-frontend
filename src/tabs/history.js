@@ -89,7 +89,7 @@ const HistoryTab = EpicComponent(self => {
   self.render = function () {
     const {alkindi, revisions} = self.props;
     return (
-      <div>
+      <div className="tab-content">
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>

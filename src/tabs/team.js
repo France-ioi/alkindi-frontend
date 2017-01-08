@@ -223,7 +223,7 @@ export default function* (deps) {
         allowTeamChanges,
         teamHasCode, teamUnlocked, teamAdmin, teamInvalid} = self.props;
       return (
-        <div className="wrapper">
+        <div className="tab-content">
           <div className="pull-right">
             <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de votre équipe.</p>}/>
             {' '}

@@ -175,7 +175,7 @@ export const CryptoTab = EpicComponent(self => {
     const rootScope = getRootScope({...task, getHint});
     const tools = alkindi.manager.render(rootScope);
     return (
-      <div>
+      <div className="tab-content">
         <Notifier alkindi={alkindi}/>
         <TabHeader task={task}/>
         {header}

@@ -94,7 +94,7 @@ const AnswersTab = PureComponent(self => {
            ? <p className="noRowsMessage">Vous n'avez pas encore soumis de réponse pour cette épreuve.</p>
            : renderAnswers(answers, Answer)));
     return (
-      <div className="wrapper">
+      <div className="tab-content">
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des réponses soumises par votre équipe.</p>}/>

@@ -34,7 +34,7 @@ const ResultsTab = EpicComponent(self => {
   self.render = function () {
     const {participations, user, roundId} = self.props;
     return (
-      <div className="wrapper">
+      <div className="tab-content">
         <h1>Résultats</h1>
         {participations.length == 0 &&
           <p>Vous n'avez pas encore de résultats.</p>}

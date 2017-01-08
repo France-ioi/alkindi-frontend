@@ -11,7 +11,7 @@ const TaskTab = EpicComponent(self => {
       return false;
     const Task = Tasks[task.front].Task;
     return (
-      <div className="wrapper">
+      <div className="tab-content">
         <h1>{round.title}</h1>
         <Task task={task}/>
       </div>

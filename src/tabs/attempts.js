@@ -66,7 +66,7 @@ export default function* (deps) {
       const {round, score} = self.props;
       /* accordéon tasks */
       return (
-        <div className="wrapper">
+        <div className="tab-content">
           <div className="pull-right">
             <Tooltip content={<p>Cliquez sur ce bouton pour recharger la situation de vos épreuves.</p>}/>
             {' '}
