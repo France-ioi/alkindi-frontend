@@ -18,13 +18,13 @@ export default function* (deps) {
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
-    const {user, round} = state.response;
+    const {now, user, round} = state.response;
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
       : round.tasks.length > 0 && round.tasks[0].id;
     // const {attempt} = state;
     const score = null; // round.hide_scores ? null : getMaxScore(attempts);
-    return {round, score, activeTaskId};
+    return {now: new Date(now).getTime(), round, score, activeTaskId};
   });
 
   yield addReducer('activeTaskChanged', function (state, action) {
@@ -51,37 +51,45 @@ export default function* (deps) {
       self.props.dispatch({type: deps.activeTaskChanged, key});
     }
 
-    const renderAttempt = function (attempt) {
-      const {ordinal, duration} = attempt;
+    function getTimeElapsed (when) {
+      return Math.floor((new Date(when).getTime() - self.props.now) / 60000);
+    }
+
+    const renderAttempt = function (attempt, round_task) {
+      const {max_score} = round_task;
+      const {ordinal, closes_at, score, ratio} = attempt;
       const is_started = !!attempt.started_at;
-      const is_timed = typeof duration === 'number';
+      const rem_time = is_started && closes_at && getTimeElapsed(closes_at);
       const classes = [
+        'row',
         'attempt',
-        attempt.is_current && 'attempt-current',
-        attempt.is_training && 'attempt-training',
-        is_started && 'attempt-started',
-        is_timed && 'attempt-timed',
-        attempt.is_closed && 'attempt-closed',
-        attempt.is_fully_solved && 'attempt-fully_solved',
-        attempt.is_unsolved && 'attempt-unsolved'
+        attempt.is_current && 'attempt-current'
       ];
       return (
         <div key={ordinal} className={classnames(classes)}>
-          <span className='attempt-ordinal'>{ordinal}</span>
-          {attempt.is_training
-            ? <span className='attempt-label-training attempt-tag'>{"Entraînement"}</span>
-            : is_timed
-              ? <span className='attempt-label-timed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Temps limité "}{duration}{"min"}</span>
-              : <span className='attempt-label-untimed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Sans limite de temps"}</span>}
-          {attempt.is_closed
-            ? <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>
-            : is_started
-              ? attempt.is_fully_solved
-                ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu, score maximal"}</span>
-                : attempt.is_unsolved
-                  ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution"}</span>
-                  : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)"}</span>
-              : <span className='attempt-label-not_started attempt-tag'>{"Pas démarré"}</span>}
+          <div className="col">
+            {is_started && (
+              ratio == 0
+              ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution" /* icone oeil */}</span>
+              : ratio == 1
+                ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu (score maximal)" /* icone check vert */}</span>
+              : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)" /* icone orange */}</span>)}
+          </div>
+          <div className="col">
+            {attempt.is_training && <span className='attempt-label-training attempt-tag'>{"Entraînement"}</span>}
+          </div>
+          <div className="col">
+            <span className='attempt-ordinal'>{ordinal}</span>
+            {is_started && new Date(attempt.started_at).toLocaleString()}
+          </div>
+          <div className="col">
+            {attempt.is_completed
+              ? <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>
+              : rem_time && <span><i className="fa fa-clock-o" aria-hidden="true"></i>{"Temps restant : "}{rem_time}{"min"}</span>}
+          </div>
+          <div className="col">
+            {score}{' / '}{max_score}
+          </div>
         </div>
       );
     };
@@ -114,7 +122,7 @@ export default function* (deps) {
                   <Panel key={round_task.id} className="task" header={header}>
                     {round_task.attempts &&
                     <div className="attempts">
-                      {round_task.attempts.map(renderAttempt)}
+                      {round_task.attempts.map(attempt => renderAttempt(attempt, round_task))}
                     </div>}
                     <Button>{"Ajouter une tentative pour ce sujet"}</Button>
                   </Panel>);
