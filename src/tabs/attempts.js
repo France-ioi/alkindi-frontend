@@ -79,7 +79,9 @@ export default function* (deps) {
             {attempt.is_training && <span className='attempt-label-training attempt-tag'>{"Entraînement"}</span>}
           </div>
           <div className="col">
+            {"Tentative "}
             <span className='attempt-ordinal'>{ordinal}</span>
+            {is_started && " démarrée "}
             {is_started && new Date(attempt.started_at).toLocaleString()}
           </div>
           <div className="col">
