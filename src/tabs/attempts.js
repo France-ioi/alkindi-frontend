@@ -74,7 +74,7 @@ export default function* (deps) {
               ? <span className='attempt-label-timed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Temps limité "}{duration}{"min"}</span>
               : <span className='attempt-label-untimed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Sans limite de temps"}</span>}
           {attempt.is_closed
-            ? <span className='attempt-label-closed'>{"Terminé"}</span>
+            ? <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>
             : is_started
               ? attempt.is_fully_solved
                 ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu, score maximal"}</span>
