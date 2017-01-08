@@ -61,6 +61,7 @@ SystemJS.config({
     "path": "npm:jspm-nodelibs-path@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.0",
     "querystring": "npm:jspm-nodelibs-querystring@0.2.0",
+    "rc-collapse": "npm:rc-collapse@1.6.11",
     "rc-tooltip": "npm:rc-tooltip@3.4.2",
     "react": "npm:react@15.4.1",
     "react-bootstrap": "npm:react-bootstrap@0.30.7",
@@ -416,7 +417,7 @@ SystemJS.config({
     },
     "npm:rc-animate@2.3.1": {
       "map": {
-        "css-animation": "npm:css-animation@1.3.0"
+        "css-animation": "npm:css-animation@1.3.1"
       }
     },
     "npm:add-dom-event-listener@1.0.1": {
@@ -427,11 +428,6 @@ SystemJS.config({
     "npm:shallowequal@0.2.2": {
       "map": {
         "lodash.keys": "npm:lodash.keys@3.1.2"
-      }
-    },
-    "npm:css-animation@1.3.0": {
-      "map": {
-        "component-classes": "npm:component-classes@1.2.6"
       }
     },
     "npm:lodash.keys@3.1.2": {
@@ -680,6 +676,18 @@ SystemJS.config({
         "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
         "xtend": "npm:xtend@4.0.1",
         "builtin-status-codes": "npm:builtin-status-codes@3.0.0"
+      }
+    },
+    "npm:rc-collapse@1.6.11": {
+      "map": {
+        "classnames": "npm:classnames@2.2.5",
+        "rc-animate": "npm:rc-animate@2.3.1",
+        "css-animation": "npm:css-animation@1.3.1"
+      }
+    },
+    "npm:css-animation@1.3.1": {
+      "map": {
+        "component-classes": "npm:component-classes@1.2.6"
       }
     }
   }

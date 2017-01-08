@@ -52,6 +52,7 @@
       "memoizejs": "npm:memoizejs@^0.1.1",
       "node-range": "npm:node-range@^0.1.0",
       "object.assign": "npm:object.assign@^4.0.4",
+      "rc-collapse": "npm:rc-collapse@^1.6.11",
       "rc-tooltip": "npm:rc-tooltip@^3.4.2",
       "react-bootstrap": "npm:react-bootstrap@^0.30.7",
       "react-dnd-html5-backend": "npm:react-dnd-html5-backend@^2.1.2",

@@ -36,6 +36,7 @@ import MainScreen from './screens/main';
 import "font-awesome/css/font-awesome.min.css!";
 import "bootstrap/dist/css/bootstrap.min.css!";
 import "rc-tooltip/assets/bootstrap.css!";
+import 'rc-collapse/assets/index.css!';
 import "alkindi-frontend.css/style.css!";
 
 const isDev = process.env.NODE_ENV === 'development';
