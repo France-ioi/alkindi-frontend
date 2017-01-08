@@ -93,8 +93,8 @@ export default function* () {
     };
 
     const renderCancelAttempt = function (attempt) {
-      const {round} = self.props;
-      const haveTraining = round.have_training_attempt;
+      const {round_task} = self.props;
+      const haveTraining = round_task.have_training_attempt;
       // XXX If there is no training attempt, cancelling the current attempt is
       // not supported.
       if (!haveTraining)
@@ -401,15 +401,15 @@ export default function* () {
               {'. '}
               <span className="">
                 {attempt.is_training
-                  ? "Épreuve d'entraînement"
+                  ? "Tentative d'entraînement"
                   : (attempt.duration !== null
                       ? <span>
-                          {"Épreuve en temps limité ("}
+                          {"Tentative en temps limité ("}
                           {attempt.duration}
                           {" minutes)"}
                         </span>
                       : <span>
-                          {"Épreuve sans limite de temps"}
+                          {"Tentative sans limite de temps"}
                         </span>)}
               </span>
             </div>

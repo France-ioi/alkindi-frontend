@@ -1,5 +1,6 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
+import classnames from 'classnames';
 import {Button} from 'react-bootstrap';
 import {include, use, defineSelector, defineView, addReducer} from 'epic-linker';
 
@@ -14,45 +15,56 @@ export default function* (deps) {
   yield use('setActiveTab', 'RefreshButton');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
-    const {user, round, tasks} = state.response;
+    const {user, round} = state.response;
     // const {attempt} = state;
     const score = null; // round.hide_scores ? null : getMaxScore(attempts);
-    return {round, tasks, score};
+    return {round, score};
   });
 
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
-
-    const accessCodes = {};
-    self.state = {access_code: undefined};
-
-    const refAccessCode = function (element) {
-      if (element) {
-        const user_id = element.getAttribute('data-user_id');
-        accessCodes[user_id] = element;
-      }
-    };
-
-    const clearAccessCode = function () {
-      self.setState({access_code: undefined});
-    };
 
     const onSwitchTab = function (tabKey) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});
     };
 
-    const onEnterAccessCode = function (event) {
-      const attemptId = self.props.attempt.id;
-      const codeUserId = event.currentTarget.getAttribute('data-user_id');
-      const element = accessCodes[codeUserId];
-      const code = element.value.trim();
-      self.props.dispatch({type: deps.enterAccessCode, attemptId, codeUserId, code});
-      // SAGA: enterAccessCode ->
-      //       old: api.enterAccessCode(user_id, {code: code, user_id: code_user_id})
-      //       new: api.enterAccessCode(attempt_id, {code: code, user_id: code_user_id})
+    const renderAttempt = function (attempt) {
+      const {ordinal, duration} = attempt;
+      const is_started = attempt.started_at !== null;
+      const is_timed = typeof duration === 'number';
+      const classes = [
+        'attempt',
+        attempt.is_current && 'attempt-current',
+        attempt.is_training && 'attempt-training',
+        is_started && 'attempt-started',
+        is_timed && 'attempt-timed',
+        attempt.is_closed && 'attempt-closed',
+        attempt.is_fully_solved && 'attempt-fully_solved',
+        attempt.is_unsolved && 'attempt-unsolved'
+      ];
+      return (
+        <div key={ordinal} className={classnames(classes)}>
+          <span className='attempt-ordinal'>{ordinal}</span>
+          {attempt.is_training
+            ? <span className='attempt-label-training'>{"Entraînement"}</span>
+            : is_timed
+              ? <span className='attempt-label-timed'>{"Temps limité "}{duration}{"min"}</span>
+              : <span className='attempt-label-untimed'>{"Sans limite de temps"}</span>}
+          {attempt.is_timed && attempt.is_closed &&
+            <span className='attempt-label-closed'>{"Terminé"}</span>}
+          {attempt.is_started
+            ? attempt.is_fully_solved
+              ? <span className='attempt-label-fully_solved'>{"Résolu, score maximal"}</span>
+              : attempt.is_unsolved
+                ? <span className='attempt-label-unsolved'>{"En cours de résolution"}</span>
+                : <span className='attempt-label-solved'>{"Partiellement résolu (score améliorable)"}</span>
+            : <span className='attempt-not_started'>{"Pas démarré"}</span>}
+        </div>
+      );
     };
 
     self.render = function () {
-      const {round, attempts, codeEntry, score} = self.props;
+      const {round, score} = self.props;
+      /* accordéon tasks */
       return (
         <div className="wrapper">
           <div className="pull-right">
@@ -61,25 +73,28 @@ export default function* (deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          <p>Les épreuves seront accessibles à partir du 16 janvier.</p>
+          {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
           {typeof score == 'number' &&
             <p className="team-score">
                 Score actuel de l'équipe (meilleur score parmi les épreuves
                 en temps limité) : <span className="team-score">{score}</span>.
               </p>}
-          {codeEntry && renderCodeEntry()}
-          {attempts &&
-            <div className="attempts">
-              {attempts.map(attempt => <deps.AttemptTimeline key={attempt.ordinal} attempt={attempt}/>)}
-            </div>}
+          <div className="tasks">
+            {round.tasks.map(round_task =>
+              <div className="task">
+                <div className="task-title">
+                  {round_task.task.title}
+                </div>
+                {round_task.attempts &&
+                <div className="attempts">
+                  {round_task.attempts.map(renderAttempt)}
+                </div>}
+              </div>)}
+          </div>
         </div>
       );
     };
   }));
-
-  yield addReducer('refresh', function (state) {
-    return {...state, accessCode: false};
-  });
 
 };
 

@@ -93,11 +93,11 @@ export default function* (deps) {
   });
 
   function selectTab (state, tabKey) {
-    const haveTasks = !!state.response.tasks;
+    const haveRound = !!state.response.round;
     const haveTask = !!state.response.task;
     const enabledTabs = {
       team: true,
-      attempts: haveTasks,
+      attempts: haveRound,
       task: haveTask,
       results: false
     };
