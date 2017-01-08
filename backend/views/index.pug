@@ -19,16 +19,20 @@ body(id='app')
       a(href=contact_email)= contact_email
       |  en décrivant précisément la situation et en
       | indiquant votre login.
+
   if development
     script(type='text/javascript', src='jspm_packages/system.src.js')
-    script(type='text/javascript', src='jspm.config.js')
-    script(type='text/javascript', src='jspm.dev.js')
-    script(type='text/javascript', src='build/dev-bundle.js')
-    script(type='text/javascript', src=start_url)
   else
     script(type='text/javascript', src='jspm_packages/system.js')
-    script(type='text/javascript', src='jspm.config.js')
+
+  script(type='text/javascript', src='jspm.config.js')
+
+  if development
+    script(type='text/javascript', src='jspm.dev.js')
+    script(type='text/javascript', src='build/dev-bundle.js')
+  else
     script(type='text/javascript', src='build/bundle.js')
-    script(type='text/javascript', src=start_url)
+
+  script(type='text/javascript', src=start_url)
 
   div#reports(style="position: fixed; right: 0; bottom: 0; width: 0; height: 0;")
