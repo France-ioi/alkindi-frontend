@@ -29,7 +29,7 @@ export default function* (deps) {
 
     const renderAttempt = function (attempt) {
       const {ordinal, duration} = attempt;
-      const is_started = attempt.started_at !== null;
+      const is_started = !!attempt.started_at;
       const is_timed = typeof duration === 'number';
       const classes = [
         'attempt',
@@ -49,15 +49,15 @@ export default function* (deps) {
             : is_timed
               ? <span className='attempt-label-timed'>{"Temps limité "}{duration}{"min"}</span>
               : <span className='attempt-label-untimed'>{"Sans limite de temps"}</span>}
-          {attempt.is_timed && attempt.is_closed &&
-            <span className='attempt-label-closed'>{"Terminé"}</span>}
-          {attempt.is_started
-            ? attempt.is_fully_solved
-              ? <span className='attempt-label-fully_solved'>{"Résolu, score maximal"}</span>
-              : attempt.is_unsolved
-                ? <span className='attempt-label-unsolved'>{"En cours de résolution"}</span>
-                : <span className='attempt-label-solved'>{"Partiellement résolu (score améliorable)"}</span>
-            : <span className='attempt-label-not_started'>{"Pas démarré"}</span>}
+          {attempt.is_closed
+            ? <span className='attempt-label-closed'>{"Terminé"}</span>
+            : is_started
+              ? attempt.is_fully_solved
+                ? <span className='attempt-label-fully_solved'>{"Résolu, score maximal"}</span>
+                : attempt.is_unsolved
+                  ? <span className='attempt-label-unsolved'>{"En cours de résolution"}</span>
+                  : <span className='attempt-label-solved'>{"Partiellement résolu (score améliorable)"}</span>
+              : <span className='attempt-label-not_started'>{"Pas démarré"}</span>}
           <Button>{"Ajouter une tentative pour ce sujet"}</Button>
         </div>
       );
