@@ -29,7 +29,7 @@ export default function* (deps) {
 
     const renderAttempt = function (attempt) {
       const {ordinal, duration} = attempt;
-      const is_started = attempt.started_at !== null;
+      const is_started = !!attempt.started_at;
       const is_timed = typeof duration === 'number';
       const classes = [
         'attempt',
@@ -49,15 +49,16 @@ export default function* (deps) {
             : is_timed
               ? <span className='attempt-label-timed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Temps limité "}{duration}{"min"}</span>
               : <span className='attempt-label-untimed attempt-tag'><i className="fa fa-clock-o" aria-hidden="true"></i> {"Sans limite de temps"}</span>}
-          {attempt.is_timed && attempt.is_closed &&
-            <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>}
-          {attempt.is_started
-            ? attempt.is_fully_solved
-              ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu, score maximal"}</span>
-              : attempt.is_unsolved
-                ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution"}</span>
-                : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)"}</span>
-            : <span className='attempt-label-not_started attempt-tag'>{"Pas démarré"}</span>}
+          {attempt.is_closed
+            ? <span className='attempt-label-closed'>{"Terminé"}</span>
+            : is_started
+              ? attempt.is_fully_solved
+                ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu, score maximal"}</span>
+                : attempt.is_unsolved
+                  ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution"}</span>
+                  : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)"}</span>
+              : <span className='attempt-label-not_started attempt-tag'>{"Pas démarré"}</span>}
+          <Button>{"Ajouter une tentative pour ce sujet"}</Button>
         </div>
       );
     };
@@ -81,7 +82,7 @@ export default function* (deps) {
               </p>}
           <div className="tasks">
             {round.tasks.map(round_task =>
-              <div className="task">
+              <div className="task" key={round_task.id}>
                 <div className="task-title">
                   {round_task.task.title}
                 </div>

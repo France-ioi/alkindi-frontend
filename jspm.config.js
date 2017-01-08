@@ -38,8 +38,8 @@ SystemJS.config({
     "debug": "npm:debug@2.6.0",
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
-    "epic-component": "npm:epic-component@0.3.1",
-    "epic-linker": "npm:epic-linker@1.1.0",
+    "epic-component": "npm:epic-component@1.0.2",
+    "epic-linker": "npm:epic-linker@1.3.3",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
     "es6-promise": "npm:es6-promise@4.0.5",
@@ -86,7 +86,7 @@ SystemJS.config({
   packages: {
     "npm:react@15.4.1": {
       "map": {
-        "fbjs": "npm:fbjs@0.8.6",
+        "fbjs": "npm:fbjs@0.8.8",
         "loose-envify": "npm:loose-envify@1.3.0",
         "object-assign": "npm:object-assign@4.1.0"
       }
@@ -333,16 +333,7 @@ SystemJS.config({
     },
     "npm:jspm-nodelibs-http@0.2.0": {
       "map": {
-        "http-browserify": "npm:stream-http@2.5.0"
-      }
-    },
-    "npm:stream-http@2.5.0": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.2.2",
-        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
-        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
-        "xtend": "npm:xtend@4.0.1"
+        "http-browserify": "npm:stream-http@2.6.0"
       }
     },
     "npm:jspm-nodelibs-zlib@0.2.2": {
@@ -523,7 +514,7 @@ SystemJS.config({
       "map": {
         "loose-envify": "npm:loose-envify@1.3.0",
         "lodash": "npm:lodash@4.17.4",
-        "lodash-es": "npm:lodash-es@4.17.2",
+        "lodash-es": "npm:lodash-es@4.17.4",
         "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     },
@@ -569,11 +560,6 @@ SystemJS.config({
     "npm:mime-types@2.1.13": {
       "map": {
         "mime-db": "npm:mime-db@1.25.0"
-      }
-    },
-    "npm:epic-linker@1.1.0": {
-      "map": {
-        "babel-runtime": "npm:babel-runtime@6.20.0"
       }
     },
     "npm:redux-devtools@3.3.1": {
@@ -669,6 +655,31 @@ SystemJS.config({
     "npm:debug@2.6.0": {
       "map": {
         "ms": "npm:ms@0.7.2"
+      }
+    },
+    "npm:epic-linker@1.3.3": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0"
+      }
+    },
+    "npm:fbjs@0.8.8": {
+      "map": {
+        "loose-envify": "npm:loose-envify@1.3.0",
+        "object-assign": "npm:object-assign@4.1.0",
+        "setimmediate": "npm:setimmediate@1.0.5",
+        "core-js": "npm:core-js@1.2.7",
+        "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1",
+        "ua-parser-js": "npm:ua-parser-js@0.7.12",
+        "promise": "npm:promise@7.1.1"
+      }
+    },
+    "npm:stream-http@2.6.0": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3",
+        "readable-stream": "npm:readable-stream@2.2.2",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
+        "xtend": "npm:xtend@4.0.1",
+        "builtin-status-codes": "npm:builtin-status-codes@3.0.0"
       }
     }
   }

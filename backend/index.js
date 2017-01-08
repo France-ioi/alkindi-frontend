@@ -81,6 +81,11 @@ app.get('/dev/start', function (req, res) {
     res.type('js').send(script);
   });
 });
+app.post('/api/users/:user_id', function (req, res) {
+  fs.readFile("seed.json", function (err, seed) {
+    res.type('json').send(seed);
+  });
+});
 
 const server = http.createServer(app);
 
