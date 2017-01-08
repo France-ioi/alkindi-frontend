@@ -70,13 +70,13 @@ export default function* (deps) {
           <div className="col">
             {is_started && (
               ratio == 0
-              ? <span className='attempt-label-unsolved attempt-tag'>{"En cours de résolution" /* icone oeil */}</span>
+              ? <span className='attempt-label-unsolved attempt-tag'><i className="fa fa-eye" aria-hidden="true"></i> {"En cours de résolution"}</span>
               : ratio == 1
-                ? <span className='attempt-label-fully_solved attempt-tag'>{"Résolu (score maximal)" /* icone check vert */}</span>
-              : <span className='attempt-label-solved attempt-tag'>{"Partiellement résolu (score améliorable)" /* icone orange */}</span>)}
+                ? <span className='attempt-label-fully_solved attempt-tag'><i className="fa fa-check-circle" aria-hidden="true"></i> {"Résolu (score maximal)" /* icone check vert */}</span>
+              : <span className='attempt-label-solved attempt-tag'><i className="fa fa-dot-circle-o" aria-hidden="true"></i> {"Partiellement résolu (score améliorable)" /* icone orange */}</span>)}
           </div>
           <div className="col">
-            {attempt.is_training && <span className='attempt-label-training attempt-tag'>{"Entraînement"}</span>}
+            {attempt.is_training && <span className='attempt-label-training attempt-tag'><i className="fa fa-key" aria-hidden="true"></i> {"Entraînement"}</span>}
           </div>
           <div className="col">
             {"Tentative "}

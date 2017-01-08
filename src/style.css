@@ -926,6 +926,9 @@ span.team-score {
   border-bottom: 1px solid #ccc;
   padding: 10px;
 }
+.attempt .col {
+  display: inline-block;
+}
 .attempt-ordinal {
   font-weight: bold;
   margin-right: 5px;
@@ -940,7 +943,15 @@ span.team-score {
 .attempt-tag.attempt-label-untimed i {
   color: #ccc;
 }
-
+.attempt-label-unsolved {}
+.attempt-label-fully_solved i {
+  color: #5cb85c;
+}
+.attempt-label-solved i {
+  color: #f0ad4e;
+}
+.attempt-label-training {}
+.attempt-label-closed {}
 .access-code-block {
   text-align: center;
   margin: 15px 0;
