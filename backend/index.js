@@ -65,6 +65,23 @@ app.get('/', function (req, res) {
   });
 });
 
+app.get('/dev/start', function (req, res) {
+  fs.readFile("seed.json", function (err, seed) {
+    const config = {
+      "api_url": "/api/",
+      "login_url": "/login",
+      "logout_url": "/logout",
+      "seed": JSON.parse(seed),
+      "csrf_token": "0000000000000000000000000000000000000000"
+    };
+    const script = `!function () {System.import('alkindi-frontend')
+      .then(function (Frontend) {
+        Frontend.run(${JSON.stringify(config)}, document.getElementById('main')); })
+      .catch(function (ex) { console.log(ex); }); }();`
+    res.type('js').send(script);
+  });
+});
+
 const server = http.createServer(app);
 
 const listen_addr = process.env.LISTEN || 8001;
