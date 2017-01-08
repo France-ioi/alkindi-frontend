@@ -916,6 +916,31 @@ span.team-score {
  Attempts tab -- access codes
 
 */
+.task button {
+  margin: 10px auto 0;
+  display: block;
+  border-color: #ccc;
+  box-shadow: 1px 1px 3px #ccc;
+}
+.attempt {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+.attempt-ordinal {
+  font-weight: bold;
+  margin-right: 5px;
+}
+.attempt-tag {
+  background-color: #fff;
+  margin-right: 5px;
+  padding: 3px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.attempt-tag.attempt-label-untimed i {
+  color: #ccc;
+}
+
 .access-code-block {
   text-align: center;
   margin: 15px 0;
