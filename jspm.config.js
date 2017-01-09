@@ -57,6 +57,7 @@ SystemJS.config({
     "html5shiv": "npm:html5shiv@3.7.3",
     "http": "npm:jspm-nodelibs-http@0.2.0",
     "https": "npm:jspm-nodelibs-https@0.2.1",
+    "immutability-helper": "npm:immutability-helper@2.1.1",
     "intersperse": "npm:intersperse@1.0.0",
     "lodash": "npm:lodash@4.17.4",
     "memoizejs": "npm:memoizejs@0.1.1",
@@ -693,6 +694,11 @@ SystemJS.config({
     "npm:css-animation@1.3.1": {
       "map": {
         "component-classes": "npm:component-classes@1.2.6"
+      }
+    },
+    "npm:immutability-helper@2.1.1": {
+      "map": {
+        "invariant": "npm:invariant@2.2.2"
       }
     }
   }
