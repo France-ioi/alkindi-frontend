@@ -16,8 +16,8 @@ SystemJS.config({
     }
   },
   meta: {
-    './lib/*.js': {
-      format: 'cjs'
+    "./lib/*.js": {
+      "format": "cjs"
     }
   }
 });
