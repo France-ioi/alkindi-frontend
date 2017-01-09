@@ -16,6 +16,7 @@ export default function* (deps) {
   yield use('setActiveTab', 'RefreshButton');
 
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
+  yield defineAction('activeAttemptChanged', 'ActiveAttempt.Changed');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {now, user, round} = state.response;
@@ -50,6 +51,11 @@ export default function* (deps) {
       self.props.dispatch({type: deps.activeTaskChanged, key});
     }
 
+    function onAttemptChange (event) {
+      const id = event.currentTarget.getAttribute('data-id');
+      self.props.dispatch({type: deps.activeAttemptChanged, id});
+    }
+
     function getTimeElapsed (when) {
       return Math.floor((new Date(when).getTime() - self.props.now) / 60000);
     }
@@ -65,7 +71,7 @@ export default function* (deps) {
         attempt.is_current && 'attempt-current'
       ];
       return (
-        <div key={ordinal} className={classnames(classes)}>
+        <div key={ordinal} className={classnames(classes)} onClick={onAttemptChange} data-id={attempt.id}>
           <div className="col attempt-icons">
             {is_started && (
               ratio == 0
