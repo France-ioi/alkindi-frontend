@@ -924,24 +924,30 @@ span.team-score {
 }
 .attempt {
   border-bottom: 1px solid #ccc;
-  padding: 10px;
+  padding: 3px 10px;
+}
+.attempt.attempt-current {
+  background-color: #dff1fc;
 }
 .attempt .col {
   display: inline-block;
 }
+.col.attempt-icons {
+  width: 30px;
+  font-size: 18px;
+}
+.col.attempt-details {
+  width: 310px;
+}
+.col.attempt-status {
+  width: 416px;
+  text-align: center;
+}
+.col.attempt-score {
+  float: right;
+}
 .attempt-ordinal {
   font-weight: bold;
-  margin-right: 5px;
-}
-.attempt-tag {
-  background-color: #fff;
-  margin-right: 5px;
-  padding: 3px 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.attempt-tag.attempt-label-untimed i {
-  color: #ccc;
 }
 .attempt-label-unsolved {}
 .attempt-label-fully_solved i {
@@ -952,6 +958,7 @@ span.team-score {
 }
 .attempt-label-training {}
 .attempt-label-closed {}
+
 .access-code-block {
   text-align: center;
   margin: 15px 0;

@@ -66,29 +66,29 @@ export default function* (deps) {
       ];
       return (
         <div key={ordinal} className={classnames(classes)}>
-          <div className="col">
+          <div className="col attempt-icons">
             {is_started && (
               ratio == 0
-              ? <span className='attempt-label-unsolved attempt-tag'><i className="fa fa-eye" aria-hidden="true"></i> {"En cours de résolution"}</span>
+              ? <span className='attempt-label-unsolved' title="En cours de résolution"><i className="fa fa-eye" aria-hidden="true"></i></span>
               : ratio == 1
-                ? <span className='attempt-label-fully_solved attempt-tag'><i className="fa fa-check-circle" aria-hidden="true"></i> {"Résolu (score maximal)" /* icone check vert */}</span>
-              : <span className='attempt-label-solved attempt-tag'><i className="fa fa-dot-circle-o" aria-hidden="true"></i> {"Partiellement résolu (score améliorable)" /* icone orange */}</span>)}
+                ? <span className='attempt-label-fully_solved' title="Résolu (score maximal)"><i className="fa fa-check-circle" aria-hidden="true"></i></span>
+              : <span className='attempt-label-solved' title="Partiellement résolu (score améliorable)"><i className="fa fa-dot-circle-o" aria-hidden="true"></i></span>)}
           </div>
-          <div className="col">
-            {attempt.is_training && <span className='attempt-label-training attempt-tag'><i className="fa fa-key" aria-hidden="true"></i> {"Entraînement"}</span>}
+          <div className="col attempt-icons">
+            {attempt.is_training && <span className='attempt-label-training' title="Entraînement"><i className="fa fa-key" aria-hidden="true"></i></span>}
           </div>
-          <div className="col">
+          <div className="col attempt-details">
             {"Tentative "}
             <span className='attempt-ordinal'>{ordinal}</span>
-            {is_started && " démarrée "}
+            {is_started && " démarrée le "}
             {is_started && new Date(attempt.started_at).toLocaleString()}
           </div>
-          <div className="col">
+          <div className="col attempt-status">
             {attempt.is_completed
-              ? <span className='attempt-label-closed attempt-tag'>{"Terminé"}</span>
+              ? <span className='attempt-label-closed'>{"Terminé"}</span>
               : rem_time && <span><i className="fa fa-clock-o" aria-hidden="true"></i>{"Temps restant : "}{rem_time}{"min"}</span>}
           </div>
-          <div className="col">
+          <div className="col attempt-score">
             {score}{' / '}{max_score}
           </div>
         </div>
