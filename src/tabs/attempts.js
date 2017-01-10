@@ -3,7 +3,10 @@ import EpicComponent from 'epic-component';
 import classnames from 'classnames';
 import {Button,} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
-import {include, use, defineAction, defineSelector, defineView, addReducer} from 'epic-linker';
+import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
+import update from 'immutability-helper';
+import {takeLatest} from 'redux-saga';
+import {select, call, put} from 'redux-saga/effects';
 
 import Tooltip from '../ui/tooltip';
 import AttemptTimeline from '../ui/attempt_timeline';
@@ -17,28 +20,43 @@ export default function* (deps) {
 
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
   yield defineAction('activeAttemptChanged', 'ActiveAttempt.Changed');
+  yield defineAction('createAttempt', 'Attempt.Create');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
-    const {now, user, round} = state.response;
+    const {now, user, round, round_tasks} = state.response;
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
-      : round.tasks.length > 0 && round.tasks[0].id;
-    const score = null; // getMaxScore(round.tasks);
-    return {now: new Date(now).getTime(), round, score, activeTaskId};
+      : round.task_ids.length > 0 && round.task_ids[0];
+    const score = null; // getMaxScore(round_tasks);
+    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId};
   });
 
   yield addReducer('activeTaskChanged', function (state, action) {
-    const activeTask = findActiveTaskByKey(state.response.round.tasks, action.key);
+    const activeTask = state.response.round_tasks[action.roundTaskId];
     return {...state, activeTask};
   });
-  function findActiveTaskByKey (tasks, key) {
-    for (let task of tasks) {
-      // Use of == to compare task.id (integer) and key (string).
-      if (task.id == key) {
-        return task;
+
+  yield addReducer('activeAttemptChanged', function (state, action) {
+    return update(state, {request: {attempt_id: {$set: action.id}}});
+  });
+
+  yield addSaga(function* () {
+    yield takeLatest(deps.createAttempt, function* (action) {
+      const {participation_id, api} = yield select(getApiContext);
+      let result;
+      try {
+        result = yield call(api.createAttempt, participation_id, action.roundTaskId);
+      } catch (ex) { // ex.err, ex.res
+        console.log('createAttempt failed', ex);
+        return;
       }
-    }
-    return false;
+      console.log(result);
+    });
+  });
+  function getApiContext (state) {
+    const {response, api} = state;
+    const {participation_id} = response;
+    return {api, participation_id};
   }
 
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
@@ -47,13 +65,18 @@ export default function* (deps) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});
     }
 
-    function onTaskChange (key) {
-      self.props.dispatch({type: deps.activeTaskChanged, key});
+    function onTaskChange (roundTaskId) {
+      self.props.dispatch({type: deps.activeTaskChanged, roundTaskId});
     }
 
     function onAttemptChange (event) {
       const id = event.currentTarget.getAttribute('data-id');
       self.props.dispatch({type: deps.activeAttemptChanged, id});
+    }
+
+    function onAddAttempt (event) {
+      const roundTaskId = event.currentTarget.getAttribute('data-roundTaskId');
+      self.props.dispatch({type: deps.createAttempt, roundTaskId});
     }
 
     function getTimeElapsed (when) {
@@ -102,7 +125,7 @@ export default function* (deps) {
     };
 
     self.render = function () {
-      const {round, score, activeTaskId} = self.props;
+      const {round, score, round_tasks, activeTaskId} = self.props;
       /* accordéon tasks */
       return (
         <div className="tab-content">
@@ -120,18 +143,19 @@ export default function* (deps) {
             </p>}
           <div className="tasks">
             <Collapse accordion={true} activeKey={''+activeTaskId} onChange={onTaskChange}>
-              {round.tasks.map(round_task => {
+              {round.task_ids.map(round_task_id => {
+                const round_task = round_tasks[round_task_id];
                 const header = (
                   <span className="task-title">
-                    {round_task.task.title}
+                    {round_task.title}
                   </span>);
                 return (
-                  <Panel key={round_task.id} className="task" header={header}>
+                  <Panel key={round_task_id} className="task" header={header}>
                     {round_task.attempts &&
                     <div className="attempts">
                       {round_task.attempts.map(attempt => renderAttempt(attempt, round_task))}
                     </div>}
-                    <Button>{"Ajouter une tentative pour ce sujet"}</Button>
+                    <Button onClick={onAddAttempt} data-roundTaskId={round_task_id}>{"Ajouter une tentative pour ce sujet"}</Button>
                   </Panel>);
                 })}
             </Collapse>

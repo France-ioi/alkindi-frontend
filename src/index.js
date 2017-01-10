@@ -61,6 +61,7 @@ const {store, scope, start} = link(function* (deps) {
       config,
       isDev,
       api: Api(config),
+      request: {},
       response: {}
     };
   });
