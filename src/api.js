@@ -5,12 +5,16 @@ import request from 'superagent';
 export const ApiFactory = function (methods) {
   const {get, post} = methods;
   return {
+
     refresh: (user_id, request) => post('users/'+user_id, request),
-    addBadge: (user_id, data) => post('users/'+user_id+'/add_badge', data),
+
     createTeam: (user_id) => post('users/'+user_id+'/create_team'),
     joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),
     leaveTeam: (user_id) => post('users/'+user_id+'/leave_team'),
     updateUserTeam: (user_id, data) => post('users/'+user_id+'/update_team', data),
+
+    createAttempt: (participation_id, round_task_id) => post('participations/'+participation_id+'/tasks/'+round_task_id+'/create_attempt'),
+
     startAttempt: (user_id) => post('users/'+user_id+'/start_attempt'),
     cancelAttempt: (user_id) => post('users/'+user_id+'/cancel_attempt'),
     enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
