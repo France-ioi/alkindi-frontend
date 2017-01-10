@@ -43,7 +43,7 @@ SystemJS.config({
     "debug": "npm:debug@2.6.0",
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
-    "epic-component": "npm:epic-component@1.0.2",
+    "epic-component": "npm:epic-component@1.1.1",
     "epic-linker": "npm:epic-linker@1.3.3",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
