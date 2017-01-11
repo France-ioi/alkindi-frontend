@@ -5,8 +5,7 @@ import {Button,} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
 import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import update from 'immutability-helper';
-import {takeLatest} from 'redux-saga';
-import {select, call, put} from 'redux-saga/effects';
+import {takeLatest, select, call, put, take, actionChannel, cancelled} from 'redux-saga/effects';
 
 import Tooltip from '../ui/tooltip';
 import AttemptTimeline from '../ui/attempt_timeline';
@@ -16,11 +15,11 @@ export default function* (deps) {
   yield include(AttemptTimeline);
   yield use('AttemptTimeline');
 
-  yield use('setActiveTab', 'RefreshButton');
+  yield use('setActiveTab', 'RefreshButton', 'refresh', 'buildRequest', 'refreshCompleted');
 
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
-  yield defineAction('activeAttemptChanged', 'ActiveAttempt.Changed');
   yield defineAction('createAttempt', 'Attempt.Create');
+  yield defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {now, user, round, round_tasks} = state.response;
@@ -36,8 +35,58 @@ export default function* (deps) {
     return {...state, activeTask};
   });
 
+  /*
   yield addReducer('activeAttemptChanged', function (state, action) {
     return update(state, {request: {attempt_id: {$set: action.id}}});
+  });
+  */
+  yield addSaga(function* () {
+    yield takeLatest(deps.changeActiveAttempt, function* (action) {
+      try {
+        const attempt_id = action.id;
+        const request = yield select(deps.buildRequest, {attempt_id})
+        console.log('changeActiveAttempt preparing a request', request);
+        const chan = yield actionChannel(deps.refreshCompleted);
+        console.log('changeActiveAttempt is issuing the refresh');
+        yield put({type: deps.refresh, request});
+        console.log('now we wait!');
+        // TODO: add a timeout!
+        while (true) {
+          let refresh, done = false;
+          try {
+            refresh = yield take(chan);
+            console.log('changeActiveAttempt got a refresh!', refresh);
+          } catch (ex) {
+            console.error('exception', ex);
+          } finally {
+            if (yield cancelled()) {
+              console.log('changeActiveAttempt cancelled :(');
+              done = true;
+            }
+          }
+          // Catch our refresh.
+          if (refresh && refresh.request === request) {
+            console.log('changeActiveAttempt got its own refresh!');
+            done = true;
+            // Switch to the task tab
+            if (refresh.success) {
+              console.log('...and it is successful!');
+              self.props.dispatch({type: deps.setActiveTab, tabKey: 'task'});
+            }
+          }
+          console.log('changeActiveAttempt checked a refresh -- ', done ? 'done' : 'not done');
+          if (done) {
+            console.log('changeActiveAttempt is done.');
+            chan.close();
+            return;
+          }
+        }
+      } finally {
+        if (yield cancelled()) {
+          console.log('changeActiveAttempt failed bigly :(');
+        }
+      }
+    });
   });
 
   yield addSaga(function* () {
@@ -71,7 +120,7 @@ export default function* (deps) {
 
     function onAttemptChange (event) {
       const id = event.currentTarget.getAttribute('data-id');
-      self.props.dispatch({type: deps.activeAttemptChanged, id});
+      self.props.dispatch({type: deps.changeActiveAttempt, id});
     }
 
     function onAddAttempt (event) {
