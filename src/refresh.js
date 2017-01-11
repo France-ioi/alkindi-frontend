@@ -4,8 +4,7 @@ import React from 'react';
 import EpicComponent from 'epic-component';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
-import {takeLatest} from 'redux-saga';
-import {select, call, put} from 'redux-saga/effects';
+import {takeLatest, select, call, put} from 'redux-saga/effects';
 
 export default function* (deps) {
 
@@ -13,20 +12,27 @@ export default function* (deps) {
 
   yield defineAction('refresh', 'Refresh');
   yield defineAction('refreshStarted', 'Refresh.Started');
-  yield defineAction('refreshSucceeded', 'Refresh.Succeeded');
-  yield defineAction('refreshFailed', 'Refresh.Failed');
+  yield defineAction('refreshCompleted', 'Refresh.Completed');
 
   yield addSaga(function* () {
     yield takeLatest(deps.refresh, doRefresh);
   });
 
+  yield defineSelector('buildRequest', function (state, request) {
+    return {...state.request, ...request};
+  });
+
   function* doRefresh (action) {
     const timestamp = new Date();
+    let {userId, request, api} = yield select(getRefreshState);
+    // A 'request' property in the request overrides the current request.
+    if ('request' in action) {
+      request = action.request;
+    }
     try {
-      const {userId, request, api} = yield select(getRefreshState);
       yield put({type: deps.refreshStarted, timestamp});
       const response = yield call(api.refresh, userId, request);
-      yield put({type: deps.refreshSucceeded, timestamp, response});
+      yield put({type: deps.refreshCompleted, success: true, timestamp, request, response});
     } catch (ex) {
       // XXX test this code
       console.log('refresh failed', ex);
@@ -44,7 +50,8 @@ export default function* (deps) {
           message = ex.toString();
         }
       }
-      yield put({type: deps.refreshFailed, timestamp, message});
+      console.log('putting refreshCompleted');
+      yield put({type: deps.refreshCompleted, success: false, timestamp, request, message});
     }
   }
 
@@ -52,8 +59,11 @@ export default function* (deps) {
     return {...state, refreshing: true};
   });
 
-  yield addReducer('refreshSucceeded', function (state, action) {
-    const {timestamp, response} = action;
+  yield addReducer('refreshCompleted', function (state, action) {
+    const {timestamp, response, success} = action;
+    if (!success) {
+      return {...state, refreshing: false};
+    }
     const newState = {...state, refreshing: false, refreshedAt: timestamp, response};
     if (state.request === undefined && response.user !== undefined) {
       /* Set the current user id from the response. */
@@ -64,10 +74,6 @@ export default function* (deps) {
       newState.timeDelta = Date.now() - (new Date(response.now)).getTime();
     }
     return newState;
-  });
-
-  yield addReducer('refreshFailed', function (state, action) {
-    return {...state, refreshing: false};
   });
 
   function getRefreshState (state) {

@@ -87,8 +87,11 @@ export default function* (deps) {
     return enabledTabs[tabKey] ? {...state, activeTabKey: tabKey} : state;
   });
 
-  /* Tabs are updated after a refresh. */
-  yield addReducer('refreshSucceeded', function (state, action) {
+  /* Tabs are updated after a successful refresh. */
+  yield addReducer('refreshCompleted', function (state, action) {
+    if (!action.success) {
+      return state;
+    }
     return selectTab(state, state.activeTabKey);
   });
 
