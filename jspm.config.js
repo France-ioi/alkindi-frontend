@@ -44,7 +44,7 @@ SystemJS.config({
     "deepmerge": "npm:deepmerge@1.3.1",
     "domain": "npm:jspm-nodelibs-domain@0.2.0",
     "epic-component": "npm:epic-component@1.1.2",
-    "epic-linker": "npm:epic-linker@1.3.3",
+    "epic-linker": "npm:epic-linker@1.4.0",
     "es5-sham-ie8": "npm:es5-sham-ie8@1.0.1",
     "es5-shim": "npm:es5-shim@4.5.9",
     "es6-promise": "npm:es6-promise@4.0.5",
@@ -659,11 +659,6 @@ SystemJS.config({
         "ms": "npm:ms@0.7.2"
       }
     },
-    "npm:epic-linker@1.3.3": {
-      "map": {
-        "babel-runtime": "npm:babel-runtime@6.20.0"
-      }
-    },
     "npm:fbjs@0.8.8": {
       "map": {
         "loose-envify": "npm:loose-envify@1.3.0",
@@ -699,6 +694,11 @@ SystemJS.config({
     "npm:immutability-helper@2.1.1": {
       "map": {
         "invariant": "npm:invariant@2.2.2"
+      }
+    },
+    "npm:epic-linker@1.4.0": {
+      "map": {
+        "babel-runtime": "npm:babel-runtime@6.20.0"
       }
     }
   }
