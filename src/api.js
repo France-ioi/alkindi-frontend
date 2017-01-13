@@ -6,7 +6,7 @@ export const ApiFactory = function (methods) {
   const {get, post} = methods;
   return {
 
-    refresh: (user_id, request) => post('users/'+user_id, request),
+    refresh: (request) => post('refresh', request),
 
     createTeam: (user_id) => post('users/'+user_id+'/create_team'),
     joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),
@@ -14,17 +14,17 @@ export const ApiFactory = function (methods) {
     updateUserTeam: (user_id, data) => post('users/'+user_id+'/update_team', data),
 
     createAttempt: (participation_id, round_task_id) => post('participations/'+participation_id+'/tasks/'+round_task_id+'/create_attempt'),
+    // enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
+    startAttempt: (attempt_id) => post('attempts/'+attempt_id+'/start'),
 
-    startAttempt: (user_id) => post('users/'+user_id+'/start_attempt'),
-    cancelAttempt: (user_id) => post('users/'+user_id+'/cancel_attempt'),
-    enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
-    assignAttemptTask: (user_id) => post('users/'+user_id+'/assign_attempt_task'),
-    getHint: (user_id, data) => post('users/'+user_id+'/get_hint', data),
-    resetHints: (user_id) => post('users/'+user_id+'/reset_hints'),
-    storeRevision: (user_id, data) => post('users/'+user_id+'/store_revision', data),
-    submitAnswer: (user_id, attempt_id, data) => post('users/'+user_id+'/attempts/'+attempt_id+'/answers', data),
-    resetTeamToTraining: (team_id) => post('teams/'+team_id+'/reset_to_training'),
+    getHint: (attempt_id, data) => post('attempts/'+attempt_id+'/get_hint', data),
+    resetHints: (attempt_id) => post('attempts/'+attempt_id+'/reset_hints'),
+
+    submitAnswer: (attempt_id, data) => post('attempts/'+attempt_id+'/answer', data),
+
+    storeRevision: (attempt_id, data) => post('attempt_id/'+attempt_id+'/store_revision', data),
     loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)
+
   };
 };
 
