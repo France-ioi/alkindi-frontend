@@ -1,10 +1,10 @@
 
-import {use, defineAction, addSaga, addReducer, defineSelector, defineView} from 'epic-linker';
+import {use, defineAction, addSaga, addReducer, define, defineView} from 'epic-linker';
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
-import {takeLatest, select, call, put} from 'redux-saga/effects';
+import {takeLatest, select, call, put, take, actionChannel, cancelled} from 'redux-saga/effects';
 
 export default function* (deps) {
 
@@ -18,20 +18,36 @@ export default function* (deps) {
     yield takeLatest(deps.refresh, doRefresh);
   });
 
-  yield defineSelector('buildRequest', function (state, request) {
+  yield define('buildRequest', function (state, request) {
     return {...state.request, ...request};
+  });
+
+  yield define('managedRefresh', function* managedRefresh (request) {
+    const chan = yield actionChannel(deps.refreshCompleted);
+    yield put({type: deps.refresh, request});
+    // TODO: add a refresh timeout!
+    try {
+      while (true) {
+        let refresh = yield take(chan);
+        if (refresh && refresh.request === request) {
+          return refresh.success;
+        }
+      }
+    } finally {
+      chan.close();
+    }
   });
 
   function* doRefresh (action) {
     const timestamp = new Date();
-    let {userId, request, api} = yield select(getRefreshState);
+    let {request, api} = yield select(getRefreshState);
     // A 'request' property in the request overrides the current request.
     if ('request' in action) {
       request = action.request;
     }
     try {
       yield put({type: deps.refreshStarted, timestamp});
-      const response = yield call(api.refresh, userId, request);
+      const response = yield call(api.refresh, request);
       yield put({type: deps.refreshCompleted, success: true, timestamp, request, response});
     } catch (ex) {
       // XXX test this code
@@ -50,7 +66,6 @@ export default function* (deps) {
           message = ex.toString();
         }
       }
-      console.log('putting refreshCompleted');
       yield put({type: deps.refreshCompleted, success: false, timestamp, request, message});
     }
   }
@@ -65,9 +80,12 @@ export default function* (deps) {
       return {...state, refreshing: false};
     }
     const newState = {...state, refreshing: false, refreshedAt: timestamp, response};
-    if (state.request === undefined && response.user !== undefined) {
-      /* Set the current user id from the response. */
-      newState.userId = response.user.id;
+    /* Set the current user id from the response. */
+    newState.request = {
+      ...state.request,
+      user_id: response.user_id,
+      participation_id: response.participation_id,
+      attempt_id: response.attempt_id
     }
     if (response.now) {
       /* Save a relative time offset (local - remote) in milliseconds. */
@@ -77,16 +95,16 @@ export default function* (deps) {
   });
 
   function getRefreshState (state) {
-    const {userId, request, override, api} = state;
-    return {userId, request: {...request, ...override}, api};
+    const {request, override, api} = state;
+    return {request: {...request, ...override}, api};
   }
 
-  yield defineSelector('RefreshButtonSelector', function (state, _props) {
+  function RefreshButtonSelector (state, _props) {
     const {refreshing} = state;
     return {refreshing};
-  });
+  }
 
-  yield defineView('RefreshButton', 'RefreshButtonSelector', EpicComponent(self => {
+  yield defineView('RefreshButton', RefreshButtonSelector, EpicComponent(self => {
     const onClick = function () {
       self.props.dispatch({type: deps.refresh});
     };
