@@ -7,10 +7,7 @@ import AttemptsTab from '../tabs/attempts';
 
 import Tabs from '../ui/tabs';
 import CountdownTimer from '../ui/countdown_timer';
-//import TaskTab from '../tabs/task';
-//import CryptoTab from '../tabs/crypto';
-//import HistoryTab from '../tabs/history';
-//import AnswersTab from '../tabs/answers';
+import TaskTab from '../tabs/task';
 //import ResultsTab from '../tabs/results';
 import {asset_url} from '../assets';
 
@@ -18,8 +15,9 @@ export default function* (deps) {
 
   yield include(TeamTab);
   yield include(AttemptsTab);
+  yield include(TaskTab);
 
-  yield use('LogoutButton', 'TeamTab', 'AttemptsTab');
+  yield use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab');
 
   yield defineAction('setActiveTab', 'Tabs.SetActive');
 
@@ -40,23 +38,12 @@ export default function* (deps) {
         case 'attempts':
           content = <deps.AttemptsTab/>;
           break;
-        /*
         case 'task':
-          content = <TaskTab round={self.props.round} attempt={self.props.attempt} task={self.props.task} />;
-          break;
-        case 'cryptanalysis':
-          content = <CryptoTab user_id={user_id} task={self.props.task}/>;
-          break;
-        case 'history':
-          content = <HistoryTab attempt={self.props.attempt}/>;
-          break;
-        case 'answers':
-          content = <AnswersTab user_id={user_id} attempt={self.props.attempt}/>;
+          content = <deps.TaskTab/>;
           break;
         case 'results':
-          content = <ResultsTab/>;
+          content = <deps.ResultsTab/>;
           break;
-        */
       }
       return (
         <div>
@@ -97,11 +84,11 @@ export default function* (deps) {
 
   function selectTab (state, tabKey) {
     const haveRound = !!state.response.round;
-    const haveTask = !!state.response.task;
+    const haveAttempt = !!state.response.attempt;
     const enabledTabs = {
       team: true,
       attempts: haveRound,
-      task: haveTask,
+      task: haveAttempt,
       results: false
     };
     // If the active tab has become disabled, select the team tab, which is
