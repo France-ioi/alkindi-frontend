@@ -70,8 +70,11 @@ export default function* (deps) {
 
   yield addReducer('setActiveTab', function (state, action) {
     const {tabKey} = action;
-    const {enabledTabs} = state;
-    return enabledTabs[tabKey] ? {...state, activeTabKey: tabKey} : state;
+    const {enabledTabs, pendingAction, lastAction, lastError} = state;
+    if (!enabledTabs[tabKey] || pendingAction) {
+      return state;
+    }
+    return {...state, activeTabKey: tabKey, lastAction: undefined, lastError: false};
   });
 
   /* Tabs are updated after a successful refresh. */
