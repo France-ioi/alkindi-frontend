@@ -109,8 +109,7 @@ export function run (config, container) {
   // Start the sagas.
   start();
   if ('seed' in config) {
-    // TODO: set a request
-    store.dispatch({type: scope.refreshCompleted, success: true, request: {}, response: config.seed});
+    store.dispatch({type: scope.refreshCompleted, success: true, response: config.seed});
   }
 
   // Render the application.
