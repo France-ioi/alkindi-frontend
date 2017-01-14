@@ -6,6 +6,11 @@ var http = require('http');
 var express = require('express');
 var colors = require('colors/safe');
 
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware')
+const webpackConfig = require('../webpack.config.js');
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 console.log(`running in ${isDevelopment ? colors.red('development') : colors.green('production')} mode`);
 
@@ -22,28 +27,12 @@ const staticAssets = {
   },
   // Built files (transpiled js, minified css, etc) are served at /build.
   '/build': {
-    localPath: 'build'
-  },
-  '/jspm.config.js': {
-    localPath: 'jspm.config.js',
-    enabled: true
-  },
-  // The package manager files are served at /jspm_packages.
-  // This is needed in production for dependency assets (fonts, images, css).
-  '/jspm_packages': {
-    localPath: 'jspm_packages'
+    localPath: 'build',
+    enabled: !isDevelopment  // served by webpack-middleware
   },
   // Source frontend files are served at /src.
   '/src': {
     localPath: 'src',
-    enabled: isDevelopment
-  },
-  '/lib': {
-    localPath: 'lib',
-    enabled: isDevelopment
-  },
-  '/jspm.dev.js': {
-    localPath: 'jspm.dev.js',
     enabled: isDevelopment
   }
 };
@@ -53,9 +42,20 @@ Object.keys(staticAssets).forEach(function (urlPath) {
     return;
   }
   let fullPath = path.join(rootDir, options.localPath);
-  // console.log('static', urlPath, fullPath);
+  console.log('static', urlPath, fullPath);
   app.use(urlPath, express.static(fullPath));
 });
+
+if (isDevelopment) {
+  const compiler = webpack(webpackConfig);
+  app.use(webpackHotMiddleware(compiler));
+  app.use('/build', webpackDevMiddleware(compiler, {
+    stats: {
+      colors: true,
+      chunks: false
+    }
+  }));
+}
 
 app.get('/', function (req, res) {
   res.render('index', {

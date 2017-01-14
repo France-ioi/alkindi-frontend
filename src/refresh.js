@@ -1,5 +1,5 @@
 
-import {use, defineAction, addSaga, addReducer, define, defineView} from 'epic-linker';
+import {use, def, defineAction, addSaga, addReducer, defineView} from 'epic-linker';
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Button} from 'react-bootstrap';
@@ -18,11 +18,11 @@ export default function* (deps) {
     yield takeLatest(deps.refresh, doRefresh);
   });
 
-  yield define('buildRequest', function (state, request) {
+  yield def('buildRequest', function (state, request) {
     return {...state.request, ...request};
   });
 
-  yield define('managedRefresh', function* managedRefresh (request) {
+  yield def('managedRefresh', function* managedRefresh (request) {
     const chan = yield actionChannel(deps.refreshCompleted);
     yield put({type: deps.refresh, request});
     // TODO: add a refresh timeout!

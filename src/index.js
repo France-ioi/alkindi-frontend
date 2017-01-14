@@ -12,7 +12,6 @@ import 'es6-shim';
 import 'array.prototype.fill';
 // Use el.getAttribute('data-value') rather than el.dataset.value.
 
-import process from 'process';
 import {Promise} from 'es6-promise';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -33,17 +32,14 @@ import MainScreen from './screens/main';
 //import FinalScreen from './screens/final';
 
 // Inject style
-import "font-awesome/css/font-awesome.min.css!";
-import "bootstrap/dist/css/bootstrap.min.css!";
-import "rc-tooltip/assets/bootstrap.css!";
-import 'rc-collapse/assets/index.css!';
-import "alkindi-frontend.css/style.css!";
+import "font-awesome/css/font-awesome.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "rc-tooltip/assets/bootstrap.css";
+import 'rc-collapse/assets/index.css';
+import "./style.css";
 
 const isDev = process.env.NODE_ENV === 'development';
 const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
-if (isDev) {
-  System.import('source-map-support').then(m => m.install());
-}
 
 const {store, scope, start} = link(function* (deps) {
 
@@ -94,20 +90,22 @@ const {store, scope, start} = link(function* (deps) {
 
 export function run (config, container) {
 
-  /*
-  System.import("@system-env").then(function (env) {
-    console.log('running in', env.production ? 'production' : 'development', 'mode');
-  });
-  */
+  Alkindi.run = function () {
+    console.log('Alkindi.run called twice');
+  };
+
+  // XXX clean this up
+  if ('assets_template' in config) {
+    configureAssets({template: config.assets_template});
+  }
 
   // Initialize the store.
-  if ('assets_template' in config) {
-    configureAssets({template: config.assets_template}); // XXX
-  }
   store.dispatch({type: scope.init, config});
 
   // Start the sagas.
   start();
+
+  // Simulate completion of a refresh operation with the backend-provided seed.
   if ('seed' in config) {
     store.dispatch({type: scope.refreshCompleted, success: true, response: config.seed});
   }
@@ -121,6 +119,10 @@ export function run (config, container) {
       </div>
     </Provider>, container);
 
-  return {store, scope};
-
 };
+
+// Export a global.
+const Alkindi = window.Alkindi = {run};
+if (isDev) {
+  Object.assign(Alkindi, {store, scope});
+}

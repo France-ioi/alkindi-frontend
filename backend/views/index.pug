@@ -20,18 +20,8 @@ body(id='app')
       |  en décrivant précisément la situation et en
       | indiquant votre login.
 
-  if development
-    script(type='text/javascript', src='jspm_packages/system.src.js')
-  else
-    script(type='text/javascript', src='jspm_packages/system.js')
-
-  script(type='text/javascript', src='jspm.config.js')
-
-  if development
-    script(type='text/javascript', src='jspm.dev.js')
-    script(type='text/javascript', src='build/dev-bundle.js')
-  else
-    script(type='text/javascript', src='build/bundle.js')
+  script(type='text/javascript', src='build/vendor.js')
+  script(type='text/javascript', src='build/bundle.js')
 
   script(type='text/javascript', src=start_url)
 
