@@ -9,16 +9,16 @@ var colors = require('colors/safe');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware')
-const webpackConfig = require('../webpack.config.js');
+const webpackConfig = require('./webpack.config.js');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 console.log(`running in ${isDevelopment ? colors.red('development') : colors.green('production')} mode`);
 
-const rootDir = path.resolve(path.dirname(__dirname));
+const rootDir = path.resolve(__dirname);
 const app = express();
 
 app.set('view engine', 'pug');
-app.set('views', path.join(rootDir, 'backend', 'views'));
+app.set('views', path.join(rootDir, 'views'));
 
 const staticAssets = {
   // Static files (no build step) are served at /assets.

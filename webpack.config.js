@@ -2,11 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const SRC = path.resolve(__dirname, "src");
 
-module.exports = {
-  devtool: 'inline-source-map',
+const config = module.exports = {
   entry: {
-    vendor: ['react', 'react-dom', 'bootstrap', 'react-bootstrap', 'lodash'],
-    index: ['./src/index.js', 'webpack-hot-middleware/client']
+    vendor: [],
+    index: ['./src/index.js']
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -29,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-        loader: 'url-loader'
+        loader: 'file?name=fonts/[name].[ext]'
       }
     ]
   },
@@ -45,6 +44,20 @@ module.exports = {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      filename: "vendor.js",
+      minChunks: function (module) { return /node_modules/.test(module.resource); }
+    })
   ]
 };
+
+if (process.env.NODE_ENV === 'development') {
+  config.devtool = 'inline-source-map';
+} else {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    }
+  }));
+}
