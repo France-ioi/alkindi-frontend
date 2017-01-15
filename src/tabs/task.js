@@ -98,15 +98,10 @@ export default function* (deps) {
   });
 
   yield addSaga(function* () {
-    yield takeEvery(deps.taskWindowChanged, manageTaskWindow);
-  });
-
-  const messageChannel = MessageChannel();
-
-  function* manageTaskWindow (action) {
-    const {taskWindow} = action;
+    const messageChannel = MessageChannel();
     while (true) {
       const {message, source, origin} = yield take(messageChannel);
+      const taskWindow = yield select(state => state.taskWindow);
       if (source === taskWindow) {
         console.log('task message', message);
         if (message.task === 'ready') {
@@ -116,6 +111,6 @@ export default function* (deps) {
         // TODO: fork & pass task to iframe on refresh
       }
     }
-  }
+  });
 
 };
