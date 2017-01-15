@@ -1,23 +1,33 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Alert, Button} from 'react-bootstrap';
-import {defineAction, defineSelector, defineView, include, use} from 'epic-linker';
 import EpicComponent from 'epic-component';
-import {select, call, put} from 'redux-saga/effects';
+import {defineAction, defineSelector, defineView, addReducer, addSaga, include, use} from 'epic-linker';
+import {call, put, take, select, takeEvery} from 'redux-saga/effects';
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import getMessage from '../messages';
+import MessageChannel from '../message_channel';
 
 export default function* (deps) {
 
   yield defineSelector('TaskTabSelector', function (state, _props) {
-    const {attempt, round_task, task} = state.response;
+    const {attempt, round_task, team_data} = state.response;
     const isTeamLocked = false; // XXX
     const startAttempt = getManagedProcessState(state, 'startAttempt');
-    return {attempt, round_task, task, isTeamLocked, startAttempt};
+    return {attempt, round_task, team_data, isTeamLocked, startAttempt};
+  });
+
+  yield defineSelector('getTeamData', function (state) {
+    return state.response.team_data;
   });
 
   yield defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
+
+    function refTask (element) {
+      const taskWindow = element.contentWindow;
+      self.props.dispatch({type: deps.taskWindowChanged, taskWindow});
+    }
 
     function onStartAttempt () {
       const attempt_id = self.props.attempt.id;
@@ -30,7 +40,7 @@ export default function* (deps) {
         <div>
           <p className="text-center">
             <Button bsStyle="primary" bsSize="large" onClick={onStartAttempt} disabled={pending}>
-              accéder au sujet{' '}
+              {'accéder au sujet '}
               {pending
                 ? <i className="fa fa-spinner fa-spin"/>
                 : <i className="fa fa-arrow-right"/>}
@@ -42,19 +52,19 @@ export default function* (deps) {
     }
 
     self.render = function () {
-      const {attempt, round_task, task, isTeamLocked} = self.props;
-      if (!task) {
+      const {attempt, round_task, team_data, isTeamLocked} = self.props;
+      if (!team_data) {
         return (
           <div className="tab-content">
             {renderStartAttempt()}
-            <p>attempt: <tt>{JSON.stringify(attempt)}</tt></p>
-            <p>round_task: <tt>{JSON.stringify(round_task)}</tt></p>
           </div>
         );
       }
       return (
         <div className="tab-content">
-          <p>{JSON.stringify(task)}</p>
+          <iframe className="task" src={round_task.frontend_url} ref={refTask}/>
+          <p>{JSON.stringify(round_task)}</p>
+          <p>{JSON.stringify(team_data)}</p>
         </div>
       );
     };
@@ -80,5 +90,32 @@ export default function* (deps) {
       yield p.failure(result.error);
     }
   }));
+
+  yield defineAction('taskWindowChanged', 'Task.Window.Changed');
+  yield addReducer('taskWindowChanged', function (state, action) {
+    const {taskWindow} = action;
+    return {...state, taskWindow};
+  });
+
+  yield addSaga(function* () {
+    yield takeEvery(deps.taskWindowChanged, manageTaskWindow);
+  });
+
+  const messageChannel = MessageChannel();
+
+  function* manageTaskWindow (action) {
+    const {taskWindow} = action;
+    while (true) {
+      const {message, source, origin} = yield take(messageChannel);
+      if (source === taskWindow) {
+        console.log('task message', message);
+        if (message.task === 'ready') {
+          const task = yield select(deps.getTeamData);
+          taskWindow.postMessage(JSON.stringify({action: "loadTask", task}), "*");
+        }
+        // TODO: fork & pass task to iframe on refresh
+      }
+    }
+  }
 
 };
