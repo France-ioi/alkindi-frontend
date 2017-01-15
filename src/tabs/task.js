@@ -25,7 +25,7 @@ export default function* (deps) {
   yield defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
 
     function refTask (element) {
-      const taskWindow = element.contentWindow;
+      const taskWindow = element && element.contentWindow;
       self.props.dispatch({type: deps.taskWindowChanged, taskWindow});
     }
 
