@@ -20,10 +20,6 @@ export default function* (deps) {
     return {attempt, round_task, team_data, isTeamLocked, startAttempt};
   });
 
-  yield defineSelector('getTeamData', function (state) {
-    return state.response.team_data;
-  });
-
   yield defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
 
     function refTask (element) {
@@ -114,7 +110,7 @@ export default function* (deps) {
           console.log('task message', message);
         }
         if (message.task === 'ready') {
-          yield fork(pushTaskData, taskWindow);
+          yield fork(pushTaskWindowData, taskWindow);
           continue;
         }
         if ('answer' in message) {
@@ -140,27 +136,35 @@ export default function* (deps) {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
         yield takeEvery(deps.refreshCompleted, function* () {
-          yield fork(pushTaskData, taskWindow);
+          yield fork(pushTaskWindowData, taskWindow);
         });
       }
     });
   });
 
-  function* pushTaskData (taskWindow) {
-    const task = yield select(deps.getTeamData);
-    taskWindow.postMessage(JSON.stringify({action: "loadTask", task}), "*");
+  function* pushTaskWindowData (taskWindow) {
+    const data = yield select(getTaskWindowData);
+    taskWindow.postMessage(JSON.stringify({action: "loadTask", ...data}), "*");
+  }
+
+  function getTaskWindowData (state) {
+    const {team_data} = state.response;
+    const {score} = state.response.attempt;
+    return {task: team_data, score};
   }
 
   function* submitAnswer (user_id, attempt_id, answer) {
     const api = yield select(state => state.api);
-    let result;
+    let response;
     try {
-      result = yield call(api.submitAnswer, user_id, attempt_id, answer);
+      response = yield call(api.submitAnswer, user_id, attempt_id, answer);
     } catch (ex) {
       console.log(ex)
       return;
     }
-    console.log(result);
+    const {result, score, feedback} = response;
+    const taskWindow = yield select(state => state.taskWindow);
+    taskWindow.postMessage(JSON.stringify({action: "feedback", result, score, feedback}), "*");
   }
 
 };
