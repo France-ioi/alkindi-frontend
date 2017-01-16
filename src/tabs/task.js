@@ -162,9 +162,9 @@ export default function* (deps) {
       console.log(ex)
       return;
     }
-    const {result, score, feedback} = response;
+    const {success, error, score, feedback} = response;
     const taskWindow = yield select(state => state.taskWindow);
-    taskWindow.postMessage(JSON.stringify({action: "feedback", result, score, feedback}), "*");
+    taskWindow.postMessage(JSON.stringify({action: "feedback", success, error, score, feedback}), "*");
   }
 
 };
