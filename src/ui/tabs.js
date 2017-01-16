@@ -4,7 +4,7 @@ import EpicComponent from 'epic-component';
 
 const tabs = [
   {key: 'team', label: "Équipe"},
-  {key: 'attempts', label: "Épreuves"},
+  {key: 'attempts', label: "Épreuve"},
   {key: 'task', label: "Sujet"},
   {key: 'results', label: "Résultats"}
 ];
