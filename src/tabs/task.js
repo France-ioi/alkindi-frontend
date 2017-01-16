@@ -131,7 +131,7 @@ export default function* (deps) {
   // of the task data.
   //
 
-  yield use('refreshCompleted');
+  yield use('refresh', 'refreshCompleted');
   yield addSaga(function* () {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
@@ -165,6 +165,7 @@ export default function* (deps) {
     const {success, error, score, feedback} = response;
     const taskWindow = yield select(state => state.taskWindow);
     taskWindow.postMessage(JSON.stringify({action: "feedback", success, error, score, feedback}), "*");
+    yield put({type: deps.refresh});
   }
 
 };
