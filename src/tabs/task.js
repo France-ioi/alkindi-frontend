@@ -7,11 +7,13 @@ import {call, fork, put, take, select, takeEvery, takeLatest} from 'redux-saga/e
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import getMessage from '../messages';
-import MessageChannel from '../message_channel';
+import Peer from '../peer';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
 export default function* (deps) {
+
+  yield use('refresh');
 
   yield defineSelector('TaskTabSelector', function (state, _props) {
     const {attempt, round_task, team_data} = state.response;
@@ -97,75 +99,70 @@ export default function* (deps) {
   });
 
   //
-  // Handle messages coming from the task's iframe.
+  // Handle communication with the task's iframe.
   //
 
-  yield addSaga(function* () {
-    const messageChannel = MessageChannel();
-    while (true) {
-      const {message, source, origin} = yield take(messageChannel);
-      const {user_id, attempt_id, taskWindow} = yield select(getTaskState);
-      if (source === taskWindow) {
-        if (isDev) {
-          console.log('task message', message);
-        }
-        if (message.task === 'ready') {
-          yield fork(pushTaskWindowData, taskWindow);
-          continue;
-        }
-        if ('answer' in message) {
-          yield fork(submitAnswer, user_id, attempt_id, message.answer);
-          continue;
-        }
-      }
-    }
-    function getTaskState(state) {
-      const {taskWindow} = state;
-      const {user_id, attempt_id} = state.response;
-      return {taskWindow, user_id, attempt_id};
-    }
+  const peer = Peer();
+  yield addSaga(peer.handleIncomingActions);
+
+  peer.on('initTask', function* initTask () {
+    return yield select(getTaskWindowData);
   });
 
-  //
-  // Whenever there is a taskWindow, every refreshCompleted causes a push
-  // of the task data.
-  //
+  /* Pass answer submissions from the task to the backend. */
+  peer.on('submitAnswer', function* submitAnswer (answer) {
+    const {api, user_id, attempt_id} = yield select(getApiUserAttemptIds);
+    let result;
+    try {
+      result = yield call(api.submitAnswer, user_id, attempt_id, answer);
+    } catch (ex) {
+      return {success: false, error: 'server error'};
+    }
+    /* Trigger a refresh to update the best score and attempt status. */
+    yield put({type: deps.refresh});
+    return result;
+  });
 
-  yield use('refresh', 'refreshCompleted');
+  /* Pass hint requests from the task to the backend. */
+  peer.on('requestHint', function* requestHint (request) {
+    const {api, attempt_id} = yield select(getApiUserAttemptIds);
+    let result;
+    try {
+      result = yield call(api.getHint, attempt_id, request);
+    } catch (ex) {
+      return {success: false, error: 'server error'};
+    }
+    /* Trigger a refresh to update the task and push to the iframe. */
+    yield put({type: deps.refresh});
+    return result;
+  });
+
+  function getApiUserAttemptIds (state) {
+    const {api} = state;
+    const {user_id, attempt_id} = state.response;
+    return {api, user_id, attempt_id};
+  }
+
+  /* When a refresh occurs and the task iframe is open, push the task data
+     to it in case there is any change. */
+  yield use('refreshCompleted');
   yield addSaga(function* () {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
         yield takeEvery(deps.refreshCompleted, function* () {
-          yield fork(pushTaskWindowData, taskWindow);
+          const payload = yield select(getTaskWindowData);
+          yield call(peer.call, taskWindow, 'updateTask', payload);
         });
       }
     });
   });
 
-  function* pushTaskWindowData (taskWindow) {
-    const data = yield select(getTaskWindowData);
-    taskWindow.postMessage(JSON.stringify({action: "loadTask", ...data}), "*");
-  }
-
+  /* This selector builds the data that is passed to the task in response to
+     the 'initTask' call, and in 'loadTask' */
   function getTaskWindowData (state) {
     const {team_data} = state.response;
     const {score} = state.response.attempt;
     return {task: team_data, score};
-  }
-
-  function* submitAnswer (user_id, attempt_id, answer) {
-    const api = yield select(state => state.api);
-    let response;
-    try {
-      response = yield call(api.submitAnswer, user_id, attempt_id, answer);
-    } catch (ex) {
-      console.log(ex)
-      return;
-    }
-    const {success, error, score, feedback} = response;
-    const taskWindow = yield select(state => state.taskWindow);
-    taskWindow.postMessage(JSON.stringify({action: "feedback", success, error, score, feedback}), "*");
-    yield put({type: deps.refresh});
   }
 
 };
