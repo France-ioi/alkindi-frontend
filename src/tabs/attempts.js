@@ -1,29 +1,31 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
-import {Button} from 'react-bootstrap';
+import {Alert, Button} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
 import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import update from 'immutability-helper';
 import {takeLatest, select, call, put} from 'redux-saga/effects';
 
 import Tooltip from '../ui/tooltip';
+import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
+import getMessage from '../messages';
 
 export default function* (deps) {
 
   yield use('setActiveTab', 'RefreshButton', 'buildRequest', 'managedRefresh');
 
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
-  yield defineAction('createAttempt', 'Attempt.Create');
   yield defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {now, user, round, round_tasks} = state.response;
+    const createAttempt = getManagedProcessState(state, 'createAttempt');
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
       : round.task_ids.length > 0 && round.task_ids[0];
     const score = null; // getMaxScore(round_tasks);
-    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId};
+    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId, createAttempt};
   });
 
   yield addReducer('activeTaskChanged', function (state, action) {
@@ -41,25 +43,29 @@ export default function* (deps) {
     });
   });
 
-  yield addSaga(function* () {
-    yield takeLatest(deps.createAttempt, function* (action) {
-      const {participation_id, api} = yield select(getApiContext);
-      let result;
-      try {
-        result = yield call(api.createAttempt, participation_id, action.roundTaskId);
-      } catch (ex) { // ex.err, ex.res
-        console.log('createAttempt failed', ex);
-        return;
-      }
-      console.log(result);
-    });
-  });
+  yield include(ManagedProcess('createAttempt', 'Attempt.Create', p => function* (action) {
+    const {participation_id, api} = yield select(getApiContext);
+    let result;
+    try {
+      result = yield call(api.createAttempt, participation_id, action.roundTaskId);
+    } catch (ex) { // ex.err, ex.res
+      yield p.failure('server error');
+      return;
+    }
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
   function getApiContext (state) {
     const {response, api} = state;
     const {participation_id} = response;
     return {api, participation_id};
   }
 
+  yield use('createAttempt');
   yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
 
     function onSwitchTab (tabKey) {
@@ -125,6 +131,23 @@ export default function* (deps) {
       );
     };
 
+    function renderCreateAttempt (round_task_id) {
+      const {pending, error} = self.props.createAttempt || {};
+      return (
+        <div>
+          <p className="text-center">
+            <Button onClick={onAddAttempt} data-roundTaskId={round_task_id}>
+              <i className="fa fa-plus"/>
+              {" Ajouter une tentative pour ce sujet"}
+              {pending &&
+                <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
+            </Button>
+          </p>
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
+        </div>
+      );
+    }
+
     self.render = function () {
       const {round, score, round_tasks, activeTaskId} = self.props;
       /* accordéon tasks */
@@ -156,7 +179,7 @@ export default function* (deps) {
                     <div className="attempts">
                       {round_task.attempts.map(attempt => renderAttempt(attempt, round_task))}
                     </div>}
-                    <Button onClick={onAddAttempt} data-roundTaskId={round_task_id}>{"Ajouter une tentative pour ce sujet"}</Button>
+                    {renderCreateAttempt(round_task_id)}
                   </Panel>);
                 })}
             </Collapse>
