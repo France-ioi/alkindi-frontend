@@ -13,7 +13,7 @@ import getMessage from '../messages';
 
 export default function* (deps) {
 
-  yield use('setActiveTab', 'RefreshButton', 'buildRequest', 'managedRefresh');
+  yield use('setActiveTab', 'RefreshButton', 'buildRequest', 'managedRefresh', 'refresh');
 
   yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
   yield defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
