@@ -66,8 +66,8 @@ export default function* (deps) {
         <div className="tab-content">
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
             style={{height: '1000px'}}/>
-          {isDev && <textarea>{JSON.stringify(round_task)}</textarea>}
-          {isDev && <textarea>{JSON.stringify(team_data)}</textarea>}
+          {isDev && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
+          {isDev && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
         </div>
       );
     };
