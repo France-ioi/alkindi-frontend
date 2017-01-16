@@ -51,13 +51,12 @@ export default function* (deps) {
       const {user, team, round, showMainScreen, participation} = self.props;
 
       // The login screen is shown when no user is active.
-      if (user === undefined) {
+      if (!user) {
         return <deps.LoginScreen/>;
       }
 
       // Select the appropriate screen to display.
-      let screen = false;
-      if (team === undefined) {
+      if (!team) {
         return <deps.JoinTeamScreen/>;
       }
       if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
