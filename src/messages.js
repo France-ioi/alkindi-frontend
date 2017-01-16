@@ -24,7 +24,8 @@ export const messages = {
   'invalid user': "L'identifiant d'utilisateur est invalide.",
   'already qualified': "Vous êtes déjà qualifié avec un autre code.",
   'unexpected': "Une erreur imprévue s'est produite, n'hésitez pas à nous contacter.",
-  'registration is closed': "La période d'enregistrement est fermée."
+  'registration is closed': "La période d'enregistrement est fermée.",
+  'attempt too soon': "Vous devez attendre 5 minutes entre la création de 2 tentatives."
 };
 
 export default function (key) {
