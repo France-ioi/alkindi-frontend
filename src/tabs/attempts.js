@@ -159,6 +159,15 @@ export default function* (deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
+          {true && <div>
+            <p>
+              {"Avant de commencer, assurez-vous de consulter les explications générales du "}
+              <a href="http://concours-alkindi.fr/#/infosTour2" target="_blank">{"fonctionnement du tour 2"}</a>
+              {"."}
+            </p>
+            <p>{"Au total, le 2ème tour sera constitué de 8 sujets, qui seront ajoutés petit à petit et seront visibles ci-dessous. Plusieurs sujets seront ajoutés dès la première semaine, et l’ensemble des sujets devraient être disponibles avant la fin du mois de janvier."}</p>
+            <p>{"Certaines fonctionnalités comme l’historique et le récapitulatif des réponses seront activées très prochainement."}</p>
+          </div>}
           {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
           {typeof score == 'number' &&
             <p className="team-score">
