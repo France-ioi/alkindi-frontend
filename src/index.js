@@ -116,7 +116,7 @@ export function run (config, container) {
       <div>
         {isDev && <div className="dev-banner">{"DEV"}</div>}
         <scope.App/>
-        {reduxExt ? false : <DevTools/>}
+        {isDev && !reduxExt && <DevTools/>}
       </div>
     </Provider>, container);
 
