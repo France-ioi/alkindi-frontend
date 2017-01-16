@@ -925,6 +925,7 @@ span.team-score {
 .attempt {
   border-bottom: 1px solid #ccc;
   padding: 3px 10px;
+  cursor: pointer;
 }
 .attempt.attempt-current {
   background-color: #dff1fc;
