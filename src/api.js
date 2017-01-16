@@ -21,7 +21,7 @@ export const ApiFactory = function (methods) {
     getHint: (attempt_id, data) => post('attempts/'+attempt_id+'/get_hint', data),
     resetHints: (attempt_id) => post('attempts/'+attempt_id+'/reset_hints'),
 
-    submitAnswer: (attempt_id, data) => post('attempts/'+attempt_id+'/answer', data),
+    submitAnswer: (user_id, attempt_id, data) => post(`/users/${user_id}/attempts/${attempt_id}/answer`, data),
 
     storeRevision: (attempt_id, data) => post('attempt_id/'+attempt_id+'/store_revision', data),
     loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)

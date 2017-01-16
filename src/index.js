@@ -45,7 +45,7 @@ const {store, scope, start} = link(function* (deps) {
 
   yield include(ClientApi);
   yield include(Login);
-  yield include(Refresh);
+  yield include(Refresh); // must be included before task communication
   yield include(App);
   yield include(JoinTeamScreen);
   yield include(MainScreen);

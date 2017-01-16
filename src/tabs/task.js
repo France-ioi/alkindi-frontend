@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Alert, Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 import {defineAction, defineSelector, defineView, addReducer, addSaga, include, use} from 'epic-linker';
-import {call, put, take, select, takeEvery} from 'redux-saga/effects';
+import {call, fork, put, take, select, takeEvery, takeLatest} from 'redux-saga/effects';
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import getMessage from '../messages';
@@ -97,20 +97,65 @@ export default function* (deps) {
     return {...state, taskWindow};
   });
 
+  //
+  // Handle messages coming from the task's iframe.
+  //
+
   yield addSaga(function* () {
     const messageChannel = MessageChannel();
     while (true) {
       const {message, source, origin} = yield take(messageChannel);
-      const taskWindow = yield select(state => state.taskWindow);
+      const {user_id, attempt_id, taskWindow} = yield select(getTaskState);
       if (source === taskWindow) {
         console.log('task message', message);
         if (message.task === 'ready') {
-          const task = yield select(deps.getTeamData);
-          taskWindow.postMessage(JSON.stringify({action: "loadTask", task}), "*");
+          yield fork(pushTaskData, taskWindow);
+          continue;
         }
-        // TODO: fork & pass task to iframe on refresh
+        if ('answer' in message) {
+          yield fork(submitAnswer, user_id, attempt_id, message.answer);
+          continue;
+        }
       }
     }
+    function getTaskState(state) {
+      const {taskWindow} = state;
+      const {user_id, attempt_id} = state.response;
+      return {taskWindow, user_id, attempt_id};
+    }
   });
+
+  //
+  // Whenever there is a taskWindow, every refreshCompleted causes a push
+  // of the task data.
+  //
+
+  yield use('refreshCompleted');
+  yield addSaga(function* () {
+    yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
+      if (taskWindow) {
+        yield takeEvery(deps.refreshCompleted, function* () {
+          yield fork(pushTaskData, taskWindow);
+        });
+      }
+    });
+  });
+
+  function* pushTaskData (taskWindow) {
+    const task = yield select(deps.getTeamData);
+    taskWindow.postMessage(JSON.stringify({action: "loadTask", task}), "*");
+  }
+
+  function* submitAnswer (user_id, attempt_id, answer) {
+    const api = yield select(state => state.api);
+    let result;
+    try {
+      result = yield call(api.submitAnswer, user_id, attempt_id, answer);
+    } catch (ex) {
+      console.log(ex)
+      return;
+    }
+    console.log(result);
+  }
 
 };
