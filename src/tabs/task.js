@@ -66,8 +66,8 @@ export default function* (deps) {
         <div className="tab-content">
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
             style={{height: '1000px'}}/>
-          {isDev && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
-          {isDev && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
+          {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
+          {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
         </div>
       );
     };
@@ -110,7 +110,9 @@ export default function* (deps) {
       const {message, source, origin} = yield take(messageChannel);
       const {user_id, attempt_id, taskWindow} = yield select(getTaskState);
       if (source === taskWindow) {
-        console.log('task message', message);
+        if (isDev) {
+          console.log('task message', message);
+        }
         if (message.task === 'ready') {
           yield fork(pushTaskData, taskWindow);
           continue;
