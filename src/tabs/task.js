@@ -9,6 +9,8 @@ import {default as ManagedProcess, getManagedProcessState} from '../managed_proc
 import getMessage from '../messages';
 import MessageChannel from '../message_channel';
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 export default function* (deps) {
 
   yield defineSelector('TaskTabSelector', function (state, _props) {
@@ -62,9 +64,10 @@ export default function* (deps) {
       }
       return (
         <div className="tab-content">
-          <iframe className="task" src={round_task.frontend_url} ref={refTask}/>
-          <p>{JSON.stringify(round_task)}</p>
-          <p>{JSON.stringify(team_data)}</p>
+          <iframe className="task" src={round_task.frontend_url} ref={refTask}
+            style={{height: '1000px'}}/>
+          {isDev && <textarea>{JSON.stringify(round_task)}</textarea>}
+          {isDev && <textarea>{JSON.stringify(team_data)}</textarea>}
         </div>
       );
     };
