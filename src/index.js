@@ -114,6 +114,7 @@ export function run (config, container) {
   ReactDOM.render(
     <Provider store={store}>
       <div>
+        {isDev && <div className="dev-banner">{"DEV"}</div>}
         <scope.App/>
         {reduxExt ? false : <DevTools/>}
       </div>
