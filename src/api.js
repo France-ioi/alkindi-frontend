@@ -8,23 +8,25 @@ export const ApiFactory = function (methods) {
 
     refresh: (request) => post('refresh', request),
 
+    addBadge: (user_id, data) => post('users/'+user_id+'/add_badge', data),
+
     createTeam: (user_id) => post('users/'+user_id+'/create_team'),
     joinTeam: (user_id, data) => post('users/'+user_id+'/join_team', data),
     leaveTeam: (user_id) => post('users/'+user_id+'/leave_team'),
     updateUserTeam: (user_id, data) => post('users/'+user_id+'/update_team', data),
 
-    addBadge: (user_id, data) => post('users/'+user_id+'/add_badge', data),
     createAttempt: (participation_id, round_task_id) => post('participations/'+participation_id+'/tasks/'+round_task_id+'/create_attempt'),
+
     // enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
     startAttempt: (attempt_id) => post('attempts/'+attempt_id+'/start'),
 
     getHint: (attempt_id, data) => post('attempts/'+attempt_id+'/get_hint', data),
     resetHints: (attempt_id) => post('attempts/'+attempt_id+'/reset_hints'),
 
-    submitAnswer: (user_id, attempt_id, data) => post(`/users/${user_id}/attempts/${attempt_id}/answer`, data),
+    submitAnswer: (user_id, attempt_id, data) => post(`users/${user_id}/attempts/${attempt_id}/answer`, data),
+    storeRevision: (user_id, attempt_id, data) => post(`users/${user_id}/attempts/${attempt_id}/store_revision`, data),
 
-    storeRevision: (attempt_id, data) => post('attempt_id/'+attempt_id+'/store_revision', data),
-    loadRevision: (revision_id) => get('workspace_revisions/'+revision_id)
+    loadRevision: (revision_id) => get(`workspace_revisions/${revision_id}`)
 
   };
 };
