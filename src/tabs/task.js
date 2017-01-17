@@ -132,8 +132,11 @@ export default function* (deps) {
     } catch (ex) {
       return {success: false, error: 'server error'};
     }
-    /* Trigger a refresh to update the task and push to the iframe. */
-    yield put({type: deps.refresh});
+    /* Perform a refresh to update the task and push to the iframe,
+       then end the saga to send the result (the task will close the
+       hint request interface). */
+    const refreshRequest = yield select(deps.buildRequest);
+    yield call(deps.managedRefresh, refreshRequest);
     return result;
   });
 
