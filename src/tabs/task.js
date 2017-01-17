@@ -140,6 +140,21 @@ export default function* (deps) {
     return result;
   });
 
+  peer.on('storeRevision', function* storeRevision (revision) {
+    const {api, user_id, attempt_id} = yield select(getApiUserAttemptIds);
+    let result;
+    try {
+      result = yield call(api.storeRevision, user_id, attempt_id, revision);
+    } catch (ex) {
+      return {success: false, error: 'server error'};
+    }
+    /* Perform a refresh to update the list of revisions and push to the iframe.
+       then end the saga to pass the result (including the revision_id). */
+    const refreshRequest = yield select(deps.buildRequest);
+    yield call(deps.managedRefresh, refreshRequest);
+    return result;
+  });
+
   function getApiUserAttemptIds (state) {
     const {api} = state;
     const {user_id, attempt_id} = state.response;
