@@ -10,54 +10,15 @@ import Tasks from '../tasks';
 
 export const CryptoTab = EpicComponent(self => {
 
-  const saveState = function () {
-    const {alkindi, user_id, workspace} = self.props;
-    // Silently ignore the request if a save operation is pending.
-    if (workspace.saving)
-      return;
-    // Remind the user that there are no changes that need to be saved.
-    if (!workspace.changed) {
-      alert("Aucune modification à enregistrer.  Notez que les demandes d'indices n'ont pas besoin d'être enregistrées.");
-      return;
-    }
-    const manager = alkindi.manager;
-    const data = {
-      title: "Révision du " + new Date().toLocaleString(),
-      state: manager.save(),
-      parent_id: workspace.revisionId
-    };
-    beginSave();
-    alkind.api.storeRevision(user_id, data).then(
-      function (result) {
-        endSave(result.revision_id);
-      },
-      function () {
-        // Reset the changed flag to true as the state was not changed.
-        endSave();
-      }
-    );
-  };
 
-  const beginSave = function () { // XXX
-    const workspace = getWorkspace();
-    setWorkspace({
-      ...workspace,
-      saving: true,
-      changed: false
-    });
-  };
-
-  const endSave = function (revisionId) { // XXX
-    const workspace = getWorkspace();
-    const newWorkspace = {...workspace, saving: false};
-    if (revisionId) {
-      newWorkspace.revisionId = revisionId;
-    } else {
-      newWorkspace.changed = true;
-    }
-    setWorkspace(newWorkspace);
-  };
-
+  const resetStateTooltip = (
+    <p>
+      Cliquez sur ce bouton pour effacer toutes vos modifications mais conserver
+      les indices.<br/>
+      Vous pourrez toujours restaurer une version précédente depuis l'onglet
+      Historique.
+    </p>
+  );
 
   const resetState = function () {
     if (window.confirm("Voulez vous vraiment repartir de zéro ?")) {
@@ -79,28 +40,6 @@ export const CryptoTab = EpicComponent(self => {
       function () { callback(false); },
       callback
     );
-  };
-
-  const saveStateTooltip = (
-    <p>
-      Enregistrez de temps en temps votre travail pour ne pas risquer de le
-      perdre.
-      Chaque version que vous enregistrez sera disponible pour vous et vos
-      coéquipiers dans l'onglet Historique.
-    </p>
-  );
-
-  const resetStateTooltip = (
-    <p>
-      Cliquez sur ce bouton pour effacer toutes vos modifications mais conserver
-      les indices.<br/>
-      Vous pourrez toujours restaurer une version précédente depuis l'onglet
-      Historique.
-    </p>
-  );
-
-  self.state = {
-    loading: false
   };
 
   self.componentWillMount = function () {
@@ -147,7 +86,6 @@ export const CryptoTab = EpicComponent(self => {
           <Notifier emitter={alkindi.emitter}/>
         </div>);
     }
-    const saveStyle = workspace.changed ? 'primary' : 'default';
     const header = (
       <div className="crypto-tab-header" style={{marginBottom: '10px'}}>
         <div className='pull-right'>
@@ -155,13 +93,6 @@ export const CryptoTab = EpicComponent(self => {
           {' '}
           <RefreshButton alkindi={alkindi}/>
         </div>
-        <Button bsStyle={saveStyle} onClick={saveState}>
-          <i className="fa fa-save"/>
-          {' Enregistrer cette version'}
-        </Button>
-        <span style={{marginLeft: '10px', marginRight: '40px'}}>
-          <Tooltip content={saveStateTooltip}/>
-        </span>
         <Button onClick={resetState}>
           <i className="fa fa-eraser"/>
           {' Repartir de zéro'}
