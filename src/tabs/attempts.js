@@ -8,7 +8,7 @@ import update from 'immutability-helper';
 import {takeLatest, select, call, put} from 'redux-saga/effects';
 
 import Tooltip from '../ui/tooltip';
-import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
+import ManagedProcess from '../managed_process';
 import getMessage from '../messages';
 
 export default function* (deps) {
@@ -20,7 +20,7 @@ export default function* (deps) {
 
   yield defineSelector('AttemptsTabSelector', function (state, _props) {
     const {now, user, round, round_tasks} = state.response;
-    const createAttempt = getManagedProcessState(state, 'createAttempt');
+    const createAttempt = ManagedProcess.getState(state, 'createAttempt');
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
       : round.task_ids.length > 0 && round.task_ids[0];
