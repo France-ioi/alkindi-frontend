@@ -28,6 +28,7 @@ import Login from './login'
 import Refresh from './refresh';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
+import RevisionsBundle from './revisions';
 //import RoundOverScreen from './screens/round_over';
 //import FinalScreen from './screens/final';
 
@@ -43,13 +44,8 @@ const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
 
 const {store, scope, start} = link(function* (deps) {
 
-  yield include(ClientApi);
-  yield include(Login);
-  yield include(Refresh); // must be included before task communication
-  yield include(App);
-  yield include(JoinTeamScreen);
-  yield include(MainScreen);
-
+  /* Make sure init is earliest in link order to avoid overwriting state added
+     by reducer in bundles included later. */
   yield defineAction('init', 'Init');
   yield addReducer('init', function (state, action) {
     const {config} = action;
@@ -61,6 +57,14 @@ const {store, scope, start} = link(function* (deps) {
       response: {}
     };
   });
+
+  yield include(ClientApi);
+  yield include(Login);
+  yield include(Refresh); // must be included before task communication
+  yield include(App);
+  yield include(JoinTeamScreen);
+  yield include(MainScreen);
+  yield include(RevisionsBundle);
 
   yield defineAction('setCsrfToken', 'SetCsrfToken');
   yield addReducer('setCsrfToken', function (state, action) {

@@ -105,8 +105,8 @@ export default function* (deps) {
   const peer = Peer();
   yield addSaga(peer.handleIncomingActions);
 
-  peer.on('initTask', function* initTask () {
-    return yield select(getTaskWindowData);
+  peer.on('pullState', function* initTask () {
+    return yield select(getTaskWindowState);
   });
 
   /* Pass answer submissions from the task to the backend. */
@@ -163,13 +163,17 @@ export default function* (deps) {
 
   /* When a refresh occurs and the task iframe is open, push the task data
      to it in case there is any change. */
-  yield use('refreshCompleted');
+  yield use('refreshCompleted', 'revisionLoaded');
   yield addSaga(function* () {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
         yield takeEvery(deps.refreshCompleted, function* () {
-          const payload = yield select(getTaskWindowData);
-          yield call(peer.call, taskWindow, 'updateTask', payload);
+          const payload = yield select(getTaskWindowState);
+          yield call(peer.call, taskWindow, 'pushState', payload);
+        });
+        yield takeEvery(deps.revisionLoaded, function* (action) {
+          const payload = yield select(getTaskWindowState);
+          yield call(peer.call, taskWindow, 'pushState', payload);
         });
       }
     });
@@ -177,10 +181,13 @@ export default function* (deps) {
 
   /* This selector builds the data that is passed to the task in response to
      the 'initTask' call, and in 'loadTask' */
-  function getTaskWindowData (state) {
-    const {team_data} = state.response;
-    const {score} = state.response.attempt;
-    return {task: team_data, score};
+  function getTaskWindowState (state) {
+    const {response, revisions} = state;
+    const {team_data, my_latest_revision_id} = response;
+    const revision = revisions[my_latest_revision_id];  // XXX current revision should override my_latest_revision_id
+    console.log('task state', my_latest_revision_id, revision);
+    const {score} = response.attempt;
+    return {task: team_data, score, revision};
   }
 
 };
