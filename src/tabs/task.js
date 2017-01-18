@@ -185,7 +185,6 @@ export default function* (deps) {
     const {response, revisions} = state;
     const {team_data, my_latest_revision_id} = response;
     const revision = revisions[my_latest_revision_id];  // XXX current revision should override my_latest_revision_id
-    console.log('task state', my_latest_revision_id, revision);
     const {score} = response.attempt;
     return {task: team_data, score, revision};
   }
