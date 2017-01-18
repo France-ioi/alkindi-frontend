@@ -185,7 +185,7 @@ export default function* (deps) {
                 return (
                   <Panel key={round_task_id} className="task" header={header}>
                     {round_task.attempts &&
-                    <div className="attempts">
+                    <div className="attempts container-fluid">
                       {round_task.attempts.map(attempt => renderAttempt(attempt, round_task))}
                     </div>}
                     {renderCreateAttempt(round_task_id)}
