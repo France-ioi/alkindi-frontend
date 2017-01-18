@@ -39,7 +39,7 @@ import "rc-tooltip/assets/bootstrap.css";
 import 'rc-collapse/assets/index.css';
 import "./style.css";
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV !== 'production';
 const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
 
 const {store, scope, start} = link(function* (deps) {
