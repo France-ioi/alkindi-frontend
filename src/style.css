@@ -435,6 +435,8 @@ span.team-score {
 }
 .attempt .col {
   display: inline-block;
+  vertical-align: middle;
+  line-height: 25px;
 }
 .col.attempt-icons {
   width: 30px;
