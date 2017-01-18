@@ -25,7 +25,8 @@ export const messages = {
   'already qualified': "Vous êtes déjà qualifié avec un autre code.",
   'unexpected': "Une erreur imprévue s'est produite, n'hésitez pas à nous contacter.",
   'registration is closed': "La période d'enregistrement est fermée.",
-  'attempt too soon': "Vous devez attendre 5 minutes entre la création de 2 tentatives."
+  'attempt too soon': "Vous devez attendre 5 minutes entre la création de 2 tentatives.",
+  'timed attempt in progress': "Terminez la tentative en cours avant d’en commencer une nouvelle."
 };
 
 export default function (key) {
