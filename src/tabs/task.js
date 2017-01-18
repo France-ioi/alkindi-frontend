@@ -110,11 +110,11 @@ export default function* (deps) {
   });
 
   /* Pass answer submissions from the task to the backend. */
-  peer.on('submitAnswer', function* submitAnswer (answer) {
+  peer.on('submitAnswer', function* submitAnswer (payload) {
     const {api, user_id, attempt_id} = yield select(getApiUserAttemptIds);
     let result;
     try {
-      result = yield call(api.submitAnswer, user_id, attempt_id, answer);
+      result = yield call(api.submitAnswer, user_id, attempt_id, payload);
     } catch (ex) {
       return {success: false, error: 'server error'};
     }
