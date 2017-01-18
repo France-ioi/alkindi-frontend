@@ -31,6 +31,7 @@ if (isDevelopment) {
   // Production route: /build serves static files in build/
   app.use('/build', express.static(path.join(rootDir, 'build')));
 }
+app.use('/assets', express.static(path.join(rootDir, 'assets')));
 
 app.get('/', function (req, res) {
   res.render('index', {
