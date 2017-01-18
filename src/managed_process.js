@@ -2,7 +2,9 @@
 import {defineAction, addReducer, addSaga} from 'epic-linker';
 import {call, put, take, select} from 'redux-saga/effects';
 
-export default function (namePrefix, typePrefix, preSaga) {
+export default ManagedProcess;
+
+function ManagedProcess (namePrefix, typePrefix, preSaga) {
   const p = {
     triggerAction: namePrefix,
     trigger: typePrefix,
@@ -53,7 +55,11 @@ export default function (namePrefix, typePrefix, preSaga) {
   };
 };
 
-export const getManagedProcessState = function (state, name) {
+export const clearManagedProcessState = ManagedProcess.clearState = function (state) {
+  return {...state, pendingAction: false, lastAction: undefined, lastError: undefined};
+};
+
+export const getManagedProcessState = ManagedProcess.getState = function (state, name) {
   if (state.pendingAction === name) {
     return {pending: true};
   }
