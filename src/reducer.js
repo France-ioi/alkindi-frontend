@@ -1,3 +1,4 @@
+/* OBSOLETE FILE, NOT USED */
 
 const initialState = {
   refreshing: true,
