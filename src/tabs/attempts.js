@@ -30,7 +30,7 @@ export default function* (deps) {
 
   yield addReducer('activeTaskChanged', function (state, action) {
     const activeTask = state.response.round_tasks[action.roundTaskId];
-    return {...state, activeTask};
+    return ManagedProcess.clearState({...state, activeTask});
   });
 
   yield addSaga(function* () {
