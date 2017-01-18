@@ -421,6 +421,10 @@ span.team-score {
   border-color: #ccc;
   box-shadow: 1px 1px 3px #ccc;
 }
+.task .task-score {
+  float: right;
+  margin-right: 26px;
+}
 .attempt {
   border-bottom: 1px solid #ccc;
   padding: 3px 10px;
