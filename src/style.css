@@ -505,6 +505,9 @@ iframe.task {
   width: 100%;
   border: 0;
 }
+.react-tabs [role=tab][aria-disabled=true] {
+  color: #ccc;
+}
 
 /** Gruüik */
 
