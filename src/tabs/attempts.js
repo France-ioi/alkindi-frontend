@@ -183,9 +183,9 @@ export default function* (deps) {
                   return elm.score ? Math.max(parseFloat(elm.score), acc) : acc; }, 0);
                 const header = (
                   <span>
-                    {best_score && <span className="task-score">
+                    <span className="task-score">
                       {best_score}{' / '}{round_task.max_score}
-                    </span>}
+                    </span>
                     <span className="task-title">
                       {round_task.title}
                     </span>
