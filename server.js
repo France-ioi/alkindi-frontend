@@ -37,7 +37,7 @@ app.get('/', function (req, res) {
   res.render('index', {
     development: isDevelopment,
     contact_email: 'info@concours-alkindi.fr',
-    start_url: process.env.START_URL
+    start_url: process.env.START_URL || '/start'
   });
 });
 
