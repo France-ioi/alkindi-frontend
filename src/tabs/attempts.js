@@ -178,9 +178,17 @@ export default function* (deps) {
             <Collapse accordion={true} activeKey={''+activeTaskId} onChange={onTaskChange}>
               {round.task_ids.map(round_task_id => {
                 const round_task = round_tasks[round_task_id];
+                // XXX Temporary, best_score should be a property of round_task.
+                const best_score = round_task.attempts.reduce(function (acc, elm) {
+                  return elm.score ? Math.max(parseFloat(elm.score), acc) : acc; }, 0);
                 const header = (
-                  <span className="task-title">
-                    {round_task.title}
+                  <span>
+                    {best_score && <span className="task-score">
+                      {best_score}{' / '}{round_task.max_score}
+                    </span>}
+                    <span className="task-title">
+                      {round_task.title}
+                    </span>
                   </span>);
                 return (
                   <Panel key={round_task_id} className="task" header={header}>
