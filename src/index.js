@@ -128,12 +128,13 @@ export function run (config, container) {
   app.store.dispatch({type: app.scope.init, config});
 
   // Start the sagas.
+  function crashed (error) {
+    app.store.dispatch({type: app.scope.crashed});
+  }
   Alkindi.restart = function () {
     app.store.dispatch({type: app.scope.restarted});
     Alkindi.rootTask = app.start();
-    Alkindi.rootTask.done.catch(function (error) {
-      app.store.dispatch({type: app.scope.crashed});
-    });
+    Alkindi.rootTask.done.then(crashed).catch(crashed);
   };
   Alkindi.restart();
 
