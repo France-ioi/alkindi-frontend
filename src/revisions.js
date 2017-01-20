@@ -1,24 +1,23 @@
 
-import {use, defineAction, addReducer, addSaga} from 'epic-linker';
 import {takeLatest, select, call, put} from 'redux-saga/effects';
 import update from 'immutability-helper';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('refreshCompleted');
+  bundle.use('refreshCompleted');
 
-  yield defineAction('revisionLoaded', 'Revision.Loaded');
+  bundle.defineAction('revisionLoaded', 'Revision.Loaded');
 
-  yield addReducer('init', function (state, action) {
+  bundle.addReducer('init', function (state, action) {
     return {...state, revisions: []};
   });
 
-  yield addReducer('revisionLoaded', function (state, action) {
+  bundle.addReducer('revisionLoaded', function (state, action) {
     const {revision} = action;
     return update(state, {revisions: {[revision.id]: {$set: revision}}});
   });
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     yield takeLatest(deps.refreshCompleted, function* (action) {
       const {response} = action;
       const attemptId = response.attempt_id;

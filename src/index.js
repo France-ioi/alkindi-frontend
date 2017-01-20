@@ -16,7 +16,8 @@ import {Promise} from 'es6-promise';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {link, include, defineAction, defineSelector, addReducer, addEnhancer} from 'epic-linker';
+import link from 'epic-linker';
+import {put} from 'redux-saga/effects';
 
 import Api from './api';
 import {configure as configureAssets} from './assets';
@@ -46,8 +47,8 @@ const {store, scope, start} = link(function* (deps) {
 
   /* Make sure init is earliest in link order to avoid overwriting state added
      by reducer in bundles included later. */
-  yield defineAction('init', 'Init');
-  yield addReducer('init', function (state, action) {
+  bundle.defineAction('init', 'Init');
+  bundle.addReducer('init', function (state, action) {
     const {config} = action;
     return {
       config,
@@ -58,35 +59,35 @@ const {store, scope, start} = link(function* (deps) {
     };
   });
 
-  yield include(ClientApi);
-  yield include(Login);
-  yield include(Refresh); // must be included before task communication
-  yield include(App);
-  yield include(JoinTeamScreen);
-  yield include(MainScreen);
-  yield include(RevisionsBundle);
+  bundle.include(ClientApi);
+  bundle.include(Login);
+  bundle.include(Refresh); // must be included before task communication
+  bundle.include(App);
+  bundle.include(JoinTeamScreen);
+  bundle.include(MainScreen);
+  bundle.include(RevisionsBundle);
 
-  yield defineAction('setCsrfToken', 'SetCsrfToken');
-  yield addReducer('setCsrfToken', function (state, action) {
+  bundle.defineAction('setCsrfToken', 'SetCsrfToken');
+  bundle.addReducer('setCsrfToken', function (state, action) {
     const {csrf_token} = action;
     let {config} = state;
     config = {...config, csrf_token};
     return {...state, config, api: Api(config)};
   });
 
-  yield defineSelector('getLoginUrl', function (state) {
+  bundle.defineSelector('getLoginUrl', function (state) {
     return state.config.login_url;
   });
 
-  yield defineSelector('getLogoutUrl', function (state) {
+  bundle.defineSelector('getLogoutUrl', function (state) {
     return state.config.logout_url;
   });
 
   if (isDev) {
     if (reduxExt) {
-      yield addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
+      bundle.addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
     } else {
-      yield addEnhancer(DevTools.instrument());
+      bundle.addEnhancer(DevTools.instrument());
     }
   }
 

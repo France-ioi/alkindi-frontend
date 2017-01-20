@@ -1,5 +1,4 @@
 
-import {defineAction, addReducer, addSaga} from 'epic-linker';
 import {call, put, take, select} from 'redux-saga/effects';
 
 export default ManagedProcess;
@@ -18,22 +17,22 @@ function ManagedProcess (namePrefix, typePrefix, preSaga) {
     failure: (error) => put({type: p.failed, error})
   };
   const saga = preSaga(p);
-  return function* () {
-    yield defineAction(p.triggerAction, p.trigger);
-    yield defineAction(p.startedAction, p.started);
-    yield defineAction(p.succeededAction, p.succeeded);
-    yield defineAction(p.failedAction, p.failed);
-    yield addReducer(p.startedAction, function (state, _action) {
+  return function (bundle) {
+    bundle.defineAction(p.triggerAction, p.trigger);
+    bundle.defineAction(p.startedAction, p.started);
+    bundle.defineAction(p.succeededAction, p.succeeded);
+    bundle.defineAction(p.failedAction, p.failed);
+    bundle.addReducer(p.startedAction, function (state, _action) {
       return {...state, pendingAction: namePrefix, lastAction: undefined, lastError: undefined};
     });
-    yield addReducer(p.failedAction, function (state, action) {
+    bundle.addReducer(p.failedAction, function (state, action) {
       const {error} = action;
       return {...state, pendingAction: false, lastAction: namePrefix, lastError: error};
     });
-    yield addReducer(p.succeededAction, function (state, action) {
+    bundle.addReducer(p.succeededAction, function (state, action) {
       return {...state, pendingAction: false, lastAction: namePrefix, lastError: false};
     });
-    yield addSaga(function* () {
+    bundle.addSaga(function* () {
       while (true) {
         // Wait for the trigger.
         const action = yield take(p.trigger);

@@ -2,32 +2,31 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
-import {use, defineAction, defineSelector, defineView, addSaga, addReducer} from 'epic-linker';
 import {eventChannel, buffers} from 'redux-saga';
 import {put, take, select} from 'redux-saga/effects'
 
 import AuthHeader from './ui/auth_header';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('getLoginUrl', 'getLogoutUrl', 'setCsrfToken', 'refresh');
+  bundle.use('getLoginUrl', 'getLogoutUrl', 'setCsrfToken', 'refresh');
 
-  yield defineAction('login', 'Login');
-  yield defineAction('loginFeedback', 'Login.Feedback'); // sent via client API
-  yield defineAction('loginSucceeded', 'Login.Succeeded');
-  yield defineAction('loginFailed', 'Login.Failed');
-  yield defineAction('loginExpired', 'Login.Expired');
+  bundle.defineAction('login', 'Login');
+  bundle.defineAction('loginFeedback', 'Login.Feedback'); // sent via client API
+  bundle.defineAction('loginSucceeded', 'Login.Succeeded');
+  bundle.defineAction('loginFailed', 'Login.Failed');
+  bundle.defineAction('loginExpired', 'Login.Expired');
 
-  yield defineAction('logout', 'Logout');
-  yield defineAction('logoutFeedback', 'Logout.Feedback'); // sent via client API
-  yield defineAction('logoutSucceeded', 'Logout.Succeeded');
-  yield defineAction('logoutFailed', 'Logout.Failed');
+  bundle.defineAction('logout', 'Logout');
+  bundle.defineAction('logoutFeedback', 'Logout.Feedback'); // sent via client API
+  bundle.defineAction('logoutSucceeded', 'Logout.Succeeded');
+  bundle.defineAction('logoutFailed', 'Logout.Failed');
 
-  yield defineSelector('LoginScreenSelector', function (state) {
+  bundle.defineSelector('LoginScreenSelector', function (state) {
     return {};
   });
 
-  yield defineView('LoginScreen', 'LoginScreenSelector', EpicComponent(self => {
+  bundle.defineView('LoginScreen', 'LoginScreenSelector', EpicComponent(self => {
     const onLogin = function () {
       self.props.dispatch({type: deps.login});
     };
@@ -48,12 +47,12 @@ export default function* (deps) {
     };
   }));
 
-  yield defineSelector('LogoutButtonSelector', function (state) {
+  bundle.defineSelector('LogoutButtonSelector', function (state) {
     const {user} = state.response;
     return {user};
   });
 
-  yield defineView('LogoutButton', 'LogoutButtonSelector', EpicComponent(self => {
+  bundle.defineView('LogoutButton', 'LogoutButtonSelector', EpicComponent(self => {
     const onLogout = function () {
       self.props.dispatch({type: deps.logout});
     };
@@ -84,7 +83,7 @@ export default function* (deps) {
       "height=555, width=510, toolbar=yes, menubar=yes, scrollbars=no, resizable=no, location=no, directories=no, status=no");
   };
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     /* On login, display the login window.  An iframe cannot be used due to a
        privacy setting ("Block third-party cookies and site data" on Chrome)
        that blocks cookies for origin X when an iframe with origin X is opened
@@ -96,7 +95,7 @@ export default function* (deps) {
     }
   });
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     /* On logout, display the logout window in a popup. */
     while (true) {
       yield take(deps.logout);
@@ -109,7 +108,7 @@ export default function* (deps) {
       {'user_id', 'csrf_token'}
       {'error'}
    */
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     while (true) {
       let {error, csrf_token, user_id} = yield take(deps.loginFeedback);
       if (error) {
@@ -128,13 +127,13 @@ export default function* (deps) {
     }
   });
 
-  yield addReducer('loginSucceeded', function (state, action) {
+  bundle.addReducer('loginSucceeded', function (state, action) {
     const {userId} = action;
     return {...state, userId};
   });
 
   /* Handle logout messages posted by the backend via the client API. */
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     while (true) {
       let {error} = yield take(deps.logoutFeedback);
       if (error) {
@@ -145,12 +144,12 @@ export default function* (deps) {
     }
   });
 
-  yield addReducer('logoutSucceeded', function (state, action) {
+  bundle.addReducer('logoutSucceeded', function (state, action) {
     // TODO: update enabledTabs
     return {...state, userId: undefined, request: {}, response: {}};
   });
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     // while (true) {
     yield take(deps.loginExpired);
     alert("Vous êtes déconnecté, reconnectez-vous pour continuer.");

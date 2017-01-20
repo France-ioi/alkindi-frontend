@@ -1,5 +1,4 @@
 
-import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Alert, Button} from 'react-bootstrap';
@@ -10,11 +9,11 @@ import {default as ManagedProcess, getManagedProcessState} from '../managed_proc
 import Tooltip from '../ui/tooltip';
 import getMessage from '../messages';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('setActiveTab', 'RefreshButton', 'refresh');
+  bundle.use('setActiveTab', 'RefreshButton', 'refresh');
 
-  yield defineSelector('TeamTabSelector', function (state, _props) {
+  bundle.defineSelector('TeamTabSelector', function (state, _props) {
     const {user, round, team} = state.response;
     if (!team) {
       return {};
@@ -32,7 +31,7 @@ export default function* (deps) {
       allowTeamChanges, teamHasCode, teamUnlocked, teamAdmin, teamInvalid};
   });
 
-  yield defineView('TeamTab', 'TeamTabSelector', EpicComponent(self => {
+  bundle.defineView('TeamTab', 'TeamTabSelector', EpicComponent(self => {
 
     const onGoToAttempts = function () {
       self.props.dispatch({type: deps.setActiveTab, tabKey: 'attempts'});
@@ -249,7 +248,7 @@ export default function* (deps) {
   // Leaving the team
   //
 
-  yield include(ManagedProcess('leaveTeam', 'Team.Leave', p => function* () {
+  bundle.include(ManagedProcess('leaveTeam', 'Team.Leave', p => function* () {
     const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
@@ -269,13 +268,13 @@ export default function* (deps) {
       yield p.failure(result.error);
     }
   }));
-  yield use('leaveTeam');
+  bundle.use('leaveTeam');
 
   //
   // Updating the team's setting(s)
   //
 
-  yield include(ManagedProcess('updateTeam', 'Team.Update', p => function* (action) {
+  bundle.include(ManagedProcess('updateTeam', 'Team.Update', p => function* (action) {
     const {isOpen} = action;
     const {api, userId} = yield select(function (state) {
       const {api, response} = state;
@@ -296,6 +295,6 @@ export default function* (deps) {
       yield p.failure(result.error);
     }
   }));
-  yield use('updateTeam');
+  bundle.use('updateTeam');
 
 };

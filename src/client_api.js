@@ -16,11 +16,10 @@
 
 */
 
-import {addSaga} from 'epic-linker';
 import {eventChannel, buffers} from 'redux-saga';
 import {put, take, select} from 'redux-saga/effects'
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
   /* Event channel holding an expanding buffer of window message. */
   const messageChannel = eventChannel(function (listener) {
@@ -44,7 +43,7 @@ export default function* (deps) {
     };
   }, buffers.expanding(1));
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     while (true) {
       let {source, message} = yield take(messageChannel);
       if (typeof message.dispatch === 'object') {
@@ -54,7 +53,7 @@ export default function* (deps) {
       }
       if (typeof message.select === 'string') {
         /* Call a selector. */
-        const selector = deps.get(message.select);
+        const selector = bundle.lookup(message.select);
         if (typeof selector === 'function') {
           const result = yield select(selector);
           source.postMessage({...message.template, result});

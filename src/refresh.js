@@ -1,28 +1,27 @@
 
-import {use, def, defineAction, addSaga, addReducer, defineView} from 'epic-linker';
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import {takeLatest, select, call, put, take, actionChannel, cancelled} from 'redux-saga/effects';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('loginExpired');
+  bundle.use('loginExpired');
 
-  yield defineAction('refresh', 'Refresh');
-  yield defineAction('refreshStarted', 'Refresh.Started');
-  yield defineAction('refreshCompleted', 'Refresh.Completed');
+  bundle.defineAction('refresh', 'Refresh');
+  bundle.defineAction('refreshStarted', 'Refresh.Started');
+  bundle.defineAction('refreshCompleted', 'Refresh.Completed');
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     yield takeLatest(deps.refresh, doRefresh);
   });
 
-  yield def('buildRequest', function (state, request) {
+  bundle.defineValue('buildRequest', function (state, request) {
     return {...state.request, ...request};
   });
 
-  yield def('managedRefresh', function* managedRefresh (request) {
+  bundle.defineValue('managedRefresh', function* managedRefresh (request) {
     const chan = yield actionChannel(deps.refreshCompleted);
     yield put({type: deps.refresh, request});
     // TODO: add a refresh timeout!
@@ -70,11 +69,11 @@ export default function* (deps) {
     }
   }
 
-  yield addReducer('refreshStarted', function (state, action) {
+  bundle.addReducer('refreshStarted', function (state, action) {
     return {...state, refreshing: true};
   });
 
-  yield addReducer('refreshCompleted', function (state, action) {
+  bundle.addReducer('refreshCompleted', function (state, action) {
     const {timestamp, response, success} = action;
     if (!success) {
       return {...state, refreshing: false};
@@ -104,7 +103,7 @@ export default function* (deps) {
     return {refreshing};
   }
 
-  yield defineView('RefreshButton', RefreshButtonSelector, EpicComponent(self => {
+  bundle.defineView('RefreshButton', RefreshButtonSelector, EpicComponent(self => {
     const onClick = function () {
       self.props.dispatch({type: deps.refresh});
     };

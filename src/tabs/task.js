@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Alert, Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
-import {defineAction, defineSelector, defineView, addReducer, addSaga, include, use} from 'epic-linker';
 import {call, fork, put, take, select, takeEvery, takeLatest} from 'redux-saga/effects';
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
@@ -11,18 +10,18 @@ import Peer from '../peer';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('refresh');
+  bundle.use('refresh');
 
-  yield defineSelector('TaskTabSelector', function (state, _props) {
+  bundle.defineSelector('TaskTabSelector', function (state, _props) {
     const {attempt, round_task, team_data} = state.response;
     const isTeamLocked = false; // XXX
     const startAttempt = getManagedProcessState(state, 'startAttempt');
     return {attempt, round_task, team_data, isTeamLocked, startAttempt};
   });
 
-  yield defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
+  bundle.defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
 
     function refTask (element) {
       const taskWindow = element && element.contentWindow;
@@ -72,8 +71,8 @@ export default function* (deps) {
 
   }));
 
-  yield use('startAttempt', 'buildRequest', 'managedRefresh');
-  yield include(ManagedProcess('startAttempt', 'Attempt.Start', p => function* (action) {
+  bundle.use('startAttempt', 'buildRequest', 'managedRefresh');
+  bundle.include(ManagedProcess('startAttempt', 'Attempt.Start', p => function* (action) {
     const {attempt_id} = action;
     const api = yield select(state => state.api);
     let result;
@@ -92,8 +91,8 @@ export default function* (deps) {
     }
   }));
 
-  yield defineAction('taskWindowChanged', 'Task.Window.Changed');
-  yield addReducer('taskWindowChanged', function (state, action) {
+  bundle.defineAction('taskWindowChanged', 'Task.Window.Changed');
+  bundle.addReducer('taskWindowChanged', function (state, action) {
     const {taskWindow} = action;
     return {...state, taskWindow};
   });
@@ -103,7 +102,7 @@ export default function* (deps) {
   //
 
   const peer = Peer();
-  yield addSaga(peer.handleIncomingActions);
+  bundle.addSaga(peer.handleIncomingActions);
 
   peer.on('pullState', function* initTask () {
     return yield select(getTaskWindowState);
@@ -163,8 +162,8 @@ export default function* (deps) {
 
   /* When a refresh occurs and the task iframe is open, push the task data
      to it in case there is any change. */
-  yield use('refreshCompleted', 'revisionLoaded');
-  yield addSaga(function* () {
+  bundle.use('refreshCompleted', 'revisionLoaded');
+  bundle.addSaga(function* () {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
         yield takeEvery(deps.refreshCompleted, function* () {

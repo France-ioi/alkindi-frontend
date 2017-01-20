@@ -1,14 +1,13 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
-import {use, defineSelector, defineView} from 'epic-linker';
 
 import AuthHeader from './ui/auth_header';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');
+  bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');
 
-  yield defineSelector('AppSelector', function (state) {
+  bundle.defineSelector('AppSelector', function (state) {
     const {error, user, team, round, participations, is_admin} = state.response;
     if (error) {
       return {error};
@@ -25,7 +24,7 @@ export default function* (deps) {
     return {user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
   });
 
-  yield defineView('App', 'AppSelector', EpicComponent(self => {
+  bundle.defineView('App', 'AppSelector', EpicComponent(self => {
 
     self.componentWillMount = function () {
       window.addEventListener('beforeunload', function (event) {

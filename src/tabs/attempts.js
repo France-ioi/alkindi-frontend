@@ -3,7 +3,6 @@ import EpicComponent from 'epic-component';
 import classnames from 'classnames';
 import {Alert, Button} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
-import {include, use, defineAction, defineSelector, defineView, addReducer, addSaga} from 'epic-linker';
 import update from 'immutability-helper';
 import {takeLatest, select, call, put} from 'redux-saga/effects';
 
@@ -11,14 +10,14 @@ import Tooltip from '../ui/tooltip';
 import ManagedProcess from '../managed_process';
 import getMessage from '../messages';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('setActiveTab', 'RefreshButton', 'buildRequest', 'managedRefresh', 'refresh');
+  bundle.use('setActiveTab', 'RefreshButton', 'buildRequest', 'managedRefresh', 'refresh');
 
-  yield defineAction('activeTaskChanged', 'ActiveTask.Changed');
-  yield defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
+  bundle.defineAction('activeTaskChanged', 'ActiveTask.Changed');
+  bundle.defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
 
-  yield defineSelector('AttemptsTabSelector', function (state, _props) {
+  bundle.defineSelector('AttemptsTabSelector', function (state, _props) {
     const {now, user, round, round_tasks} = state.response;
     const createAttempt = ManagedProcess.getState(state, 'createAttempt');
     const activeTaskId = 'activeTask' in state
@@ -28,12 +27,12 @@ export default function* (deps) {
     return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId, createAttempt};
   });
 
-  yield addReducer('activeTaskChanged', function (state, action) {
+  bundle.addReducer('activeTaskChanged', function (state, action) {
     const activeTask = state.response.round_tasks[action.roundTaskId];
     return ManagedProcess.clearState({...state, activeTask});
   });
 
-  yield addSaga(function* () {
+  bundle.addSaga(function* () {
     yield takeLatest(deps.changeActiveAttempt, function* (action) {
       const attempt_id = action.id;
       const request = yield select(deps.buildRequest, {attempt_id});
@@ -43,7 +42,7 @@ export default function* (deps) {
     });
   });
 
-  yield include(ManagedProcess('createAttempt', 'Attempt.Create', p => function* (action) {
+  bundle.include(ManagedProcess('createAttempt', 'Attempt.Create', p => function* (action) {
     const {participation_id, api} = yield select(getApiContext);
     let result;
     try {
@@ -65,8 +64,8 @@ export default function* (deps) {
     return {api, participation_id};
   }
 
-  yield use('createAttempt');
-  yield defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
+  bundle.use('createAttempt');
+  bundle.defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
 
     function onSwitchTab (tabKey) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});

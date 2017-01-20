@@ -2,16 +2,15 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
-import {defineView} from 'epic-linker';
 
-export default function* () {
+export default function (bundle) {
 
   function ResultsTabSelector (state, _props) {
     const {participations, user, round} = state.response;
     return {participations, user, roundId: round.id};
   };
 
-  yield defineView('ResultsTab', ResultsTabSelector, EpicComponent(self => {
+  bundle.defineView('ResultsTab', ResultsTabSelector, EpicComponent(self => {
 
     const locationSearchAsObject = function () {
       return window.location.search.substring(1).split("&").reduce(function(result, value) {

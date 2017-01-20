@@ -11,17 +11,17 @@ import TaskTab from '../tabs/task';
 //import ResultsTab from '../tabs/results';
 import {asset_url} from '../assets';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield include(TeamTab);
-  yield include(AttemptsTab);
-  yield include(TaskTab);
+  bundle.include(TeamTab);
+  bundle.include(AttemptsTab);
+  bundle.include(TaskTab);
 
-  yield use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab');
+  bundle.use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab');
 
-  yield defineAction('setActiveTab', 'Tabs.SetActive');
+  bundle.defineAction('setActiveTab', 'Tabs.SetActive');
 
-  yield defineView('MainScreen', 'MainScreenSelector', EpicComponent(self => {
+  bundle.defineView('MainScreen', 'MainScreenSelector', EpicComponent(self => {
 
     const setActiveTab = function (tabKey) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});
@@ -62,13 +62,13 @@ export default function* (deps) {
 
   }));
 
-  yield defineSelector('MainScreenSelector', function (state) {
+  bundle.defineSelector('MainScreenSelector', function (state) {
     const {activeTabKey, enabledTabs, response, countdown, frontendUpdate} = state;
     const {user, round, team, attempt, task} = state.response;
     return {activeTabKey, enabledTabs, user, round, team, attempt, task, countdown, frontendUpdate};
   });
 
-  yield addReducer('setActiveTab', function (state, action) {
+  bundle.addReducer('setActiveTab', function (state, action) {
     const {tabKey} = action;
     const {enabledTabs, pendingAction, lastAction, lastError} = state;
     if (!enabledTabs[tabKey] || pendingAction) {
@@ -78,7 +78,7 @@ export default function* (deps) {
   });
 
   /* Tabs are updated after a successful refresh. */
-  yield addReducer('refreshCompleted', function (state, action) {
+  bundle.addReducer('refreshCompleted', function (state, action) {
     if (!action.success) {
       return state;
     }

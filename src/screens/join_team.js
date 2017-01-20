@@ -9,9 +9,9 @@ import AuthHeader from '../ui/auth_header';
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import getMessage from '../messages';
 
-export default function* (deps) {
+export default function (bundle, deps) {
 
-  yield use('refresh', 'LogoutButton');
+  bundle.use('refresh', 'LogoutButton');
 
   /*
 
@@ -21,7 +21,7 @@ export default function* (deps) {
     round: round object (if the user can create a team)
 
   */
-  yield defineSelector('JoinTeamScreenSelector', function (state) {
+  bundle.defineSelector('JoinTeamScreenSelector', function (state) {
     const {user, round} = state.response;
     const addBadge = getManagedProcessState(state, 'addBadge');
     const joinTeam = getManagedProcessState(state, 'joinTeam');
@@ -29,7 +29,7 @@ export default function* (deps) {
     return {user, round, addBadge, joinTeam, createTeam};
   });
 
-  yield defineView('JoinTeamScreen', 'JoinTeamScreenSelector', EpicComponent(self => {
+  bundle.defineView('JoinTeamScreen', 'JoinTeamScreenSelector', EpicComponent(self => {
     self.state = {joinTeam: false, teamCode: '', qualCode: ''};
     const onTeamCodeChanged = function (event) {
       self.setState({teamCode: event.target.value});
@@ -181,7 +181,7 @@ export default function* (deps) {
     };
   }));
 
-  yield include(ManagedProcess('createTeam', 'Team.Create', p => function* () {
+  bundle.include(ManagedProcess('createTeam', 'Team.Create', p => function* () {
     const {api, userId} = yield select(function (state) {
       const {api, response} = state;
       const userId = response.user.id;
@@ -201,9 +201,9 @@ export default function* (deps) {
       yield p.failure(result.error);
     }
   }));
-  yield use('createTeam');
+  bundle.use('createTeam');
 
-  yield include(ManagedProcess('joinTeam', 'Team.Join', p => function* (action) {
+  bundle.include(ManagedProcess('joinTeam', 'Team.Join', p => function* (action) {
     const {code} = action;
     let {api, userId} = yield select(function (state) {
       const {api, response} = state;
@@ -224,9 +224,9 @@ export default function* (deps) {
       yield p.failure(result.error);
     }
   }));
-  yield use('joinTeam');
+  bundle.use('joinTeam');
 
-  yield include(ManagedProcess('addBadge', 'User.AddBadge', p => function* (action) {
+  bundle.include(ManagedProcess('addBadge', 'User.AddBadge', p => function* (action) {
     const {code} = action;
     const {api, userId} = yield select(function (state) {
       const {api, response} = state;
@@ -261,6 +261,6 @@ export default function* (deps) {
     yield errorCode ? p.failure(errorCode) : p.success();
     yield put({type: deps.refresh});
   }));
-  yield use('addBadge');
+  bundle.use('addBadge');
 
 };
