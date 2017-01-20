@@ -43,7 +43,7 @@ import "./style.css";
 const isDev = process.env.NODE_ENV !== 'production';
 const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
 
-const {store, scope, start} = link(function* (deps) {
+const app = link(function (bundle, deps) {
 
   /* Make sure init is earliest in link order to avoid overwriting state added
      by reducer in bundles included later. */
@@ -57,6 +57,26 @@ const {store, scope, start} = link(function* (deps) {
       request: {},
       response: {}
     };
+  });
+
+  /* When the sagas crash, a 'crashed' action is dispatched, causing the
+     'crashed' property to be set on the global state, which causes the
+     crash screen to be displayed. */
+  bundle.defineAction('crashed', 'Crashed');
+  bundle.addReducer('crashed', function (state, action) {
+    return {...state, crashed: true};
+  });
+
+  /* When the user clicks the 'continue' button on the crash screen, the
+     sagas are restarted.  If things go well, the saga below will put the
+    'restarted' action, whose reducer will clear the 'crashed' property
+    from the global state, restoring the normal display. */
+  bundle.defineAction('restarted', 'Restarted');
+  bundle.addSaga(function* () {
+    yield put({type: deps.restarted});
+  });
+  bundle.addReducer('restarted', function (state, action) {
+    return {...state, crashed: false};
   });
 
   bundle.include(ClientApi);
@@ -105,22 +125,29 @@ export function run (config, container) {
   }
 
   // Initialize the store.
-  store.dispatch({type: scope.init, config});
+  app.store.dispatch({type: app.scope.init, config});
 
   // Start the sagas.
-  start();
+  Alkindi.restart = function () {
+    app.store.dispatch({type: app.scope.restarted});
+    Alkindi.rootTask = app.start();
+    Alkindi.rootTask.done.catch(function (error) {
+      app.store.dispatch({type: app.scope.crashed});
+    });
+  };
+  Alkindi.restart();
 
   // Simulate completion of a refresh operation with the backend-provided seed.
   if ('seed' in config) {
-    store.dispatch({type: scope.refreshCompleted, success: true, response: config.seed});
+    app.store.dispatch({type: app.scope.refreshCompleted, success: true, response: config.seed});
   }
 
   // Render the application.
   ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={app.store}>
       <div>
         {isDev && <div className="dev-banner">{"DEV"}</div>}
-        <scope.App/>
+        <app.scope.App/>
         {isDev && !reduxExt && <DevTools/>}
       </div>
     </Provider>, container);
@@ -130,5 +157,5 @@ export function run (config, container) {
 // Export a global.
 const Alkindi = window.Alkindi = {run};
 if (isDev) {
-  Object.assign(Alkindi, {store, scope});
+  Object.assign(Alkindi, app);
 }

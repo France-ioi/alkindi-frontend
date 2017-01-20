@@ -1,4 +1,5 @@
 import React from 'react';
+import {Alert, Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 
 import AuthHeader from './ui/auth_header';
@@ -8,6 +9,7 @@ export default function (bundle, deps) {
   bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');
 
   bundle.defineSelector('AppSelector', function (state) {
+    const {crashed} = state;
     const {error, user, team, round, participations, is_admin} = state.response;
     if (error) {
       return {error};
@@ -21,7 +23,7 @@ export default function (bundle, deps) {
           currentParticipation = participation;
       });
     }
-    return {user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
+    return {crashed, user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
   });
 
   bundle.defineView('App', 'AppSelector', EpicComponent(self => {
@@ -36,11 +38,29 @@ export default function (bundle, deps) {
       });
     };
 
+    const onRetry = function () {
+      // Restart the sagas.
+      window.Alkindi.restart();
+    };
+
     self.render = function () {
-      const {error} = self.props;
-      if (error) {
-        return (
-          <div className="container">
+      let body = false, popup = false;
+      const {crashed, error} = self.props;
+
+      if (crashed) {
+        popup = (
+          <div id="popup">
+            <Alert bsStyle='danger'>
+              {"Désolé, une erreur s'est produite."}
+            </Alert>
+            <p className="text-center">
+              <Button onClick={onRetry}>continuer</Button>
+            </p>
+          </div>
+        );
+      } else if (error) {
+        popup = (
+          <div id="popup">
             <p>Désolé, une erreur s'est produite : {error}</p>
             <p><deps.RefreshButton/></p>
           </div>
@@ -51,27 +71,30 @@ export default function (bundle, deps) {
 
       // The login screen is shown when no user is active.
       if (!user) {
-        return <deps.LoginScreen/>;
+        body = <deps.LoginScreen/>;
+      } else if (!team) {
+        body = <deps.JoinTeamScreen/>;
+      } else if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
+        body = <deps.MainScreen/>;
+      } else {
+        body = (
+          <div>
+            <p>Cas non prévu.</p>
+          </div>
+        );
       }
-
-      // Select the appropriate screen to display.
-      if (!team) {
-        return <deps.JoinTeamScreen/>;
-      }
-      if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
-        return <deps.MainScreen/>;
-      }
-
       /*
-      if (round.status === 'final')
+      } else if (round.status === 'final') {
         return <deps.FinalScreen/>;
-      if (round.status === 'over' || round.status === 'closed')
+      } else if (round.status === 'over' || round.status === 'closed') {
         return <deps.RoundOverScreen/>;
+      }
       */
 
       return (
         <div>
-          <p>Cas non prévu.</p>
+          {popup}
+          {body}
         </div>
       );
     };
