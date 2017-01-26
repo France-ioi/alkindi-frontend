@@ -62,7 +62,7 @@ export default function (bundle, deps) {
       return (
         <div className="tab-content">
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
-            style={{height: '1000px'}}/>
+            style={{height: '1100px'}}/>
           {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
           {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
         </div>
