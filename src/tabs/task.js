@@ -1,7 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Alert, Button} from 'react-bootstrap';
+import {Tabs, TabList, Tab, TabPanel} from 'react-tabs';
 import EpicComponent from 'epic-component';
+import {eventChannel, buffers} from 'redux-saga'
 import {call, fork, put, take, select, takeEvery, takeLatest} from 'redux-saga/effects';
 
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
@@ -10,15 +12,28 @@ import Peer from '../peer';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
+const views = [
+  {key: 'task', title: "Énoncé", showTask: true},
+  {key: 'solve', title: "Résoudre", showTask: true},
+  {key: 'history', title: "Historique", showTask: false}
+];
+views.forEach(function (view, index) {
+  view.index = index;
+});
+
 export default function (bundle, deps) {
 
   bundle.use('refresh');
 
+  bundle.addReducer('init', function (state, action) {
+    return {...state, taskView: views[0]};
+  });
+
   bundle.defineSelector('TaskTabSelector', function (state, _props) {
+    const {taskView} = state;
     const {attempt, round_task, team_data} = state.response;
-    const isTeamLocked = false; // XXX
     const startAttempt = getManagedProcessState(state, 'startAttempt');
-    return {attempt, round_task, team_data, isTeamLocked, startAttempt};
+    return {attempt, round_task, team_data, taskView, startAttempt};
   });
 
   bundle.defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
@@ -31,6 +46,10 @@ export default function (bundle, deps) {
     function onStartAttempt () {
       const attempt_id = self.props.attempt.id;
       self.props.dispatch({type: deps.startAttempt, attempt_id});
+    }
+
+    function onSelectTab (index) {
+      self.props.dispatch({type: deps.taskViewSelected, view: views[index]});
     }
 
     function renderStartAttempt () {
@@ -51,7 +70,7 @@ export default function (bundle, deps) {
     }
 
     self.render = function () {
-      const {attempt, round_task, team_data, isTeamLocked} = self.props;
+      const {attempt, round_task, team_data, taskView} = self.props;
       if (!team_data) {
         return (
           <div className="tab-content">
@@ -59,17 +78,54 @@ export default function (bundle, deps) {
           </div>
         );
       }
+      // React.createElement(deps[t.component])
       return (
         <div className="tab-content">
-          <iframe className="task" src={round_task.frontend_url} ref={refTask}
-            style={{height: '1800px'}}/>
+          <Tabs onSelect={onSelectTab} selectedIndex={taskView.index}>
+            <TabList>
+              {views.map(t => <Tab key={t.key} disabled={t.disabled}>{t.title}</Tab>)}
+            </TabList>
+            {views.map(t =>
+              <TabPanel key={t.key}>
+                <div></div>
+              </TabPanel>)}
+          </Tabs>
+          {taskView.key === 'history' && <p>History</p>}
           {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
           {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
+          <iframe className="task" src={round_task.frontend_url} ref={refTask}
+            style={{height: taskView.showTask ? '1800px' : '0'}}/>
         </div>
       );
     };
 
   }));
+
+  let channel;
+  bundle.defer(function (store) {
+    channel = eventChannel(function (emitter) {
+      return store.subscribe(function () {
+        const {taskWindow, taskDirty} = store.getState();
+        emitter({taskWindow, taskDirty});
+      });
+    }, buffers.sliding(1));
+  });
+  bundle.addSaga(function* () {
+    while (true) {
+      const {taskWindow, taskDirty} = yield take(channel);
+      if (taskDirty) {
+        const payload = yield select(getTaskWindowState);
+        yield call(peer.call, taskWindow, 'pushState', payload);
+        yield put({type: deps.taskStateSynced})
+      }
+    }
+  });
+
+  bundle.defineAction('taskViewSelected', 'Task.View.Selected');
+  bundle.addReducer('taskViewSelected', function (state, action) {
+    // XXX clear feedback
+    return {...state, taskView: action.view, taskDirty: true};
+  });
 
   bundle.use('startAttempt', 'buildRequest', 'managedRefresh');
   bundle.include(ManagedProcess('startAttempt', 'Attempt.Start', p => function* (action) {
@@ -85,7 +141,7 @@ export default function (bundle, deps) {
     if (result.success) {
       const request = yield select(deps.buildRequest);
       yield call(deps.managedRefresh, request);
-      yield p.success();
+      yield p.success({type: deps.taskStateSynced});
     } else {
       yield p.failure(result.error);
     }
@@ -94,7 +150,12 @@ export default function (bundle, deps) {
   bundle.defineAction('taskWindowChanged', 'Task.Window.Changed');
   bundle.addReducer('taskWindowChanged', function (state, action) {
     const {taskWindow} = action;
-    return {...state, taskWindow};
+    return {...state, taskWindow, taskDirty: false};
+  });
+
+  bundle.defineAction('taskStateSynced', 'Task.State.Pulled');
+  bundle.addReducer('taskStateSynced', function (state, action) {
+    return {...state, taskDirty: false};
   });
 
   //
@@ -104,8 +165,10 @@ export default function (bundle, deps) {
   const peer = Peer();
   bundle.addSaga(peer.handleIncomingActions);
 
-  peer.on('pullState', function* initTask () {
-    return yield select(getTaskWindowState);
+  peer.on('pullState', function* pullState () {
+    const result = yield select(getTaskWindowState);
+    yield put({type: deps.taskStateSynced});
+    return result;
   });
 
   /* Pass answer submissions from the task to the backend. */
@@ -181,11 +244,11 @@ export default function (bundle, deps) {
   /* This selector builds the data that is passed to the task in response to
      the 'initTask' call, and in 'loadTask' */
   function getTaskWindowState (state) {
-    const {response, revisions} = state;
+    const {response, revisions, taskView} = state;
     const {team_data, my_latest_revision_id} = response;
     const revision = revisions[my_latest_revision_id];  // XXX current revision should override my_latest_revision_id
     const {score} = response.attempt;
-    return {task: team_data, score, revision};
+    return {view: taskView.key, task: team_data, score, revision};
   }
 
 };
