@@ -2,8 +2,6 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 
-import AuthHeader from './ui/auth_header';
-
 export default function (bundle, deps) {
 
   bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');

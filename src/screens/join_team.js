@@ -5,13 +5,12 @@ import {use, include, defineAction, defineSelector, defineView, addSaga, addRedu
 import {eventChannel, buffers} from 'redux-saga';
 import {call, put, take, select} from 'redux-saga/effects'
 
-import AuthHeader from '../ui/auth_header';
 import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 import getMessage from '../messages';
 
 export default function (bundle, deps) {
 
-  bundle.use('refresh', 'LogoutButton');
+  bundle.use('refresh', 'LogoutButton', 'AuthHeader');
 
   /*
 
@@ -169,7 +168,7 @@ export default function (bundle, deps) {
           <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
             <deps.LogoutButton/>
           </div>
-          <AuthHeader/>
+          <deps.AuthHeader/>
           <div className="wrapper" style={{position: 'relative'}}>
             {round ? renderQualified(round) : renderNotQualified()}
             {round && renderCreateTeam()}

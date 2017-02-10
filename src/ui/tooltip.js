@@ -1,9 +1,8 @@
 import React from 'react';
 import Tooltip from 'rc-tooltip';
+import EpicComponent from 'epic-component';
 
-import {PureComponent} from '../misc';
-
-export default PureComponent(self => {
+export default EpicComponent(self => {
     /* Props:
              text
     */

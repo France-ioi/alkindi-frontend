@@ -9,7 +9,6 @@ import Tabs from '../ui/tabs';
 import CountdownTimer from '../ui/countdown_timer';
 import TaskTab from '../tabs/task';
 //import ResultsTab from '../tabs/results';
-import {asset_url} from '../assets';
 
 export default function (bundle, deps) {
 
@@ -17,7 +16,7 @@ export default function (bundle, deps) {
   bundle.include(AttemptsTab);
   bundle.include(TaskTab);
 
-  bundle.use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab');
+  bundle.use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab', 'assetUrl');
 
   bundle.defineAction('setActiveTab', 'Tabs.SetActive');
 
@@ -49,7 +48,7 @@ export default function (bundle, deps) {
         <div>
           <div id="header">
             <div className="wrapper">
-              <img id="header-logo" src={asset_url('alkindi-logo.png')} />
+              <img id="header-logo" src={deps.assetUrl('alkindi-logo.png')} />
               <Tabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
               <CountdownTimer visible={countdown !== undefined} seconds={Math.round(countdown/1000)}/>
               {frontendUpdate && '*'}

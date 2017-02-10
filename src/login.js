@@ -26,6 +26,8 @@ export default function (bundle, deps) {
     return {};
   });
 
+  bundle.defineView('AuthHeader', AuthHeader(bundle.pack('assetUrl')));
+
   bundle.defineView('LoginScreen', 'LoginScreenSelector', EpicComponent(self => {
     const onLogin = function () {
       self.props.dispatch({type: deps.login});
@@ -33,7 +35,7 @@ export default function (bundle, deps) {
     self.render = function () {
       return (
         <div className="wrapper">
-          <AuthHeader/>
+          <deps.AuthHeader/>
           <div className="section">
             <p>Bienvenue sur la plateforme du 2<sup>ème</sup> tour du concours Alkindi.</p>
             <p>

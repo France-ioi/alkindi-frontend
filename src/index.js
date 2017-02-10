@@ -59,6 +59,10 @@ const app = link(function (bundle, deps) {
     };
   });
 
+  bundle.defineValue('assetUrl', function assetUrl (path) {
+    return `/assets/${path}`; // XXX
+  });
+
   /* When the sagas crash, a 'crashed' action is dispatched, causing the
      'crashed' property to be set on the global state, which causes the
      crash screen to be displayed. */
