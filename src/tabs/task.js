@@ -26,11 +26,12 @@ export default function (bundle, deps) {
   bundle.use('refresh', 'HistoryTab');
 
   bundle.addReducer('init', function (state, action) {
-    return {...state, taskView: views[0]};
+    return {...state, taskViewKey: views[0].key};
   });
 
   bundle.defineSelector('TaskTabSelector', function (state, _props) {
-    const {taskView} = state;
+    const {taskViewKey} = state;
+    const taskView = views.find(view => view.key === taskViewKey);
     const {attempt, round_task, team_data} = state.response;
     const startAttempt = getManagedProcessState(state, 'startAttempt');
     return {attempt, round_task, team_data, taskView, startAttempt};
@@ -124,8 +125,7 @@ export default function (bundle, deps) {
   bundle.defineAction('taskViewSelected', 'Task.View.Selected');
   bundle.addReducer('taskViewSelected', function (state, action) {
     const {key} = action;
-    const taskView = views.find(view => view.key === key);
-    return {...state, taskView, taskDirty: true};
+    return {...state, taskViewKey: key, taskDirty: true};
   });
 
   bundle.use('startAttempt', 'buildRequest', 'managedRefresh');
@@ -247,11 +247,11 @@ export default function (bundle, deps) {
   /* This selector builds the data that is passed to the task in response to
      the 'initTask' call, and in 'loadTask' */
   function getTaskWindowState (state) {
-    const {response, revision, revisions, taskView} = state;
+    const {response, revision, revisions, taskViewKey} = state;
     const {team_data, my_latest_revision_id} = response;
     const {score} = response.attempt;
     return {
-      view: taskView.key,
+      view: taskViewKey,
       task: team_data,
       revision: revisions[revision.revisionId],
       score
