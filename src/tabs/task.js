@@ -23,7 +23,7 @@ views.forEach(function (view, index) {
 
 export default function (bundle, deps) {
 
-  bundle.use('refresh');
+  bundle.use('refresh', 'HistoryTab');
 
   bundle.addReducer('init', function (state, action) {
     return {...state, taskView: views[0]};
@@ -49,7 +49,7 @@ export default function (bundle, deps) {
     }
 
     function onSelectTab (index) {
-      self.props.dispatch({type: deps.taskViewSelected, view: views[index]});
+      self.props.dispatch({type: deps.taskViewSelected, key: views[index].key});
     }
 
     function renderStartAttempt () {
@@ -90,7 +90,7 @@ export default function (bundle, deps) {
                 <div></div>
               </TabPanel>)}
           </Tabs>
-          {taskView.key === 'history' && <p>History</p>}
+          {taskView.key === 'history' && <deps.HistoryTab/>}
           {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
           {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
@@ -123,8 +123,9 @@ export default function (bundle, deps) {
 
   bundle.defineAction('taskViewSelected', 'Task.View.Selected');
   bundle.addReducer('taskViewSelected', function (state, action) {
-    // XXX clear feedback
-    return {...state, taskView: action.view, taskDirty: true};
+    const {key} = action;
+    const taskView = views.find(view => view.key === key);
+    return {...state, taskView, taskDirty: true};
   });
 
   bundle.use('startAttempt', 'buildRequest', 'managedRefresh');
@@ -225,17 +226,19 @@ export default function (bundle, deps) {
 
   /* When a refresh occurs and the task iframe is open, push the task data
      to it in case there is any change. */
-  bundle.use('refreshCompleted', 'revisionLoaded');
+  bundle.use('refreshCompleted', 'revisionSelected');
   bundle.addSaga(function* () {
     yield takeLatest(deps.taskWindowChanged, function* ({taskWindow}) {
       if (taskWindow) {
         yield takeEvery(deps.refreshCompleted, function* () {
-          const payload = yield select(getTaskWindowState);
+          const payload = yield select(getTaskAndScore);
+          // TODO: push task, score only
           yield call(peer.call, taskWindow, 'pushState', payload);
         });
-        yield takeEvery(deps.revisionLoaded, function* (action) {
-          const payload = yield select(getTaskWindowState);
-          yield call(peer.call, taskWindow, 'pushState', payload);
+        yield takeEvery(deps.revisionSelected, function* (action) {
+          const revision = yield select(getCurrentRevision);
+          yield call(peer.call, taskWindow, 'pushState', {revision});
+          yield put({type: deps.taskViewSelected, key: 'solve'});
         });
       }
     });
@@ -244,11 +247,28 @@ export default function (bundle, deps) {
   /* This selector builds the data that is passed to the task in response to
      the 'initTask' call, and in 'loadTask' */
   function getTaskWindowState (state) {
-    const {response, revisions, taskView} = state;
+    const {response, revision, revisions, taskView} = state;
     const {team_data, my_latest_revision_id} = response;
-    const revision = revisions[my_latest_revision_id];  // XXX current revision should override my_latest_revision_id
     const {score} = response.attempt;
-    return {view: taskView.key, task: team_data, score, revision};
+    return {
+      view: taskView.key,
+      task: team_data,
+      revision: revisions[revision.revisionId],
+      score
+    };
+  }
+
+  function getTaskAndScore (state) {
+    const {team_data, attempt} = state.response;
+    return {
+      task: team_data,
+      score: attempt.score
+    };
+  }
+
+  function getCurrentRevision (state) {
+    const {revision, revisions} = state;
+    return revisions[revision.revisionId];
   }
 
 };

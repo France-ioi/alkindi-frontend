@@ -4,41 +4,77 @@ import update from 'immutability-helper';
 
 export default function (bundle, deps) {
 
-  bundle.use('refreshCompleted');
-
-  bundle.defineAction('revisionLoaded', 'Revision.Loaded');
-
   bundle.addReducer('init', function (state, action) {
-    return {...state, revisions: []};
+    return {...state,
+      revision: {},
+      revisions: []
+    };
   });
 
-  bundle.addReducer('revisionLoaded', function (state, action) {
-    const {revision} = action;
-    return update(state, {revisions: {[revision.id]: {$set: revision}}});
+  /* After a refresh:
+     - if there is no selected revision, set the latest revision as the next one
+     - if the next revision is not loaded, set it to be loaded
+       - mar
+
+     automatically select the latest revision. */
+  bundle.use('refreshCompleted');
+  bundle.addReducer('refreshCompleted', function (state, action) {
+    const {response} = action;
+    const {revision} = state;
+    const attemptId = response.attempt_id;
+    /* When the attempt changes, clear the current revision. */
+    if (revision.attemptId !== attemptId) {
+      state = {...state, revision: {attemptId}};
+    }
+    return state;
   });
 
   bundle.addSaga(function* () {
     yield takeLatest(deps.refreshCompleted, function* (action) {
-      const {response} = action;
-      const attemptId = response.attempt_id;
-      const revisionId = response.my_latest_revision_id;
-      // revisionId can be undefined, null, or a number.
-      if (typeof revisionId === 'number') {
-        console.log('loading current revision', revisionId);
-        const {api, isNeeded} = yield select(isRevisionNeeded, revisionId);
-        if (isNeeded) {
-          const result = yield call(api.loadRevision, revisionId);
-          yield put({type: deps.revisionLoaded, attemptId, revision: result.workspace_revision});
+      const {revision, revisions, response} = yield select(state => state);
+      let {revisionId} = revision;
+      if (revisionId === undefined) {
+        /* Default to the user's latest revision. */
+        revisionId = response.my_latest_revision_id;
+      }
+      if (revisionId !== undefined && revisionId !== null) {
+        if (revisions[revisionId] === undefined) {
+          yield put({type: deps.loadRevision, revisionId});
+        } else {
+          yield put({type: deps.revisionSelected, revisionId});
         }
       }
     });
   });
 
-  function isRevisionNeeded (state, revisionId) {
-    if (state.revisions[revisionId]) {
-      return {};
-    }
-    return {api: state.api, isNeeded: true};
-  }
+  bundle.defineAction('loadRevision', 'Revision.Load');
+  bundle.addSaga(function* () {
+    yield takeLatest(deps.loadRevision, function* (action) {
+      const {revisionId} = action;
+      const revisions = yield select(state => state.revisions);
+      if (revisions[revisionId] === undefined) {
+        const api = yield select(state => state.api);
+        const result = yield call(api.loadRevision, revisionId);
+        yield put({type: deps.revisionLoaded, revision: result.workspace_revision});
+      }
+      yield put({type: deps.revisionSelected, revisionId});
+    });
+  });
+
+  bundle.defineAction('revisionLoaded', 'Revision.Loaded');
+  bundle.addReducer('revisionLoaded', function (state, action) {
+    const {revision} = action;
+    return update(state, {
+      revisions: {[revision.id]: {$set: revision}},
+    });
+  });
+
+  bundle.defineAction('revisionSelected', 'Revision.Selected');
+  bundle.addReducer('revisionSelected', function (state, action) {
+    const {revisionId} = action;
+    return update(state, {
+      revision: {revisionId: {$set: revisionId}}
+    });
+  });
 
 };

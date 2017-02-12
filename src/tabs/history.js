@@ -1,70 +1,65 @@
+
 import React from 'react';
-import {connect} from 'react-redux';
 import EpicComponent from 'epic-component';
-import {createSelector} from 'reselect';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import memoize from 'memoizejs';
 
 import {toMap} from '../misc';
-import Notifier from '../ui/notifier';
 import Tooltip from '../ui/tooltip';
-import RefreshButton from '../ui/refresh_button';
 
-const HistoryTab = EpicComponent(self => {
+const RevisionRow = EpicComponent(self => {
 
-  const onLoadRevision = memoize(function (revisionId) {
-    return function () {
-      const {cryptoChanged} = self.props;
-      if (cryptoChanged) {
-        if (!confirm("Vous allez perdre vos changements dans l'onglet Cryptanalyse si vous continuer."))
-          return;
-      }
-      self.props.dispatch({type: 'USE_REVISION', revisionId});
-    };
-  });
+  function onLoad () {
+    self.props.onLoad(self.props.revision.id);
+  }
 
-  const onRefresh = function () {
-    const {alkindi, attempt_id} = self.props;
-    alkindi.refresh({history: attempt_id});
+  self.render = function () {
+    const {revision, creator, isCurrent, isModified} = self.props;
+    const classes = [
+      isCurrent && 'revision-isCurrent',
+      isModified && 'revision-isModified'
+    ];
+    return (
+      <tr key={revision.id} className={classnames(classes)}>
+        <td>
+          {isCurrent &&
+            (isModified
+              ? <Tooltip content={<p>Cette version a été chargée dans l'onglet Résoudre, puis modifiée.</p>}>
+                  <i className="fa fa-save"/>
+                </Tooltip>
+              : <Tooltip content={<p>Cette version est chargée dans l'onglet Résoudre.</p>}>
+                  <i className="fa fa-asterisk"/>
+                </Tooltip>)}
+        </td>
+        <td>{new Date(revision.created_at).toLocaleString()}</td>
+        <td>{creator.username}</td>
+        <td>
+          <Button onClick={onLoad}>
+            <i className="fa fa-code-fork"/>
+            {' recharger'}
+          </Button>
+        </td>
+      </tr>
+    );
   };
+
+});
+
+const HistoryTabView = deps => EpicComponent(self => {
+
+  function onLoadRevision (revisionId) {
+    const {cryptoChanged} = self.props;
+    if (cryptoChanged) {
+      if (!confirm("Vous allez perdre vos changements dans l'onglet Résoudre si vous continuez."))
+        return;
+    }
+    self.props.dispatch({type: deps.loadRevision, revisionId});
+  }
 
   const renderRevisions = function (revisions) {
     const {currentRevisionId, cryptoChanged} = self.props;
     const users = toMap(self.props.users);
-    const workspaces = toMap(self.props.workspaces);
-    const renderRevisionRow = function (revision) {
-      const workspace = workspaces[revision.workspace_id];
-      const creator = users[revision.creator_id];
-      const isCurrent = currentRevisionId === revision.id;
-      const isModified = isCurrent && cryptoChanged;
-      const classes = [
-        isCurrent && 'revision-isCurrent',
-        isModified && 'revision-isModified'
-      ];
-      return (
-        <tr key={workspace.id+'.'+revision.id} className={classnames(classes)}>
-          <td>
-            {isCurrent &&
-              (isModified
-                ? <Tooltip content={<p>Cette version a été chargée dans l'onglet cryptanalyse, puis modifiée.</p>}>
-                    <i className="fa fa-save"/>
-                  </Tooltip>
-                : <Tooltip content={<p>Cette version est chargée dans l'onglet cryptanalyse.</p>}>
-                    <i className="fa fa-asterisk"/>
-                  </Tooltip>)}
-          </td>
-          <td>{new Date(revision.created_at).toLocaleString()}</td>
-          <td>{creator.username}</td>
-          <td>
-            <Button onClick={onLoadRevision(revision.id)}>
-              <i className="fa fa-code-fork"/>
-              {' recharger'}
-            </Button>
-          </td>
-        </tr>
-      );
-    };
     return (
       <table className="table revision-list">
         <thead>
@@ -76,28 +71,28 @@ const HistoryTab = EpicComponent(self => {
           </tr>
         </thead>
         <tbody>
-          {revisions.map(renderRevisionRow)}
+          {revisions.map(function (revision) {
+            const creator = users[revision.creator_id];
+            const isCurrent = currentRevisionId === revision.id;
+            const isModified = isCurrent && cryptoChanged;
+            return <RevisionRow key={revision.id} revision={revision} creator={creator} isCurrent={isCurrent} isModified={isModified} onLoad={onLoadRevision}/>;
+          })}
         </tbody>
       </table>
     );
   };
 
-  self.componentWillMount = function () {
-    onRefresh();
-  };
-
   self.render = function () {
-    const {alkindi, revisions} = self.props;
+    const {revisions} = self.props;
     return (
       <div className="tab-content">
         <div style={{marginBottom: '10px'}}>
           <div className='pull-right'>
             <Tooltip content={<p>Cliquez sur ce bouton pour mettre à jour la liste des versions enregistrées par votre équipe.</p>}/>
             {' '}
-            <RefreshButton alkindi={alkindi} refresh={onRefresh}/>
+            <deps.RefreshButton/>
           </div>
         </div>
-        <Notifier alkindi={alkindi}/>
         <p>
           Ci-dessous, vous pouvez trouver toutes les versions précédemment
           enregistrées par vous et vos coéquipiers.
@@ -118,15 +113,23 @@ const HistoryTab = EpicComponent(self => {
   };
 });
 
-const selector = function (state) {
-  const {workspace, attempt} = state;
-  const {revisions, users, workspaces} = state.response;
+function HistoryTabSelector (state, props) {
+  const {currentRevisionId, nextRevisionId} = state;
+  const {revisions, users} = state.response;
+  const cryptoChanged = false; // XXX TODO: lib must signal when workspace has unsaved changes
   return {
-    attempt_id: attempt.id,
-    cryptoChanged: workspace.changed,
-    currentRevisionId: workspace.revisionId,
-    revisions, users, workspaces
+    cryptoChanged,
+    currentRevisionId,
+    nextRevisionId,
+    revisions,
+    users
   };
+  return {};
 };
 
-export default connect(selector)(HistoryTab);
+export default function (bundle, deps) {
+
+  bundle.defineView('HistoryTab', HistoryTabSelector, HistoryTabView(
+    bundle.pack('RefreshButton', 'loadRevision')));
+
+};
