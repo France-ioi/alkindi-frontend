@@ -1,3 +1,5 @@
+/* OBSOLETE CODE 2016 */
+
 import React from 'react';
 import EpicComponent from 'epic-component';
 import {connect} from 'react-redux';
