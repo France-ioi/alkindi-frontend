@@ -1,16 +1,17 @@
 import React from 'react';
+import EpicComponent from 'epic-component';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
-import Tooltip from '../ui/tooltip';
 import classnames from 'classnames';
 
-import {PureComponent, toMap} from '../misc';
+import {toMap} from '../misc';
+import Tooltip from '../ui/tooltip';
 import Notifier from '../ui/notifier';
 import {RefreshButton} from '../ui/refresh_button';
 import {setActiveTab} from '../actions';
 import Tasks from '../tasks';
 
-const AnswersTab = PureComponent(self => {
+const AnswersTab = EpicComponent(self => {
 
   const submitAnswer = function (data) {
     const {alkindi, user_id, attempt} = self.props;
