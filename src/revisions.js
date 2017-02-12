@@ -24,7 +24,7 @@ export default function (bundle, deps) {
     const attemptId = response.attempt_id;
     /* When the attempt changes, clear the current revision. */
     if (revision.attemptId !== attemptId) {
-      state = {...state, revision: {attemptId}};
+      state = {...state, revision: {attemptId}, taskViewKey: 'task'};
     }
     return state;
   });
