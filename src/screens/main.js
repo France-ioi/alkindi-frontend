@@ -2,21 +2,23 @@ import React from 'react';
 import EpicComponent from 'epic-component';
 import {include, use, defineAction, defineSelector, defineView, addReducer} from 'epic-linker';
 
+import alkindiLogo from '../../assets/alkindi-logo.png';
 import TeamTab from '../tabs/team';
 import AttemptsTab from '../tabs/attempts';
-
+import TaskTab from '../tabs/task';
+import HistoryTab from '../tabs/history';
+//import ResultsTab from '../tabs/results';
 import Tabs from '../ui/tabs';
 import CountdownTimer from '../ui/countdown_timer';
-import TaskTab from '../tabs/task';
-//import ResultsTab from '../tabs/results';
 
 export default function (bundle, deps) {
 
   bundle.include(TeamTab);
   bundle.include(AttemptsTab);
   bundle.include(TaskTab);
+  bundle.include(HistoryTab);
 
-  bundle.use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab', 'assetUrl');
+  bundle.use('LogoutButton', 'TeamTab', 'AttemptsTab', 'TaskTab');
 
   bundle.defineAction('setActiveTab', 'Tabs.SetActive');
 
@@ -48,7 +50,7 @@ export default function (bundle, deps) {
         <div>
           <div id="header">
             <div className="wrapper">
-              <img id="header-logo" src={deps.assetUrl('alkindi-logo.png')} />
+              <img id="header-logo" src={alkindiLogo} />
               <Tabs activeTabKey={activeTabKey} enabledTabs={enabledTabs} setActiveTab={setActiveTab} />
               <CountdownTimer visible={countdown !== undefined} seconds={Math.round(countdown/1000)}/>
               {frontendUpdate && '*'}

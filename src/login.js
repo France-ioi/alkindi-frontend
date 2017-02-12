@@ -26,7 +26,7 @@ export default function (bundle, deps) {
     return {};
   });
 
-  bundle.defineView('AuthHeader', AuthHeader(bundle.pack('assetUrl')));
+  bundle.defineView('AuthHeader', AuthHeader);
 
   bundle.defineView('LoginScreen', 'LoginScreenSelector', EpicComponent(self => {
     const onLogin = function () {
@@ -137,7 +137,7 @@ export default function (bundle, deps) {
   /* Handle logout messages posted by the backend via the client API. */
   bundle.addSaga(function* () {
     while (true) {
-      let {error} = yield take(deps.logoutFeedback);
+      var {error} = yield take(deps.logoutFeedback);
       if (error) {
         yield put({type: deps.logoutFailed, error});
       } else {

@@ -29,6 +29,10 @@ const config = module.exports = {
       {
         test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
         loader: 'file?name=fonts/[name].[ext]'
+      },
+      {
+        test: /\.(ico|gif|png|jpg|jpeg|svg)$/,
+        loader: 'file-loader?context=public&name=images/[name].[ext]'
       }
     ]
   },

@@ -20,7 +20,6 @@ import link from 'epic-linker';
 import {put} from 'redux-saga/effects';
 
 import Api from './api';
-import {configure as configureAssets} from './assets';
 import DevTools from './dev_tools';
 
 import App from './app';
@@ -57,10 +56,6 @@ const app = link(function (bundle, deps) {
       request: {},
       response: {}
     };
-  });
-
-  bundle.defineValue('assetUrl', function assetUrl (path) {
-    return `/assets/${path}`; // XXX
   });
 
   /* When the sagas crash, a 'crashed' action is dispatched, causing the
@@ -122,11 +117,6 @@ export function run (config, container) {
   Alkindi.run = function () {
     console.log('Alkindi.run called twice');
   };
-
-  // XXX clean this up
-  if ('assets_template' in config) {
-    configureAssets({template: config.assets_template});
-  }
 
   // Initialize the store.
   app.store.dispatch({type: app.scope.init, config});
