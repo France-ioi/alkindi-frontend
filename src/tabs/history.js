@@ -114,13 +114,12 @@ const HistoryTabView = deps => EpicComponent(self => {
 });
 
 function HistoryTabSelector (state, props) {
-  const {currentRevisionId, nextRevisionId} = state;
-  const {revisions, users} = state.response;
+  const {revision, response} = state;
+  const {revisions, users} = response;
   const cryptoChanged = false; // XXX TODO: lib must signal when workspace has unsaved changes
   return {
     cryptoChanged,
-    currentRevisionId,
-    nextRevisionId,
+    currentRevisionId: revision.revisionId,
     revisions,
     users
   };

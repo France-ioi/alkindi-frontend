@@ -23,7 +23,7 @@ views.forEach(function (view, index) {
 
 export default function (bundle, deps) {
 
-  bundle.use('refresh', 'HistoryTab');
+  bundle.use('refresh', 'HistoryTab', 'revisionSelected');
 
   bundle.addReducer('init', function (state, action) {
     return {...state, taskViewKey: views[0].key};
@@ -211,6 +211,8 @@ export default function (bundle, deps) {
     } catch (ex) {
       return {success: false, error: 'server error'};
     }
+    /* The 'quiet' option prevents revisionSelected from pushing to the iframe. */
+    yield put({type: deps.revisionSelected, revisionId: revision.id, quiet: true});
     /* Perform a refresh to update the list of revisions and push to the iframe.
        then end the saga to pass the result (including the revision_id). */
     const refreshRequest = yield select(deps.buildRequest);
@@ -236,9 +238,11 @@ export default function (bundle, deps) {
           yield call(peer.call, taskWindow, 'pushState', payload);
         });
         yield takeEvery(deps.revisionSelected, function* (action) {
-          const revision = yield select(getCurrentRevision);
-          yield call(peer.call, taskWindow, 'pushState', {revision});
-          yield put({type: deps.taskViewSelected, key: 'solve'});
+          if (!action.quiet) {
+            const revision = yield select(getCurrentRevision);
+            yield call(peer.call, taskWindow, 'pushState', {revision});
+            yield put({type: deps.taskViewSelected, key: 'solve'});
+          }
         });
       }
     });
