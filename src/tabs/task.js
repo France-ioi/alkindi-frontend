@@ -30,11 +30,11 @@ export default function (bundle, deps) {
   });
 
   bundle.defineSelector('TaskTabSelector', function (state, _props) {
-    const {taskViewKey} = state;
+    const {taskViewKey, taskReady} = state;
     const taskView = views.find(view => view.key === taskViewKey);
     const {attempt, round_task, team_data} = state.response;
     const startAttempt = getManagedProcessState(state, 'startAttempt');
-    return {attempt, round_task, team_data, taskView, startAttempt};
+    return {attempt, round_task, team_data, taskView, taskReady, startAttempt};
   });
 
   bundle.defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
@@ -71,7 +71,7 @@ export default function (bundle, deps) {
     }
 
     self.render = function () {
-      const {attempt, round_task, team_data, taskView} = self.props;
+      const {attempt, round_task, team_data, taskReady, taskView} = self.props;
       if (!team_data) {
         return (
           <div className="tab-content">
@@ -82,20 +82,24 @@ export default function (bundle, deps) {
       // React.createElement(deps[t.component])
       return (
         <div className="tab-content">
-          <Tabs onSelect={onSelectTab} selectedIndex={taskView.index}>
-            <TabList>
-              {views.map(t => <Tab key={t.key} disabled={t.disabled}>{t.title}</Tab>)}
-            </TabList>
-            {views.map(t =>
-              <TabPanel key={t.key}>
-                <div></div>
-              </TabPanel>)}
-          </Tabs>
-          {taskView.key === 'history' && <deps.HistoryTab/>}
-          {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
-          {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
+          {!taskReady &&
+            <div style={{padding: '20px', fontSize: '32px'}}><i className="fa fa-spinner fa-spin"/></div>}
+          {taskReady &&
+            <Tabs onSelect={onSelectTab} selectedIndex={taskView.index}>
+              <TabList>
+                {views.map(t => <Tab key={t.key} disabled={t.disabled}>{t.title}</Tab>)}
+              </TabList>
+              {views.map(t =>
+                <TabPanel key={t.key}>
+                  <div></div>
+                </TabPanel>)}
+            </Tabs>
+            {taskView.key === 'history' && <deps.HistoryTab/>}
+            {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
+            {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
+          }
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
-            style={{height: taskView.showTask ? '1800px' : '0'}}/>
+            style={{height: taskReady && taskView.showTask ? '1800px' : '0'}}/>
         </div>
       );
     };
@@ -151,10 +155,15 @@ export default function (bundle, deps) {
   bundle.defineAction('taskWindowChanged', 'Task.Window.Changed');
   bundle.addReducer('taskWindowChanged', function (state, action) {
     const {taskWindow} = action;
-    return {...state, taskWindow, taskDirty: false};
+    return {...state, taskWindow, taskReady: false, taskDirty: false};
   });
 
-  bundle.defineAction('taskStateSynced', 'Task.State.Pulled');
+  bundle.defineAction('taskStatePulled', 'Task.State.Pulled');
+  bundle.addReducer('taskStatePulled', function (state, action) {
+    return {...state, taskReady: true, taskDirty: false};
+  });
+
+  bundle.defineAction('taskStateSynced', 'Task.State.Synced');
   bundle.addReducer('taskStateSynced', function (state, action) {
     return {...state, taskDirty: false};
   });
@@ -168,7 +177,7 @@ export default function (bundle, deps) {
 
   peer.on('pullState', function* pullState () {
     const result = yield select(getTaskWindowState);
-    yield put({type: deps.taskStateSynced});
+    yield put({type: deps.taskStatePulled});
     return result;
   });
 
