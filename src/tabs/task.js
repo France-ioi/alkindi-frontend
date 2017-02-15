@@ -93,11 +93,10 @@ export default function (bundle, deps) {
                 <TabPanel key={t.key}>
                   <div></div>
                 </TabPanel>)}
-            </Tabs>
-            {taskView.key === 'history' && <deps.HistoryTab/>}
-            {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
-            {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
-          }
+            </Tabs>}
+          {taskReady && taskView.key === 'history' && <deps.HistoryTab/>}
+          {false && <textarea value={JSON.stringify(round_task, null, 2)}></textarea>}
+          {false && <textarea value={JSON.stringify(team_data, null, 2)}></textarea>}
           <iframe className="task" src={round_task.frontend_url} ref={refTask}
             style={{height: taskReady && taskView.showTask ? '1800px' : '0'}}/>
         </div>
