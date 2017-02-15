@@ -115,8 +115,8 @@ export default function (bundle, deps) {
     while (true) {
       const {taskWindow, taskDirty} = yield take(channel);
       if (taskDirty) {
-        const payload = yield select(getTaskWindowState);
-        yield call(peer.call, taskWindow, 'pushState', payload);
+        const view = yield select(state => state.taskViewKey);
+        yield call(peer.call, taskWindow, 'pushState', {view});
         yield put({type: deps.taskStateSynced})
       }
     }
@@ -181,6 +181,8 @@ export default function (bundle, deps) {
     } catch (ex) {
       return {success: false, error: 'server error'};
     }
+    /* Select the saved revision without (delay pushing to the task iframe). */
+    yield put({type: deps.revisionSelected, revisionId: result.revision_id, quiet: true});
     /* Trigger a refresh to update the best score and attempt status. */
     yield put({type: deps.refresh});
     return result;
@@ -211,10 +213,10 @@ export default function (bundle, deps) {
     } catch (ex) {
       return {success: false, error: 'server error'};
     }
-    /* The 'quiet' option prevents revisionSelected from pushing to the iframe. */
-    yield put({type: deps.revisionSelected, revisionId: revision.id, quiet: true});
-    /* Perform a refresh to update the list of revisions and push to the iframe.
-       then end the saga to pass the result (including the revision_id). */
+    /* Select the saved revision (do not push to the task iframe, it will do
+       the necessary work when it gets the result). */
+    yield put({type: deps.revisionSelected, revisionId: result.revision_id, quiet: true});
+    /* Perform a refresh to update the list of revisions. */
     const refreshRequest = yield select(deps.buildRequest);
     yield call(deps.managedRefresh, refreshRequest);
     return result;

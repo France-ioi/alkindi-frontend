@@ -40,7 +40,7 @@ export default function (bundle, deps) {
       if (revisionId !== undefined && revisionId !== null) {
         if (revisions[revisionId] === undefined) {
           yield put({type: deps.loadRevision, revisionId});
-        } else {
+        } else if (revision.revisionId !== revisionId) {
           yield put({type: deps.revisionSelected, revisionId});
         }
       }
