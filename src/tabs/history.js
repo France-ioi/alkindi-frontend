@@ -15,7 +15,7 @@ const RevisionRow = EpicComponent(self => {
   }
 
   self.render = function () {
-    const {revision, creator, isCurrent, isModified} = self.props;
+    const {revision, creator, isCurrent, isModified, score} = self.props;
     const classes = [
       isCurrent && 'revision-isCurrent',
       isModified && 'revision-isModified'
@@ -34,6 +34,7 @@ const RevisionRow = EpicComponent(self => {
         </td>
         <td>{new Date(revision.created_at).toLocaleString()}</td>
         <td>{creator.username}</td>
+        <td className="colScore">{score !== null && score}</td>
         <td>
           <Button onClick={onLoad}>
             <i className="fa fa-code-fork"/>
@@ -67,6 +68,7 @@ const HistoryTabView = deps => EpicComponent(self => {
             <th></th>
             <th>Date d'enregistrement</th>
             <th>Auteur</th>
+            <th style={{width: '64px'}}>Score</th>
             <th></th>
           </tr>
         </thead>
@@ -75,7 +77,7 @@ const HistoryTabView = deps => EpicComponent(self => {
             const creator = users[revision.creator_id];
             const isCurrent = currentRevisionId === revision.id;
             const isModified = isCurrent && cryptoChanged;
-            return <RevisionRow key={revision.id} revision={revision} creator={creator} isCurrent={isCurrent} isModified={isModified} onLoad={onLoadRevision}/>;
+            return <RevisionRow key={revision.id} revision={revision} creator={creator} score={revision.score} isCurrent={isCurrent} isModified={isModified} onLoad={onLoadRevision}/>;
           })}
         </tbody>
       </table>
