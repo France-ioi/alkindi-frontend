@@ -105,6 +105,10 @@ const HistoryTabView = deps => EpicComponent(self => {
           Elle ne sera pas modifiée, mais sera copiée si vous faites des
           changements et les enregistrez.
         </p>
+        <p>
+          Les enregistrements indiquant un score ont été fait automatiquement
+          lors de la soumission d'une réponse.
+        </p>
         {revisions === undefined
           ? <p>Chargement en cours...</p>
           : (revisions.length == 0
