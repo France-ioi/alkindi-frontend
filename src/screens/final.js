@@ -1,11 +1,6 @@
-/* OBSOLETE CODE 2016 */
 
 import React from 'react';
-import {connect} from 'react-redux';
 import EpicComponent from 'epic-component';
-
-import AuthHeader from '../ui/auth_header';
-import Logout from '../ui/logout';
 
 const FinalScreen = EpicComponent(self => {
 
@@ -13,14 +8,19 @@ const FinalScreen = EpicComponent(self => {
     self.props.dispatch({type: 'SHOW_MAIN_SCREEN'});
   };
 
-  self.render = function () {
-    const {alkindi, round} = self.props;
+  function renderOver () {
     return (
-      <div className="wrapper" style={{position: 'relative'}}>
-        <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout alkindi={alkindi}/>
-        </div>
-        <AuthHeader/>
+      <div>
+        <p style={{fontSize: '200%'}}>
+          Le deuxième tour est terminé, les résultats sont en cours de préparation.
+        </p>
+      </div>
+    );
+  }
+
+  function renderFinal () {
+    return (
+      <div>
         <p>
           Félicitations, votre équipe est qualifiée pour la finale du concours
           Alkindi 2015-2016 !
@@ -35,13 +35,33 @@ const FinalScreen = EpicComponent(self => {
         <p><Button onClick={onShowMainScreen}>revoir ma participation</Button></p>
       </div>
     );
+  }
+
+  self.render = function () {
+    const {alkindi, round, LogoutButton, AuthHeader} = self.props;
+    return (
+      <div className="wrapper" style={{position: 'relative'}}>
+        <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
+          <LogoutButton/>
+        </div>
+        <AuthHeader/>
+        {renderOver()}
+      </div>
+    );
   };
 
 });
 
-export const selector = function (state) {
-  const {team, round} = state.response;
-  return {team, round};
-};
+export default function (bundle, deps) {
 
-export default connect(selector)(FinalScreen);
+  bundle.use('refresh', 'LogoutButton', 'AuthHeader');
+
+  bundle.defineView('FinalScreen', FinalScreenSelector, FinalScreen);
+
+  function FinalScreenSelector (state) {
+    const {team, round} = state.response;
+    const {LogoutButton, AuthHeader} = deps;
+    return {team, round, LogoutButton, AuthHeader};
+  }
+
+};

@@ -4,7 +4,7 @@ import EpicComponent from 'epic-component';
 
 export default function (bundle, deps) {
 
-  bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton');
+  bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton', 'FinalScreen');
 
   bundle.defineSelector('AppSelector', function (state) {
     const {crashed} = state;
@@ -74,6 +74,8 @@ export default function (bundle, deps) {
         body = <deps.JoinTeamScreen/>;
       } else if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
         body = <deps.MainScreen/>;
+      } else if (round.status === 'over') {
+        body = <deps.FinalScreen status='over'/>;
       } else {
         body = (
           <div>
