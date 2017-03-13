@@ -9,12 +9,6 @@ const RoundOverScreen = EpicComponent(self => {
     self.props.dispatch({type: self.props.BypassRoundOverScreen});
   };
 
-  const renderY2017R3 = function () {
-    return (
-      <p>Le 3ème tour se déroulera entre le 20 mars et le 1er avril. C'est une épreuve d'une heure et demie qui sera à faire sous la surveillance d'un enseignant qui devra vous transmettre un code d'accès au moment de l'épreuve.</p>
-    );
-  };
-
 /*
   const renderPostRound4 = function () {
     const {team, participations} = self.props;
@@ -84,7 +78,6 @@ const RoundOverScreen = EpicComponent(self => {
             </p>
             {participation.is_qualified &&
               <p>Félicitations, votre équipe est qualifiée pour le tour suivant, qui est en cours de préparation.</p>}
-            {participation.is_qualified && renderY2017R3()}
             {participation.is_qualified ||
               <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>}
             {participation.is_qualified ||

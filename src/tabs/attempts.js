@@ -151,7 +151,7 @@ export default function (bundle, deps) {
       );
     }
 
-    function renderHeader_2016R2 () {
+    function renderHeader_Y2016R2 () {
       return (
         <div>
           <p>
@@ -162,6 +162,19 @@ export default function (bundle, deps) {
           <p>{"Le 2ème tour est constitué des 8 sujets ci-dessous."}</p>
           <p>{"Certaines fonctionnalités comme l’historique et le récapitulatif des réponses seront activées très prochainement."}</p>
           <p style={{fontWeight: "bold"}}>{"Votre score pour chaque sujet est le score de votre meilleure tentative pour ce sujet."}</p>
+        </div>
+      );
+    }
+
+    function renderHeader_Y2016R3 () {
+      return (
+        <div>
+          <p>Le 3ème tour se déroulera <strong>entre le 20 mars et le 1er avril</strong>.</p>
+          <p>C'est une épreuve d'<strong>une heure et demie</strong> qui sera
+             à faire sous la <strong>surveillance d'un enseignant</strong> qui
+             devra vous transmettre un <strong>code d'accès</strong> au moment
+             de l'épreuve.
+          </p>
         </div>
       );
     }
@@ -177,12 +190,11 @@ export default function (bundle, deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
-          {false && renderHeader_2016R2()}
           {isRoundClosed &&
             <p>Ce tour est terminé, vous pouvez revoir votre participation mais vous ne pouvez plus soumettre de réponse.</p>}
-          {isRoundOpen &&
-            <p>Les épreuves seront accessibles à partir du 20 mars et se dérouleront sous la surveillance d'un enseignant.</p>}
+          {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
+          {false && renderHeader_Y2016R2()}
+          {isRoundOpen && renderHeader_Y2016R3()}
           {typeof score == 'number' &&
             <p className="team-score">
               Score actuel de l'équipe (meilleur score parmi les épreuves
