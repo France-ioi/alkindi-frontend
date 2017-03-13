@@ -76,7 +76,7 @@ export default function (bundle, deps) {
 
       const {screen} = self.props;
       switch (screen) {
-      case 'user': body = <deps.LoginScreen/>; break;
+      case 'login': body = <deps.LoginScreen/>; break;
       case 'join_team': body = <deps.JoinTeamScreen/>; break;
       case 'main' : body = <deps.MainScreen/>; break;
       case 'round_over': body = <deps.RoundOverScreen/>; break;
