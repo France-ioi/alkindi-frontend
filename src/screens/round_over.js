@@ -101,7 +101,7 @@ const RoundOverScreen = EpicComponent(self => {
           {' sur '}{team.n_teams_region}{' équipes ayant participé au 2ème tour'}.
         </p>}
         <p>
-          Vous pouvez revoir votre participation en cliquant le bouton ci-dessous.
+          Vous pouvez revoir votre participation passée en cliquant le bouton ci-dessous.
         </p>
         <p><Button onClick={onShowMainScreen}>revoir ma participation</Button></p>
       </div>
