@@ -235,8 +235,9 @@ export default function (bundle, deps) {
           {teamInvalid
             ? renderInvalidTeam(team.round_access)
             : haveAttempts && renderValidTeam()}
-          {teamHasCode && (team.is_open ? renderTeamCode(team) : renderTeamClosed())}
-          {teamHasCode && teamAdmin && renderAdminControls(team)}
+          {teamUnlocked || <p>La composition de l'équipe est définitive.</p>}
+          {teamUnlocked && teamHasCode && (team.is_open ? renderTeamCode(team) : renderTeamClosed())}
+          {teamUnlocked && teamHasCode && teamAdmin && renderAdminControls(team)}
           {allowTeamChanges && teamUnlocked && renderLeaveTeam()}
         </div>
       );
