@@ -1,3 +1,4 @@
+
 import React from 'react';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
@@ -142,7 +143,23 @@ export default function (bundle, deps) {
                 <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
             </Button>
           </p>
+          {/* TODO: add warning if max score reached */}
           {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
+        </div>
+      );
+    }
+
+    function renderHeader_2016R2 () {
+      return (
+        <div>
+          <p>
+            {"Avant de commencer, assurez-vous de consulter les explications générales du "}
+            <a href="http://concours-alkindi.fr/#/infosTour2" target="_blank">{"fonctionnement du tour 2"}</a>
+            {"."}
+          </p>
+          <p>{"Le 2ème tour est constitué des 8 sujets ci-dessous."}</p>
+          <p>{"Certaines fonctionnalités comme l’historique et le récapitulatif des réponses seront activées très prochainement."}</p>
+          <p style={{fontWeight: "bold"}}>{"Votre score pour chaque sujet est le score de votre meilleure tentative pour ce sujet."}</p>
         </div>
       );
     }
@@ -158,17 +175,10 @@ export default function (bundle, deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          {true && <div>
-            <p>
-              {"Avant de commencer, assurez-vous de consulter les explications générales du "}
-              <a href="http://concours-alkindi.fr/#/infosTour2" target="_blank">{"fonctionnement du tour 2"}</a>
-              {"."}
-            </p>
-            <p>{"Le 2ème tour est constitué des 8 sujets ci-dessous."}</p>
-            <p>{"Certaines fonctionnalités comme l’historique et le récapitulatif des réponses seront activées très prochainement."}</p>
-            <p style={{fontWeight: "bold"}}>{"Votre score pour chaque sujet est le score de votre meilleure tentative pour ce sujet."}</p>
-          </div>}
           {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
+          {false && renderHeader_2016R2()}
+          {true &&
+            <p>Les épreuves seront accessibles à partir du 20 mars et se dérouleront sous la surveillance d'un enseignant.</p>}
           {typeof score == 'number' &&
             <p className="team-score">
               Score actuel de l'équipe (meilleur score parmi les épreuves

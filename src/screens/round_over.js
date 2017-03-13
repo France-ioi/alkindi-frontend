@@ -1,19 +1,15 @@
-/* OBSOLETE CODE 2016 */
 
 import React from 'react';
-import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
-
-import AuthHeader from '../ui/auth_header';
-import Logout from '../ui/logout';
 
 const RoundOverScreen = EpicComponent(self => {
 
   const onShowMainScreen = function () {
-    self.props.dispatch({type: 'SHOW_MAIN_SCREEN'});
+    self.props.dispatch({type: self.props.BypassRoundOverScreen});
   };
 
+/*
   const renderPostRound4 = function () {
     const {team, participations} = self.props;
     let totalScore = 0;
@@ -47,13 +43,25 @@ const RoundOverScreen = EpicComponent(self => {
       </div>
     );
   };
+*/
 
   self.render = function () {
-    const {alkindi, team, round} = self.props;
+    const {team, round, participation} = self.props;
+    const {LogoutButton, AuthHeader} = self.props;
+    /*
+
+
+
+      - Users that did not qualify for the next round remain associated with
+        the 'closed'-status round
+      - Users that did qualify have a new participation associated with the
+        next round.
+
+    */
     return (
       <div className="wrapper" style={{position: 'relative'}}>
         <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <Logout alkindi={alkindi}/>
+          <LogoutButton/>
         </div>
         <AuthHeader/>
         <p>
@@ -64,16 +72,18 @@ const RoundOverScreen = EpicComponent(self => {
           cette page si votre équipe est qualifiée pour le tour suivant.
         </p>}
         {round.status === 'closed' &&
-          (round.id !== 4
-            ? <div>
-                <p>
-                  {'Le score de votre équipe pour ce tour est : '}{team.score||0}
-                </p>
-                <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>
-                <p>Merci pour votre participation.</p>
-              </div>
-            : renderPostRound4()
-          )}
+          <div>
+            <p>
+              {'Le score de votre équipe pour ce tour est : '}{participation.score||0}
+            </p>
+            {participation.is_qualified &&
+              <p>Félicitation, votre équipe est qualifiée pour le tour suivant, qui est en cours de préparation.</p>}
+            {participation.is_qualified ||
+              <p>Malheureusement, votre équipe n'est pas qualifiée pour le tour suivant.</p>}
+            {participation.is_qualified ||
+              <p>Merci pour votre participation.</p>}
+          </div>}
+        {false && renderPostRound4()}
         {team.rank && <p>
           {'Votre rang au niveau national est : '}{team.rank}
           {' sur '}{team.n_teams}{' équipes ayant participé au 2ème tour.'}
@@ -92,9 +102,26 @@ const RoundOverScreen = EpicComponent(self => {
   };
 });
 
-export const selector = function (state) {
-  const {team, round, participations} = state.response;
-  return {team, round, participations};
-};
 
-export default connect(selector)(RoundOverScreen);
+export default function (bundle, deps) {
+
+  bundle.use('LogoutButton', 'AuthHeader');
+
+  bundle.defineView('RoundOverScreen', RoundOverScreenSelector, RoundOverScreen);
+
+  bundle.defineAction('BypassRoundOverScreen', 'Screens.RoundOver.Bypass');
+  bundle.addReducer('BypassRoundOverScreen', function (state, action) {
+    return {...state, bypassRoundOverScreen: true};
+  });
+
+  function RoundOverScreenSelector (state) {
+    const {team, round, participation, participations} = state.response;
+    const {LogoutButton, AuthHeader, BypassRoundOverScreen} = deps;
+    /* Find the current participation, if any. */
+    const currentParticipation = participations && participations.find(p => p.is_current);
+    return {
+      team, round, participation: currentParticipation, participations,
+      LogoutButton, AuthHeader, BypassRoundOverScreen};
+  }
+
+};

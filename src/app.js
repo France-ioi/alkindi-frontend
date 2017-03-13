@@ -4,24 +4,33 @@ import EpicComponent from 'epic-component';
 
 export default function (bundle, deps) {
 
-  bundle.use('LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RefreshButton', 'FinalScreen');
+  bundle.use(
+    'LoginScreen', 'JoinTeamScreen', 'MainScreen', 'RoundOverScreen',
+    'FinalScreen', 'RefreshButton');
 
   bundle.defineSelector('AppSelector', function (state) {
     const {crashed} = state;
-    const {error, user, team, round, participations, is_admin} = state.response;
+    const {error, user, team, round} = state.response;
     if (error) {
       return {error};
     }
-    const {workspace, showMainScreen} = state; // XXX clean up
-    const changed = workspace && workspace.changed;
-    let currentParticipation = null;
-    if (participations) {
-      participations.forEach(function (participation) {
-        if (participation.is_current)
-          currentParticipation = participation;
-      });
+    /* TODO: restore this mechanism, set 'changed' to true when workspace
+             has unsaved changes */
+    const changed = false;
+    /* Screen selection */
+    let screen;
+    if (!user) {
+      screen = 'login';
+    } else if (!team) {
+      screen = 'join_team';
+    } else if (round.status === 'open') {
+      screen = 'main';
+    } else if (round.status === 'over' || round.status === 'closed') {
+      screen = state.bypassRoundOverScreen ? 'main' : 'round_over';
+    } else if (round.status === 'final') {
+      screen = 'final';
     }
-    return {crashed, user, team, round, is_admin, changed, showMainScreen, participation: currentParticipation};
+    return {crashed, screen, changed};
   });
 
   bundle.defineView('App', 'AppSelector', EpicComponent(self => {
@@ -65,31 +74,21 @@ export default function (bundle, deps) {
         );
       }
 
-      const {user, team, round, showMainScreen, participation} = self.props;
-
-      // The login screen is shown when no user is active.
-      if (!user) {
-        body = <deps.LoginScreen/>;
-      } else if (!team) {
-        body = <deps.JoinTeamScreen/>;
-      } else if (round.status === 'open' || showMainScreen || participation && participation.is_qualified) {
-        body = <deps.MainScreen/>;
-      } else if (round.status === 'over') {
-        body = <deps.FinalScreen status='over'/>;
-      } else {
+      const {screen} = self.props;
+      switch (screen) {
+      case 'user': body = <deps.LoginScreen/>; break;
+      case 'join_team': body = <deps.JoinTeamScreen/>; break;
+      case 'main' : body = <deps.MainScreen/>; break;
+      case 'round_over': body = <deps.RoundOverScreen/>; break;
+      case 'final': body = <deps.FinalScreen/>; break;
+      default:
         body = (
           <div>
             <p>Cas non prévu.</p>
           </div>
         );
+        break;
       }
-      /*
-      } else if (round.status === 'final') {
-        return <deps.FinalScreen/>;
-      } else if (round.status === 'over' || round.status === 'closed') {
-        return <deps.RoundOverScreen/>;
-      }
-      */
 
       return (
         <div>

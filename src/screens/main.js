@@ -87,11 +87,15 @@ export default function (bundle, deps) {
   });
 
   function selectTab (state, tabKey) {
-    const haveRound = !!state.response.round;
-    const haveAttempt = !!state.response.attempt;
+    const {response} = state;
+    const {round, team, attempt} = response;
+    const haveRound = !!round;
+    const haveTeam = !!team;
+    const haveAttempt = !!attempt;
+    const isTeamValid = haveTeam && !team.is_invalid;
     const enabledTabs = {
       team: true,
-      attempts: haveRound,
+      attempts: isTeamValid && haveRound,
       task: haveAttempt,
       results: false
     };

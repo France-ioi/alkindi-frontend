@@ -29,7 +29,7 @@ import Refresh from './refresh';
 import JoinTeamScreen from './screens/join_team';
 import MainScreen from './screens/main';
 import RevisionsBundle from './revisions';
-//import RoundOverScreen from './screens/round_over';
+import RoundOverScreen from './screens/round_over';
 import FinalScreen from './screens/final';
 
 // Inject style
@@ -85,6 +85,7 @@ const app = link(function (bundle, deps) {
   bundle.include(JoinTeamScreen);
   bundle.include(MainScreen);
   bundle.include(FinalScreen);
+  bundle.include(RoundOverScreen);
   bundle.include(RevisionsBundle);
 
   bundle.defineAction('setCsrfToken', 'SetCsrfToken');
