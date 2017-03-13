@@ -25,7 +25,9 @@ export default function (bundle, deps) {
       ? state.activeTask && state.activeTask.id
       : round.task_ids.length > 0 && round.task_ids[0];
     const score = null; // getMaxScore(round_tasks);
-    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId, createAttempt};
+    const isRoundClosed = /closed|over/.test(round.status);
+    const isRoundOpen = round.status === 'open';
+    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId, createAttempt, isRoundOpen, isRoundClosed};
   });
 
   bundle.addReducer('activeTaskChanged', function (state, action) {
@@ -165,7 +167,7 @@ export default function (bundle, deps) {
     }
 
     self.render = function () {
-      const {round, score, round_tasks, activeTaskId} = self.props;
+      const {round, score, round_tasks, activeTaskId, isRoundOpen, isRoundClosed} = self.props;
       /* accordéon tasks */
       return (
         <div className="tab-content">
@@ -177,7 +179,9 @@ export default function (bundle, deps) {
           <h1>{round.title}</h1>
           {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
           {false && renderHeader_2016R2()}
-          {true &&
+          {isRoundClosed &&
+            <p>Ce tour est terminé, vous pouvez revoir votre participation mais vous ne pouvez plus soumettre de réponse.</p>}
+          {isRoundOpen &&
             <p>Les épreuves seront accessibles à partir du 20 mars et se dérouleront sous la surveillance d'un enseignant.</p>}
           {typeof score == 'number' &&
             <p className="team-score">
@@ -206,7 +210,7 @@ export default function (bundle, deps) {
                     <div className="attempts container-fluid">
                       {round_task.attempts.map(attempt => renderAttempt(attempt, round_task))}
                     </div>}
-                    {renderCreateAttempt(round_task_id)}
+                    {isRoundOpen && renderCreateAttempt(round_task_id)}
                   </Panel>);
                 })}
             </Collapse>
