@@ -94,8 +94,9 @@ export default function (bundle, deps) {
   });
 
   function getRefreshState (state) {
-    const {request, override, api} = state;
-    return {request: {...request, ...override}, api};
+    /* The config.override object overrides the request. */
+    const {request, config, api} = state;
+    return {request: {...request, ...config.override}, api};
   }
 
   function RefreshButtonSelector (state, _props) {
