@@ -40,7 +40,7 @@ app.get('/', function (req, res) {
   res.render('index', {
     development: isDevelopment,
     contact_email: 'info@concours-alkindi.fr',
-    start_url: startUrl + originalUrl.search
+    start_url: startUrl + (originalUrl.search || '')
   });
 });
 
