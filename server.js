@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var http = require('http');
+var url = require('url');
 var express = require('express');
 var colors = require('colors/safe');
 
@@ -34,10 +35,12 @@ if (isDevelopment) {
 app.use('/assets', express.static(path.join(rootDir, 'assets')));
 
 app.get('/', function (req, res) {
+  const startUrl = process.env.START_URL || '/start';
+  const originalUrl = url.parse(req.originalUrl, false);
   res.render('index', {
     development: isDevelopment,
     contact_email: 'info@concours-alkindi.fr',
-    start_url: process.env.START_URL || '/start'
+    start_url: startUrl + originalUrl.search
   });
 });
 
