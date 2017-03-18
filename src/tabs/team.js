@@ -229,7 +229,7 @@ export default function (bundle, deps) {
             <deps.RefreshButton/>
           </div>
           <h1>{round.title}</h1>
-          {renderRoundPrelude(round)}
+          {!teamUnlocked && renderRoundPrelude(round)}
           {false && renderTeamQualified()}
           {renderTeamMembers(team)}
           {teamInvalid
