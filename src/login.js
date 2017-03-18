@@ -37,7 +37,7 @@ export default function (bundle, deps) {
         <div className="wrapper">
           <deps.AuthHeader/>
           <div className="section">
-            <p>Bienvenue sur la plateforme du 2<sup>ème</sup> tour du concours Alkindi.</p>
+            <p>Bienvenue sur la plateforme des tours 2 et 3 du concours Alkindi.</p>
             <p>
               Pour accéder à l'interface du concours, connectez vous en cliquant
               sur ce bouton :
