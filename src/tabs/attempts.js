@@ -169,7 +169,8 @@ export default function (bundle, deps) {
     function renderHeader_Y2016R3 () {
       return (
         <div>
-          <p>Le 3ème tour se déroulera <strong>entre le 20 mars et le 1er avril</strong>.</p>
+          <p>Bravo, votre score au 2ème tour qualifie votre équipe pour le tour 3.</p>
+          <p>Celui-ci se déroulera <strong>entre le 20 mars et le 1er avril</strong>.</p>
           <p>C'est une épreuve d'<strong>une heure et demie</strong> qui sera
              à faire sous la <strong>surveillance d'un enseignant</strong> qui
              devra vous transmettre un <strong>code d'accès</strong> au moment
