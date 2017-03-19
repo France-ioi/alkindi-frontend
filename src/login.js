@@ -1,11 +1,13 @@
 
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Alert, Button, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
 import EpicComponent from 'epic-component';
 import {eventChannel, buffers} from 'redux-saga';
-import {put, take, select} from 'redux-saga/effects'
+import {put, take, select, takeLatest, call} from 'redux-saga/effects'
+import {default as ManagedProcess, getManagedProcessState} from './managed_process';
 
 import AuthHeader from './ui/auth_header';
+import getMessage from './messages';
 
 export default function (bundle, deps) {
 
@@ -23,15 +25,52 @@ export default function (bundle, deps) {
   bundle.defineAction('logoutFailed', 'Logout.Failed');
 
   bundle.defineSelector('LoginScreenSelector', function (state) {
-    return {};
+    const loginWithParticipationCode = getManagedProcessState(state, 'loginWithParticipationCode');
+    return {loginWithParticipationCode};
   });
 
   bundle.defineView('AuthHeader', AuthHeader);
 
   bundle.defineView('LoginScreen', 'LoginScreenSelector', EpicComponent(self => {
-    const onLogin = function () {
+    function onLogin () {
       self.props.dispatch({type: deps.login});
+    }
+    function onSubmitParticipationCode () {
+      const {participationCode} = self.state;
+      self.props.dispatch({type: deps.loginWithParticipationCode, code: participationCode});
+    }
+    function onParticipationCodeChanged (event) {
+      const participationCode = event.currentTarget.value;
+      self.setState({participationCode});
+    }
+    self.state = {
+      participationCode: ""
     };
+    function renderParticipationCode () {
+      const {participationCode} = self.state;
+      const {pending, error} = self.props.loginWithParticipationCode;
+      return (
+        <form>
+          <FormGroup controlId="participation_code">
+            <ControlLabel>
+              {"Si vous avez un code de qualification pour le tour 3, vous pouvez l'entrer ici :"}
+            </ControlLabel>
+            <FormControl
+              name="participationCode" value={participationCode}
+              onChange={onParticipationCodeChanged}
+              type="text" placeholder="code" />
+          </FormGroup>
+          <p>
+            <Button onClick={onSubmitParticipationCode}>
+              {"valider"}
+              {pending &&
+                <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
+            </Button>
+          </p>
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
+        </form>
+      );
+    }
     self.render = function () {
       return (
         <div className="wrapper">
@@ -43,6 +82,7 @@ export default function (bundle, deps) {
               sur ce bouton :
             </p>
             <p><Button onClick={onLogin}>se connecter</Button></p>
+            {renderParticipationCode()}
           </div>
         </div>
       );
@@ -137,11 +177,15 @@ export default function (bundle, deps) {
   /* Handle logout messages posted by the backend via the client API. */
   bundle.addSaga(function* () {
     while (true) {
-      var {error} = yield take(deps.logoutFeedback);
+      var {error, csrf_token} = yield take(deps.logoutFeedback);
       if (error) {
         yield put({type: deps.logoutFailed, error});
       } else {
         yield put({type: deps.logoutSucceeded});
+        if (csrf_token) {
+          /* The CSRF token is updated when the user logs out. */
+          yield put({type: deps.setCsrfToken, csrf_token});
+        }
       }
     }
   });
@@ -158,5 +202,27 @@ export default function (bundle, deps) {
     yield put({type: deps.login});
     // }
   });
+
+  /* Participation code */
+
+  bundle.include(ManagedProcess('loginWithParticipationCode', 'Login.ParticipationCode', p => function* (action) {
+    const {code} = action;
+    const api = yield select(state => state.api);
+    let result;
+    try {
+      result = yield call(api.loginWithParticipationCode, {code});
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
+    }
+    if (result.success) {
+      yield p.success();
+      const {csrf_token, user_id} = result;
+      yield put({type: deps.loginFeedback, csrf_token, user_id});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  bundle.use('loginWithParticipationCode');
 
 };
