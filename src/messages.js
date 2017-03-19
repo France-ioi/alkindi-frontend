@@ -27,7 +27,8 @@ export const messages = {
   'registration is closed': "La période d'enregistrement est fermée.",
   'attempt too soon': "Vous devez attendre 5 minutes entre la création de 2 tentatives.",
   'timed attempt in progress': "Terminez la tentative en cours avant d’en commencer une nouvelle.",
-  'no such participation': "Le code entré ne correspond pas à une participation connue."
+  'no such participation': "Le code entré ne correspond pas à une participation connue.",
+  'invalid participation code': "Le code entré ne correspond pas à la participation."
 };
 
 export default function (key) {

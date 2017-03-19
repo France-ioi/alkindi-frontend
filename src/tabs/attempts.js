@@ -2,14 +2,14 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
 import classnames from 'classnames';
-import {Alert, Button} from 'react-bootstrap';
+import {Alert, Button, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
 import Collapse, {Panel} from 'rc-collapse';
 import update from 'immutability-helper';
 import {takeLatest, select, call, put} from 'redux-saga/effects';
 
 import Tooltip from '../ui/tooltip';
-import ManagedProcess from '../managed_process';
 import getMessage from '../messages';
+import {default as ManagedProcess, getManagedProcessState} from '../managed_process';
 
 export default function (bundle, deps) {
 
@@ -18,8 +18,8 @@ export default function (bundle, deps) {
   bundle.defineAction('activeTaskChanged', 'ActiveTask.Changed');
   bundle.defineAction('changeActiveAttempt', 'ActiveAttempt.Change');
 
-  bundle.defineSelector('AttemptsTabSelector', function (state, _props) {
-    const {now, user, round, round_tasks} = state.response;
+  function AttemptsTabSelector (state, _props) {
+    const {now, user, round, round_tasks, participation_id, participations} = state.response;
     const createAttempt = ManagedProcess.getState(state, 'createAttempt');
     const activeTaskId = 'activeTask' in state
       ? state.activeTask && state.activeTask.id
@@ -27,8 +27,15 @@ export default function (bundle, deps) {
     const score = null; // getMaxScore(round_tasks);
     const isRoundClosed = /closed|over/.test(round.status);
     const isRoundOpen = round.status === 'open';
-    return {now: new Date(now).getTime(), round, round_tasks, score, activeTaskId, createAttempt, isRoundOpen, isRoundClosed};
-  });
+    const participation = participations.find(p => p.id === participation_id);
+    const {access_code} = participation;
+    const enterParticipationCode = getManagedProcessState(state, 'enterParticipationCode');
+    return {
+      now: new Date(now).getTime(), round, round_tasks, score, activeTaskId,
+      createAttempt, isRoundOpen, isRoundClosed,
+      participation_id, access_code, enterParticipationCode
+    };
+  }
 
   bundle.addReducer('activeTaskChanged', function (state, action) {
     const activeTask = state.response.round_tasks[action.roundTaskId];
@@ -67,8 +74,27 @@ export default function (bundle, deps) {
     return {api, participation_id};
   }
 
+  bundle.include(ManagedProcess('enterParticipationCode', 'Attempt.ParticipationCode', p => function* (action) {
+    const {participation_id, code} = action;
+    const api = yield select(state => state.api);
+    let result;
+    try {
+      result = yield call(api.enterParticipationCode, participation_id, {code});
+    } catch (ex) {
+      yield p.failure('server error');
+      return;
+    }
+    if (result.success) {
+      yield p.success();
+      yield put({type: deps.refresh});
+    } else {
+      yield p.failure(result.error);
+    }
+  }));
+  bundle.use('enterParticipationCode');
+
   bundle.use('createAttempt');
-  bundle.defineView('AttemptsTab', 'AttemptsTabSelector', EpicComponent(self => {
+  bundle.defineView('AttemptsTab', AttemptsTabSelector, EpicComponent(self => {
 
     function onSwitchTab (tabKey) {
       self.props.dispatch({type: deps.setActiveTab, tabKey});
@@ -180,8 +206,52 @@ export default function (bundle, deps) {
       );
     }
 
+    function renderAccessCodeEntry () {
+      const {participationCode} = self.state;
+      const {pending, error} = self.props.enterParticipationCode;
+      return (
+        <form>
+          <FormGroup controlId="participation_code">
+            <ControlLabel>
+              {"Pour démarrer l'épreuve, vous devez entrer le code transmi par votre enseignant."}
+            </ControlLabel>
+            <FormControl
+              name="participationCode" value={participationCode}
+              onChange={onParticipationCodeChanged}
+              type="text" placeholder="code" />
+          </FormGroup>
+          <p>
+            <Button onClick={onSubmitParticipationCode}>
+              {"valider"}
+              {pending &&
+                <span>{' '}<i className="fa fa-spinner fa-spin"/></span>}
+            </Button>
+          </p>
+          {error && <Alert bsStyle='danger'>{getMessage(error)}</Alert>}
+        </form>
+      );
+    }
+
+    function onSubmitParticipationCode () {
+      const {participation_id} = self.props;
+      const {participationCode} = self.state;
+      console.log(self.state);
+      self.props.dispatch({type: deps.enterParticipationCode, participation_id, code: participationCode});
+    }
+
+    function onParticipationCodeChanged (event) {
+      const participationCode = event.currentTarget.value;
+      self.setState({participationCode});
+      console.log(self.state);
+    }
+
+    self.state = {
+      participationCode: ""
+    };
+
     self.render = function () {
-      const {round, score, round_tasks, activeTaskId, isRoundOpen, isRoundClosed} = self.props;
+      const {round, score, round_tasks, activeTaskId, isRoundOpen, isRoundClosed, access_code} = self.props;
+      const isAccessOk = access_code !== 'required';
       /* accordéon tasks */
       return (
         <div className="tab-content">
@@ -196,12 +266,13 @@ export default function (bundle, deps) {
           {false && <p>Les épreuves seront accessibles à partir du 16 janvier.</p>}
           {false && renderHeader_Y2016R2()}
           {isRoundOpen && renderHeader_Y2016R3()}
+          {access_code === 'required' && renderAccessCodeEntry()}
           {typeof score == 'number' &&
             <p className="team-score">
               Score actuel de l'équipe (meilleur score parmi les épreuves
               en temps limité) : <span className="team-score">{score}</span>.
             </p>}
-          <div className="tasks">
+          {isAccessOk && <div className="tasks">
             <Collapse accordion={true} activeKey={''+activeTaskId} onChange={onTaskChange}>
               {round.task_ids.map(round_task_id => {
                 const round_task = round_tasks[round_task_id];
@@ -227,7 +298,7 @@ export default function (bundle, deps) {
                   </Panel>);
                 })}
             </Collapse>
-          </div>
+          </div>}
         </div>
       );
     };

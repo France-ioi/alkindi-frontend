@@ -28,6 +28,7 @@ export const ApiFactory = function (methods) {
 
     loadRevision: (revision_id) => get(`api/workspace_revisions/${revision_id}`),
 
+    enterParticipationCode: (participation_id, data) => post(`api/participations/${participation_id}/enter_code`, data),
     loginWithParticipationCode: (data) => post('login/participation', data)
 
   };
