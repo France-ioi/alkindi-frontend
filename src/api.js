@@ -15,7 +15,7 @@ export const ApiFactory = function (methods) {
     leaveTeam: (user_id) => post('api/users/'+user_id+'/leave_team'),
     updateUserTeam: (user_id, data) => post('api/users/'+user_id+'/update_team', data),
 
-    createAttempt: (participation_id, round_task_id) => post('participations/'+participation_id+'/tasks/'+round_task_id+'/create_attempt'),
+    createAttempt: (participation_id, round_task_id) => post('api/participations/'+participation_id+'/tasks/'+round_task_id+'/create_attempt'),
 
     // enterAccessCode: (user_id, data) => post('users/'+user_id+'/access_code', data),
     startAttempt: (attempt_id) => post('api/attempts/'+attempt_id+'/start'),
