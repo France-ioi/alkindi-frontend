@@ -61,6 +61,9 @@ export default function (bundle, deps) {
               type="text" placeholder="code" />
           </FormGroup>
           <p>
+            {"Attention : le tour 3 doit se faire en 1h30 sans interruption, sous la surveillance d'un enseignant, et avec un seul ordinateur par équipe."}
+          </p>
+          <p>
             <Button onClick={onSubmitParticipationCode}>
               {"valider"}
               {pending &&

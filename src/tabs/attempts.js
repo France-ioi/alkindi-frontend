@@ -196,7 +196,7 @@ export default function (bundle, deps) {
       return (
         <div>
           <p>Bravo, votre score au 2ème tour qualifie votre équipe pour le tour 3.</p>
-          <p>Celui-ci se déroulera <strong>entre le 20 mars et le 1er avril</strong>.</p>
+          <p>Celui-ci se déroule <strong>entre le 20 mars et le 1er avril</strong>.</p>
           <p>C'est une épreuve d'<strong>une heure et demie</strong> qui sera
              à faire sous la <strong>surveillance d'un enseignant</strong> qui
              devra vous transmettre un <strong>code d'accès</strong> au moment
@@ -213,13 +213,16 @@ export default function (bundle, deps) {
         <form>
           <FormGroup controlId="participation_code">
             <ControlLabel>
-              {"Pour démarrer l'épreuve, vous devez entrer le code transmi par votre enseignant."}
+              {"Pour démarrer l'épreuve, vous devez entrer le code transmis par votre enseignant :"}
             </ControlLabel>
             <FormControl
               name="participationCode" value={participationCode}
               onChange={onParticipationCodeChanged}
               type="text" placeholder="code" />
           </FormGroup>
+          <p>
+            {"Attention : le tour 3 doit se faire en 1h30 sans interruption, sous la surveillance d'un enseignant, et avec un seul ordinateur par équipe."}
+          </p>
           <p>
             <Button onClick={onSubmitParticipationCode}>
               {"valider"}
