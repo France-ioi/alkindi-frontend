@@ -6,7 +6,7 @@ const twoDigits = function (number) {
   return ("0" + number).slice(-2);
 };
 
-export const RefreshButton = EpicComponent(self => {
+export default EpicComponent(self => {
   self.render = function () {
     let {visible, seconds} = self.props;
     if (!visible)
@@ -33,5 +33,3 @@ export const RefreshButton = EpicComponent(self => {
     );
   };
 });
-
-export default RefreshButton;

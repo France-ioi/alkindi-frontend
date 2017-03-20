@@ -31,6 +31,7 @@ import MainScreen from './screens/main';
 import RevisionsBundle from './revisions';
 import RoundOverScreen from './screens/round_over';
 import FinalScreen from './screens/final';
+import CountdownBundle from './countdown';
 
 // Inject style
 import "font-awesome/css/font-awesome.min.css";
@@ -87,6 +88,7 @@ const app = link(function (bundle, deps) {
   bundle.include(FinalScreen);
   bundle.include(RoundOverScreen);
   bundle.include(RevisionsBundle);
+  bundle.include(CountdownBundle);
 
   bundle.defineAction('setCsrfToken', 'SetCsrfToken');
   bundle.addReducer('setCsrfToken', function (state, action) {
