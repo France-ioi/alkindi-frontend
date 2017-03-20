@@ -238,14 +238,12 @@ export default function (bundle, deps) {
     function onSubmitParticipationCode () {
       const {participation_id} = self.props;
       const {participationCode} = self.state;
-      console.log(self.state);
       self.props.dispatch({type: deps.enterParticipationCode, participation_id, code: participationCode});
     }
 
     function onParticipationCodeChanged (event) {
       const participationCode = event.currentTarget.value;
       self.setState({participationCode});
-      console.log(self.state);
     }
 
     self.state = {
