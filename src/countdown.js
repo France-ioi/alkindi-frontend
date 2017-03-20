@@ -37,6 +37,10 @@ export default function (bundle, deps) {
     yield takeLatest(deps.countdownStarted, function* (action) {
       const {deadline} = action;
       let countdown = yield call(computeCountdown, deadline);
+      if (countdown < 0) {
+        yield put({type: deps.countdownTicked, countdown: false});
+        return;
+      }
       const chan = yield call(countdownChannel, countdown);
       let prevNow;
       while (true) {
