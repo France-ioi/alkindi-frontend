@@ -32,9 +32,13 @@ export default function (bundle, deps) {
   bundle.defineSelector('TaskTabSelector', function (state, _props) {
     const {taskViewKey, taskReady} = state;
     const taskView = views.find(view => view.key === taskViewKey);
-    const {attempt, round_task, team_data} = state.response;
+    const {attempt, round_task, team_data, now, countdown} = state.response;
     const startAttempt = getManagedProcessState(state, 'startAttempt');
-    return {attempt, round_task, team_data, taskView, taskReady, startAttempt};
+    const view = {attempt, round_task, team_data, taskView, taskReady, startAttempt, countdown};
+    if (countdown) {
+      view.timeElapsed = new Date(now) > new Date(countdown);
+    }
+    return view;
   });
 
   bundle.defineView('TaskTab', 'TaskTabSelector', EpicComponent(self => {
@@ -71,7 +75,16 @@ export default function (bundle, deps) {
     }
 
     self.render = function () {
-      const {attempt, round_task, team_data, taskReady, taskView} = self.props;
+      const {timeElapsed, attempt, round_task, team_data, taskReady, taskView} = self.props;
+      if (timeElapsed) {
+        return (
+          <div className="tab-content">
+            <Alert bsStyle="warning">
+              {"Le temps imparti est écoulé et cette épreuve n'est plus accessible."}
+            </Alert>
+          </div>
+        );
+      }
       if (!team_data) {
         return (
           <div className="tab-content">
