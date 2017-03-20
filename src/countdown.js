@@ -4,7 +4,7 @@ import {takeEvery, takeLatest, put, call, select, take} from 'redux-saga/effects
 
 export default function (bundle, deps) {
 
-  bundle.use('refreshCompleted');
+  bundle.use('refresh', 'refreshCompleted');
 
   bundle.defineAction('countdownStarted', 'Countdown.Started');
   bundle.defineAction('countdownTicked', 'Countdown.Ticked');
@@ -16,6 +16,7 @@ export default function (bundle, deps) {
         if (millis > 0) {
           emitter(millis);
         } else {
+          emitter(0);
           emitter(END); /* closes the channel */
           clearInterval(interval);
         }
@@ -36,7 +37,7 @@ export default function (bundle, deps) {
     yield takeLatest(deps.countdownStarted, function* (action) {
       const {deadline} = action;
       let countdown = yield call(computeCountdown, deadline);
-      const chan = yield call(countdownChannel, countdown + 30);
+      const chan = yield call(countdownChannel, countdown);
       let prevNow;
       while (true) {
         countdown = yield take(chan);
@@ -46,17 +47,13 @@ export default function (bundle, deps) {
           self.props.dispatch({type: deps.refresh});
           return;
         }
-        /* Compute the new countdown (adjusted by the time delta w/ server). */
         /* Update the countdown. */
         yield put({type: deps.countdownTicked, countdown});
-        /*
-        // TODO: Switch to 'attempts' tab when the countdown elapses.
-        if (countdown < 0) {
-          ...
-          newState = reduceSetActiveTab(newState, 'attempts');
-          setTimeout(Alkindi.refresh, 0);
+        /* When the countdown reaches 0, trigger a refresh. */
+        if (countdown === 0) {
+          yield put({type: deps.refresh});
+          return;
         }
-        */
         prevNow = now;
       }
     });
