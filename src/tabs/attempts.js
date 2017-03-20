@@ -202,6 +202,8 @@ export default function (bundle, deps) {
              devra vous transmettre un <strong>code d'accès</strong> au moment
              de l'épreuve.
           </p>
+          <p>Seules les réponses soumises moins de 1h30 après la création de la
+             première tentative seront prises en compte.</p>
         </div>
       );
     }
