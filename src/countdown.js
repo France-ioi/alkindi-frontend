@@ -1,6 +1,6 @@
 
 import {eventChannel, END} from 'redux-saga';
-import {takeEvery, takeLatest, put, call, select, take} from 'redux-saga/effects';
+import {takeEvery, takeLatest, put, call, select, take, cancelled} from 'redux-saga/effects';
 
 export default function (bundle, deps) {
 
@@ -42,23 +42,29 @@ export default function (bundle, deps) {
         return;
       }
       const chan = yield call(countdownChannel, countdown);
-      let prevNow;
-      while (true) {
-        countdown = yield take(chan);
-        /* Trigger a refresh if the clock jumps by over 30 seconds. */
-        let now = Date.now();
-        if (prevNow && Math.abs(now - prevNow) > 30000) {
-          self.props.dispatch({type: deps.refresh});
-          return;
+      try {
+        let prevNow;
+        while (true) {
+          countdown = yield take(chan);
+          /* Trigger a refresh if the clock jumps by over 30 seconds. */
+          let now = Date.now();
+          if (prevNow && Math.abs(now - prevNow) > 30000) {
+            self.props.dispatch({type: deps.refresh});
+            return;
+          }
+          /* Update the countdown. */
+          yield put({type: deps.countdownTicked, countdown});
+          /* When the countdown reaches 0, trigger a refresh. */
+          if (countdown === 0) {
+            yield put({type: deps.refresh});
+            return;
+          }
+          prevNow = now;
         }
-        /* Update the countdown. */
-        yield put({type: deps.countdownTicked, countdown});
-        /* When the countdown reaches 0, trigger a refresh. */
-        if (countdown === 0) {
-          yield put({type: deps.refresh});
-          return;
+      } finally {
+        if (yield cancelled()) {
+          chan.close()
         }
-        prevNow = now;
       }
     });
   });
