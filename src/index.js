@@ -41,6 +41,7 @@ import 'rc-collapse/assets/index.css';
 import "./style.css";
 
 const isDev = process.env.NODE_ENV !== 'production';
+const useDevTools = false;
 const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION__;
 
 const app = link(function (bundle, deps) {
@@ -106,7 +107,7 @@ const app = link(function (bundle, deps) {
     return state.config.logout_url;
   });
 
-  if (isDev) {
+  if (useDevTools) {
     if (reduxExt) {
       bundle.addEnhancer(window.__REDUX_DEVTOOLS_EXTENSION__());
     } else {
@@ -147,7 +148,7 @@ export function run (config, container) {
       <div>
         {isDev && <div className="dev-banner">{"DEV"}</div>}
         <app.scope.App/>
-        {isDev && !reduxExt && <DevTools/>}
+        {useDevTools && !reduxExt && <DevTools/>}
       </div>
     </Provider>, container);
 
