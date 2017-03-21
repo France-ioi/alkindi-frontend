@@ -23,7 +23,7 @@ views.forEach(function (view, index) {
 
 export default function (bundle, deps) {
 
-  bundle.use('refresh', 'HistoryTab', 'revisionSelected');
+  bundle.use('refresh', 'RefreshButton', 'HistoryTab', 'revisionSelected');
 
   bundle.addReducer('init', function (state, action) {
     return {...state, taskViewKey: views[0].key};
@@ -97,6 +97,9 @@ export default function (bundle, deps) {
         <div className="tab-content">
           {!taskReady &&
             <div style={{padding: '20px', fontSize: '32px'}}><i className="fa fa-spinner fa-spin"/></div>}
+          {<div className="pull-right">
+            <deps.RefreshButton/>
+          </div>}
           {taskReady &&
             <Tabs onSelect={onSelectTab} selectedIndex={taskView.index}>
               <TabList>
