@@ -97,9 +97,6 @@ export default function (bundle, deps) {
         <div className="tab-content">
           {!taskReady &&
             <div style={{padding: '20px', fontSize: '32px'}}><i className="fa fa-spinner fa-spin"/></div>}
-          {<div className="pull-right">
-            <deps.RefreshButton/>
-          </div>}
           {taskReady &&
             <Tabs onSelect={onSelectTab} selectedIndex={taskView.index}>
               <TabList>
