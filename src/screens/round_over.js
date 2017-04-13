@@ -86,10 +86,10 @@ const RoundOverScreen = EpicComponent(self => {
   const render2017R3 = function () {
     const {team, ranking, round, participation} = self.props;
     const {score} = participation;
-    const {national, big_region, region} = ranking;
     if (!ranking) {
       return <p>{"Votre équipe n'est pas classée."}</p>;
     }
+    const {national, big_region, region} = ranking;
     return (
       <div>
         <p>
