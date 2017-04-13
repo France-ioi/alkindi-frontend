@@ -10,7 +10,7 @@ const RoundOverScreen = EpicComponent(self => {
   };
 
 /*
-  const renderPostRound4 = function () {
+  const render2016R4 = function () {
     const {team, participations} = self.props;
     let totalScore = 0;
     let participation;
@@ -43,27 +43,11 @@ const RoundOverScreen = EpicComponent(self => {
       </div>
     );
   };
-*/
 
-  self.render = function () {
+  const render2016Closed = function () {
     const {team, round, participation} = self.props;
-    const {LogoutButton, AuthHeader} = self.props;
-    /*
-
-
-
-      - Users that did not qualify for the next round remain associated with
-        the 'closed'-status round
-      - Users that did qualify have a new participation associated with the
-        next round.
-
-    */
     return (
-      <div className="wrapper" style={{position: 'relative'}}>
-        <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
-          <LogoutButton/>
-        </div>
-        <AuthHeader/>
+      <div>
         <p>
           {'Le '}{round.title}{' est maintenant terminé.'}
         </p>
@@ -93,6 +77,58 @@ const RoundOverScreen = EpicComponent(self => {
           {') est : '}{team.rank_region}
           {' sur '}{team.n_teams_region}{' équipes ayant participé au 2ème tour'}.
         </p>}
+      </div>
+    );
+  };
+
+*/
+
+  const render2017R3 = function () {
+    const {team, ranking, round, participation} = self.props;
+    const {score} = participation;
+    const {national, big_region, region} = ranking;
+    if (!ranking) {
+      return <p>{"Votre équipe n'est pas classée."}</p>;
+    }
+    return (
+      <div>
+        <p>
+          {"Votre score au 3ème tour est : "}{score}
+        </p>
+        <p>
+          {"Classement national de votre équipe : "}{national.rank}{" sur "}{national.count}
+        </p>
+        <p>
+          {"Classement de votre équipe au sein de votre grande région ("}{big_region.name}{") : "}
+          {big_region.rank}{" sur "}{big_region.count}
+        </p>
+        <p>
+          {"Classement de votre équipe au sein de votre académie ("}{region.name}{") : "}
+          {region.rank}{" sur "}{region.count}
+        </p>
+      </div>
+    );
+  };
+
+  self.render = function () {
+    const {LogoutButton, AuthHeader} = self.props;
+    /*
+
+
+
+      - Users that did not qualify for the next round remain associated with
+        the 'closed'-status round
+      - Users that did qualify have a new participation associated with the
+        next round.
+
+    */
+    return (
+      <div className="wrapper" style={{position: 'relative'}}>
+        <div className="pull-right" style={{position: 'absolute', right: '0', top: '0'}}>
+          <LogoutButton/>
+        </div>
+        <AuthHeader/>
+        {render2017R3()}
         <p>
           Vous pouvez revoir votre participation passée en cliquant le bouton ci-dessous.
         </p>
@@ -115,12 +151,12 @@ export default function (bundle, deps) {
   });
 
   function RoundOverScreenSelector (state) {
-    const {team, round, participation, participations} = state.response;
+    const {team, round, participation, participations, ranking} = state.response;
     const {LogoutButton, AuthHeader, BypassRoundOverScreen} = deps;
     /* Find the current participation, if any. */
     const currentParticipation = participations && participations.find(p => p.is_current);
     return {
-      team, round, participation: currentParticipation, participations,
+      team, round, participation: currentParticipation, ranking,
       LogoutButton, AuthHeader, BypassRoundOverScreen};
   }
 
